@@ -1,0 +1,80 @@
+<html><head><title>Extract input and / or output data tables from a NONMEM object</title>
+<meta http-equiv="Content-Type" content="text/html; charset=">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>nmData(RNMImport)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   nmData">
+<param name="keyword" value=" Extract input and / or output data tables from a NONMEM object">
+</object>
+
+
+<h2>Extract input and / or output data tables from a NONMEM object</h2>
+
+
+<h3>Description</h3>
+
+<p>
+A generic function that extracts input and output data tables from a NONMEM object into either a single consolidated
+data.frame or a list.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+nmData(obj, dataTypes = c("input", "output"), returnMode = c("singleDF", "DFList"), ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>obj</code></td>
+<td>
+An object of class NMRun, or one that inherits from NMProblem</td></tr>
+<tr valign="top"><td><code>dataTypes</code></td>
+<td>
+Which type of data should be returned, must be "input" and/or "output"</td></tr>
+<tr valign="top"><td><code>returnMode</code></td>
+<td>
+Which type of data should be returned, must be "input" and/or "output".
+If "singleDF", attempts to return a consolidated data.frame of output. and input data, if "DFList" returns 
+a list with separate input and output data</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+Additional arguments that apply to different classes</td></tr>
+</table>
+
+<h3>Value</h3>
+
+<p>
+data.frame or list with "input" and "output" components</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Mango Solutions &lt;fgochez@mango-solutions.com&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+        x &lt;- importNm("TestData1.ctl", "TestData1.lst", path  = system.file(package = "RNMImport", "unittests/testdata/TestRun"))
+        x.data &lt;- nmData(x)
+        print(head(x.data))
+        x.data &lt;- nmData(x, returnMode = "DFList" )
+        print(lapply(x.data, head))
+        y &lt;- importNm("TestData1SIM.con", "TestData1SIM.lst", path  = system.file(package = "RNMImport", "unittests/testdata/TestSimRun"))
+        y.outputData &lt;- nmData(y, subProblemNum = 2:4, dataTypes = "output")
+        print(summary(y.outputData))
+        
+</pre>
+
+
+
+<hr><div align="center">[Package <em>RNMImport</em> version 0.1.6 <a href="00Index.html">Index]</a></div>
+
+</body></html>

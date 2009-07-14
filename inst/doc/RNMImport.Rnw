@@ -1,0 +1,180 @@
+\documentclass[a4paper, 10pt, titlepage]{article}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage[pdftex]{graphicx}
+\usepackage{fancyvrb}
+\usepackage{color}
+% Command for code that is not in boxes
+\newcommand{\code}[1]{\texttt{#1}}
+% Command for R functions
+\newcommand{\rfun}[1]{\texttt{#1}}
+\newcommand{\packVersion} {0.1.17}
+\DefineVerbatimEnvironment{Code}{Verbatim}{commandchars=¬\{\}, frame = single, samepage = TRUE}
+
+\begin{document}
+\title{Notes on RNMImport}
+\author{Francisco Gochez, Mango Solutions}
+\maketitle
+
+% \VignetteIndexEntry{"Overview of RNMImport"}
+
+\section{Introduction}
+\paragraph{} This set of notes is a brief overview of the RNMImport package.  At the moment (version \packVersion), these are quite terse,
+but will be expanded upon in later releases.  This is meant to give only a basic idea of how the package works.
+
+\section{Importing runs}
+\SweaveOpts{keep.source=TRUE}
+<<echo=FALSE,print=FALSE>>=
+require(RNMImport)
+@
+\paragraph{} The main command for importing a NONMEM run is \rfun{importNm}, which works with a control file and a path.  List files
+names are automatically deduced from allowable file extensions (see meta data section below), but can be passed explicitly.
+<<echo=TRUE,print=FALSE>>=
+# Import an example run
+runPath <- system.file(package = "RNMImport", "unittests/testdata/TestRun")
+# List file deduced automatically
+run <- importNm(conFile = "TestData1.ctl", path = runPath)
+print(run)
+print(class(run))
+@
+When calling \rfun{importNm}, a control file, ``list'' file and output table files are all required, else an error is generated.  Input
+ data tables are optional, but a warning is omitted if it is missing. The returned object is of class \code{NMRun}, whose declaration is given
+ below:
+\begin{Code}
+setClass(
+	"NMRun", 
+	representation(
+			controlText = "character", 
+			lstText = "character",
+			controlComments = "character",
+			controlFileInfo = "data.frame", 
+			listFileInfo = "data.frame",
+			numProblems = "numeric",
+			problems = "list"
+			),
+		validity = validity.NMRun
+		)
+
+\end{Code} 
+The information of primary interest is in \code{problems}.  This list has one element corresponding to each \code{\$PROB} statement in the 
+control file, although at the moment, ONLY ONE problem statement can be handled.  An individual problem can be extracted with the 
+\rfun{getProblem} function.
+%
+<<echo=TRUE,print=FALSE>>=
+prob <- getProblem(run)
+print(prob)
+@
+
+Individual problems can be of class \code{NMBasicModel}, \code{NMSimDataGen} or \code{NMSimModel}. 
+\begin{itemize}
+\item \code{NMBasicModel} Is a standard NONMEM model fit, without simulation step
+\item \code{NMSimDataGen} Is a NONMEM problem with simulation step, but no model fitting
+\item \code{NMSimModel} Is a NONMEM propblem with simulation and model fitting on each simulation
+\end{itemize}
+
+Below is an example of loading a simulation + model fitting run:
+<<echo=TRUE,print=FALSE>>=
+runPath <- system.file(package = "RNMImport", "unittests/testdata/TestSimRun")
+# List file deduced automatically
+simRun <- importNm(conFile = "TestData1SIM.con", path = runPath)
+simProblem <- getProblem(simRun)
+print(simProblem)
+@
+%% Add examples
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Extractor functionality
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Extracting data from a problem}
+\subsection{Parameter estimates}
+For retrieving parameter estimates, one uses the functions \code{getThetas}, \code{getOmegas} and \code{getSigmas}. 
+These take an additional parameter \code{stdError}, which controls whether or not standard errors should be returned if they are
+available.
+
+<<echo=TRUE, print=FALSE>>=
+print(getThetas(prob, stdError=FALSE))
+print(getOmegas(prob, stError=FALSE))
+print(getThetas(simProblem, stdError=FALSE))
+print(getOmegas(simProblem, stdError=FALSE))
+@
+
+Additional extraction functions include \code{getObjective}, \code{getEstimateCov} (extract estimator covariance and correlation matrices),
+ \code{getControlStatements} (extract an object holding the parsed statements of an object's control file), and others.  See the online
+ help for full details. Note that these can be used with \code{NMRun}
+objects as long as the problem numnber is specified (it is 1 by default), for instance:
+
+<<echo=TRUE, print=FALSE>>=
+print(getThetas(run, stdError = FALSE, problemNum = 1))
+print(getOmegas(prob, stError=FALSE, problemNum = 1))
+
+@
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Input and output data}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\code{nmData} is a generic function for extracting a NONMEM run's input and output data tables, as described by the control 
+file \$DATA and \$TABLE statements.  The data is allowed to be missing when a run is loaded, in which case obviously it will not
+be retrievable.  For a basic model, \code{nmData} has the following arguments:
+\begin{itemize}
+\item \code{obj} - \code{NMBasicProblem} class object
+\item \code{dataTypes} - \code{character} vector with strings \code{input} and/or \code{output}, determines which type of data is to be
+retrieved.
+\item \code{returnMode} - Whether to return data as a list of input and outputs, or a single data frame
+\end{itemize}
+
+<<echo=TRUE,print=FALSE>>=
+probOutData <- nmData(prob, dataTypes = "output")
+print(head(probOutData))
+probData <- nmData(prob)
+print(head(probData))
+@
+
+Note that the \code{|INPUT} postfix is used to handle data that is repeated in the output and input tables.  Precedence is given to output
+data, which has no postfix.  For simulation problems, one can select a vector of subproblems from which to extract the data.  Note that at the moment if more than one subproblem is selected yet the user requests output and input data as a single \code{data.frame}, and error will be generated due to the mismatch in data size.  In future releases, we plan to allow this by repeating the input data as necessary.
+
+<<echo=TRUE,print=FALSE>>=
+simOutData <- nmData(simRun, dataTypes = "output", subProblemNum = 2:3, problemNum = 1)
+print(dim(simOutData))
+@
+
+Data may also be extracted by type via the \code{nmDatabyType} function. This extracts columns according to the type of data they hold, 
+and type mappings are defined in the metadata.  See the next section for details.
+
+<<echo=TRUE,print=FALSE>>=
+x <- nmDatabyVarType(run, varTypes = "Parameter,Covariate", problemNum = 1 )
+print(head(x))
+@
+Additional variables may be created by certain functions, including \code{addDerivedCategorical}, which derives a categorical variable from an existing data column.  These added columns may then be extracted with \code{addedData}.
+
+<<echo=TRUE, print=FALSE>>=
+prob <- getProblem(run)
+prob <- addDerivedCategorical(prob, "RES", "RES.CUT", breaks = 3, labels = c("low", "medium", "high"))
+print(head(addedData(prob)))
+@
+
+\section{Configuration / metadata}
+RNMImport has tools for modifying the package configuration.  For instance, paths can be stored under ``names''. These names
+can be referenced by using round brackets in numerous functions.
+<<echo=TRUE, print=FALSE>>=
+print(runPath)
+setNmPath("runPath", runPath)
+# note the use of round brackets
+controlContents <- importNmMod("TestData1SIM.con", path = "(runPath)" )
+print(head(controlContents))
+removeNmPath("runPath")
+@
+One can also configure categorical variable ``formats'', which define how levels of the category should be interpreted, as well as what
+the variables mean.  These format descriptions are comma seperated lists.  Below we show the existing formats (defaults are defined
+in a file included with the package) for \code{SEX} and \code{SMOK}, and then change \code{SMOK}.  The function \code{imposeCategoryFormat}
+then forces variables to take a particular format.
+<<echo=TRUE, print=FALSE>>=
+print(getVarDescription(c("SEX", "SMOK")))
+setVarDescription("SMOK", "Smokes", varFormat = "0=NO, 1 = YES", varType = "Covariate")
+prob <- imposeCategoryFormat(prob, varSubset = "SMOK")
+nmData(prob)[,"SMOK"]
+@
+\end{document}

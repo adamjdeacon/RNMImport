@@ -1,0 +1,88 @@
+Variable,Label,Format,VarType
+ADDL,Additional Dosing Item,,Undefined
+AMT,Dose,,Undefined
+CMT,Compartment,,Undefined
+DV,Observation,,Undefined
+EVID,Event Identification,,Undefined
+ID,Subject Number,,Undefined
+II,Interdose Interval,,Undefined
+IPRED,Individual Prediction,,Undefined
+MDV,Missing Observation,,Undefined
+IWRES,Individual Weighted Residual,,Undefined
+absWRES,Absolute Weighted Residual,,Undefined
+absIWRES,Absolute Individual Weighted Residual,,Undefined
+PRED,Population Prediction,,Undefined
+RATE,Rate,,Undefined
+SS,Steady State Item,,Undefined
+TIME,Time relative to first dose,,Undefined
+UVOL,Urine Volume,,Undefined
+ALAG,Absorption Lag Time,,Parameter
+BASE,Baseline,,Parameter
+CL,Clearance,,Parameter
+D,Duration of Zero Order Input,,Parameter
+D1,Duration of Zero Order Input,,Parameter
+D2,Duration of Zero Order Input,,Parameter
+EC50,Concentration giving Half Maximal Response,,Parameter
+EMAX,Maximal Response,,Parameter
+F,Bioavailability,,Parameter
+K,Elimination Rate Constant,,Parameter
+K0,Zero Order Rate Constant,,Parameter
+K10,Elimination Rate Constant,,Parameter
+K20,Elimination Rate Constant,,Parameter
+K30,Elimination Rate Constant,,Parameter
+KA,Absorption Rate Constant,,Parameter
+KABS,Absorption Rate Constant,,Parameter
+KE,Elimination Rate Constant,,Parameter
+KEL,Elimination Rate Constant,,Parameter
+KM,Michaelis Constant,,Parameter
+Q,Intercompartmental Clearance,,Parameter
+Q2,Intercompartmental Clearance (Q2),,Parameter
+Q3,Intercompartmental Clearance (Q3),,Parameter
+TLAG,Absorption Lag Time,,Parameter
+V,Volume of Distribution,,Parameter
+VC,Central Volume,,Parameter
+V1,Volume of Compartment 1,,Parameter
+V2,Volume of Compartment 2,,Parameter
+V3,Volume of Compartment 3,,Parameter
+V4,Volume of Compartment 4,,Parameter
+VP,Peripheral Volume,,Parameter
+VMAX,Maximum Metabolic Rate,,Parameter
+VSS,Volume of Distribution at Steady State,,Parameter
+AGE,Age (years),,Covariate
+ALCY,Alcohol Intake,"0=no, 1=yes",Covariate
+BLQ,Below Limit of Quantification,"1=value is BLQ, 0=value is not BLQ",Covariate
+BMI,BMI (kg/m2),,Covariate
+BSA,Body Surface Area (m2),,Covariate
+COFY,Caffeine Intake,"0=no, 1=yes",Covariate
+DOSE,Dose,,Covariate
+FOOD,Food,"0=fasted, 1=fed",Covariate
+FORM,Formulation,,Covariate
+GENO,Genotype,,Covariate
+HGT,Height (cm),,Covariate
+LBW,Lean Body Weight,,Covariate
+RACE,Race,,Covariate
+SEX,"Gender (0=male, 1=female)","0=male, 1=female",Covariate
+SMOK,Smoking,"0=no, 1=yes",Covariate
+WGT,Weight (kg),,Covariate
+ALKP,Alkaline Phosphatase (U/L),,Lab Covariate
+ALBU,Serum Albumin (g/L),,Lab Covariate
+APH,Alkaline Phosphatase (U/L),,Lab Covariate
+BILT,Total Bilirubin (µmol/L),,Lab Covariate
+CCR,Creatinine Clearance (mL/min),,Lab Covariate
+CLCR,Creatinine Clearance (mL/min),,Lab Covariate
+HCT,Hematocrit (%),,Lab Covariate
+SALB,Albumin (g/L),,Lab Covariate
+SCRT,Serum Creatinine (µmol/L),,Lab Covariate
+SGOT,ASAT(SGOT) (U/L),,Lab Covariate
+SGPT,ALAT(SGPT) (U/L),,Lab Covariate
+TPRO,Total Protein (g/L),,Lab Covariate
+PROT,Protocol Number,,Undefined
+CRTN,Clinical Research task Number,,Undefined
+CYCL,Cycle,,Undefined
+OCC,Occasion,,Undefined
+SDAY,Study Day,,Undefined
+TAD,Time after last dose,,Undefined
+VIST,Visit,,Undefined
+WRES,Weighted residuals,,Undefined
+IWRE,Individual weighted residuals,,Undefined
+RES,Residuals,,Undefined

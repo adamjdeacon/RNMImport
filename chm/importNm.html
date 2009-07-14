@@ -1,0 +1,76 @@
+<html><head><title>Import a NONMEM run</title>
+<meta http-equiv="Content-Type" content="text/html; charset=">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>importNm(RNMImport)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   importNm">
+<param name="keyword" value=" Import a NONMEM run">
+</object>
+
+
+<h2>Import a NONMEM run</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Imports a NONMEM run based on a control file and an output list file.  This function assumes that 
+all of the input and output data tables are in the same directory as the control file, though the input
+tables are allowed to be missing.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>importNm(conFile, reportFile = NULL, path = NULL, dropInputColumns = TRUE)</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>conFile</code></td>
+<td>
+[C,1] control file name</td></tr>
+<tr valign="top"><td><code>reportFile</code></td>
+<td>
+[C,1] The name of the list file.  In the future this parameter will be optional, 
+in which case importNm will attempt' to deduce the file name on its own based on the name of the conFile
+and the list file extensions stored in the meta-data.</td></tr>
+<tr valign="top"><td><code>path</code></td>
+<td>
+The path where the files are located.  Can be the name of a path stored with setNmPath if it
+is surrounded by round brackets</td></tr>
+<tr valign="top"><td><code>dropInputColumns</code></td>
+<td>
+</td></tr>
+</table>
+<p>
+ {Logical flag.  If TRUE, those columns of the input data flagged for dropping in the 
+$INPUT statement will not be imported with the run}</p>
+
+<h3>Value</h3>
+
+<p>
+An NMRun object that holds the information of the NONMEM run</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Mango Solutions &lt;support@mango-solutions.com&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+        x &lt;- importNm("TestData1.ctl", "TestData1.lst", path  = system.file(package = "RNMImport", "unittests/testdata/TestRun"))
+        print(x)
+</pre>
+
+
+
+<hr><div align="center">[Package <em>RNMImport</em> version 0.1.9 <a href="00Index.html">Index]</a></div>
+
+</body></html>

@@ -1,0 +1,48 @@
+\name{NMSimDataGen-class}
+\docType{class}
+\alias{NMSimDataGen-class}
+\alias{nmData,NMSimDataGen-method}
+\alias{show,NMSimDataGen-method}
+\alias{addDerivedCategorical,NMSimDataGen-method}
+\alias{imposeCategoryFormat,NMSimDataGen-method}
+
+\title{Class for holding simulation problems that don't fit models}
+\description{This class handles NONMEM models that have a $SIM statement but only simulate data without fitting a mode
+}
+\section{Objects from the Class}{
+	Objects of this class are not usually instantiated on their own, but are created as part of a call
+	to \code{importNm}.
+}
+\section{Slots}{
+	 \describe{
+    \item{\code{numSimulations}:}{Number of simulations/subproblems }
+    \item{\code{seeds}:}{Seeds used for the random number generator }
+    \item{\code{thetaInitial}:}{thetaInitial Fixed/initial theta values used to generate data (numeric vector)}
+    \item{\code{omegaInitial}:}{Fixed/initial omega values used to generate data (numeric matrix)}
+    \item{\code{sigmaInitial}:}{Fixed/initial sigma values used to generate data (numeric matrix)}
+    \item{\code{problemStatement}:}{The contents of the $PROB statement}
+    \item{\code{controlStatements}:}{A list of parsed sections of the control file}
+    \item{\code{lstStatements}:}{A list of parsed sections of the output "list" file}
+    \item{\code{inputData}:}{A data.frame of the input data, if available (otherwise an empty data.frame)}
+    \item{\code{outputData}:}{Aggregation of the output data}
+    \item{\code{additionalVars}:}{A data.frame of additional variables created by the user}
+  }
+}
+\section{Extends}{
+Virtual class \code{"\linkS4class{NMProblem}"}, directly.
+}
+\section{Methods}{
+  \describe{
+  	\item{addDerivedCategorical}{\code{signature(obj = "NMSimDataGen")}: Create user-defined categorical variables}
+    \item{imposeCategoryFormat}{\code{signature(obj = "NMSimDataGen")}: Coerces variables to categories}
+    \item{nmData}{\code{signature(object = "NMSimDataGen")}: Retrieves the input/output data, where the output can come from 1 or more subproblems. }
+    \item{show}{\code{signature(object = "NMSimDataGen")}: Prints basic data about the problem }
+	 }
+}
+
+\author{Mango Solutions <support@mango-solutions.com> }
+
+\examples{
+	showClass("NMSimDataGen")
+}
+\keyword{classes}

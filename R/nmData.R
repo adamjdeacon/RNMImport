@@ -1,0 +1,150 @@
+# $Rev$
+# $LastChangedDate$
+
+
+#' A generic function that extracts input and output data tables from a NONMEM object into either a single consolidated
+#' data.frame or a list.  
+#' @param obj An object of class NMRun, or one that inherits from NMProblem
+#' @param dataTypes Which type of data should be returned, must be "input" and/or "output"
+#' @param returnMode Determines how the data should be returned.  If "singleDF", attempts to return a consolidated data.frame of output
+#' and input data, if "DFList" returns a list with seperate input and output data
+#' @param ... Additional parameters: problemNum to select the problem if obj is of class NMRun, subProblemNum to select a 
+#' set of subproblems for simulation problems
+#' @title Extract data from run
+#' @return A data.frame or a list, depending on the value of \code{returnMode}
+#' @author fgochez
+#' @keywords utilities
+
+# TODO: add option to extract from derived data
+# TODO: need tests for applySubset
+
+nmData <- function(obj, dataTypes = c("input", "output") , returnMode = c("singleDF", "DFList"), 
+		applySubset = FALSE, ...)
+{
+	returnMode <- match.arg(returnMode)
+	RNMImportStop("This method is not implemented for this class\n")
+}
+
+setGeneric("nmData")
+
+nmData.NMBasicModel <- function(obj, dataTypes = c("input", "output") , returnMode = c("singleDF", "DFList"),
+		applySubset = FALSE, ...)
+{
+
+	dataTypes <- intersect(dataTypes, c("input", "output"))
+	returnMode <- match.arg(returnMode)
+	
+	# check for FIRSTONLY
+	if("output" %in% dataTypes & class(obj@outputData) == "list")
+		RNMImportStop("FIRSTONLY output data is not handled at the moment\n", match.call())
+	
+	allData = list("input" = obj@inputData, "output" = obj@outputData)
+	# only one data.frame to return
+	if(length(dataTypes) == 1)
+		return(allData[[dataTypes]])
+	# more than one data type
+	if(returnMode == "DFList")
+		return(allData[dataTypes])
+	outData <- allData$output
+	inData <- allData$input
+	inColumns <- colnames(inData)
+	outColumns <- colnames(outData)
+	
+	# otherwise, bind the data together, taking care to deal with repeated data.
+	allColumns <- union(inColumns, outColumns)
+	clashingColumns <- intersect(inColumns, outColumns)
+	# no repeated columns, so just return cbind
+	if(length(clashingColumns) == 0)
+	{
+		return(cbind(inData, outData))
+	}
+	# create names of the form "VAR.INPUT", "VAR.OUPUT" etc. for those columns found in both data sets.
+	# Note that a variable name with 
+	
+	# determine the names unique to both input and output data
+	uniqueIn <- setdiff(inColumns, clashingColumns)
+	uniqueOut <- setdiff(outColumns, clashingColumns)
+	res <- cbind(outData, inData[uniqueIn])
+	clashIn <- inData[,clashingColumns]
+	
+	names(clashIn) <- paste(clashingColumns, "INPUT", sep = ".")
+#	if(applySubset)
+#		applyDataSubset(cbind(res, clashIn))
+	cbind(res, clashIn)
+}
+
+setMethod("nmData", signature(obj = "NMBasicModel"), nmData.NMBasicModel)
+
+nmData.NMSim<- function(obj, dataTypes = c("input", "output") , 
+		returnMode = c("singleDF", "DFList"),  
+		applySubset = FALSE,	subProblemNum = NA)
+{
+	# browser()
+	returnMode <- match.arg(returnMode)
+	dataTypes <- intersect(dataTypes, c("input", "output"))
+	inData <- obj@inputData
+	returnMode <- match.arg(returnMode)
+
+	if(("output" %in% dataTypes) & (class(obj@outputData) == "list"))
+		RNMImportStop("FIRSTONLY output data is not handled at the moment\n", match.call())
+	
+	outData <- obj@outputData
+	
+	# create a simulation number factor
+	simNum <- gl(obj@numSimulations, nrow(outData) / obj@numSimulations , ordered = TRUE)
+	outData <- cbind(outData, "NSIM" = simNum)
+	# extract requested simulations
+	if(is.na(subProblemNum)) subProblemNum = 1:obj@numSimulations
+	outData <- subset(outData, NSIM %in% subProblemNum)
+	
+	# only one data.frame to return
+	if(length(dataTypes) == 1)
+	{
+		res <- if(dataTypes == "input") inData else outData
+		return(res)
+	}
+	# more than one data type
+	if(returnMode == "DFList")
+		return(list("input" = inData, "output" = outData))
+	
+	if(nrow(inData) != nrow(outData))
+		RNMImportStop("Amount of simulated output data selected is not compatible with the amount of input data, cannot bind into a single data.frame\n",
+				call = match.call())
+	
+	inColumns <- colnames(inData)
+	outColumns <- colnames(outData)
+	# otherwise, bind the data together, taking care to deal with repeated data.
+	allColumns <- union(inColumns, outColumns)
+	clashingColumns <- intersect(inColumns, outColumns)
+	# no repeated columns, so just return cbind
+	if(length(clashingColumns) == 0)
+	{
+		return(cbind(inData, outData))
+	}
+	# create names of the form "VAR|INPUT", "VAR|OUPUT" etc. for those columns found in both data sets.
+	# Note that a variable name with 
+	
+	# determine the names unique to both input and output data
+	uniqueIn <- setdiff(inColumns, clashingColumns)
+	uniqueOut <- setdiff(outColumns, clashingColumns)
+	res <- cbind(outData, inData[uniqueIn])
+	clashIn <- inData[,clashingColumns]
+	# clashOut <- outData[, clashingColumns]
+	names(clashIn) <- paste(clashingColumns, "INPUT", sep = ".")
+	# names(clashOut) <- paste(clashingColumns, "OUTPUT", sep = "|")
+	cbind(res, clashIn)
+	
+}
+
+setMethod("nmData", signature(obj = "NMSimDataGen"), nmData.NMSim)
+setMethod("nmData", signature(obj = "NMSimModel"), nmData.NMSim)
+
+nmData.NMRun <- function(obj, dataTypes = c("input", "output") , returnMode = c("singleDF", "DFList"),
+		applySubset = FALSE,
+				problemNum = 1, subProblemNum = NA)
+{
+	returnMode <- match.arg(returnMode)
+	nmData(getProblem(obj, problemNum),dataTypes,returnMode, applySubset, subProblemNum)
+}
+
+setMethod("nmData", signature(obj = "NMRun"), nmData.NMRun)

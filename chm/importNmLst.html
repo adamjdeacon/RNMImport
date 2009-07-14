@@ -1,0 +1,68 @@
+<html><head><title>Import the information in an output report file</title>
+<meta http-equiv="Content-Type" content="text/html; charset=">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>importNmReport(RNMImport)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   importNmReport">
+<param name="keyword" value=" Import the information in an output report file">
+</object>
+
+
+<h2>Import the information in an output report file</h2>
+
+
+<h3>Description</h3>
+
+<p>
+This routine imports the contents in a NONMEM output report file, and then parses different sections of it
+while ignoring others.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>importNmReport(fileName, path, controlStatements)</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>fileName</code></td>
+<td>
+Name of the list file</td></tr>
+<tr valign="top"><td><code>path</code></td>
+<td>
+(optional) Path to the list file.  Can be a path stored by setNmPath if it is in round brackets. </td></tr>
+<tr valign="top"><td><code>controlStatements</code></td>
+<td>
+(optional) Control statements from the run associated with this output.  Using it 
+allows cleaner parsing of the report file</td></tr>
+</table>
+
+<h3>Value</h3>
+
+<p>
+A named list with elements holding parsed statements in the list file</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Mango Solutions
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+        x &lt;- importNmReport("TestData1.lst", path = system.file(package = "RNMImport", "unittests/testdata/TestRun"))
+        print(x)
+
+</pre>
+
+
+
+<hr><div align="center">[Package <em>RNMImport</em> version 0.1.6 <a href="00Index.html">Index]</a></div>
+
+</body></html>

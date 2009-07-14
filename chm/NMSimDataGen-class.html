@@ -1,0 +1,84 @@
+<html><head><title>Class for holding simulation problems that don't fit models</title>
+<meta http-equiv="Content-Type" content="text/html; charset=">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>NMSimDataGen-class(RNMImport)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   NMSimDataGen-class">
+<param name="keyword" value="R:   nmData,NMSimDataGen-method">
+<param name="keyword" value="R:   show,NMSimDataGen-method">
+<param name="keyword" value="R:   addDerivedCategorical,NMSimDataGen-method">
+<param name="keyword" value="R:   imposeCategoryFormat,NMSimDataGen-method">
+<param name="keyword" value=" Class for holding simulation problems that don't fit models">
+</object>
+
+
+<h2>Class for holding simulation problems that don't fit models</h2>
+
+
+<h3>Description</h3>
+
+<p>
+This class handles NONMEM models that have a $SIM statement but only simulate data without fitting a mode
+</p>
+
+
+<h3>Objects from the Class</h3>
+
+<p>
+Objects of this class are not usually instantiated on their own, but are created as part of a call
+to <code>importNm</code>.
+</p>
+
+
+<h3>Slots</h3>
+
+<dl>
+<dt><code>numSimulations</code>:</dt><dd>Number of simulations/subproblems </dd>
+<dt><code>seeds</code>:</dt><dd>Seeds used for the random number generator </dd>
+<dt><code>thetaInitial</code>:</dt><dd>thetaInitial Fixed/initial theta values used to generate data (numeric vector)</dd>
+<dt><code>omegaInitial</code>:</dt><dd>Fixed/initial omega values used to generate data (numeric matrix)</dd>
+<dt><code>sigmaInitial</code>:</dt><dd>Fixed/initial sigma values used to generate data (numeric matrix)</dd>
+<dt><code>problemStatement</code>:</dt><dd>The contents of the $PROB statement</dd>
+<dt><code>controlStatements</code>:</dt><dd>A list of parsed sections of the control file</dd>
+<dt><code>lstStatements</code>:</dt><dd>A list of parsed sections of the output "list" file</dd>
+<dt><code>inputData</code>:</dt><dd>A data.frame of the input data, if available (otherwise an empty data.frame)</dd>
+<dt><code>outputData</code>:</dt><dd>Aggregation of the output data</dd>
+<dt><code>additionalVars</code>:</dt><dd>A data.frame of additional variables created by the user</dd>
+</dl>
+
+<h3>Extends</h3>
+
+<p>
+Virtual class <code>"<a href="NMProblem-class.html">NMProblem</a>"</code>, directly.
+</p>
+
+
+<h3>Methods</h3>
+
+<dl>
+<dt>addDerivedCategorical</dt><dd><code>signature(obj = "NMSimDataGen")</code>: Create user-defined categorical variables</dd>
+<dt>imposeCategoryFormat</dt><dd><code>signature(obj = "NMSimDataGen")</code>: Coerces variables to categories</dd>
+<dt>nmData</dt><dd><code>signature(object = "NMSimDataGen")</code>: Retrieves the input/output data, where the output can come from 1 or more subproblems. </dd>
+<dt>show</dt><dd><code>signature(object = "NMSimDataGen")</code>: Prints basic data about the problem </dd>
+</dl>
+
+<h3>Author(s)</h3>
+
+<p>
+Mango Solutions &lt;support@mango-solutions.com&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+        showClass("NMSimDataGen")
+</pre>
+
+
+
+<hr><div align="center">[Package <em>RNMImport</em> version 0.1.9 <a href="00Index.html">Index]</a></div>
+
+</body></html>

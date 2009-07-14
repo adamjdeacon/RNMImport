@@ -1,0 +1,65 @@
+<html><head><title>Read a NONMEM control file</title>
+<meta http-equiv="Content-Type" content="text/html; charset=">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>importNmMod(RNMImport)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   importNmMod">
+<param name="keyword" value=" Read a NONMEM control file">
+</object>
+
+
+<h2>Read a NONMEM control file</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Parses a NONMEM control file, and returns its contents as a list of parsed elements.  These elements
+will correspond to the actual control statements, e.g. $PK, $THETA, $PROBLEM, etc.  Some of the elements
+are kept as pure text.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>importNmMod(fileName, path)</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>fileName</code></td>
+<td>
+Name of the control file</td></tr>
+<tr valign="top"><td><code>path</code></td>
+<td>
+(optional) path to the control file, can be a stored path enclosed in round brackets</td></tr>
+</table>
+
+<h3>Value</h3>
+
+<p>
+A list with parsed components of the control file</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Mango Solutions
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+        conFile &lt;- system.file(package = "RNMImport", "unittests/testdata/control4.con")
+        conContents &lt;- importNmMod(file = conFile)
+        print(conContents)
+</pre>
+
+
+
+<hr><div align="center">[Package <em>RNMImport</em> version 0.1.6 <a href="00Index.html">Index]</a></div>
+
+</body></html>

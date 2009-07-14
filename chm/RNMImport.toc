@@ -1,0 +1,451 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HEAD></HEAD><HTML><BODY>
+<UL>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Package RNMImport:  Contents">
+<param name="Local" value="00Index.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Package RNMImport:  R objects">
+</OBJECT>
+<UL>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="addDerivedCategorical">
+<param name="Local" value="addDerivedCategorical.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="addDerivedCategorical,NMBasicModel-method">
+<param name="Local" value="NMBasicModel-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="addDerivedCategorical,NMSimDataGen-method">
+<param name="Local" value="NMSimDataGen-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="addDerivedCategorical,NMSimModel-method">
+<param name="Local" value="NMSimModel-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="addedData">
+<param name="Local" value="addedData.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="addedData,NMProblem-method">
+<param name="Local" value="NMProblem-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="addedData,NMRun-method">
+<param name="Local" value="NMRun-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="addVarDescription">
+<param name="Local" value="addVarDescription.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="availableLogs">
+<param name="Local" value="logging.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="closeLogConnection">
+<param name="Local" value="logging.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="createCategorical,NMRun-method">
+<param name="Local" value="NMRun-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getControlStatements">
+<param name="Local" value="getFileinfo.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getControlStatements,NMProblem-method">
+<param name="Local" value="NMProblem-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getControlStatements,NMRun-method">
+<param name="Local" value="NMRun-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getControltext">
+<param name="Local" value="getFileinfo.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getEstimateCov">
+<param name="Local" value="getEstimateCov.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getEstimateCov,NMBasicModel-method">
+<param name="Local" value="NMBasicModel-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getEstimateCov,NMRun-method">
+<param name="Local" value="NMRun-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getFileinfo">
+<param name="Local" value="getFileinfo.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getNmFileExtensions">
+<param name="Local" value="getNmFileExtensions.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getNmPath">
+<param name="Local" value="getNmPath.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getObjective">
+<param name="Local" value="getObjective.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getObjective,NMBasicModel-method">
+<param name="Local" value="NMBasicModel-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getObjective,NMRun-method">
+<param name="Local" value="NMRun-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getObjective,NMSimModel-method">
+<param name="Local" value="NMSimModel-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getOmegas">
+<param name="Local" value="getOmegas.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getOmegas,NMBasicModel-method">
+<param name="Local" value="NMBasicModel-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getOmegas,NMRun-method">
+<param name="Local" value="NMRun-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getOmegas,NMSimModel-method">
+<param name="Local" value="NMSimModel-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getProblem">
+<param name="Local" value="getProblem.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getReporttext">
+<param name="Local" value="getFileinfo.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getSigmas">
+<param name="Local" value="getSigmas.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getSigmas,NMBasicModel-method">
+<param name="Local" value="NMBasicModel-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getSigmas,NMRun-method">
+<param name="Local" value="NMRun-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getSigmas,NMSimModel-method">
+<param name="Local" value="NMSimModel-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getThetas">
+<param name="Local" value="getThetas.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getThetas,NMBasicModel-method">
+<param name="Local" value="NMBasicModel-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getThetas,NMRun-method">
+<param name="Local" value="NMRun-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getThetas,NMSimModel-method">
+<param name="Local" value="NMSimModel-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getVarDescription">
+<param name="Local" value="getVarDescription.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="importNm">
+<param name="Local" value="importNm.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="importNmInter">
+<param name="Local" value="importNmInter.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="importNmMod">
+<param name="Local" value="importNmMod.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="importNmReport">
+<param name="Local" value="importNmLst.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="imposeCategoryFormat">
+<param name="Local" value="imposeCategoryFormat.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="imposeCategoryFormat,NMBasicModel-method">
+<param name="Local" value="NMBasicModel-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="imposeCategoryFormat,NMRun-method">
+<param name="Local" value="NMRun-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="imposeCategoryFormat,NMSimDataGen-method">
+<param name="Local" value="NMSimDataGen-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="imposeCategoryFormat,NMSimModel-method">
+<param name="Local" value="NMSimModel-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="logConnection">
+<param name="Local" value="logging.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="logMessage">
+<param name="Local" value="logging.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="NMBasicModel-class">
+<param name="Local" value="NMBasicModel-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="nmData">
+<param name="Local" value="nmData.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="nmData,NMBasicModel-method">
+<param name="Local" value="NMBasicModel-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="nmData,NMRun-method">
+<param name="Local" value="NMRun-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="nmData,NMSimDataGen-method">
+<param name="Local" value="NMSimDataGen-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="nmData,NMSimModel-method">
+<param name="Local" value="NMSimModel-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="nmDatabyVarType">
+<param name="Local" value="nmDatabyVarType.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="nmDatabyVarType,NMProblem-method">
+<param name="Local" value="NMProblem-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="nmDatabyVarType,NMRun-method">
+<param name="Local" value="NMRun-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="NMProblem-class">
+<param name="Local" value="NMProblem-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="NMRun-class">
+<param name="Local" value="NMRun-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="NMSimDataGen-class">
+<param name="Local" value="NMSimDataGen-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="NMSimModel-class">
+<param name="Local" value="NMSimModel-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="readNmData">
+<param name="Local" value="readNmData.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="removeNmPath">
+<param name="Local" value="removeNmPath.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="runRNMImportTests">
+<param name="Local" value="runRNMImportTests.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="setLogConnection">
+<param name="Local" value="logging.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="setLogFile">
+<param name="Local" value="logging.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="setNmFileExtensions">
+<param name="Local" value="setNmFileExtensions.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="setNmPath">
+<param name="Local" value="setNmPath.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="setVarDescription">
+<param name="Local" value="setVarDescription.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="show,NMBasicModel-method">
+<param name="Local" value="NMBasicModel-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="show,NMRun-method">
+<param name="Local" value="NMRun-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="show,NMSimDataGen-method">
+<param name="Local" value="NMSimDataGen-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="show,NMSimModel-method">
+<param name="Local" value="NMSimModel-class.html">
+</OBJECT>
+</UL>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Package RNMImport:  Titles">
+</OBJECT>
+<UL>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Adds a variable description">
+<param name="Local" value="addVarDescription.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Class "NMProblem" ">
+<param name="Local" value="NMProblem-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Class "NMSimModel" ">
+<param name="Local" value="NMSimModel-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Class for holding simulation problems that don't fit models">
+<param name="Local" value="NMSimDataGen-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Coerce variables of a NONMEM object to categories">
+<param name="Local" value="imposeCategoryFormat.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Create user-defined categorical variables for a NONMEM object">
+<param name="Local" value="addDerivedCategorical.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Extract input and / or output data tables from a NONMEM object">
+<param name="Local" value="nmData.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Extract omega estimates from a NONMEM object">
+<param name="Local" value="getOmegas.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Extract sigma estimates from a NONMEM object">
+<param name="Local" value="getSigmas.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Extract theta estimates from a NONMEM object">
+<param name="Local" value="getThetas.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Get added data ">
+<param name="Local" value="addedData.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Get NONMEM data by variable type">
+<param name="Local" value="nmDatabyVarType.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Get Objective Value">
+<param name="Local" value="getObjective.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Gets a user defined path">
+<param name="Local" value="getNmPath.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Gets a variable description">
+<param name="Local" value="getVarDescription.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Gets allowed NONMEM file extensions">
+<param name="Local" value="getNmFileExtensions.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Import a NONMEM run">
+<param name="Local" value="importNm.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Import NONMEM "inter" file">
+<param name="Local" value="importNmInter.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Import the information in an output report file">
+<param name="Local" value="importNmLst.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Logging utilities">
+<param name="Local" value="logging.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="NONMEM run container class">
+<param name="Local" value="NMRun-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Read a NONMEM control file">
+<param name="Local" value="importNmMod.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Read a NONMEM input or output data table file">
+<param name="Local" value="readNmData.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Removes a user specified path">
+<param name="Local" value="removeNmPath.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Retrieve NONMEM problem">
+<param name="Local" value="getProblem.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Returns variance-covariance matrix, if available,  from a NONMEM object ">
+<param name="Local" value="getEstimateCov.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="run package regression tests ">
+<param name="Local" value="runRNMImportTests.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Sets new variable characteristics">
+<param name="Local" value="setVarDescription.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Sets NONMEM file extensions">
+<param name="Local" value="setNmFileExtensions.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Standard/"basic" NONMEM individual problem">
+<param name="Local" value="NMBasicModel-class.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Stores a user specified path">
+<param name="Local" value="setNmPath.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Various miscellaneous "getter"/extractor functions">
+<param name="Local" value="getFileinfo.html">
+</OBJECT>
+</UL>
+</UL>
+</BODY></HTML>
