@@ -7,7 +7,7 @@
 test.getVarDescription <- function()
 {
 	varDescription <- RNMImport:::getVarDescription
-	testFrameOne <- data.frame(Variable = c("ID", "SEX"), Label = c("Subject Number", "Gender (0=male, 1=female)"),
+	testFrameOne <- data.frame(Variable = c("ID", "SEX"), Label = c("Subject Number", "Gender"),
 						Format = c("", "0=male, 1=female"),	VarType = c("Undefined", "Covariate"), stringsAsFactors = FALSE)
 	testFrameTwo <- data.frame(Variable = "BILT", Label = "Total Bilirubin (µmol/L)", Format = "", VarType = "Lab Covariate", stringsAsFactors = FALSE)
 	checkEquals(varDescription(c("ID", "SEX")), testFrameOne, check.attributes = FALSE)	
