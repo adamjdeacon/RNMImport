@@ -13,7 +13,7 @@ export(getNmFileExtensions, setNmFileExtensions, getNmPath)
 export(setNmPath, removeNmPath)
 export(addVarDescription, getVarDescription, setVarDescription)
 export(getFileinfo, getControltext, getReporttext)
-export("graphSubset<-", defaultDataSubset)
+export("graphSubset<-", defaultDataSubset, "dataSubset<-")
 
 exportClasses("NMRun", "NMProblem", "NMBasicModel", "NMSimDataGen", "NMSimModel")
 exportMethods(nmData, getThetas, show, getOmegas, getSigmas, addDerivedCategorical, imposeCategoryFormat)
