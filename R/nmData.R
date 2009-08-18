@@ -77,9 +77,9 @@ setMethod("nmData", signature(obj = "NMBasicModel"), nmData.NMBasicModel)
 
 nmData.NMSim<- function(obj, dataTypes = c("input", "output") , 
 		returnMode = c("singleDF", "DFList"),  
-		applySubset = FALSE,	subProblemNum = NA)
+		applySubset = FALSE, subProblemNum = NA, stackInput = TRUE)
 {
-	# browser()
+
 	returnMode <- match.arg(returnMode)
 	dataTypes <- intersect(dataTypes, c("input", "output"))
 	inData <- obj@inputData
@@ -106,7 +106,11 @@ nmData.NMSim<- function(obj, dataTypes = c("input", "output") ,
 	# more than one data type
 	if(returnMode == "DFList")
 		return(list("input" = inData, "output" = outData))
-	
+	# if stackInput == TRUE, replicate the input data set so that its number of rows matches
+	# the number of rows of the simulated output data set
+
+	if(stackInput)
+		inData <- do.call(cbind.data.frame, lapply(inData, rep, length(subProblemNum)))
 	if(nrow(inData) != nrow(outData))
 		RNMImportStop("Amount of simulated output data selected is not compatible with the amount of input data, cannot bind into a single data.frame\n",
 				call = match.call())
@@ -121,7 +125,7 @@ nmData.NMSim<- function(obj, dataTypes = c("input", "output") ,
 	{
 		return(cbind(inData, outData))
 	}
-	# create names of the form "VAR|INPUT", "VAR|OUPUT" etc. for those columns found in both data sets.
+	# create names of the form "VAR.INPUT", "VAR.OUPUT" etc. for those columns found in both data sets.
 	# Note that a variable name with 
 	
 	# determine the names unique to both input and output data
@@ -129,9 +133,9 @@ nmData.NMSim<- function(obj, dataTypes = c("input", "output") ,
 	uniqueOut <- setdiff(outColumns, clashingColumns)
 	res <- cbind(outData, inData[uniqueIn])
 	clashIn <- inData[,clashingColumns]
-	# clashOut <- outData[, clashingColumns]
+	
 	names(clashIn) <- paste(clashingColumns, "INPUT", sep = ".")
-	# names(clashOut) <- paste(clashingColumns, "OUTPUT", sep = "|")
+	
 	cbind(res, clashIn)
 	
 }
