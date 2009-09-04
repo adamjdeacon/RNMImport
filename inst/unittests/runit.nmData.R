@@ -35,7 +35,8 @@ test.nmData.NMSim <- function()
 	run1 <- importNm("TestData1SIM.con", "TestData1SIM.lst", path = file.path(unitTestPath, "testdata/TestSimRun"))
 	prob <- getProblem(run1)
 	dataSubset(run1) <- NULL
-	dataSubset(prob1) <- NULL
+
+	dataSubset(prob) <- NULL
 	inputColumns <- c("SID", "SEX" ,"AGE" ,"RACE",  "HT",  "SMOK",  "HCTZ","PROP", "CON", "AMT", "WT" ,"TIME", "SECR", "DV", "EVID", "SS", "II" ,"ID", "OCC")
 	outputColumns <- c("ID", "TIME", "IPRED", "IWRES", "CL", "V", "KA", "AGE", "HT", "WT", "SECR", "SEX", "RACE", 
 			"SMOK", "HCTZ", "PROP", "CON", "OCC", "absWRES", "DV", "WRES", "PRED", "RES", "SID") 
