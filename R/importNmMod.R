@@ -54,64 +54,93 @@ importNmMod <- function(
 
 	problemContents <- vector(mode = "list", length = numProblems)
 	
-	for(i in seq_along(problemTexts))
-	{
-		# retrieve a version of the text without comments
-		poppedTxt <- commentPop(problemTexts[[i]], inPlace = FALSE)$txt
-		prob <- list()	
-		# find the existent sections in the current problem
-		titles <- sectionTitles(poppedTxt)	
-		# deal with THETAs
-		
-		prob$Theta <- if( "THE" %in% titles | "THT" %in% titles ) .importNmModTheta( problemTexts[[i]] )
-		prob$Omega <- if("OME" %in% titles ) .importNmModOmega( problemTexts[[i]], component = "OMEGA")
-		prob$Sigma <- if( "SIG" %in% titles ) .importNmModOmega( problemTexts[[i]], component = "SIGMA" )
+	# first problem is dealt with normally, but additional ones have to be dealt with differently
+	# TODO: The logic for handling the additional problems probably needs to be dealt with elsewhere.
+	# For example, a simulation that follows a normal problem might need access to the THETAs from the previous
+	# estimation (which are found in the report file)
+	problemContents[[1]] <- .importNmModSingleProblem(problemTexts[[1]])
 	
-		# extract any raw FORTRAN code
-		prob$Script <- fortranPop(poppedTxt, inPlace = TRUE)
-		
-		# now extract the $PROB statement   
-		prob$Problem <-  section(poppedTxt, "PRO", "", strip = TRUE, as.list = FALSE, glue = TRUE, clean = TRUE)
-		# extract $TABLE
-		prob$Tables <- if( "TAB" %in% titles ) .importNmModTables( poppedTxt) 
-		# extract $SUB
-		prob$Subroutine <- if( "SUB" %in% titles ) .importNmModSub( poppedTxt)
-		# $INPUT statement
-		prob$Input <- if( "INP" %in% titles ) .importNmModInput( poppedTxt )
-		prob$Data <- if( "DAT" %in% titles ) .importNmModData( poppedTxt, fileName )
-		prob$Sim <- if("SIM" %in% titles ) .importNmModSim( poppedTxt )
-		
-		# From now on, simply extract raw text for the other sections
-		
-		### extract the PK model                                                      
-		prob$PK <- section( poppedTxt, "PK", "", as.list = FALSE, strip = TRUE)
-		
-		### extract the PRED model                                                    
-		prob$PRED <- section(poppedTxt, "PRED", "", as.list = FALSE, strip = TRUE)
-		
-		### extract the Model                                                         
-		prob$Model <- section( poppedTxt, "MOD", "", as.list = FALSE, strip = TRUE)
-		
-		### extract the Error statements                                              
-		prob$Error <- section( poppedTxt, "ERR", "", as.list = FALSE, strip = TRUE)
-		
-		### extract the Mix statements                                                
-		prob$Mix <- section( poppedTxt, "MIX", "", as.list = FALSE,
-				strip = TRUE, clean = TRUE)
-		
-		### extract the EST statements                                                
-		prob$Estimates <- section( poppedTxt, "EST", "", glue = TRUE, 
-				as.list = FALSE, strip = TRUE, clean = TRUE)
-		
-		### extract the COV statements                                                
-		prob$Cov <- section( poppedTxt, "COV", "", glue = TRUE,  
-				as.list = FALSE, strip = TRUE, clean = TRUE)
-		problemContents[[i]] <- prob
+	for(i in seq_along(problemTexts[-1]) + 1)
+	{
+		contents <- .importNmModSingleProblem(problemTexts[[i]])
+		# problemContents[[i]] <- .mergeMissing(contents, problemContents[[i-1]])
+		problemContents[[i]] <- contents
+		 
 	}
 	outList$controlFile <- .getFile(fileName, path)
 	outList$problemContents <- problemContents 
-	outList 
-	
-	
+	outList 	
 }
 
+.importNmModSingleProblem <- function(contents)
+{
+	# retrieve a version of the text without comments
+	poppedTxt <- commentPop(contents, inPlace = FALSE)$txt
+	prob <- list()	
+	# find the existent sections in the current problem
+	titles <- sectionTitles(poppedTxt)	
+	
+	# deal with THETAs
+	
+	prob$Theta <- if( "THE" %in% titles | "THT" %in% titles ) .importNmModTheta( contents )
+	prob$Omega <- if("OME" %in% titles ) .importNmModOmega( contents, component = "OMEGA")
+	prob$Sigma <- if( "SIG" %in% titles ) .importNmModOmega( contents, component = "SIGMA" )
+	
+	# extract any raw FORTRAN code
+	prob$Script <- fortranPop(poppedTxt, inPlace = TRUE)
+	
+	# now extract the $PROB statement   
+	prob$Problem <-  section(poppedTxt, "PRO", "", strip = TRUE, as.list = FALSE, glue = TRUE, clean = TRUE)
+	# extract $TABLE
+	prob$Tables <- if( "TAB" %in% titles ) .importNmModTables( poppedTxt) 
+	# extract $SUB
+	prob$Subroutine <- if( "SUB" %in% titles ) .importNmModSub( poppedTxt)
+	# $INPUT statement
+	prob$Input <- if( "INP" %in% titles ) .importNmModInput( poppedTxt )
+	prob$Data <- if( "DAT" %in% titles ) .importNmModData( poppedTxt, fileName )
+	prob$Sim <- if("SIM" %in% titles ) .importNmModSim( poppedTxt )
+	
+	# From now on, simply extract raw text for the other sections
+	
+	### extract the PK model                                                      
+	prob$PK <- section( poppedTxt, "PK", "", as.list = FALSE, strip = TRUE)
+	
+	### extract the PRED model                                                    
+	prob$PRED <- section(poppedTxt, "PRED", "", as.list = FALSE, strip = TRUE)
+	
+	### extract the Model                                                         
+	prob$Model <- section( poppedTxt, "MOD", "", as.list = FALSE, strip = TRUE)
+	
+	### extract the Error statements                                              
+	prob$Error <- section( poppedTxt, "ERR", "", as.list = FALSE, strip = TRUE)
+	
+	### extract the Mix statements                                                
+	prob$Mix <- section( poppedTxt, "MIX", "", as.list = FALSE,
+			strip = TRUE, clean = TRUE)
+	
+	### extract the EST statements                                                
+	prob$Estimates <- section( poppedTxt, "EST", "", glue = TRUE, 
+			as.list = FALSE, strip = TRUE, clean = TRUE)
+	
+	### extract the COV statements                                                
+	prob$Cov <- section( poppedTxt, "COV", "", glue = TRUE,  
+			as.list = FALSE, strip = TRUE, clean = TRUE)
+	prob
+}
+
+#TODO: comment
+# TODO: handle additional missing elements
+
+.mergeMissing <- function(currentProblem, previousProblem)
+{
+	availableSections <- names(currentProblem)
+	requiredElements <- c("Theta", "Sigma", "Omega")
+	missingElements <- !(requiredElements %in% availableSections)
+	
+	# retrieve necessary elements from the previous problem
+	additionalElements <- previousProblem[requiredElements[missingElements]]
+	# trim out elements that were not available in the previous problem either
+	additionalElements <- additionalElements[!is.na(names(additionalElements))]
+	c(currentProblem, additionalElements)
+
+}
