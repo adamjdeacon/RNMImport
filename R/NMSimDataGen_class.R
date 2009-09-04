@@ -1,13 +1,15 @@
 # $Rev$
 # $LastChangedDate$
 
+# TODO: THETAS might be missing from that particular problem statement, in which case
+# they should be inherited from a previous problem.  This is currently not implemented
 
 validity.NMSimDataGen <- function(object)
 {
 	if(object@numSimulations < 1)
 		return("Number of simulations is less than 1!")
-	if(length(object@thetaInitial) < 1)
-		return("No initial thetas!")
+	# if(length(object@thetaInitial) < 1)
+	#	return("No initial thetas!")
 	TRUE
 }
 
@@ -48,6 +50,11 @@ NMSimDataGen <- function(controlStatements, path, reportContents = NULL)
 				inData$message, "\nWill continue importing other components")
 		inData <- data.frame()
 	} # end if(inherits(inData, "try-error"))
+	# TODO: replace this logic since it should never happen once problems are parsed correctly
+	Omega <- if(is.null(controlStatements$Omega)) matrix() else controlStatements$Omega
+	Sigma <- if(is.null(controlStatements$Sigma)) matrix() else controlStatements$Sigma
+	
+	Theta <- if(is.null(controlStatements$Theta)) numeric(0) else controlStatements$Theta[,"Est"]
 	
 	with(controlStatements , 
 	{
@@ -62,7 +69,7 @@ NMSimDataGen <- function(controlStatements, path, reportContents = NULL)
 			new("NMSimDataGen", numSimulations = as.numeric(controlStatements$Sim["nSub"]), 
 					seeds = seeds, inputData = inData, outputData = outTables, controlStatements = 
 							controlStatements, problemStatement = controlStatements$Problem,
-					thetaInitial = Theta[,"Est"], omegaInitial = Omega, sigmaInitial = Sigma,
+					thetaInitial = Theta, omegaInitial = Omega, sigmaInitial = Sigma,
 					additionalVars = as.data.frame(matrix(ncol = 0, nrow = nDataRows)))
 	})
 
