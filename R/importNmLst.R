@@ -34,7 +34,7 @@ importNmLstSimModel <- function(contents, numSub = NA)
 	{
 		outList <- list()       
 		
-		outList$VersionInfo  <- nmVersion( contents ) 
+		# outList$VersionInfo  <- nmVersion( contents ) 
 		
 		# extract the number of records and individuals in the data
 		outList$nRecords     <- colonPop( contents, "TOT\\. NO\\. OF OBS RECS"   , inPlace = FALSE, numeric = TRUE )$op.out
@@ -52,7 +52,7 @@ importNmLstSimModel <- function(contents, numSub = NA)
 		subprobStatements <- lapply(partitionLstSubproblems(subprobContents), .importSubProb)
 		
 		# get all objective function values
-		objectives <- sapply(subprobStatements, "[[", "objective")
+		objectives <- sapply(subprobStatements, "[[", "objectiveMin")
 		names(objectives) <- paste("sim", sep = "", 1:numSub)
 		# now insert the thetas into a matrix with one row for each subproblem. 
 		thetas <- t(sapply(subprobStatements, function(x) x$THETA))
@@ -109,10 +109,12 @@ importNmLstSimModel <- function(contents, numSub = NA)
 
 .importNmLstBasicProb <- function(contents)
 {
-	contents <- cleanReportContents(contents)
-	outList <- list()       
+	# contents <- cleanReportContents(contents)
+	outList <- list() 
+	# NOTE: version info is NOT repeated for each problem - thus one must retrieve
+	# this information once for the report and store it.  This should also be moved 
 
-	outList$VersionInfo  <- nmVersion( contents ) 
+	# outList$VersionInfo  <- nmVersion( contents ) 
 	
 	# extract the number of records and individuals in the data
 	outList$nRecords     <- colonPop( contents, "TOT\\. NO\\. OF OBS RECS"   , inPlace = FALSE, numeric = TRUE )$op.out
@@ -140,6 +142,34 @@ importNmLstSimModel <- function(contents, numSub = NA)
 	
 }
 
+#' 
+#' @name
+#' @title
+#' @return 
+#' @author fgochez
+#' @keywords
+
+.reportPartitionedByProblems <- function(reportContents, numProblems)
+{
+	# only one problem, no partitioning necessary
+	
+	if(numProblems == 1)
+		return(list(reportContents))
+	
+	problemDelimeterRegexp <- "^[[:blank:]]*PROBLEM NO\\.\\: [[:blank:]]*[0-9][[:blank:]]*$"
+	probStartPoints <- grep(reportContents, pattern = problemDelimeterRegexp)
+	
+	RNMImportStopifnot(length(probStartPoints) == numProblems, "Number of problems specified does not match actual number of problems found in report")
+	individualProblemReports <- vector(mode = "list", length = numProblems)
+	for(i in seq_along(probStartPoints[-1]) )
+	{
+		individualProblemReports[[i]] <- reportContents[probStartPoints[i]:(probStartPoints[i+1] - 1)]
+		
+	}
+	individualProblemReports[[numProblems]] <- tail(reportContents, n = - probStartPoints[numProblems] + 1)
+	individualProblemReports
+}
+
 #' Imports a NONMEM report file based on information contained in control statements corresponding to some problem
 #' @param fileName Name of the report file to import
 #' @param controlStatements 
@@ -157,33 +187,46 @@ importNmLstSimModel <- function(contents, numSub = NA)
 	}
 	
 	result <- list(Raw = content)
-	# TODO: In the future, add multiple problem handling here
-	probContent <- controlStatements$problemContents[[1]]
-	isSim <- !is.null(probContent$Sim)
+	# clean the report contents for easier parsing
+	cont <- cleanReportContents(content)
 	
-	if(length(controlStatements$problemContents) > 1)
-		RNMImportStop("Cannot yet import lst files with more than one problem", call = match.call())
+	# Capture the version info - this should not be repeated for each problem
+	# result$VersionInfo <- nmVersion( cont )
+	allProbContents <- controlStatements$problemContents
+	partitionedContent <- .reportPartitionedByProblems(content, length(allProbContents))
 	
-	# this is a basic problem (no simulation, one problem statement only)
-	if(!isSim)
-	{	
-		result$problemResults <- list(.importNmLstBasicProb(content))
-		return(result)
-	}
+	problems <- vector(mode = "list", length = length(partitionedContent))
 	
-	# single simulation problem
-	if(isSim)
-	{
-		# check if it is SIMONLY, if so, we're not interested in the list file
-		if(probContent$Sim["simOnly"] == "TRUE")
+	# if(length(controlStatements$problemContents) > 1)
+	#	RNMImportStop("Cannot yet import lst files with more than one problem", call = match.call())
+	for(i in seq_along(partitionedContent)) {
+		probContent <- allProbContents[[i]]
+		contents <- partitionedContent[[i]]
+		isSim <- !is.null(probContent$Sim)	
+		# this is a basic problem (no simulation, one problem statement only)
+		if(!isSim)
+			problems[[i]] <- .importNmLstBasicProb(contents)
+		# single simulation problem
+		if(isSim)
 		{
-			logMessage(log = "detailedReport", "Sim only report file, contents will be disregarded\n")
-			return(list("Raw" = content, problemResults = list(character(0))))
+			# check if it is SIMONLY, if so, we're not interested in the list file
+			if(probContent$Sim["simOnly"] == "TRUE")
+			{
+				logMessage(log = "detailedReport", "Sim only report file, contents will be disregarded\n")
+				problems[[i]] <- character(0)
+			}
+			else
+			{
+				problems[[i]] <- importNmLstSimModel(content, as.numeric(probContent$Sim["nSub"]))
+			}
+		
 		}
-		result$problemResults <- list(importNmLstSimModel(content, as.numeric(probContent$Sim["nSub"])))
-		return(result)
 		
 	}
+		
+	result$problemResults <- problems
+	
+	result
 }
 
 #' This routine imports the contents in a NONMEM output report file, and then parses different sections of it
@@ -214,7 +257,7 @@ importNmReport <- function( fileName, path = NULL, controlStatements = NULL )
 		RNMImportWarning(paste("Contents of the list file", fileName, "were empty or read incorrectly"))
 		return(NULL)
 	}
-	
+	content <- cleanReportContents(content)
 	result <- list(Raw = content)
 	# check for the presence of  SIMULATION STEP PERFORMED
 	simStep <- any(regexMatches("SIMULATION STEP PERFORMED", txt= content))
@@ -263,8 +306,8 @@ cleanReportContents <- function(content)
 		if(min(startLine) > 1)
 			content <- tail(content, -(min(startLine) - 1))
 	}
-	else
-		RNMImportStop("The statement 1NONLINEAR MIXED EFFECTS MODEL was not found in the report file\n", match.call())
+		
+		# RNMImportStop("The statement 1NONLINEAR MIXED EFFECTS MODEL was not found in the report file\n", match.call())
 	# Remove final statements and onwards
 	grepFinal <- grep("^This file was created", content)
 	
