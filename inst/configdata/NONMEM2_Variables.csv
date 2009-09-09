@@ -61,7 +61,7 @@ GENO,Genotype,,Covariate
 HGT,Height (cm),,Covariate
 LBW,Lean Body Weight,,Covariate
 RACE,Race,,Covariate
-SEX,"Gender (0=male, 1=female)","0=male, 1=female",Covariate
+SEX,Gender,"0=male, 1=female",Covariate
 SMOK,Smoking,"0=no, 1=yes",Covariate
 WGT,Weight (kg),,Covariate
 ALKP,Alkaline Phosphatase (U/L),,Lab Covariate
