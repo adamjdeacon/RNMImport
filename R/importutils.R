@@ -116,8 +116,8 @@ dirname.abs <- function(x){
 	}
 	if(test) test <- file.exists( file )
 	if( any(test) ){
-		if(stop) stop(paste("missing files", file[test], sep = "\n\t\t"))
-		if(warn) .cat("Warning: Cannot open file", file[test])
+		if(stop) RNMImportStop(paste("missing files", file[test], sep = "\n\t\t"))
+		if(warn) logMessage("Warning: Cannot open file", file[test], "warnings")
 		if(remove) file <- file[!test]
 	}
 	if( !length(file) ) file <- NULL
