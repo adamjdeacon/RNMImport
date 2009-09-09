@@ -47,9 +47,7 @@ test.nmData.NMSim <- function()
 	test2 <- nmData(prob, dataType = "output")
 	checkTrue(setequal(names(test1), inputColumns), msg = "Checking presence of input data")
 	checkTrue(setequal(names(test2), c(outputColumns, "NSIM")), msg = "Checking presence of output data")
-	
-	checkException(nmData(prob, subProblemNum = 1:2), silent = TRUE, msg = "check for incompatible data sizes")
-	
+	 
 	test3 <- nmData(prob, subProblemNum = 2:3, returnMode = "DFList") 
 	checkEquals(nrow(test3[["input"]]) * 2, nrow(test3[["output"]]), msg = "Number of rows of output is correct" )
 	
@@ -62,6 +60,9 @@ test.nmData.NMSim <- function()
 	checkTrue(setequal(names(test4), c(x, "NSIM", paste(y, ".INPUT", sep = ""))), msg = "correct columns present")
 	checkTrue(any(test4$DV != test4$"DV.INPUT"), msg = "simulated DV not equiavlent to input DV")
 	
+	test5 <- nmData(prob, subProblemNum = 1:2)
+	checkEquals(nrow(test5), 2 * 1061, msg = " result has the correct number of rows")
+	checkEquals(test5$NSIM, factor(c(rep(1, 1061), rep(2, 1061)), levels = as.character(1:5), ordered = TRUE))
 	
 }
 
