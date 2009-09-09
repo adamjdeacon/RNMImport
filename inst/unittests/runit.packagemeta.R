@@ -10,7 +10,11 @@ test.getVarDescription <- function()
 	testFrameOne <- data.frame(Variable = c("ID", "SEX"), Label = c("Subject Number", "Gender"),
 						Format = c("", "0=male, 1=female"),	VarType = c("Undefined", "Covariate"), stringsAsFactors = FALSE)
 	testFrameTwo <- data.frame(Variable = "BILT", Label = "Total Bilirubin (µmol/L)", Format = "", VarType = "Lab Covariate", stringsAsFactors = FALSE)
-	checkEquals(varDescription(c("ID", "SEX")), testFrameOne, check.attributes = FALSE)	
+	
+	x <- varDescription(c("ID", "SEX"))
+	rownames(x) <- NULL
+	
+	checkEquals(x, testFrameOne, check.attributes = FALSE)	
 	checkEquals(names(varDescription(c("ID", "SEX"))), names(testFrameOne))
 	checkEquals(varDescription("BILT"), testFrameTwo, check.attributes = FALSE)
 	checkEquals(names(varDescription(c("BILT"))), names(testFrameTwo))
