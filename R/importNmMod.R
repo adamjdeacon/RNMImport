@@ -58,11 +58,11 @@ importNmMod <- function(
 	# TODO: The logic for handling the additional problems probably needs to be dealt with elsewhere.
 	# For example, a simulation that follows a normal problem might need access to the THETAs from the previous
 	# estimation (which are found in the report file)
-	problemContents[[1]] <- .importNmModSingleProblem(problemTexts[[1]])
+	problemContents[[1]] <- .importNmModSingleProblem(problemTexts[[1]], fileName)
 	
 	for(i in seq_along(problemTexts[-1]) + 1)
 	{
-		contents <- .importNmModSingleProblem(problemTexts[[i]])
+		contents <- .importNmModSingleProblem(problemTexts[[i]], fileName)
 		# problemContents[[i]] <- .mergeMissing(contents, problemContents[[i-1]])
 		problemContents[[i]] <- contents
 		 
@@ -72,7 +72,16 @@ importNmMod <- function(
 	outList 	
 }
 
-.importNmModSingleProblem <- function(contents)
+#' 
+#' @name
+#' @title
+#' @param contents 
+#' @param fileName 
+#' @return 
+#' @author fgochez
+#' @keywords
+
+.importNmModSingleProblem <- function(contents, fileName)
 {
 	# retrieve a version of the text without comments
 	poppedTxt <- commentPop(contents, inPlace = FALSE)$txt
@@ -97,6 +106,7 @@ importNmMod <- function(
 	prob$Subroutine <- if( "SUB" %in% titles ) .importNmModSub( poppedTxt)
 	# $INPUT statement
 	prob$Input <- if( "INP" %in% titles ) .importNmModInput( poppedTxt )
+	# TODO: the fact that fileName was not passed down here was not generating any problems.  Why?
 	prob$Data <- if( "DAT" %in% titles ) .importNmModData( poppedTxt, fileName )
 	prob$Sim <- if("SIM" %in% titles ) .importNmModSim( poppedTxt )
 	
@@ -130,6 +140,15 @@ importNmMod <- function(
 
 #TODO: comment
 # TODO: handle additional missing elements
+
+#' 
+#' @name
+#' @title
+#' @param currentProblem 
+#' @param previousProblem 
+#' @return 
+#' @author fgochez
+#' @keywords
 
 .mergeMissing <- function(currentProblem, previousProblem)
 {
