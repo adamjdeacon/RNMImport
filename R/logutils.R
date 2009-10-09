@@ -50,9 +50,9 @@ closeLogConnection <- function(logName, allowFail = TRUE)
 	if(inherits(x, "try-error"))
 	{
 		if(allowFail)
-			RNMImportWarning("Unable to close the connection " %pst% logName, ", but proceeding anyway \n", match.call())
+			RNMImportWarning(paste("Unable to close the connection " %pst% logName, ", but proceeding anyway \n"), match.call())
 		else
-			RNMImportStop("Unable to close the connection " %pst% logName, "\n", match.call())
+			RNMImportStop(paste("Unable to close the connection " %pst% logName, "\n"), match.call())
 	}
 	.RNMImportEnv$logConnections[[logName]] <- NA	
 }
