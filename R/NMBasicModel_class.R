@@ -118,13 +118,21 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 					thetaFinal <-  rbind(StandardError$THETA, FinalEstimates$THETA )
 					
 					rownames(thetaFinal) <- c("standardErrors","estimates")
-					
+					# TODO: Initial omega statements can be omitted - thus the dimension of the omegaInitial and
+					# omega final will be different in this case.  The following logic must be updated to deal with this
+					#.  See mantis issue 1207
 					omegaDim <- dim(FinalEstimates$OMEGA)
+					# if no initial omega, fall back on a defualt set of names
+					if(is.null(omegaInitial)) {
+						omegaInitial <- matrix()
+						omegaDimNames <- list(paste( "OMEGA", 1:omegaDim[1], sep = "" ), paste( "OMEGA", 1:omegaDim[2], sep = "" ))
+					}
+					else omegaDimNames <- dimnames(omegaInitial)
 					omegaFinal <- array(dim = c(omegaDim, 2), 
-							dimnames = c(dimnames(omegaInitial), list(c("estimates", "standardErrors"))))
+							dimnames = c(omegaDimNames, list(c("estimates", "standardErrors"))))
 					omegaFinal[,,"estimates"] <- FinalEstimates$OMEGA
 					omegaFinal[,,"standardErrors"] <- StandardError$OMEGA
-							
+
 					sigmaDim <- dim(FinalEstimates$SIGMA)
 					# SIGMA can be omitted
 					if(is.null(sigmaDim))
