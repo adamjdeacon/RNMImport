@@ -19,7 +19,7 @@
 runRNMImportTests <- function(
 		testDataPaths = c(system.file(package="RNMImport", "unittests"), 
 				"\\\\Mango-data1\\mangowork\\MangoProjects\\RNONMEM2\\data"), 
-		testScriptPaths = c(system.file(package="RNMImport", "unittests"), "ExternalTests/RNMImport"),
+		testScriptPaths = c(system.file(package="RNMImport", "unittests"), "testing/externaltests"),
 		runExtern = FALSE,
 		printTestProtocol = TRUE,
 		cleanup = TRUE
