@@ -126,7 +126,7 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 				# if standard errors are available in the lst file,store them with the "XXXFinal" slots
 				if(!is.null(reportContents$StandardError))
 				{
-					browser()
+					# browser()
 					thetaFinal <-  rbind(StandardError$THETA, FinalEstimates$THETA )
 					
 					rownames(thetaFinal) <- c("standardErrors","estimates")
