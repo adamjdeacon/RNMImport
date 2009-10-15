@@ -105,8 +105,20 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 				# check for the covariance/correlation matrices
 				covMatrix <- if(!is.null(reportContents$CovarianceMatrix)) CovarianceMatrix else matrix()
 				corMatrix <- if(!is.null(reportContents$CorrelationMatrix)) CorrelationMatrix else matrix()
+				# grab parameter initial values
 				thetaInitial <- t(controlStatements$Theta)
-				omegaInitial <- controlStatements$Omega
+				# these may be missing in the control statements, so try to extract them from the reportContents
+				omegaInitial <- if(!is.null(controlStatements$Omega)) controlStatements$Omega  else  reportContents$initialEstimates$OMEGA
+				# grab dimensions of omega final estimates
+				omegaDim <- dim(FinalEstimates$OMEGA)
+				# if no initial omega, fall back on a defualt set of names
+				if(is.null(omegaInitial)) {
+					omegaInitial <- matrix(NA, nrow = omegaDim[1], ncol = omegaDim[2])
+					omegaDimNames <- list(paste( "OMEGA", 1:omegaDim[1], sep = "" ), paste( "OMEGA", 1:omegaDim[2], sep = "" ))
+				}
+				
+				else omegaDimNames <- dimnames(omegaInitial)
+				
 				sigmaInitial <- controlStatements$Sigma
 				if(is.null(sigmaInitial)) sigmaInitial <- matrix()
 				rownames(thetaInitial) <- c("upperBound", "initial", "lowerBound")
@@ -114,20 +126,11 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 				# if standard errors are available in the lst file,store them with the "XXXFinal" slots
 				if(!is.null(reportContents$StandardError))
 				{
-					
+					browser()
 					thetaFinal <-  rbind(StandardError$THETA, FinalEstimates$THETA )
 					
 					rownames(thetaFinal) <- c("standardErrors","estimates")
-					# TODO: Initial omega statements can be omitted - thus the dimension of the omegaInitial and
-					# omega final will be different in this case.  The following logic must be updated to deal with this
-					#.  See mantis issue 1207
-					omegaDim <- dim(FinalEstimates$OMEGA)
-					# if no initial omega, fall back on a defualt set of names
-					if(is.null(omegaInitial)) {
-						omegaInitial <- matrix(NA, nrow = omegaDim[1], ncol = omegaDim[2])
-						omegaDimNames <- list(paste( "OMEGA", 1:omegaDim[1], sep = "" ), paste( "OMEGA", 1:omegaDim[2], sep = "" ))
-					}
-					else omegaDimNames <- dimnames(omegaInitial)
+				
 					omegaFinal <- array(dim = c(omegaDim, 2), 
 							dimnames = c(omegaDimNames, list(c("estimates", "standardErrors"))))
 					omegaFinal[,,"estimates"] <- FinalEstimates$OMEGA
@@ -152,7 +155,8 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 				{
 					thetaFinal <- matrix(FinalEstimates$THETA, nrow = 1, dimnames = list( "estimates" , NULL ))
 					
-					omegaFinal <- array(FinalEstimates$OMEGA, dim = c(dim(FinalEstimates$OMEGA), 1),
+					
+					omegaFinal <- array(FinalEstimates$OMEGA, dim = c(omegaDim, 1),
 						dimnames = c(dimnames(omegaInitial), list("estimates")))
 					
 					sigmaDim <- dim(FinalEstimates$SIGMA)					
