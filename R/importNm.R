@@ -21,6 +21,13 @@
 
 importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns = TRUE)
 {
+	
+	# collapse the file names to lower case if we are using a windows system
+	# TODO: uncomment following verification
+	# conFile <- .windowsToLower(conFile)
+	# reportFile <- .windowsToLower(reportFile)
+	
+	
 	logMessage(logName = "detailedReport", paste("Importing control file", conFile, "\n"))
 	#deal with the 	"path" parameter
 	if(!is.null(path))
@@ -91,10 +98,13 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 					dropInputColumns = dropInputColumns)
 		}
 		# set the subset for graphing - note that this should probably be dropped in the future
-		# and replaced with the data subset only
-	
-		graphSubset(modelList[[i]]) <- defaultDataSubset()
-		dataSubset(modelList[[i]]) <- defaultDataSubset()
+		# and replaced with the data subset only.
+		# TODO: consider logging this
+		if(applySubsetOnLoad()) {
+			logMessage("Attaching the default subset on loading", logName = "detailedReport")
+			graphSubset(modelList[[i]]) <- defaultDataSubset()
+			dataSubset(modelList[[i]]) <- defaultDataSubset()
+		}
 	} # end for(i in 1:numProblems)
 	# retrieve basic information on the control and report files, e.g. date of modification, size, etc.
 	fileInfo <- file.info(fullConFilePath, fullLstFilePath)
