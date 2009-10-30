@@ -80,7 +80,7 @@ initializeDataPath <- function()
 
 initializeSubsets <- function()
 {
-	.RNMImportEnv$subsets <- list("default" = c("MDV != 1", "EVID == 0", "AMT <= 0"), applyOnLoad = FALSE)
+	.RNMImportEnv$subsets <- list("default" = c("MDV != 1", "EVID == 0", "AMT <= 0"), applyOnLoad = TRUE)
 }
 
 .onLoad <- function(libname, pkgname)
