@@ -117,3 +117,61 @@ test.removeNmPath <- function()
 	checkEquals(get("dataPath", envir = RNMImport:::.RNMImportEnv), character(0))
 	assign("dataPath", envir = RNMImport:::.RNMImportEnv, original)
 }
+
+# Tests whether or not the subset configuration functions work correctly 
+
+test.configSubsets <- function()
+{
+	STANDARDSUBSET <- c("MDV != 1", "EVID == 0", "AMT <= 0")
+	# check default is loaded correctly.
+	
+	checkEquals(defaultDataSubset(), STANDARDSUBSET,
+			msg = " |Default data subset as expected|")
+	
+	
+	# check that the subset can be modified
+	
+	setDefaultDataSubset("MDV != 1", TRUE)
+	checkEquals(defaultDataSubset(),"MDV != 1", " |Default data subset changed as expected|")
+	
+	# check that it can be augmented
+	augmentDefaultDataSubset("EVID == 0")
+	checkEquals(defaultDataSubset(),c("MDV != 1", "EVID == 0"), " |Default data subset augmented as expected|")
+	
+	# check that duplicates eliminated when augmenting
+	
+	augmentDefaultDataSubset("EVID == 0")
+	checkEquals(defaultDataSubset(),c("MDV != 1", "EVID == 0"), " |Default data subset augmented as expected, no duplicates|")
+		
+	# check that when loaded, subset is attached to object
+	# set internal unit path from runRNMImportTests?
+	
+	testRun <- importNm(conFile = "testdata1notab.ctl", reportFile = "testdata1notab.lst", 
+			path =  file.path(unitTestPath, "testdata/TestRunNoTab"))
+	
+	checkEquals(dataSubset(getProblem(testRun)), c("MDV != 1", "EVID == 0"), " |Subset loaded correctly|")
+	
+	# disable subsetting
+	setDefaultDataSubset(STANDARDSUBSET, FALSE)
+	
+	# TODO: remove use of the global unitTestPath!!
+	
+	
+	testRun <- importNm(conFile = "testdata1notab.ctl", reportFile = "testdata1notab.lst", 
+			path = file.path(unitTestPath, "testdata/TestRunNoTab"))
+	
+	checkTrue(is.null(dataSubset(testRun)),  " |No default data subset attached|")
+	
+	# reset configuration
+	RNMImport:::applySubsetOnLoad(TRUE)
+	checkTrue(RNMImport:::applySubsetOnLoad())
+}
+
+# Tests whether or not the subset configuration functions handle errors as expected.
+
+test.configSubsetsErrorHandling <- function()
+{
+	checkException(setDefaultDataSubset(1:10, TRUE), " |Non-character subset not allowed|")
+	checkException(setDefaultDataSubset("MDV != 1", 1), " |Non-logical toggle not allowed|" )
+	checkException(augmentDefaultDataSubset(1:10)," |Non-character subset not allowed|" )
+}
