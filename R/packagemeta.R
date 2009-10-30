@@ -130,15 +130,62 @@ removeNmPath <- function(pathName)
 		attributes(.RNMImportEnv$dataPath) <- NULL
 }
 
-# TODO: documentation
+
+
+#' Retrieves the global default subset which is assigned to objects upon loading
+#' @return Character vector of the default subset expressions
+#' @author fgochez
+#' @export
 
 defaultDataSubset <- function()
 {
 	return(.RNMImportEnv$subsets$default)
 }
 
+#' Modifies the global default subset for loaded objects, and can toggle if it is applied on loading
+#' @param sub character vector of strings of subset expressions
+#' @param applyOnLoad Logical flag.  Should the subset actually be applied on loading automatically?
+#' @return None
+#' @author fgochez
+#' @export
+
 setDefaultDataSubset <- function(sub, applyOnLoad)
 {
+	assertClass(sub, "character")
+	assertClass(applyOnLoad, "logical")
+	# if it is a vector of length longer than one, take only the first element
+	applyOnLoad <- applyOnLoad[1]
 	.RNMImportEnv$subsets$default <- sub
 	.RNMImportEnv$subsets$applyOnLoad <- applyOnLoad
+}
+
+#' Augments the global default subset by appending the "sub" parameter to the existing subset
+#' @param sub  
+#' @return 
+#' @author fgochez
+#' @export
+
+augmentDefaultDataSubset <- function(sub)
+{
+	assertClass(sub, "character")
+	newSubset <- unique(c(defaultDataSubset(), sub))
+	setDefaultDataSubset(newSubset, applySubsetOnLoad())
+	
+}
+
+#' Retrieves the setting as to whether or not a subset should be attached to an object on loading, 
+#' or can actually be used to toggle the setting
+#' @param applyOnLoad If supplied, used to toggle the setting
+#' @return Setting if argument is not supplied
+#' @author fgochez
+
+applySubsetOnLoad <- function(applyOnLoad)
+{
+	if(missing(applyOnLoad))
+		return( .RNMImportEnv$subsets$applyOnLoad )
+	else
+	{
+		assertClass(applyOnLoad, "logical")
+		.RNMImportEnv$subsets$applyOnLoad <- applyOnLoad[1]
+	}
 }
