@@ -123,6 +123,9 @@ test.removeNmPath <- function()
 test.configSubsets <- function()
 {
 	STANDARDSUBSET <- c("MDV != 1", "EVID == 0", "AMT <= 0")
+	# by default, should attach subsets
+	checkTrue( RNMImport:::applySubsetOnLoad(), msg = " |By default, data subset should be applied|" )
+	
 	# check default is loaded correctly.
 	
 	checkEquals(defaultDataSubset(), STANDARDSUBSET,
