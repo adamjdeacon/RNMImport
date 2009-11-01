@@ -15,6 +15,7 @@ export(addVarDescription, getVarDescription, setVarDescription)
 export(getFileinfo, getControltext, getReporttext)
 export("graphSubset<-", defaultDataSubset, "dataSubset<-")
 export(dataSubset, augmentDefaultDataSubset, setDefaultDataSubset)
+export("augmentDataSubset<-", applyDataSubset)
 
 exportClasses("NMRun", "NMProblem", "NMBasicModel", "NMSimDataGen", "NMSimModel")
 exportMethods(nmData, getThetas, show, getOmegas, getSigmas, addDerivedCategorical, imposeCategoryFormat)
