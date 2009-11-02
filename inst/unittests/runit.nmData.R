@@ -6,8 +6,8 @@ test.nmData.NMBasic <- function()
 {
 	run1 <- importNm("TestData1.ctl", "TestData1.lst", path = file.path(unitTestPath, "testdata/TestRun"))
 	prob <- getProblem(run1)
-	test1 <- nmData(run1, , applySubset = FALSE)
-	checkEquals(test1, nmData(getProblem(run1), applySubset = FALSE), "Extracting from run and problem directly should give same result")
+	test1 <- nmData(run1)
+	checkEquals(test1, nmData(getProblem(run1)), "Extracting from run and problem directly should give same result")
 	test2 <- nmData(run1, dataType = "input")
 	inputColumns <- c("SID", "SEX" ,"AGE" ,"RACE",  "HT",  "SMOK",  "HCTZ","PROP", "CON", "AMT", "WT" ,"TIME", "SECR", "DV", "EVID", "SS", "II" ,"ID", "OCC")
 	outputColumns <- c("ID", "TIME", "IPRED", "IWRES", "CL", "V", "KA", "AGE", "HT", "WT", "SECR", "SEX", "RACE", 
@@ -15,9 +15,9 @@ test.nmData.NMBasic <- function()
 	
 	checkTrue(setequal(names(test2), inputColumns), "Checking that all input data is present")
 
-	test3 <- nmData(run1, dataType = "output", , applySubset = FALSE)
+	test3 <- nmData(run1, dataType = "output")
 	checkTrue(setequal(names(test3), outputColumns), "Checking that all output data is present")
-	test4 <- nmData(prob, returnMode = "DFList", applySubset = FALSE)
+	test4 <- nmData(prob, returnMode = "DFList")
 	checkEquals(names(test4), c("input", "output"), "Check return list names")
 	checkEquals(test2, test4$input)
 	checkEquals(test3, test4$output)
@@ -26,6 +26,30 @@ test.nmData.NMBasic <- function()
 	y <- intersect(inputColumns, outputColumns )
 	checkTrue(setequal(names(test1), c(x, paste(y, ".INPUT", sep = ""))))
 
+	# tests added for subsetting logic:
+	
+	test5 <- nmData( prob, subset = TRUE )
+	checkEquals(test5, nmData(prob, subset = dataSubset(prob)), 
+			msg = " subset = TRUE and subset = dataSubset(prob) are identical")
+	
+	checkEquals(nmData(prob, subset = FALSE), nmData(prob), msg = " subset = FALSE and susbet = NULL are equivalent")
+	
+	TESTSUBSET <- "ID == 1"
+	
+	test6.input <- nmData(prob, dataType = "input", subset = "ID == 1")
+	test6.output <- nmData(prob, dataType = "output", subset = "ID == 1")
+	
+	test6.inoutlist <- nmData(prob, returnMode = "DFList", subset = "ID == 1")
+	
+	checkEquals(test6.input, test6.inoutlist$input, msg = " subset from input extracted correctly into a list" )
+	checkEquals(test6.output, test6.inoutlist$output, msg = " subset from output only extracted correctly into a list" )
+	
+	test6.inoutdf  <- nmData(prob, returnType = "singleDF", subset = "ID == 1")
+	
+	checkEquals( test6.inoutdf, subset(nmData(prob), ID == 1 ))
+	# check that subset is passed to NMRun method correctly
+	
+	checkEquals(nmData(prob, subset = TRUE), nmData(run1, subset = TRUE), " subset is passed to NMRun method correctly")
 }
 
 # test nmData for an object of class "NMSimDataGen" and "NMSimModel"
@@ -34,7 +58,6 @@ test.nmData.NMSim <- function()
 {
 	run1 <- importNm("TestData1SIM.con", "TestData1SIM.lst", path = file.path(unitTestPath, "testdata/TestSimRun"))
 	prob <- getProblem(run1)
-	# dataSubset(run1) <- NULL
 
 	dataSubset(prob) <- NULL
 	inputColumns <- c("SID", "SEX" ,"AGE" ,"RACE",  "HT",  "SMOK",  "HCTZ","PROP", "CON", "AMT", "WT" ,"TIME", "SECR", "DV", "EVID", "SS", "II" ,"ID", "OCC")
@@ -42,7 +65,7 @@ test.nmData.NMSim <- function()
 			"SMOK", "HCTZ", "PROP", "CON", "OCC", "absWRES", "DV", "WRES", "PRED", "RES", "SID") 
 	
 	test1 <- nmData(prob, dataType = "input")
-	checkEquals(nmData(run1, subProblemNum = 2 ), nmData(getProblem(run1), subProblemNum = 2, applySubset = FALSE), 
+	checkEquals(nmData(run1, subProblemNum = 2 ), nmData(getProblem(run1), subProblemNum = 2), 
 			"Extracting from run and problem directly should give same result")
 	test2 <- nmData(prob, dataType = "output")
 	checkTrue(setequal(names(test1), inputColumns), msg = "Checking presence of input data")
@@ -60,10 +83,35 @@ test.nmData.NMSim <- function()
 	checkTrue(setequal(names(test4), c(x, "NSIM", paste(y, ".INPUT", sep = ""))), msg = "correct columns present")
 	checkTrue(any(test4$DV != test4$"DV.INPUT"), msg = "simulated DV not equiavlent to input DV")
 	
+	# extract multiple simulations into a single DF
+	
 	test5 <- nmData(prob, subProblemNum = 1:2)
 	checkEquals(nrow(test5), 2 * 1061, msg = " result has the correct number of rows")
 	checkEquals(test5$NSIM, factor(c(rep(1, 1061), rep(2, 1061)), levels = as.character(1:5), ordered = TRUE))
 	
+	
+	test6 <- nmData( prob, subset = TRUE )
+	checkEquals(test6, nmData(prob, subset = dataSubset(prob)), 
+			msg = " subset = TRUE and subset = dataSubset(prob) are identical")
+	
+	checkEquals(nmData(prob, subset = FALSE), nmData(prob), msg = " subset = FALSE and susbet = NULL are equivalent")
+	
+	
+	# test subsetting
+	
+	TESTSUBSET <- "ID == 1"
+#	
+	test7.input <- nmData(prob, dataType = "input", subset = "ID == 1")
+	test7.output <- nmData(prob, dataType = "output", subset = "ID == 1")
+#	
+	test7.inoutlist <- nmData(prob, returnMode = "DFList", subset = "ID == 1")
+#	
+	checkEquals(test7.input, test7.inoutlist$input, msg = " subset from input extracted correctly into a list" )
+	checkEquals(test7.output, test7.inoutlist$output, msg = " subset from output only extracted correctly into a list" )
+#	
+	test7.inoutdf  <- nmData(prob, returnMode = "singleDF", subset = "ID == 1")
+#	
+	checkEquals( test7.inoutdf, subset(nmData(prob), ID == 1 ))
 }
 
 test.nmDatabyVarType <- function()
