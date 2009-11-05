@@ -51,10 +51,11 @@ NMSimDataGen <- function(controlStatements, path, reportContents = NULL)
 		inData <- data.frame()
 	} # end if(inherits(inData, "try-error"))
 	# TODO: replace this logic since it should never happen once problems are parsed correctly
-	Omega <- if(is.null(controlStatements$Omega)) matrix() else controlStatements$Omega
-	Sigma <- if(is.null(controlStatements$Sigma)) matrix() else controlStatements$Sigma
 	
-	Theta <- if(is.null(controlStatements$Theta)) numeric(0) else controlStatements$Theta[,"Est"]
+	.Omega <- if(is.null(controlStatements$Omega)) matrix() else controlStatements$Omega
+	.Sigma <- if(is.null(controlStatements$Sigma)) matrix() else controlStatements$Sigma
+	
+	.Theta <- if(is.null(controlStatements$Theta)) numeric(0) else controlStatements$Theta[,"Est"]
 	
 	with(controlStatements , 
 	{
@@ -69,7 +70,7 @@ NMSimDataGen <- function(controlStatements, path, reportContents = NULL)
 			new("NMSimDataGen", numSimulations = as.numeric(controlStatements$Sim["nSub"]), 
 					seeds = seeds, inputData = inData, outputData = outTables, controlStatements = 
 							controlStatements, problemStatement = controlStatements$Problem,
-					thetaInitial = Theta, omegaInitial = Omega, sigmaInitial = Sigma,
+					thetaInitial = .Theta, omegaInitial = .Omega, sigmaInitial = .Sigma,
 					additionalVars = as.data.frame(matrix(ncol = 0, nrow = nDataRows)))
 	})
 
