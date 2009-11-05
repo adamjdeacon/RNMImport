@@ -35,7 +35,8 @@ Virtual class \code{"\linkS4class{NMProblem}"}, directly.
   \describe{
   	\item{addDerivedCategorical}{\code{signature(obj = "NMSimDataGen")}: Create user-defined categorical variables}
     \item{imposeCategoryFormat}{\code{signature(obj = "NMSimDataGen")}: Coerces variables to categories}
-    \item{nmData}{\code{signature(object = "NMSimDataGen")}: Retrieves the input/output data, where the output can come from 1 or more subproblems. }
+    \item{nmData}{\code{signature(object = "NMSimDataGen")}: Retrieves the input/output data, where the output can come from 1 or more subproblems. 
+    If TRUE, will cause input to be "stacked" enough times that it matches the size of the output.}
     \item{show}{\code{signature(object = "NMSimDataGen")}: Prints basic data about the problem }
 	 }
 }

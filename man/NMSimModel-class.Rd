@@ -45,7 +45,8 @@ Class \code{"\linkS4class{NMProblem}"}, directly.
     \item{getThetas}{\code{signature(obj = "NMSimModel")}: Retrieves the theta estimates for the simulation number}
     \item{addDerivedCategorical}{\code{signature(obj = "NMSimModel")}: Create user-defined categorical variables}
     \item{imposeCategoryFormat}{\code{signature(obj = "NMSimModel")}: Coerces variables to categories}
-    \item{nmData}{\code{signature(obj = "NMSimModel")}: ... }
+    \item{nmData}{\code{signature(obj = "NMSimModel")}: Extracts NONMEM data.  A parameter stackInput is also available.  
+    	If TRUE, will cause input to be "stacked" enough times that it matches the size of the output.}
     \item{show}{\code{signature(object = "NMSimModel")}: ... }
 	 }
 }
