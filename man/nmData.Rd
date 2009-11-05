@@ -14,7 +14,8 @@ nmData(obj, dataTypes = c("input", "output"), returnMode = c("singleDF", "DFList
   \item{returnMode}{ Which type of data should be returned, must be "input" and/or "output".
   If "singleDF", attempts to return a consolidated data.frame of output. and input data, if "DFList" returns 
   a list with separate input and output data}
-  \item{applySubset}{Currently unused}
+  \item{subset}{Controls the application of a "subset" to the data when it is returned. In general this is used to remove dosing records from the data. If NULL or FALSE, nothing is done. Otherwise, it should be a character vector of subsetting expressions 
+   (such as "MDV = 1", etc.) which will be applied in succession.}
   \item{\dots}{Additional arguments that apply to different classes}
 
 }
