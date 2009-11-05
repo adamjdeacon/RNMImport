@@ -26,11 +26,11 @@
 }
 
 \details{
-	When loading is done via importNm, the default subset may be associated to each constituent problem.
-	If you wish to disable this, use setDefaultSubset(sub, FALSE).
+	When loading is done via \code{importNm}, the default subset may be associated to each constituent problem.
+	If you wish to disable this, use \code{setDefaultSubset(sub, FALSE)}.
 }
 \value{
-  defaultDataSubset will return a character vector of the current subsetting expressions.
+  \code{defaultDataSubset} will return a character vector of the current subsetting expressions.
 }
 
 \author{Mango Solutions}
