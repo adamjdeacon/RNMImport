@@ -5,7 +5,7 @@
 data.frame or a list. 
 }
 \usage{
-nmData(obj, dataTypes = c("input", "output"), returnMode = c("singleDF", "DFList"), applySubset = FALSE,  ...)
+nmData(obj, dataTypes = c("input", "output"), returnMode = c("singleDF", "DFList"), subset = NULL,  ...)
 }
 
 \arguments{
