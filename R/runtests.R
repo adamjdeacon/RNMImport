@@ -9,6 +9,7 @@
 #' @param testScriptPath Path where the scripts are located.  By default, will use the package installation directory
 #' @param runExtern Logical flag.  Should the external tests be run?
 #' @param printTestProtocol Logical flag.  Should HTML reports be produced?
+#' @param cleanup Logical flag. ???
 #' @return The results of running the test suite, as run by RUnit's "runTestSuite".  This will be a list of up to 4 elements
 #' @author Mango Solutions
 #' @keywords debugging
@@ -25,21 +26,25 @@ runRNMImportTests <- function(
 		cleanup = TRUE
 )
 {
+	# preserve stdReport log for resetting later
+	stdReportLog <- logConnection("stdReport")
+	# redirect output to a log.
 	cat("Redirecting stdout to testlog.txt\n")
 	sink("testlog.txt")
 	stopifnot(require("RUnit", quietly = TRUE))
 	results <- list()
 
-	#logDir <- setTestLogs()
+	# logDir <- setTestLogs()
 	# allocated environment for use by tests
 	.innerTestEnv <<- new.env()
 	# the first set of tests depends on the following global path:
+	# TODO: refactor to avoid usage of a globval variable
 	unitTestPath <<- testDataPaths[1]
-	# first, run the unit tests which are 
+	# first, run the unit tests which are internal 
 	testSuite <- defineTestSuite("Internal unit test suite", dirs = testScriptPaths[1],
 			testFileRegexp = "^runit\\..+\\.[rR]$")
 	res <- runTestSuite(testSuite)
-	
+	# output the unit test HTML report created by RUnit if it is requested
 	if(printTestProtocol)
 		printHTMLProtocol(res, fileName = "RNMImport_internalunit.html" )
 	
@@ -61,13 +66,14 @@ runRNMImportTests <- function(
 			return(results)
 		}
 		setNmPath("testpath1", testDataPaths[2])
+		# run the "external unit tests"
 		testSuite <- defineTestSuite("External unit test suite", dirs = testScriptPaths[2], 
 				testFileRegexp = "^runitextern1.+\\.[rR]$")
 		res <- runTestSuite(testSuite)
 		if(printTestProtocol)
 			printHTMLProtocol(res, fileName = "RNMImport_externalunit1.html" )
 		results[["External unit"]] <- res
-		
+		# Run the "system test" suite
 		testSuite <- defineTestSuite("External system test suite", dirs = testScriptPaths[2], 
 				testFileRegexp = "^rsys.+\\.[rR]$")
 		res <- runTestSuite(testSuite)
@@ -83,9 +89,11 @@ runRNMImportTests <- function(
 		}
 	}
 	if(cleanup) 
-	rm(.innerTestEnv, envir = .GlobalEnv)
+		rm(.innerTestEnv, envir = .GlobalEnv)
 	# closeTestLogs()
 	sink(NULL)
+	# restore original stdReport log
+	setLogConnection("stdReport", stdReportLog)
 	results
 
 }
