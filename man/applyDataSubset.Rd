@@ -26,12 +26,19 @@
 }
 
 \value{
-	applyDataSubset will return the data.frame obj with the (valid) subsetting expressions applied.  dataSubset the data subset associated
-	with an object.
+	\code{applyDataSubset} will return the data.frame obj with the (valid) subsetting expressions applied.  
+	\code{dataSubset} the data subset associated with an object.
 }
 
 \examples{
+	\dontrun{
+		x <- importNm("TestData1.ctl", "TestData1.lst", path  = system.file(package = "RNMImport", "unittests/testdata/TestRun"))
+		prob <- getProblem(x)
+		print(dataSubset(prob))
+		z <- nmData(prob, subset = c(dataSubset(prob), "ID < 20"))
+		print(summary(z))
 	
+	}
 }
 \keyword{ manip }
 
