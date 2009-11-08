@@ -7,11 +7,14 @@
 }
 
 \usage{
-runRNMImportTests(testDataPaths = c(system.file(package = "RNMImport", 
-    "unittests"), "\\\\Mango-data1\\mangowork\\MangoProjects\\RNONMEM2\\data"), 
-    testScriptPaths = c(system.file(package = "RNMImport", "unittests"), 
-        "ExternalTests/RNMImport"), runExtern = FALSE, printTestProtocol = TRUE, 
-    cleanup = TRUE) 
+runRNMImportTests(
+		testDataPaths = c(system.file(package="RNMImport", "unittests"), 
+				"\\\\Mango-data1\\mangowork\\MangoProjects\\RNONMEM2\\data"), 
+		testScriptPaths = c(system.file(package="RNMImport", "unittests"), "testing/externaltests"),
+		runExtern = FALSE,
+		printTestProtocol = TRUE,
+		cleanup = TRUE
+)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -31,7 +34,9 @@ runRNMImportTests(testDataPaths = c(system.file(package = "RNMImport",
 \author{Mango Solutions}
 
 \examples{
+	\dontrun{
 	x <- runRNMImportTests(runExtern = FALSE, printTestProtocol = FALSE)
 	summary(x[[1]])
+	}
 }
 \keyword{ debugging }
