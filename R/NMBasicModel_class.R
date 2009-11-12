@@ -27,7 +27,9 @@ validity.NMBasicModel <- function(object)
 
 	# Check for list due to the possibility of output tables with FIRSTONLY option
 	test1 <- inherits(object@outputData, "data.frame") | inherits(object@outputData, "list") 
-	test2 <- all(diag(object@omegaFinal[,, "estimates"]) >= 0)
+	# extract omega estimates.  as.matrix is necessary in case omega matrix is 1x1
+	omegaEstimates <- as.matrix(object@omegaFinal[,, "estimates"])
+	test2 <- all(diag(omegaEstimates) >= 0)
 	test3 <- nrow(object@additionalVars) == 0 || (nrow(object@additionalVars) %% nrow(object@inputData)) == 0
 	test4 <- ncol(object@thetaInitial) == ncol(object@thetaFinal)
 
@@ -102,6 +104,7 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 	# TODO: The following is too complex, simplify in future releases
 	with(reportContents,
 			{
+
 				# check for the covariance/correlation matrices
 				covMatrix <- if(!is.null(reportContents$CovarianceMatrix)) CovarianceMatrix else matrix()
 				corMatrix <- if(!is.null(reportContents$CorrelationMatrix)) CorrelationMatrix else matrix()
