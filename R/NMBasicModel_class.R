@@ -19,6 +19,8 @@ setClass("NMProblem", representation("VIRTUAL",
 				problemStatement = "character",
 				controlStatements = "list", 
 				reportStatements = "list", 
+				nmVersionMajor = "character",
+				nmVersionMinor = "numeric",
 				inputData = "data.frame", outputData = "ANY", additionalVars = "data.frame"),
 		validity = validity.NMProblem)
 
@@ -73,10 +75,12 @@ setClass(
 #' @param controlStatements [list] A list of control file statements for this particular problem  
 #' @param path [C,1] path parameter, passed directly to importModelData and importModelOutputTables
 #' @param lstContents [list] contents of an lst file that apply to this problem
+#' @param versionInfo [C, +] numeric vector that holds
 #' @return An NMBasicModel object holding the problem information
 #' @author fgochez
 
-NMBasicModel <- function(controlStatements, path, reportContents, dropInputColumns = FALSE)
+NMBasicModel <- function(controlStatements, path, reportContents, dropInputColumns = FALSE, 
+		versionInfo = c("major" = "VI", "minor" = 0))
 {
 	inData <- try(importModelData(dataStatement = controlStatements$Data,inputStatement = controlStatements$Input, path = path,
 					dropCols = dropInputColumns))
@@ -157,12 +161,12 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 				else
 				{
 					thetaFinal <- matrix(FinalEstimates$THETA, nrow = 1, dimnames = list( "estimates" , NULL ))
-					
-					
+										
 					omegaFinal <- array(FinalEstimates$OMEGA, dim = c(omegaDim, 1),
 						dimnames = c(dimnames(omegaInitial), list("estimates")))
 					
 					sigmaDim <- dim(FinalEstimates$SIGMA)					
+					# if missing sigmas, fill in an "empty" sigma array anyway
 					if(is.null(sigmaDim))
 						sigmaFinal <- array(dim = c(0,0,1), dimnames = list(NULL, NULL, "estimates"))
 					else
@@ -187,7 +191,10 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 						outputData = outTables, 
 						controlStatements = controlStatements,
 						reportStatements = reportContents,
-						minInfo = unlist(attr(reportContents$Iter, "min.info")))
+						minInfo = unlist(attr(reportContents$Iter, "min.info")),
+						nmVersionMajor = versionInfo["major"],
+						nmVersionMinor = as.numeric(versionInfo["minor"])) 
+						
 			} ) # end with(reportContents)
 	
 }

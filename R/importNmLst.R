@@ -191,7 +191,7 @@ importNmLstSimModel <- function(contents, numSub = NA)
 	cont <- cleanReportContents(content)
 	
 	# Capture the version info - this should not be repeated for each problem
-	# result$VersionInfo <- nmVersion( cont )
+	result$VersionInfo <- nmVersion( cont )
 	allProbContents <- controlStatements$problemContents
 	partitionedContent <- .reportPartitionedByProblems(content, length(allProbContents))
 	

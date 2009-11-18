@@ -38,7 +38,8 @@ setClass(
 #' @return An NMSimDataGen object
 #' @author fgochez
 
-NMSimDataGen <- function(controlStatements, path, reportContents = NULL)
+NMSimDataGen <- function(controlStatements, path, reportContents = NULL, 
+		versionInfo = c("major" = "VI", "minor" = 0))
 {
 	inData <- try(importModelData(dataStatement = controlStatements$Data,
 					inputStatement = controlStatements$Input, path = path))
@@ -67,7 +68,8 @@ NMSimDataGen <- function(controlStatements, path, reportContents = NULL)
 				
 				# now extract initial value estimates of parameters:
 				
-			new("NMSimDataGen", numSimulations = as.numeric(controlStatements$Sim["nSub"]), 
+			new("NMSimDataGen", nmVersionMajor = versionInfo["major"],
+					nmVersionMinor = as.numeric(versionInfo["minor"]), numSimulations = as.numeric(controlStatements$Sim["nSub"]), 
 					seeds = seeds, inputData = inData, outputData = outTables, controlStatements = 
 							controlStatements, problemStatement = controlStatements$Problem,
 					thetaInitial = .Theta, omegaInitial = .Omega, sigmaInitial = .Sigma,

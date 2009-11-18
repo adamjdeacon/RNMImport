@@ -1,12 +1,16 @@
 # $LastChangedDate$
 # $Rev$
 
+# TODO: implement or raise tickets about invCorMatrix parameters?
+
 #' Retrieved the variance-covariance matrix of the estimators and optionally
 #'  the correlation and inverse correlation matrices of the selected NONMEM run
 #' @title Returns variance-covariance matrix, if available, from a NONMEM object 
 #' @param obj An object of class NMRun or NMBasicModel
-#' @param corMatrix TRUE or FALSE, Not implemented yet
-#' @param invCorMatrix TRUE or FALSE, Not implemented yet}
+#' @param corMatrix TRUE or FALSE.  If TRUE, returns correlation matrix as well
+#' @param invCorMatrix TRUE or FALSE, Not implemented yet
+#' @param pdMatrix TRUE or FALSE.  If TRUE, will check that a positive-definite covariance matrix is available.  
+#' If it is not, it will create one based on sample variances and covariances of estimates 
 #' @param ... 
 #' @return A matrix if just the covariance matrix is required, a list of matrices otherwise
 #' @author Mango Solutions
@@ -14,19 +18,29 @@
 
 #  Author: F Gochez
 
-getEstimateCov <- function(obj, corMatrix = FALSE, invCorMatrix = FALSE, ...)
+getEstimateCov <- function(obj, corMatrix = FALSE, invCorMatrix = FALSE, pdMatrix = FALSE, ...)
 {
 	RNMImportStop("getEstimateCov not implemented for this class yet\n", match.call())
 }
 
 setGeneric("getEstimateCov")
 
-getEstimateCov.NMRun <- function(obj, corMatrix = FALSE, invCorMatrix = FALSE, problemNum = 1)	getEstimateCov(getProblem(obj, problemNum), corMatrix = corMatrix)
+getEstimateCov.NMRun <- function(obj, corMatrix = FALSE, invCorMatrix = FALSE, pdMatrix = FALSE,  
+		problemNum = 1)	
+{
+	getEstimateCov(getProblem(obj, problemNum), corMatrix = corMatrix)
+}
 
 setMethod("getEstimateCov", signature(obj = "NMRun"), getEstimateCov.NMRun)
 
-getEstimateCov.NMBasicModel <- function(obj, corMatrix = FALSE, invCorMatrix = FALSE)
+getEstimateCov.NMBasicModel <- function(obj, corMatrix = FALSE, invCorMatrix = FALSE, pdMatrix = FALSE)
 {
+	parameterCovMatrix <- obj@parameterCovMatrix
+	if(all(dim(parameterCovMatrix)) == 0)
+	{
+		logMessage("No covariance matrix available, will compute a new one\n", "stdReport")
+		
+	}
 	if(!corMatrix | all(dim(obj@parameterCorMatrix) == 0)) obj@parameterCovMatrix
 	else list("covariance" = obj@parameterCovMatrix, "correlation" = obj@parameterCorMatrix)
 	
@@ -74,7 +88,6 @@ getObjective.NMBasicModel <- function(obj, addMinInfo=TRUE, ...)
 
 setMethod("getObjective", signature(obj="NMBasicModel"), getObjective.NMBasicModel)
 
-# check that this works
 
 getObjective.NMSimModel <- function(obj, addMinInfo = TRUE, subProblems = 1,...)
 {	
@@ -102,12 +115,13 @@ getReporttext <- function(run) 	run@reportText
 getControltext <- function(run) run@controlText
 
 
-#' 
-#' @param obj 
-#' @param ... 
-#' @title
-#' @return 
+#' Extracts the list of "parsed control statements" associated with a problem or run 
+#' @param obj NMRun or NMProblem object
+#' @param ... Various arguments specific to methods
+#' @title Extract list of parsed control statement
+#' @return A list with the parsed control statements (e.g. an actual matrix for the Thetas, etc.,
 #' @author fgochez
+#' @export
 #' @keywords
 
 getControlStatements <- function(obj, ...)
@@ -129,4 +143,29 @@ getControlStatements.NMProblem <- function(obj, ...)
 	obj@controlStatements
 }
 
+
 setMethod("getControlStatements", signature(obj = "NMProblem"), getControlStatements.NMProblem)
+
+#' Gets the version of NONMEM used to create compile obj
+#' @param obj NMProblem or NMRun
+#' @return A named character vector with entries "major" and "minor", corresponding to the major and minor NONMEM 
+#' version
+#' @author fgochez
+#' @export
+
+getNmVersion <- function(obj)
+{
+	RNMImportStop("This function is not implemented for objects of this class")
+}
+
+setGeneric("getNmVersion")
+
+getNmVersion.NMRunProb <- function(obj)
+{
+	versionInfo <- c(obj@nmVersionMajor, as.character(obj@nmVersionMinor))
+	names(versionInfo) <- c("major", "minor")
+	versionInfo
+}
+
+setMethod("getNmVersion", signature(obj = "NMRun"), getNmVersion.NMRunProb)
+setMethod("getNmVersion", signature(obj = "NMProblem"), getNmVersion.NMRunProb)

@@ -75,6 +75,13 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 	probResults <- reportContents$problemResults
 	problems <- controlContents$problemContents
 	numProblems <- length(problems)
+	
+	# capture the version
+	nmVersionMajor <- reportContents$VersionInfo[1]
+	nmVersionMinor <- as.numeric(reportContents$VersionInfo[2])
+	versionInfo <- c(nmVersionMajor,  as.character(nmVersionMinor))
+	names(versionInfo) <- c("major", "minor")
+	
 	modelList <- vector(mode = "list", length = numProblems)
 		
 	# iterate through the problems
@@ -88,18 +95,18 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 			# there is a simulation statement, so check if it is a "simulation only" run, or a simulation+model fitting run
 			isSimOnly <- controlStatements$Sim["simOnly"] == "TRUE"
 			if(isSimOnly)
-				modelList[[i]] <- NMSimDataGen(controlStatements, path, NULL)
+				modelList[[i]] <- NMSimDataGen(controlStatements, path, NULL, versionInfo = versionInfo)
 			else # this is a simulation+fitting problem
-				modelList[[i]] <- NMSimModel(controlStatements, path, reportStatements)
+				modelList[[i]] <- NMSimModel(controlStatements, path, reportStatements, versionInfo = versionInfo)
 		} # end !is.null(controlStatements$Sim)
 		else
 		{			 			
 			modelList[[i]] <- NMBasicModel(controlStatements, path, reportStatements, 
-					dropInputColumns = dropInputColumns)
+					dropInputColumns = dropInputColumns, versionInfo = versionInfo)
 		}
 		# set the subset for graphing - note that this should probably be dropped in the future
 		# and replaced with the data subset only.
-		# TODO: consider logging this
+		
 		if(applySubsetOnLoad()) {
 			logMessage("Attaching the default subset on loading", logName = "detailedReport")
 			graphSubset(modelList[[i]]) <- defaultDataSubset()
@@ -116,6 +123,8 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 			controlComments = if(is.null(controlContents$Comments)) character(0) else controlContents$Comments, 
 			reportFileInfo = fileInfo[2,],
 			controlFileInfo= fileInfo[1,], 
+			nmVersionMajor = nmVersionMajor,
+			nmVersionMinor = nmVersionMinor,
 			numProblems = numProblems, problems = modelList,
 			reportText = reportContents$Raw)
 }

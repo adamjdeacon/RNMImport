@@ -48,6 +48,8 @@ setClass(
 	representation(
 			controlText = "character", 
 			reportText = "character",
+			nmVersionMajor = "character",
+			nmVersionMinor = "numeric",
 			controlComments = "character",
 			controlFileInfo = "data.frame", 
 			reportFileInfo = "data.frame",
