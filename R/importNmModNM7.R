@@ -1,7 +1,7 @@
 #
-# $LastChangedDate: $
-# $LastChangedBy: $
-# $Rev: $
+# $LastChangedDate$
+# $LastChangedBy$
+# $Rev$
 #
 # Author: fgochez
 ###############################################################################
