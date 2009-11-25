@@ -1,17 +1,27 @@
+# $LastChangeDate: $
+# $LastChangedVersion: $
+# $Rev$
+
+
+#### FUNCTIONS in this file:
+## importNmMod
+## .importNmModSingleProblem
+## .mergeMissing
 
 #' Parses a NONMEM control file, and returns its contents as a list of parsed elements.  These elements
 #' will correspond to the actual control statements, e.g. $PK, $THETA, $PROBLEM, etc.  Some of the elements
 #' are kept as pure text.
-#' @title Parses a NONMEM control file
+#' @title Parse a NONMEM control file
 #' @param fileName Name of the control file
 #' @param path (optional) path to the control file, can be a stored path enclosed in round brackets
+#' @param version of NONMEM which the control file requires 
 #' @title Import a control file
 #' @return A list describing the control file contents
 #' @author Francisco Gochez <fgochez@mango-solutions.com>
 #' @keywords IO
 
 importNmMod <- function(
-		fileName = NULL, path = NULL)
+		fileName = NULL, path = NULL, version = "VI")
 {	
 	# log messages
 	logMessage(logName = "stdReport", paste("Importing file", fileName, "\n"))
@@ -54,15 +64,21 @@ importNmMod <- function(
 
 	problemContents <- vector(mode = "list", length = numProblems)
 	
+	# store the required importing function
+	if(version != "VII")
+		.importSingleProb  <- .importNmModSingleProblem
+	else
+		.importSingleProb <- .importNmModSingleProblemNM7
 	# first problem is dealt with normally, but additional ones have to be dealt with differently
 	# TODO: The logic for handling the additional problems probably needs to be dealt with elsewhere.
 	# For example, a simulation that follows a normal problem might need access to the THETAs from the previous
 	# estimation (which are found in the report file)
-	problemContents[[1]] <- .importNmModSingleProblem(problemTexts[[1]], fileName)
+	
+	problemContents[[1]] <- .importSingleProb(problemTexts[[1]], fileName)
 	
 	for(i in seq_along(problemTexts[-1]) + 1)
 	{
-		contents <- .importNmModSingleProblem(problemTexts[[i]], fileName)
+		contents <- .importSingleProb(problemTexts[[i]], fileName)
 		# problemContents[[i]] <- .mergeMissing(contents, problemContents[[i-1]])
 		problemContents[[i]] <- contents
 		 
@@ -72,13 +88,14 @@ importNmMod <- function(
 	outList 	
 }
 
-#' 
-#' @name
-#' @title
-#' @param contents 
-#' @param fileName 
-#' @return 
+#' Imports a single NONMEM problem into a list structure
+#' @name .importNmModSingleProblem
+#' @title Import Single NONMEM problem
+#' @param contents Text of the contents of a SINGLE problem statement
+#' @param fileName Name of the control file from which the problem originates
+#' @return named list with the various sections split up
 #' @author fgochez
+#' @export
 #' @keywords
 
 .importNmModSingleProblem <- function(contents, fileName)
