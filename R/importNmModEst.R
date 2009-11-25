@@ -15,5 +15,5 @@
 
 .importNmModEst <- function(txt )
 {
-	section(txt, "EST", oneline = TRUE, as.list = TRUE)
+	section(txt, "EST", oneline = FALSE, stripout = TRUE, glue = TRUE)
 }
