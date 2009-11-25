@@ -49,6 +49,7 @@
 	prob$Data <- if( "DAT" %in% titles ) .importNmModData( poppedTxt, fileName )
 	prob$Sim <- if("SIM" %in% titles ) .importNmModSim( poppedTxt )
 	
+	
 	# From now on, simply extract raw text for the other sections
 	
 	### extract the PK model                                                      
@@ -69,7 +70,7 @@
 	
 	### extract the EST statements                                                
 	
-	prob$Estimates <- .importNmModEst(poppedTxt)
+	if("EST" %in% titles) prob$Estimates <- .importNmModEst(poppedTxt)
 	
 	### extract the COV statements                                                
 	prob$Cov <- section( poppedTxt, "COV", "", glue = TRUE,  
