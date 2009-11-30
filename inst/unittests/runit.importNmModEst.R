@@ -20,11 +20,7 @@ test.importNmModEst <- function()
 	"$EST METHOD=COND INTERACTION MAXEVAL=9999 NSIG=3 SIGL=10 PRINT=5 NOABORT NOPRIOR=1",
 	"FILE=wexample7.EXT" )
 
-	estResult <- RNMImport:::.importNmModEst(estText)
-	
-	# check that 5 seperate lines of EST are extracted
-	
-	checkEquals(length(estResult), 5, " correct number of $EST statements obtained" )
+	estResult1 <- RNMImport:::.importNmModEst(estText)
 	
 	estTextSingleLines <- c( 
 		"METHOD=ITS INTERACTION FILE=wexample7.EXT   NITER=100 PRINT=5 NOABORT SIGL=8 CTYPE=3 CITER=10 NOPRIOR=1 CALPHA=0.05 NSIG=2",
@@ -33,8 +29,15 @@ test.importNmModEst <- function()
 		"METHOD=BAYES INTERACTION FILE=wexample7.txt NBURN=500 NITER=500 PRINT=100 CTYPE=3 CITER=10 CALPHA=0.05 NOPRIOR=0",
 		"METHOD=COND INTERACTION MAXEVAL=9999 NSIG=3 SIGL=10 PRINT=5 NOABORT NOPRIOR=1 FILE=wexample7.EXT"
 		)
+	estMatrix1 <- cbind("method" = c("ITS", "SAEM", "IMP", "BAYES", "COND"), "file" = c("wexample7.EXT","","","wexample7.txt", "wexample7.EXT"),
+			remainingText = c(" INTERACTION NITER=100 PRINT=5 NOABORT SIGL=8 CTYPE=3 CITER=10 NOPRIOR=1 CALPHA=0.05 NSIG=2",
+					" INTERACTION NBURN=200 NITER=300 SIGL=8 ISAMPLE=2 PRINT=10 SEED=1556678 CTYPE=3 CITER=10 CALPHA=0.05 NOPRIOR=1 ISAMPLE=1 ISAMPLE_M1=1 ISAMPLE_M2=1 ISAMPLE_M3=1",
+					" INTERACTION EONLY=1 NITER=2 ISAMPLE=300 PRINT=1 SIGL=10 NOPRIOR=1",
+					" INTERACTION NBURN=500 NITER=500 PRINT=100 CTYPE=3 CITER=10 CALPHA=0.05 NOPRIOR=0",
+					" INTERACTION MAXEVAL=9999 NSIG=3 SIGL=10 PRINT=5 NOABORT NOPRIOR=1 "
+					))
 	# check that the EST statement is parsed into multiple lines of text
-	target <- unlist(estResult)
-	checkEquals( target, estTextSingleLines, msg = " EST statement parsed into multiple lines of text" )
+	
+	checkEquals( estResult1, estMatrix1, msg = " EST statement parsed into matrix correctly" )
 }
 
