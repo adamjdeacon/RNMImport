@@ -1,4 +1,6 @@
-
+# $LastChangeDate: $
+# $LastChangedBy$
+# $Rev$
 # 
 # Author: fgochez
 # Tests importNmMod
@@ -77,7 +79,7 @@ test.importNmModNM7 <- function( )
 				)
 	checkEquals(prob1$Estimates, 
 			estMatrix1, " | $Est statement parsed correctly" )
-	
+	# PRIOR with NWPRI should cause exception (issue 1811)
 	checkException( importNmMod("wexample8.ctl", version = "VII", path = testDir), msg = " |Presence of $PRIOR NWPRI raises exception" )
 	
 }
