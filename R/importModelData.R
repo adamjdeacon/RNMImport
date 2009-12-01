@@ -32,8 +32,18 @@ importModelData <- function(
 	accept <- dataStatement[,"ACCEPT"]
 	translate <- dataStatement[,"TRANSLATE"]
 	records <- dataStatement[,"RECORDS"]
-	# Call readNmData, which is the workhorse function that actuall reads the table
-	myData <- readNmData(file = fileName, ignore = ignore, accept = accept, 
+	
+	# split out the ignore statement, as individuals tokens (or chunks of code) are seperated by ";"
+	ignoreTokens <- unlist(strsplit(ignore, split = ";"))
+	# replace "NONE" with "#"
+	ignoreTokens <- ifelse(ignoreTokens == "NONE", "#", ignoreTokens)
+	
+	ignoreCodes <- ignoreTokens[which(nchar(ignoreTokens) > 1)]
+	ignoreChars <- ignoreTokens[which(nchar(ignoreTokens) == 1)]
+	
+	# Call readNmData, which is the workhorse function that actually reads the table
+
+	myData <- readNmData(file = fileName, ignore = ignoreChars, accept = accept, 
 			translate = translate, records = records)
 		
 	# Deal with the case of additional columns in the dataset
@@ -62,7 +72,8 @@ importModelData <- function(
 	if(nDiff < 0)
 		cNames <- cNames[1:ncol(myData)]
 	dimnames(myData) <- list(dimnames(myData)[[1]], cNames)
-	
+	for(ignoreCode in ignoreCodes)
+		.readNmData.nmSubset(data = myData, nmCode = ignoreCode, method = "ignore")
 	### Check numeric and missing values
 	myData <- .importDataNumeric(myData, missToZero = FALSE)
 	
