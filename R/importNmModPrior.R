@@ -1,6 +1,7 @@
-# TODO: Add comment
-# 
-# Author: fgochez
+###################################################################
+# $Rev$
+# $LastChangedDate$
+# $LastChangedBy: $
 ###############################################################################
 
 #' Parses the $PRIOR statement of NONMEM 7 control files.  The parsed statement is turned into a named vector
@@ -31,17 +32,16 @@
 	
 	# extract the individual elements of the form NTHETA=X, NETA=Y, etc.
 	
-	nTheta <- equalExpressionPop( priorText, "NTHETA", shortcut = TRUE, inPlace = FALSE)$op.out
-	nEta <- equalExpressionPop(priorText, "NETA", shortcut = TRUE, inPlace = FALSE)$op.out
+	nTheta <- as.numeric(equalExpressionPop( priorText, "NTHETA", shortcut = TRUE, inPlace = FALSE)$op.out)
+	nEta <- as.numeric(equalExpressionPop(priorText, "NETA", shortcut = TRUE, inPlace = FALSE)$op.out)
 	
-	nThp <- equalExpressionPop(priorText, "NTHP", shortcut = TRUE, inPlace = FALSE)$op.out
-	nEtp <- equalExpressionPop(priorText, "NETP", shortcut = TRUE, inPlace = FALSE)$op.out
-	npExp <- equalExpressionPop(priorText, "NPEXP", shortcut = TRUE, inPlace = FALSE)$op.out
+	nThp <- as.numeric(equalExpressionPop(priorText, "NTHP", shortcut = TRUE, inPlace = FALSE)$op.out)
+	nEtp <- as.numeric(equalExpressionPop(priorText, "NETP", shortcut = TRUE, inPlace = FALSE)$op.out)
+	npExp <- as.numeric(equalExpressionPop(priorText, "NPEXP", shortcut = TRUE, inPlace = FALSE)$op.out)
 	
 	# res <- as.numeric(c( nTheta = nTheta, nEta = nEta, nThp = nThp, npExp = npExp, nEtp = nEtp ))
-	res <- as.numeric(c( nTheta = nTheta, nEta = nEta, nThp = nThp, npExp = npExp, nEtp = nEtp ))
-	names(res) <- c("nTheta", "nEta", "nThp", "npExp", "nEtp")
-
+	res <- c( nTheta = nTheta, nEta = nEta, nThp = nThp, npExp = npExp, nEtp = nEtp )
+	
 	attr(res, "NWPRI") <- nWpri
 	res
 	
