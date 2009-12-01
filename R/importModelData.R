@@ -40,6 +40,7 @@ importModelData <- function(
 	
 	ignoreCodes <- ignoreTokens[which(nchar(ignoreTokens) > 1)]
 	ignoreChars <- ignoreTokens[which(nchar(ignoreTokens) == 1)]
+	if(length(ignoreChars) == 0) ignoreChars <- ""
 	
 	# Call readNmData, which is the workhorse function that actually reads the table
 
