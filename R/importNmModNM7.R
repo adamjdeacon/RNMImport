@@ -17,23 +17,21 @@
 	# find the existent sections in the current problem
 	titles <- sectionTitles(poppedTxt)	
 	
-	if("PRIOR" %in% titles)
-	{
-		RNMImportStop("At the moment, parsing of PRIORS is not handled\n", match.call())
-		
+	if("PRI" %in% titles)
+	{	
 		logMessage(log = "lowLevelParse", "$PRIOR found \n")
 		prob$Prior <- .importNmModPrior( contents )
+		if(attr(prob$Prior, "NWPRI") == TRUE)
+			RNMImportStop("$PRIOR NWPRI statement detected.  Importing of this is not supported, so will halt.\n", match.call())
 		
 		# handle case with priors here, else ignore
 	}
-	else
-	{
+	
 	# deal with parameters
 	
-		prob$Theta <- if( "THE" %in% titles | "THT" %in% titles ) .importNmModTheta( contents )
-		prob$Omega <- if("OME" %in% titles ) .importNmModOmega( contents, component = "OMEGA")
-		prob$Sigma <- if( "SIG" %in% titles ) .importNmModOmega( contents, component = "SIGMA" )
-	}
+	prob$Theta <- if( "THE" %in% titles | "THT" %in% titles ) .importNmModTheta( contents )
+	prob$Omega <- if("OME" %in% titles ) .importNmModOmega( contents, component = "OMEGA")
+	prob$Sigma <- if( "SIG" %in% titles ) .importNmModOmega( contents, component = "SIGMA" )
 	# extract any raw FORTRAN code
 	prob$Script <- fortranPop(poppedTxt, inPlace = TRUE)
 	
