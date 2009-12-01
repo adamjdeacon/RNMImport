@@ -21,7 +21,8 @@
 readNmData <- function(
 		file, ignore = NULL, accept = NULL, translate = NULL,   
 		records = NULL, null = NA, sep = NULL
-){
+)
+{
 	
 	if( is.character(ignore) && ignore == "" ) ignore <- NULL
 	if( is.character(accept) && accept == "" ) accept <- NULL
@@ -65,10 +66,14 @@ readNmData <- function(
 	colHeaders <- NULL
 	
 	### Deal with "ignore" string          
-	if(length(ignore) == 1 && nchar(ignore) == 1) {    
-		rx <- sprintf( "^[[:space:]]*%s", if( ignore == "@" ) "[[:alpha:]@]" else ignore )
-		igRows <- grep( rx, allScan ) 
-	}                      
+	if(any(nchar(ignore) > 1)) RNMImportStop("readNmData cannot handle IGNORE tokens with more than one character", match.call())
+		 
+	ignoreMod <- replace(ignore, ignore == "@", "[[:alpha:]@]")
+	if(length(ignoreMod > 0)) {
+		ignoreMod <- sprintf("^[[:space:]]*%s", ignoreMod)
+		rx <- paste(ignoreMod, collapse = "|")
+		igRows <- c(igRows, grep( rx, allScan )) 
+	}
 	### Need to work out which rows we want to omit here
 	skipRows <- unique(c(igRows, headRows, tabRows, theHeadRow))
 	dataCall <- list( na.strings = ".", header = FALSE, sep = sep, comment.char = "")
@@ -89,20 +94,30 @@ readNmData <- function(
 	try( unlink( tmpFile ), silent = TRUE )     
 	
 	### apply the header as the names of the data
-	if(length(theHeadRow)) {
+	if(length(theHeadRow) != 0 && theHeadRow != 0) {
+
 		headLine <- allScan[theHeadRow]
-		if(length(ignore) == 1 && nchar(ignore) == 1 ){
-			rx <- sprintf( "^[[:space:]]*%s", if( ignore == "@" ) "[[:alpha:]@]" else ignore )
-			headLine <- gsub( rx, "", headLine)
+		ignoreMod <- replace(ignore, ignore == "@", "[[:alpha:]@]")
+		if(length(ignoreMod > 0)) {
+			ignoreMod <- sprintf("^[[:space:]]*%s", ignoreMod)
+			rx <- paste(ignoreMod, collapse = "|")
+			if(length(grep(headLine, pattern = rx)) > 0)
+				headLine <- ""
+			
 		}
+		
 		colHeaders <- .readValues( headLine, sep = sep, what = "character" )
-		if(length(colHeaders) <= length(myData)){                                
-			names(myData)[1:length(colHeaders)] <- colHeaders
+		if(length(colHeaders) <= length(myData))  {
+			
+#		 	browser()                             
+			names(myData)[seq_along(colHeaders)] <- colHeaders
+			
 		}
 	}
-	
+			
 	### deal with the list ignore declaration
-	.readNmData.nmSubset( ignore, myData, method = "ignore")
+	# TODO: remove from here
+	# .readNmData.nmSubset( ignore, myData, method = "ignore")
 	
 	### deal with the list accept declaration
 	.readNmData.nmSubset( accept, myData, method = "accept")
@@ -115,7 +130,6 @@ readNmData <- function(
 	.readNmData.nmRecords( records, myData)
 	
 	return(myData)
-	
 }
 
 #' convert lists usch as IGNORE or ACCEPT from a control file (see ?$DATA) into an R subset
