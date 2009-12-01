@@ -4,6 +4,7 @@
 \alias{nmDatabyVarType,NMProblem-method}
 \alias{addedData,NMProblem-method}
 \alias{getControlStatements,NMProblem-method}
+\alias{getNmVersion,NMProblem-method}
 
 \title{Class "NMProblem" }
 \description{This is an abstract class that holds the common features of all 3 NONMEM problem types 
@@ -28,6 +29,7 @@
 	 \code{addDerivedCategorical} into a data.frame}
 	 \item{getControlStatements}{\code{signature(obj = "NMProblem")}: Extract an object with parsed statements control file
 		corresponding to this problem}
+	\item{getNmVersion}{\code{signature(obj = "NMProblem")}: Extract information about NONMEM version used for compiling problem}
 	}
 }
 

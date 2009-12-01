@@ -14,6 +14,7 @@
 \alias{addDerivedCategorical,NMRun-method}
 \alias{imposeCategoryFormat,NMRun-method}
 \alias{getControlStatements,NMRun-method}
+\alias{getNmVersion,NMRun-method}
 
 \title{NONMEM run container class}
 \description{This is the basic class for handling a standard NONMEM run.  In essence, it holds
@@ -52,6 +53,7 @@ imports a NONMEM run on the basis of its control file.
 	\item{getObjective}{\code{signature(obj = "NMRun")} }
 	\item{getControlStatements}{\code{signature(obj = "NMRun")}: Extract an object with parsed statements control file
 	corresponding to a particular problem}
+	\item{getNmVersion}{\code{signature(obj = "NMRun")}: Extract information about NONMEM version used for compiling problem}
 	}
 }
 
