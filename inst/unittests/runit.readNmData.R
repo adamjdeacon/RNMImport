@@ -13,8 +13,11 @@ test.readNmData <- function()
 	checkEquals(dim(x.2), c(9, 3))
 	checkEquals(names(x.2), c("AMT", "TIME", "DV"))
 	checkEquals(x.2$AMT, x[ -c(8, 11),1])
+	# readNmData will no longer accept "code" in ignore statements
+	# x.3 <- readNmData(file.path(testDir, "data3"), 
+	# 		ignore = "(V2.EQ.12)")
 	
-	x.3 <- readNmData(file.path(testDir, "data3"), 
-			ignore = "(V2.EQ.12)")
+	x.3 <-  readNmData(file.path(testDir, "data3"))
+	RNMImport:::.readNmData.nmSubset(x.3, nmCode = "(V2.EQ.12)", method = "ignore" )
 	checkEquals(x[-10,], x.3 )
 }
