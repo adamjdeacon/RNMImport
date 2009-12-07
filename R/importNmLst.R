@@ -109,14 +109,8 @@ importNmLstSimModel <- function(contents, numSub = NA)
 
 .importNmLstBasicProb <- function(contents)
 {
-	# contents <- cleanReportContents(contents)
-	outList <- list() 
-	# NOTE: version info is NOT repeated for each problem - thus one must retrieve
-	# this information once for the report and store it.  This should also be moved 
 
-	# outList$VersionInfo  <- nmVersion( contents ) 
-	
-	# extract the number of records and individuals in the data
+	outList <- list() 
 	outList$nRecords     <- colonPop( contents, "TOT\\. NO\\. OF OBS RECS"   , inPlace = FALSE, numeric = TRUE )$op.out
 	outList$nIndividuals <- colonPop( contents, "TOT\\. NO\\. OF INDIVIDUALS", inPlace = FALSE, numeric = TRUE )$op.out
 	
@@ -142,24 +136,24 @@ importNmLstSimModel <- function(contents, numSub = NA)
 	
 }
 
-#' 
+#' Takes the content of a report file and splits into a list of problems
 #' @name
 #' @title
 #' @return 
 #' @author fgochez
 #' @keywords
 
-.reportPartitionedByProblems <- function(reportContents, numProblems)
+.reportPartitionedByProblems <- function(reportContents, numProblems = NA)
 {
 	# only one problem, no partitioning necessary
 	
-	if(numProblems == 1)
-		return(list(reportContents))
-	
 	problemDelimeterRegexp <- "^[[:blank:]]*PROBLEM NO\\.\\: [[:blank:]]*[0-9][[:blank:]]*$"
 	probStartPoints <- grep(reportContents, pattern = problemDelimeterRegexp)
-	
+	if(is.na(numProblems)) numProblems <- length(probStartPoints)
 	RNMImportStopifnot(length(probStartPoints) == numProblems, "Number of problems specified does not match actual number of problems found in report")
+
+	if(numProblems == 1)
+		return(list(reportContents))	
 	individualProblemReports <- vector(mode = "list", length = numProblems)
 	for(i in seq_along(probStartPoints[-1]) )
 	{
@@ -257,8 +251,15 @@ importNmReport <- function( fileName, path = NULL, controlStatements = NULL )
 		RNMImportWarning(paste("Contents of the list file", fileName, "were empty or read incorrectly"))
 		return(NULL)
 	}
-	content <- cleanReportContents(content)
 	result <- list(Raw = content)
+	content <- cleanReportContents(content)
+	
+	# Capture the version info - this should not be repeated for each problem
+	result$VersionInfo <- nmVersion( content )
+	# allProbContents <- controlStatements$problemContents
+	partitionedContent <- .reportPartitionedByProblems(content)
+	
+	
 	# check for the presence of  SIMULATION STEP PERFORMED
 	simStep <- any(regexMatches("SIMULATION STEP PERFORMED", txt= content))
 	# check for value of objective function
