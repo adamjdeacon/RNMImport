@@ -1,7 +1,7 @@
 Package: RNMImport
 Type: Package
 Title: Imports NONMEM data
-Version: 0.2.5
+Version: 0.2.6
 Date: 2009-12-04
 Author: Mango Solutions
 Maintainer: <support@mango-solutions.com>
