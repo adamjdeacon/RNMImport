@@ -132,7 +132,10 @@ dirname.abs <- function(x){
 
 processPath <- function(path)
 {
-	if(any(regexMatches(rx = "\\" %pst% "(", path)) & any(regexMatches(rx = "\\" %pst% ")", path)))
+	path <- path[1]
+	# path names should be enclosed in brackets surrounded by spaces
+	PATHNAMEREGEX <- "^[[:space:]]*\\([[:alnum:]]+\\)[[:space:]]*$"
+	if(any(regexMatches(path, PATHNAMEREGEX)))
 		return(getNmPath( bracketPop(path, inPlace = FALSE)$op.out ))
 	path
 	
@@ -149,4 +152,18 @@ hasExtension <- function(fileName, extensions)
 	y <- sapply(casefold(extensions), 
 			function(x) { regexMatches(txt = casefold(fileName), rx = paste( "\\.", x, "$", sep = "")) } )
 	any(y)
+}
+
+
+#' Changes a filename to lower case if the current system is Windows, otherwise leaves it unchanged.
+#' @param fileName  
+#' @return fileName in lower case, 
+#' @author fgochez
+
+
+.windowsToLower <- function(fileName)
+{
+	if(Sys.info()["sysname"] == "Windows")
+		return(tolower(fileName))
+	fileName
 }
