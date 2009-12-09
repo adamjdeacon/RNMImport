@@ -10,6 +10,10 @@ test.createCategorical.edgeCase <- function()
 	checkTrue(all(newDf[["X.CUT"]][11:100] == "[-1.02,0]"), msg = "All elements past first 10 in the correct bin")
 }
 
+# tests creation of categorical variables
+#
+# 
+
 test.createCategorical <- function()
 {
 	testDF <- data.frame(A = c(10, 20, 50, 100, 150, 200, 250, 300, 400, 500), B = letters[1:10],
@@ -66,12 +70,30 @@ test.createCategorical <- function()
 	checkEquals(names(testBas@additionalVars), "WT|CUT")
 	checkEquals(length(levels(testBas@additionalVars[["WT|CUT"]])), 6)
 	
+	# a test for "addedData"
+
+	addedDataTest <- addedData(testBas)
+	checkEquals(class(addedDataTest), "data.frame", " |Added data extracted is a data.frame")
+	checkEquals( names( addedDataTest ) ,"WT|CUT", " |Correct column names" )
+	checkEquals(dim(addedDataTest), c(1061, 1), " |Dimensions of extracted data are corrected")
+	checkEquals(levels(addedDataTest$"WT|CUT"), c("(50.9,65.7]", "(65.7,80.5]", "(80.5,95.2]", "(95.2,110]", "(110,125]", "(125,139]")  )
+	
+	
 	#Check NMRun
 	testRun <- addDerivedCategorical(run1, varName = "SEX", binType = "unique", newVar = "FactorSEX")
 	checkException(addDerivedCategorical(run1, varName = "SEX",  binType = "unique", dataType = "Intermediate"))
 	checkEquals(nrow(testRun@additionalVars), nrow(testRun@outputData))
 	checkEquals(names(testRun@additionalVars), "FactorSEX")
 	checkEquals(length(levels(testRun@additionalVars[["FactorSEX"]])), 2)
+	
+	# a test for "addedData"
+	
+	testRun2 <- addDerivedCategorical(prob1, varName = "WT", breaks = 6, dataType = "input")
+	addedDataTest2 <- addedData(testRun2)
+	checkEquals(class(addedDataTest2), "data.frame", " |Added data extracted is a data.frame")
+	checkEquals( names( addedDataTest2 ) ,"WT|CUT", " |Correct column names" )
+	checkEquals(dim(addedDataTest2), c(1061, 1), " |Dimensions of extracted data are corrected")
+	checkEquals(levels(addedDataTest2$"WT|CUT"), c("(50.9,65.7]", "(65.7,80.5]", "(80.5,95.2]", "(95.2,110]", "(110,125]", "(125,139]")  )
 	
 }
 
