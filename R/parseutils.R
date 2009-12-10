@@ -467,3 +467,38 @@ lseq <- function( x, txt = NULL ){
 	else
 		sapply( out, function(x) txt[x] )
 }  
+
+#' "Splits" a given vector along a vector of indices. The split content is returned as a list ranging between each index,
+#' with each index 
+#' @title split a vector into a list of sub-vectors
+#' @param x The vector to split
+#' @param indices a set of integer indices along which to split
+#' @param includeStart should the first element of the vector be included automatically? 
+#' @param includeEnd should the last element of the vector be included automatically?
+#' @return A list of split elements of x.  These will be of the form x[index_n:(index_n - 1)] for each index
+#' @author fgochez
+
+splitVector <- function(x, indices, includeStart = FALSE, includeEnd = FALSE)
+{
+	RNMImportStopifnot(length(indices) > 1)
+	RNMImportStopifnot(all(diff(indices) > 0))
+	RNMImportStopifnot(tail(indices, 1) <= length(x) )
+	
+	# if these indices should be forced, add them
+	if(includeEnd) indices <- c(indices, length(x)+1)
+	if(includeStart) indices <- c(1, indices)
+	 # remove any duplicates
+	indices <- unique(indices)
+	
+	splitList <- vector(mode = "list", length = length(indices) - 1)
+	# loop through the indices and break into chunks
+	for(n in 1:(length(indices) - 1))
+	{	
+		startIndex <- indices[n]
+		endIndex <- indices[n+1] - 1
+		splitList[[n]] <- x[startIndex:endIndex]
+	}
+	
+	splitList	
+	
+}
