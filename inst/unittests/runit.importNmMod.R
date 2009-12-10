@@ -80,6 +80,9 @@ test.importNmModNM7 <- function( )
 	checkEquals(prob1$Estimates, 
 			estMatrix1, " | $Est statement parsed correctly" )
 	# PRIOR with NWPRI should cause exception (issue 1811)
-	checkException( importNmMod("wexample8.ctl", version = "VII", path = testDir), msg = " |Presence of $PRIOR NWPRI raises exception" )
+	tryImport <- try(importNmMod("wexample8.ctl", version = "VII", path = testDir), silent = TRUE)
+	checkTrue(length( grep(tryImport, pattern = "\\$PRIOR NWPRI statement detected\\.  Importing of this is not supported") ) > 0,
+	msg = " |Presence of $PRIOR NWPRI raises exception with adequate error message"   )
+	#			msg = " |Presence of $PRIOR NWPRI raises exception with adequate error message" )
 	
 }
