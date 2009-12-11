@@ -6,6 +6,12 @@
 ###############################################################################
 
 
+#' This function parses
+#' @param methodTextBlock 
+#' @title Parse report file #METH text block
+#' @return 
+#' @author fgochez
+#' @export
 .importMethodBlock <- function(methodTextBlock)
 {
 	blockResult <- list(  )
@@ -14,7 +20,7 @@
 	# retrieve objective function value
 	
 	objFinalLine <- grep(methodTextBlock, pattern = "#OBJV", value = TRUE)
-	objFinalValueLoc <- gregexpr(objFinalLine, pattern = "[0-9\\.]+")
+	objFinalValueLoc <- gregexpr(objFinalLine, pattern = "-{0,1}[0-9\\.]+")
 	
 	objFinalValue <- as.numeric( substr(objFinalLine, 
 					start = objFinalValueLoc[[1]], 
