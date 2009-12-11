@@ -100,10 +100,10 @@ importNmLstSimModel <- function(contents, numSub = NA)
 	outList	
 }
 
-#' 
-#' @param contents 
-#' @title
-#' @return 
+#' Parses the results of a single BASIC MODEL
+#' @param contents character vector of text for a single problem statement.
+#' @title Import basic problem report results 
+#' @return a list containing final estimates, number of individuals, etc. for the problem 
 #' @author fgochez
 #' @keywords
 
@@ -172,6 +172,9 @@ importNmLstSimModel <- function(contents, numSub = NA)
 #' @author fgochez
 #' @keywords
 
+# TODO: suppress this?  It should be possible to fully import a list file without a control file, and then there
+# would be no sense in maintaining this function
+
 .importNmLstWithCtl <- function(fileName, controlStatements )
 {
 	content <- scanFile(fileName)
@@ -226,18 +229,23 @@ importNmLstSimModel <- function(contents, numSub = NA)
 #' This routine imports the contents in a NONMEM output report file, and then parses different sections of it
 #' while ignoring some.
 #' @title Import the information in an output report file
-#' @param fileName Name of the report file
-#' @param path (optional) Can be a path stored by setNmPath if it is in round brackets. 
-#' @param controlStatements (optional) Control statements from the run associated with this output.  Using it 
+#' @param fileName [C,1] Name of the report file
+#' @param path [C,1] (optional) Can be a path stored by setNmPath if it is in round brackets. 
+#' @param controlStatements [L,1](optional) Control statements from the run associated with this output.  Using it 
 #' allows cleaner parsing of the report file  
+#' @param version [C,1] NONMEM version that the report file is extracted from
 #' @return A named report with elements holding parsed statements in the report file
 #' @author fgochez
 #' @keywords IO
-#' @export
 
-importNmReport <- function( fileName, path = NULL, controlStatements = NULL )
+importNmReport <- function( fileName, path = NULL, controlStatements = NULL, version = "VI" )
 {          
 	logMessage("Importing the lst file " %pst% fileName %pst% "\n", logName = "highLevelParse")
+	
+	# check for version of NONMEM, and call another funciton if necessary.  Not the cleanest possible solution...
+	if(version == "VII" | version == "7")
+		return( importNmReport.NM7(fileName, path) )
+	
 	# use getNmPath if necessary
 	path <- processPath(path)
 	if(!is.null(controlStatements))
