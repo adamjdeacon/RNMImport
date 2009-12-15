@@ -51,7 +51,7 @@ test.importNmReport.BasicNM7 <- function()
 	# test 2, uses wexample2.lst
 	
 	report2 <- importNmReport("wexample2.lst", path = file.path(unitTestPath, "testdata/wexample2" ), version = "VII" )
-	methodResults2 <- report2$problemResults[[2]]$MethodResults
+	methodResults2 <- report2$problemResults[[1]]$MethodResults
 	objectiveFunValues2 <- sapply( methodResults2, function(x) x$Objective.Final)
 	checkEquals( objectiveFunValues2, c( -19576.074, -10779.024 ,  -10772.143  ),  msg = " |Objective function values retrieved correctly (check 2)" )
 	
@@ -63,5 +63,24 @@ test.importNmReport.BasicNM7 <- function()
 	
 	checkEquals( objectiveFunValues3, c(-4708.871, -4710.416 ), msg = " |Objective function values retrieved correctly (check 3)" )
 	
+	### NOW TEST THETAS
 	
+	thetas1 <- lapply(methodResults, function(x) x$FinalEstimates$THETA)
+	
+	checkEquals( unname(unlist(thetas1)), 
+			c(1.680, 1.590, 0.813, 2.370, 1.630, 1.560, 0.767, 2.350, 1.630, 1.560, 0.767, 2.350, 1.690, 1.610,0.819,2.390),
+			msg = " |Thetas imported correctly from wexample1.lst")
+	
+	thetas2 <- lapply(methodResults2, function(x) x$FinalEstimates$THETA)
+	
+	checkEquals(unname(unlist(thetas2)), 
+			c(3.3, 3.25, -0.612, -0.208, 0.733, 1.13, 0.335, 0.192, 0.69, 
+					2.3, 0.0984, 3.3, 3.25, -0.612, -0.208, 0.733, 1.13, 0.335, 0.192, 
+					0.69, 2.3, 0.0984, 3.31, 3.26, -0.612, -0.208, 0.735, 1.14, 0.336, 
+					0.192, 0.695, 2.3, 0.1),
+			msg = " |Thetas imported correctly from wexample2.lst")
+	
+	thetas3 <- lapply(methodResult3, function(x) x$FinalEstimates$THETA)
+	checkEquals(unname(unlist(thetas3)), c(3.9, -2.17, 0.565, -0.184, 2.26, 0.207, 3.7, -0.71, 3.9, -2.22, 
+					0.562, -0.18, 2.27, 0.233, 3.71, -0.701), msg = " |Thetas imported correctly from wexample6.lst")
 }
