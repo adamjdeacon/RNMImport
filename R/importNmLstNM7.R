@@ -225,7 +225,9 @@ importNmLstSimModel.NM7 <- function(contents, numSub = NA)
 	names(sigmaList) <- simLabels
 	
 	outList$FinalEstimates <- list(THETA = thetaArray, 
-			OMEGA = omegaList, SIGMA = sigmaList, Objective.Minimum = objectiveMatrix)
+			OMEGA = omegaList, SIGMA = sigmaList)
+	outList$Objective.Minimum <- objectiveMatrix
+	
 	
 #	}
 #	else
