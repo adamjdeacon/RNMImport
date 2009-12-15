@@ -16,7 +16,7 @@
 arrayFromMatrixList <- function(matrixList, matrixNames = names(matrixList))
 {
 	# check for more than one matrix, and that all elements of matrixList are of class matrix
-	RNMImportStopifnot( length(matrixList) > 1 )
+	RNMImportStopifnot( length(matrixList) > 0 )
 	RNMImportStopifnot( all( sapply(matrixList, inherits, "matrix") ) )
 	
 	# if no matrix names were given, construct some
