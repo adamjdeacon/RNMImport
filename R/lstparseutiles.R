@@ -233,7 +233,7 @@ nmVersion <- function(lstContents)
 	line <- grep( "NONLINEAR MIXED EFFECTS MODEL PROGRAM", lstContents, fixed = TRUE, value = TRUE )
 	
 	if( length(line) == 0)
-		RNMImportStop("Could not find any version information in the contents of the control file")
+		RNMImportStop("Could not find any version information in the contents of the report file")
 	# extract VERSION=
 	nmVersion <- equalExpressionPop( line, "VERSION", sep = "[[:space:]]*" )
 	nmLevel   <- equalExpressionPop( line, "LEVEL", sep = "[[:space:]]*")
