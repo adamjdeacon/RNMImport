@@ -39,16 +39,15 @@
 	blockResult
 }
 
-importNmReport.NM7 <- function( fileName, path = NULL )
+#' Parses the contents of a NONMEM 7 report file into a list of parsed components 
+#' (see the design info for details on the return structure)
+#' @param content [C,+] The report file's text. 
+#' @title Import NONMEM 7 report file
+#' @return A list with various parsed components of the report file.
+#' @author fgochez
+
+importNmReport.NM7 <- function( content )
 {
-	logMessage("Importing the lst file " %pst% fileName %pst% "\n", logName = "highLevelParse")
-	# use getNmPath if necessary
-	path <- processPath(path)
-	
-	logMessage(log = "stdReport", "importNmReport: No control statements found, attempting to deduce problem type...\n")
-	content <- scanFile(.getFile(fileName, path) )	
-	# if content is NULL, return NULL
-	
 	if( is.null(content) )  {
 		RNMImportWarning(paste("Contents of the list file", fileName, "were empty or read incorrectly"))
 		return(NULL)
@@ -88,7 +87,7 @@ importNmReport.NM7 <- function( fileName, path = NULL )
 		else
 		{
 			logMessage(log = "stdReport", "Appears to be a standard model\n")
-			problemResults[[i]] <- .importNmLstBasicProb.NM7(content)
+			problemResults[[i]] <- .importNmLstBasicProb.NM7(currentProb)
 
 		}
 	}

@@ -238,21 +238,26 @@ importNmLstSimModel <- function(contents, numSub = NA)
 #' @author fgochez
 #' @keywords IO
 
-importNmReport <- function( fileName, path = NULL, controlStatements = NULL, version = "VI" )
+importNmReport <- function( fileName, path = NULL, controlStatements = NULL)
 {          
 	logMessage("Importing the lst file " %pst% fileName %pst% "\n", logName = "highLevelParse")
 	
 	# check for version of NONMEM, and call another funciton if necessary.  Not the cleanest possible solution...
-	if(version == "VII" | version == "7")
-		return( importNmReport.NM7(fileName, path) )
 	
 	# use getNmPath if necessary
 	path <- processPath(path)
+	
 	if(!is.null(controlStatements))
 		return(.importNmLstWithCtl(.getFile(fileName, path ), controlStatements) )
 	
 	logMessage(log = "stdReport", "importNmReport: No control statements found, attempting to deduce problem type...\n")
 	content <- scanFile(.getFile(fileName, path) )	
+	
+	versionInfo <- nmVersion(content)
+	# check if the version is NONMEM 7.  If so, import with importNmReport.NM7
+	if(substr(versionInfo, start = 1, stop = 1) == "7")
+		return(importNmReport.NM7(content))
+	
 	# if content is NULL, return NULL
 	
 	if( is.null(content) )  {
