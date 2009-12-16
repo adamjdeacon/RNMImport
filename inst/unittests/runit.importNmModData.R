@@ -25,7 +25,20 @@ test.importNmModData <- function()
 					REWIND="TRUE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
 	checkEquals( dataTest2,dataExpected2, msg = " |IGNORE=@ correct" )
 	
+	dataStatement3 <- "$DATA data3.dat IGNORE='C'"
+	dataTest3 <- RNMImport:::.importNmModData(dataStatement3)
+	dataExpected3 <- matrix(c( File="data3.dat", IG="C", ACCEPT="",     
+					REWIND="TRUE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
+	checkEquals( dataTest3,dataExpected3, msg = " |IGNORE='C' correct" )
 	
+	dataStatement4 <- "$DATA data3.dat IGNORE=\"C\""
+	dataTest4 <- RNMImport:::.importNmModData(dataStatement4)
+	checkEquals( dataTest4,dataExpected3, msg = " |IGNORE=\"C\" correct" )
 	
+	dataStatement5 <- "$DATA data3.dat IGNORE=\"I\" IGNORE=(TIME.EQ.1)"
+	dataTest5 <- RNMImport:::.importNmModData(dataStatement5)
+	dataExpected5 <- matrix(c( File="data3.dat", IG="I;(TIME.EQ.1)", ACCEPT="",     
+					REWIND="TRUE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
+	checkEquals( dataTest5,dataExpected5, msg = " |Multiple IGNORE= with IGNORE=\"I\" is correct" )
 	
 }
