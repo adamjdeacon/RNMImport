@@ -46,6 +46,19 @@ test.importModelData <- function()
 					TIME = c(1,1.92,3.5,5.02,7.03,9,12,24.3),
 					DV = c(8.31,8.33,6.85,6.08,5.40,4.55,3.01,0.9)), 
 			msg = " |IGNORE=code alone works as expected" )
+	# test IGNORE = 'C'
+	dataStatement4 <- RNMImport:::.importNmModData("$DATA data3.dat IGNORE='I'")
+	testInput4 <-  as.matrix( RNMImport:::importModelData(dataStatement4, inputStatement, path = testDir) )
+	rownames(testInput4) <- NULL
+	checkEquals( testInput4,  cbind(AMT = c(320,NA,NA,NA,NA,NA,NA,NA,NA), 
+					TIME = c(0,.27,0.52,1,1.92,3.5,5.02,9,12),
+					DV = c(NA,1.71,7.91,8.31,8.33,6.85,6.08,4.55,3.01)), msg = " |IGNORE='I' same as IGNORE=I " )
 	
+	dataStatement5 <- RNMImport:::.importNmModData("$DATA data3.dat IGNORE=\"I\"")
+	testInput5 <-  as.matrix( RNMImport:::importModelData(dataStatement5, inputStatement, path = testDir) )
+	rownames(testInput5) <- NULL
+	checkEquals( testInput5,  cbind(AMT = c(320,NA,NA,NA,NA,NA,NA,NA,NA), 
+					TIME = c(0,.27,0.52,1,1.92,3.5,5.02,9,12),
+					DV = c(NA,1.71,7.91,8.31,8.33,6.85,6.08,4.55,3.01)), msg = " |IGNORE=\"I\" same as IGNORE=I " )
 	
 }
