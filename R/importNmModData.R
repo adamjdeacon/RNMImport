@@ -44,7 +44,7 @@
 		### hunt for the IGNORE declaration      
 		# this is the regular expression for detecting IGNORE statements (there may be multiple)
 		
-		ignoreRegexp <- "[[:space:]]+IGNORE[[:space:]]*=[[:space:]]*[\\.[:alnum:]\\(\\)\\@\\#]+"
+		ignoreRegexp <- "[[:space:]]+IGNORE[[:space:]]*=[[:space:]]*[\\.[:alnum:]\\(\\)\\@\\#\"']+"
 		ignorePos <- gregexpr(dataSec, pattern = ignoreRegexp)
 		
 		# the call to gregexpr returns starting positions and lengths of matches, so now we must extract the actual strings
@@ -54,6 +54,8 @@
 		# now extact the actual ignore tokens
 		
 		ignoreTokens <- sapply(ignoreText, function(x) equalExpressionPop(x, "IGNORE", sep = "[=[:space:]]", absent = "NONE", inPlace = FALSE)$op.out)
+		# strip out quotes and "'" 
+		ignoreTokens <- sapply(ignoreTokens, gsub, pattern = "['\"]", replacement = "")
 		allIgnore <- paste(ignoreTokens, collapse = ";")
 		
 		# now delete the IGNORE= declarations from dataSec
