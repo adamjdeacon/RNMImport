@@ -17,7 +17,22 @@ sectionMethodBlock <- function(methodContents)
 	# strip blank lines
 	
 	methodContentsClean <- negGrep("^[[:space:]]*$", methodContents, value = TRUE) 
-	sectionStarts <- grep(methodContentsClean, pattern = paste("^[[:space:]]*", SECTIONSEP, "[[:space:]]*$", sep = "" ))
+	
+	# pattern that delimits sections, e.g.
+	
+	#1
+	# ************************************************************************************************************************
+	
+	# SECTIONSEPPATTERN <- paste("^[[:space:]]*", SECTIONSEP, "[[:space:]]*\n[[:space:]]*", paste(rep("\\*", times = 15), collapse = ""), sep = "" )
+	SECTIONSEPPATTERN <- paste("^[[:space:]]*", SECTIONSEP, "[[:space:]]*$", sep = "" ) 
+	
+	sectionStarts <- grep(methodContentsClean, pattern = SECTIONSEPPATTERN)
+	# the following logic eliminates as section starts those lines that are NOT followed by 
+	# " *********** " (or nothing).  These are not real section starts
+	x <- regexMatches(methodContentsClean[sectionStarts + 1], "[[:alnum:]]+")
+	
+	x[is.na(x)] <- FALSE
+	sectionStarts <- sectionStarts[!x]
 	RNMImportStopifnot(length(sectionStarts) >= 1, match.call())
 	# grab the section "header" text block
 	
@@ -42,11 +57,12 @@ sectionMethodBlock <- function(methodContents)
 				list(title = y, text = z)
 			})
 	
-	blockContents <- lapply(blockSplits, function(x) x$text)
+	# also remove the presence of lines of the form "1  "
+	blockContents <- lapply(blockSplits, function(x) negGrep(x$text, pattern = paste("^", SECTIONSEP, "[[:space:]]*$", sep = "") , value = TRUE))
 	names(blockContents) <- sapply(blockSplits, function(x) x$title )
 	
-	blockContents
 	
+	blockContents
 }
 
 # TODO: this function is overly-complex; clean it so that it no longer recurses
