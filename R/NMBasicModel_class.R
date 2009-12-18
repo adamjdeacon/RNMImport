@@ -128,7 +128,7 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 				
 				sigmaInitial <- controlStatements$Sigma
 				if(is.null(sigmaInitial)) sigmaInitial <- matrix()
-				rownames(thetaInitial) <- c("upperBound", "initial", "lowerBound")
+				rownames(thetaInitial) <- c("lowerBound", "initial", "upperBound")
 				
 				# if standard errors are available in the lst file,store them with the "XXXFinal" slots
 				if(!is.null(reportContents$StandardError))
