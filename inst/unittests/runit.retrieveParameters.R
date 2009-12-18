@@ -14,7 +14,7 @@ test.getThetas <- function()
 	
 	expThetas <- matrix(c(19.6, 84.6, 1.66), 1, 3, dimnames = list(c("estimates"), c("THETA1", "THETA2", "THETA3")))
 	expAttributes <- matrix(c(-Inf, 18.7, Inf, -Inf, 87.3, Inf, -Inf, 2.13, Inf), 3,
-						dimnames = list(c("upperBound", "initial", "lowerBound"), c("THETA1", "THETA2", "THETA3")))
+						dimnames = list(c("lowerBound", "initial", "upperBound"), c("THETA1", "THETA2", "THETA3")))
 	
 	checkEquals(getThetas(prob1), expThetas)
 	checkEquals(getThetas(run1), expThetas)
