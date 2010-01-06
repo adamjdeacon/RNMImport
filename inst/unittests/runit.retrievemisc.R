@@ -34,11 +34,11 @@ test.getMisc <- function()
 	run2 <- importNm(conFile = "TestData1SIM.con", reportFile = "TestData1SIM.lst", 
 			path = file.path(unitTestPath, "testdata/TestSimRun"))
 	
-	checkEquals( getNmVersion(run1), c(major = "VI", "minor" = "1" ) , " version of run1 is correct")
+	checkEquals( getNmVersion(run1), c(major = "VI", "minor" = "2" ) , " version of run1 is correct")
 	checkEquals( getNmVersion(run2), c(major = "VI", "minor" = "1" ) , " version of run2 is correct")
 	prob1 <- getProblem(run1)
 	prob2 <- getProblem(run2)
-	checkEquals( getNmVersion(prob1), c(major = "VI", "minor" = "1" ) , " version of run1 problem is correct")
+	checkEquals( getNmVersion(prob1), c(major = "VI", "minor" = "2" ) , " version of run1 problem is correct")
 	checkEquals( getNmVersion(prob2), c(major = "VI", "minor" = "1" ) , " version of run2 problem is correct")
 	
 }

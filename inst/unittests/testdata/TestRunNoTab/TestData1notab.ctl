@@ -21,6 +21,6 @@ $ERROR
     IF(W.EQ.0) W = 1
     IWRES = IRES/W
     Y     = IPRED + W*EPS(1)
-
+$COV
 $SIGMA  0.0231 
 $EST NOABORT POSTHOC
