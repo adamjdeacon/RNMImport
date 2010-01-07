@@ -44,16 +44,21 @@ test.getOmegas <- function()
 			path = testDir1)
 	prob1 <- getProblem(run1)
 	
-	expOmegas <- array(c(0.164, 0, 0, 0, 0.165, 0, 0, 0, 1.3), c(3,3,1))
-#	dimnames(expOmegas) = list(c("ETA1", "ETA2", "ETA3"), c("ETA1", "ETA2", "ETA3"), "estimates")
-	dimnames(expOmegas) = list(paste("OMEGA", 1:3, sep = ""), paste("OMEGA", 1:3, sep = ""), "estimates")
-	expAttributes <- diag(c(0.128, 0.142, 1.82))
-	dimnames(expAttributes) = list(c("OMEGA1", "OMEGA2", "OMEGA3"), c("OMEGA1", "OMEGA2", "OMEGA3"))
+	expOmegas <- array(c(0.164, 0, 0, 0, 0.165, 0, 0, 0, 1.3), c(3,3))
+#	dimnames(expOmegas) = list(c("ETA1", "ETA2", "ETA3"), c("ETA1", "ETA2", "ETA3"), "estimates)
+	
+	dimnames(expOmegas) = list(paste("OMEGA", 1:3, sep = ""), paste("OMEGA", 1:3, sep = ""))
+	expOmegaInit <- diag(c(0.128, 0.142, 1.82))
+	dimnames(expOmegaInit) = list(c("OMEGA1", "OMEGA2", "OMEGA3"), c("OMEGA1", "OMEGA2", "OMEGA3"))
 	
 	checkEquals(getOmegas(prob1),  expOmegas)
 	checkEquals(getOmegas(run1),  expOmegas)
-	checkEquals(attr(getOmegas(prob1, initial = TRUE), "Initial"),  expAttributes)
-	checkEquals(attr(getOmegas(run1, initial = TRUE), "Initial"),  expAttributes)	
+	
+	omegaTest1 <- getOmegas(prob1, what = "initial")
+	omegaTest2 <- getOmegas(run1, what = "initial")
+	
+	checkEquals(omegaTest1,  expOmegaInit)
+	checkEquals(omegaTest2,  expOmegaInit)	
 	
 	#Check NMSimModel
 	testDir2 <- file.path(unitTestPath, "testdata/TestSimRun")
@@ -71,7 +76,7 @@ test.getOmegas <- function()
 	dimnames(attrOm) <- list(c("OMEGA1", "OMEGA2", "OMEGA3"), c("OMEGA1", "OMEGA2", "OMEGA3"))
 	
 	checkEquals(getOmegas(prob2, subProblemNum = 1:5),  simOmegas)
-	checkEquals(attr(getOmegas(prob2, initial = TRUE, subProblemNum = 1:5), "Initial"),  attrOm)
+	# checkEquals(attr(getOmegas(prob2, initial = TRUE, subProblemNum = 1:5), "Initial"),  attrOm)
 }
 
 test.getSigmas <- function()
@@ -81,13 +86,13 @@ test.getSigmas <- function()
 			path = testDir1)
 	prob1 <- getProblem(run1)
 	
-	expSigmas <- array(0.0202, c(1,1,1), dimnames = list("SIGMA1", "SIGMA1", "estimates"))
-	expAttributes <- matrix(0.0231, 1,dimnames = list("SIGMA1", "SIGMA1"))
+	expSigmas <- array(0.0202, c(1,1), dimnames = list("SIGMA1", "SIGMA1"))
+	expSigmaInit <- matrix(0.0231, 1,dimnames = list("SIGMA1", "SIGMA1"))
 	
 	checkEquals(getSigmas(prob1),  expSigmas)
 	checkEquals(getSigmas(run1),  expSigmas)
-	checkEquals(attr(getSigmas(prob1, initial = TRUE), "Initial"),  expAttributes)
-	checkEquals(attr(getSigmas(run1, initial = TRUE), "Initial"),  expAttributes)
+	checkEquals(getSigmas(prob1, what = "initial"),  expSigmaInit)
+	checkEquals(getSigmas(run1, what = "initial"),  expSigmaInit)
 	
 	#Check NMSimModel
 	testDir2 <- file.path(unitTestPath, "testdata/TestSimRun")
@@ -100,5 +105,5 @@ test.getSigmas <- function()
 	attrSig <- matrix(0.0202, 1, dimnames = list("SIGMA1", "SIGMA1"))
 	
 	checkEquals(getSigmas(prob2, subProblemNum = 1:5),  simSigmas)
-	checkEquals(attr(getSigmas(prob2, initial = TRUE, subProblemNum = 1:5), "Initial"),  attrSig)
+	# checkEquals(attr(getSigmas(prob2, initial = TRUE, subProblemNum = 1:5), "Initial"),  attrSig)
 }

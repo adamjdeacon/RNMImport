@@ -25,10 +25,11 @@ test.importNm.Basic <- function()
 	checkEquals( getThetas(prob1, stdErrors = FALSE),  expThetas)
 	
 	"%pst%" <- RNMImport:::"%pst%"
-	expOmega <- array(diag(c(.164, .165, 1.3)), c(3,3,1), dimnames = list( "OMEGA" %pst% 1:3, "OMEGA" %pst% 1:3 , "estimates"))
-	checkEquals(expOmega, getOmegas(prob1, stdErrors = FALSE))
-	expSigma <- array(0.0202, c(1,1,1), dimnames = list("SIGMA1", "SIGMA1", "estimates"))
-	checkEquals(getSigmas(run1, stdErrors = FALSE), expSigma)
+	expOmega <- array(diag(c(.164, .165, 1.3)), c(3,3), dimnames = list( "OMEGA" %pst% 1:3, "OMEGA" %pst% 1:3))
+	checkEquals(expOmega, getOmegas(prob1, what = "final"))
+	
+	expSigma <- array(0.0202, c(1,1), dimnames = list("SIGMA1", "SIGMA1"))
+	checkEquals(getSigmas(run1, what = "final"), expSigma)
 	
 	# check importNm with dropInputColumns = FALSE
 	run2 <- importNm(conFile = "testdata1.ctl", reportFile = "testdata1.lst", 
