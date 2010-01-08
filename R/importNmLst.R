@@ -250,12 +250,12 @@ importNmReport <- function( fileName, path = NULL, controlStatements = NULL)
 	if(!is.null(controlStatements))
 		return(.importNmLstWithCtl(.getFile(fileName, path ), controlStatements) )
 	
-	logMessage(log = "stdReport", "importNmReport: No control statements found, attempting to deduce problem type...\n")
+	logMessage(log = "highLevelParse", "importNmReport: No control statements found...\n")
 	content <- scanFile(.getFile(fileName, path) )	
 	
 	versionInfo <- nmVersion(content)
 	# check if the version is NONMEM 7.  If so, import with importNmReport.NM7
-	if(substr(versionInfo, start = 1, stop = 1) == "7")
+	if(substr(versionInfo[1], start = 1, stop = 1) == "7")
 		return(importNmReport.NM7(content))
 	
 	# if content is NULL, return NULL
@@ -272,27 +272,37 @@ importNmReport <- function( fileName, path = NULL, controlStatements = NULL)
 	# allProbContents <- controlStatements$problemContents
 	partitionedContent <- .reportPartitionedByProblems(content)
 	
+	# now loop through the different problems
 	
-	# check for the presence of  SIMULATION STEP PERFORMED
-	simStep <- any(regexMatches("SIMULATION STEP PERFORMED", txt= content))
-	# check for value of objective function
-	objFun <- any(regexMatches("MINIMUM VALUE OF OBJECTIVE FUNCTION", txt= content))
-	# simulation + model
-	if(simStep & objFun)
-	{	
-		logMessage(log = "stdReport", "Appears to be a simulation+modelling problem\n")
-		result$problemResults <- list(importNmLstSimModel(content, NA))
-		return(result)
+	problemResults <- vector(mode = "list", length = length(partitionedContent))	
+	for(i in seq_along(problemResults))
+	{
+		currentProb <- partitionedContent[[i]]
+		# check for the presence of  SIMULATION STEP PERFORMED
+		simStep <- any(regexMatches("SIMULATION STEP PERFORMED", txt= currentProb))
+		# check for value of objective function
+		objFun <- any(regexMatches("MINIMUM VALUE OF OBJECTIVE FUNCTION", txt = currentProb))
+		# simulation + model
+		if(simStep & objFun)
+		{	
+			#	RNMImportStop("Simulations + fitting problems for NONMEM 7 not yet imported")
+			logMessage(log = "stdReport", "Appears to be a simulation+modelling problem\n")
+			problemResults[[i]] <- importNmLstSimModel(currentProb, NA)
+		}
+		# only data simulation, no fit step
+		else if(simStep & !objFun)
+		{	
+			RNMImportWarning( "This is a simulation without modelling step, will only return raw contents\n", match.call() )
+			problemResults[[i]] <- character(0)
+		}
+		else
+		{
+			logMessage(log = "stdReport", "Appears to be a standard model\n")
+			problemResults[[i]] <- .importNmLstBasicProb(currentProb)
+			
+		}
 	}
-	# only data simulation, no fit step
-	else if(simStep & !objFun)
-	{	
-		RNMImportWarning( "This is a simulation without modelling step, will only return raw contents\n", match.call() )
-		return(list("Raw" = content, problemResults = list(character(0))))
-	}
-	logMessage(log = "stdReport", "Appears to be a standard model\n")
-	
-	result$problemResults <- list(.importNmLstBasicProb(content))
+	result$problemResults <- problemResults
 	result
 }
 
