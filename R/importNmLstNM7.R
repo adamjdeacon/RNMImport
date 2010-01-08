@@ -57,7 +57,13 @@ importNmReport.NM7 <- function( content )
 	content <- cleanReportContents(content)
 	
 	# Capture the version info - this should not be repeated for each problem
-	result$VersionInfo <- nmVersion( content )
+	versionInfo <- nmVersion( content )
+	# for NONMEM 7, it seems that the version info is stored in the form 7.MINOR.X.  This we must further manipulate
+	# the string to obtain major and minor versions
+	versionInfoSplit <- strsplit(versionInfo, split = "\\.")[[1]]
+	version <- "VII"
+	level <- paste(versionInfoSplit[2], versionInfoSplit[3], sep = ".")
+	result$VersionInfo <- c("Version" = version, "Level" = level)
 	
 	partitionedContent <- .reportPartitionedByProblems(content)
 	
