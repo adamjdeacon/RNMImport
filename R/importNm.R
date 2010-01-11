@@ -69,18 +69,23 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 	}
 	fullLstFilePath <- tools:::file_path_as_absolute(.getFile(reportFile, path))
 	# read the control file contents
-	controlContents <- importNmMod(conFile,  path = path)
+	
 	# read in the list file contents.  Note that they should only be omitted in the case of a single SIMONLY run
-	reportContents <- importNmReport(reportFile, path = path, controlContents)
+	reportContents <- importNmReport(reportFile, path = path)
+	
 	probResults <- reportContents$problemResults
-	problems <- controlContents$problemContents
-	numProblems <- length(problems)
 	
 	# capture the version
 	nmVersionMajor <- reportContents$VersionInfo[1]
 	nmVersionMinor <- as.numeric(reportContents$VersionInfo[2])
 	versionInfo <- c(nmVersionMajor,  as.character(nmVersionMinor))
 	names(versionInfo) <- c("major", "minor")
+
+	# read the control file contents, using the appropriate version
+	
+	controlContents <- importNmMod(conFile,  path = path, version = versionInfo["major"])
+	problems <- controlContents$problemContents
+	numProblems <- length(problems)
 	
 	modelList <- vector(mode = "list", length = numProblems)
 		
@@ -101,7 +106,11 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 		} # end !is.null(controlStatements$Sim)
 		else
 		{			 			
-			modelList[[i]] <- NMBasicModel(controlStatements, path, reportStatements, 
+			if(nmVersionMajor == "VII")
+				modelList[[i]] <- NMBasicModelNM7(controlStatements, path, reportStatements, 
+						dropInputColumns = dropInputColumns, versionInfo = versionInfo)
+			else
+				modelList[[i]] <- NMBasicModel(controlStatements, path, reportStatements, 
 					dropInputColumns = dropInputColumns, versionInfo = versionInfo)
 		}
 		# set the subset for graphing - note that this should probably be dropped in the future
