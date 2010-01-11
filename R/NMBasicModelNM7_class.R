@@ -7,15 +7,22 @@
 
 validity.NMBasicModelNM7 <- function(object)
 {
+	numMethods <- length( object@methodNames )
+	if(! all(numMethods == c( nrow(object@methodInfo), 
+					length(object@thetaFinal), length(object@sigmaFinal), 
+					length(object@omegaFinal)) ))
+		return("Inconsistency between number of methods used and the number of rows of method descriptors, length of theta estimates, sigma estimates, or omega estimates")
+	
 	TRUE
 }
+
 
 setClass(
 		"NMBasicModelNM7", 
 		representation("NMProblem",
 				parameterIterations = "ANY",
 				objectiveFinal = "numeric",
-				methodInfo = "matrix",
+				methodInfo = "matrix", methodNames = "character",
 				thetaInitial = "matrix", sigmaInitial = "array", omegaInitial = "array", 
 				thetaFinal = "list", sigmaFinal = "list",
 				omegaFinal = "list",
@@ -68,7 +75,7 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 	
 	with(reportContents,
 			{
-				
+
 				# check for the covariance/correlation matrices
 				covMatrices <- lapply(MethodResults, "[[", "CovarianceMatrix")
 				corMatrices <- lapply(MethodResults, "[[", "CorrelationMatrix")
@@ -98,35 +105,46 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 				# get standard errors
 				stdErrors <- lapply(MethodResults, "[[", "StandardError")
 				
+				omegaStdErrors <- lapply(stdErrors, "[[", "OMEGA")
+				sigmaStdErrors <- lapply(stdErrors, "[[", "SIGMA")
+				thetaStdErrors <- lapply(stdErrors, "[[", "THETA")
+				
 				# extract lists of final estimates by method
 				
 				thetaFinal <- lapply(MethodResults, function(x) x$FinalEstimates$THETA)
 				omegaFinal <- lapply(MethodResults, function(x) x$FinalEstimates$OMEGA)
-				sigmaFinals <- lapply(MethodResult, function(x) x$FinalEstimates$SIGMA)					
+				sigmaFinal <- lapply(MethodResults, function(x) x$FinalEstimates$SIGMA)					
 				
 			#	colnames(thetaFinal) <- colnames(thetaInitial)
 				
-				objectiveFinal <- lapply(MethodResults, "[[", "Objective.Final")
-				methodUsed <- lapply(MethodResults, "[[", "method")
-				
-				objectiveFinal <- 
+				objectiveFinal <- sapply(MethodResults, "[[", "Objective.Final")
+				methodsUsed <- sapply(MethodResults, "[[", "method")
+				# attr(objectiveFinal, "methods") <- methodsUsed
 				# create the object
-				new("NMBasicModel", parameterIterations = NULL, 
+				new("NMBasicModelNM7", parameterIterations = NULL, 
 						problemStatement = controlStatements$Prob,
-						objectiveFinal = Objective.Minimum, 
-						parameterCovMatrix = covMatrix,
-						parameterCorMatrix = corMatrix,
+						objectiveFinal = objectiveFinal, 
+						parameterCovMatrices = covMatrices,
+						parameterCorMatrices = corMatrices,
+						methodNames = methodsUsed,
 						thetaInitial = thetaInitial,
 						sigmaInitial = sigmaInitial,
 						omegaInitial = omegaInitial,					
+						
 						thetaFinal = thetaFinal,
-						sigmaFinal = sigmaFinal, omegaFinal = omegaFinal,			
+						sigmaFinal = sigmaFinal, omegaFinal = omegaFinal,
+						
+						sigmaStderr= sigmaStdErrors,
+						omegaStderr = omegaStdErrors,
+						thetaStderr = thetaStdErrors,
+						
 						additionalVars = as.data.frame(matrix(ncol = 0, nrow = max( nOutDataRows, nInDataRows ))),
 						inputData = inData, 
-						outputData = outTables, 
+						outputData = outTables,
+						methodInfo =  controlStatements$Estimates ,
 						controlStatements = controlStatements,
 						reportStatements = reportContents,
-						minInfo = unlist(attr(reportContents$Iter, "min.info")),
+						minInfo = character(0),
 						nmVersionMajor = versionInfo["major"],
 						nmVersionMinor = as.numeric(versionInfo["minor"])) 
 				
