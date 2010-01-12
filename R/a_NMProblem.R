@@ -28,3 +28,317 @@ setClass("NMProblem", representation("VIRTUAL",
 				inputData = "data.frame", outputData = "ANY", additionalVars = "data.frame"),
 		validity = validity.NMProblem)
 
+
+
+validity.NMBasicModel <- function(object)
+{
+	
+	# Check for list due to the possibility of output tables with FIRSTONLY option
+	test1 <- inherits(object@outputData, "data.frame") | inherits(object@outputData, "list") 
+	# extract omega estimates.  as.matrix is necessary in case omega matrix is 1x1
+	omegaEstimates <- as.matrix(object@omegaFinal[,, "estimates"])
+	test2 <- all(diag(omegaEstimates) >= 0)
+	test3 <- nrow(object@additionalVars) == 0 || (nrow(object@additionalVars) %% nrow(object@inputData)) == 0
+	test4 <- ncol(object@thetaInitial) == ncol(object@thetaFinal)
+	
+	if(!test1) return("Output data is not a data.frame or list\n")
+	if(length(object@objectiveFinal) < 1)
+		return("Objective function final value not present!")
+	if(length(object@thetaFinal) < 1)
+		return("No THETA estimates found!")
+	if(all(dim(object@omegaFinal) == 0))
+		return("No OMEGA estimates found!")
+	
+	TRUE
+}
+
+#' This class holds the information for a standard single NONMEM problem  
+#' @slot parameterIterations A data.frame of the iteration of each parameter estimate, if available
+#' @slot objectiveFinal The numeric value of the objective function minimum
+#' @slot thetaFinal Final estimates of the "thetas", together with the standard errors, if available (as a matrix with 1 or 2 rows)
+#' @slot sigmaFinal Final estimates of the "sigmas", together with the standard errors, if available (as an array  with 1 or 2 matrices)
+#' @slot omegaFinal Final estimates of the "omegas", together with the standard errors, if available (as an array  with 1 or 2 matrices) 
+#' @slot parameterCovMatrix The variance-covariance of the parameter estimators, if available
+#' @slot minInfo A string describing the status of the objective function-minimization
+#' @author fgochez
+
+setClass(
+		"NMBasicModel", 
+		representation("NMProblem",
+				parameterIterations = "ANY",
+				objectiveFinal = "numeric", 
+				thetaInitial = "matrix", sigmaInitial = "array", omegaInitial = "array", 
+				thetaFinal = "matrix", sigmaFinal = "array",
+				omegaFinal = "array", 	 
+				parameterCovMatrix = "matrix",
+				parameterCorMatrix = "matrix",
+				minInfo = "character"),validity = validity.NMBasicModel
+)
+
+
+validity.NMBasicModelNM7 <- function(object)
+{
+	numMethods <- length( object@methodNames )
+	if(! all(numMethods == c( nrow(object@methodInfo), 
+					length(object@thetaFinal), length(object@sigmaFinal), 
+					length(object@omegaFinal)) ))
+		return("Inconsistency between number of methods used and the number of rows of method descriptors, length of theta estimates, sigma estimates, or omega estimates")
+	
+	TRUE
+}
+
+
+setClass(
+		"NMBasicModelNM7", 
+		representation("NMProblem",
+				parameterIterations = "ANY",
+				objectiveFinal = "numeric",
+				methodInfo = "matrix", methodNames = "character",
+				thetaInitial = "matrix", sigmaInitial = "array", omegaInitial = "array", 
+				thetaFinal = "list", sigmaFinal = "list",
+				omegaFinal = "list",
+				thetaStderr = "list", sigmaStderr = "list",
+				omegaStderr = "list",
+				ETAShrinkage = "numeric",
+				EPSShrinkage = "numeric",
+				parameterCovMatrices = "list",
+				parameterCorMatrices = "list",
+				minInfo = "character"),
+		validity = validity.NMBasicModelNM7
+)
+
+
+# TODO: THETAS might be missing from that particular problem statement, in which case
+# they should be inherited from a previous problem.  This is currently not implemented
+
+validity.NMSimDataGen <- function(object)
+{
+	if(object@numSimulations < 1)
+		return("Number of simulations is less than 1!")
+	# if(length(object@thetaInitial) < 1)
+	#	return("No initial thetas!")
+	TRUE
+}
+
+#' This class handles NONMEM models that have a $SIM statement but only simulate
+#' data without fitting a model
+#' @slot numSimulations Number of simulations/subproblems 
+#' @slot seeds Seeds used for the random number generator
+#' @slot problemStatement $PROBLEM statement 
+#' @slot thetaInitial Fixed/initial theta values used to generate data
+#' @slot omegaInitial Fixed/initial omega values used to generate data
+#' @slot sigmaInitial Fixed/initial sigma values used to generate data
+#' @author fgochez
+
+setClass(
+		"NMSimDataGen", 
+		representation(
+				"NMProblem", numSimulations = "numeric",	seeds = "numeric", 
+				thetaInitial = "vector", omegaInitial = "matrix", sigmaInitial = "matrix"
+		),validity = validity.NMSimDataGen
+)
+
+#' Constructor for NMSimDataGen
+#' @param controlStatements Statements from the control file that apply to this problem 
+#' @param path Full path to the files where the problem output is located
+#' @param reportContents  
+#' @return An NMSimDataGen object
+#' @author fgochez
+
+NMSimDataGen <- function(controlStatements, path, reportContents = NULL, 
+		versionInfo = c("major" = "VI", "minor" = 0))
+{
+	inData <- try(importModelData(dataStatement = controlStatements$Data,
+					inputStatement = controlStatements$Input, path = path))
+	
+	# if we could not read data file for some reason, continue anyway	
+	if(inherits(inData, "try-error"))
+	{
+		msg <- paste("Could not import data file.  Error generated was:", 
+				inData$message, "\nWill continue importing other components")
+		inData <- data.frame()
+	} # end if(inherits(inData, "try-error"))
+	# TODO: replace this logic since it should never happen once problems are parsed correctly
+	
+	.Omega <- if(is.null(controlStatements$Omega)) matrix() else controlStatements$Omega
+	.Sigma <- if(is.null(controlStatements$Sigma)) matrix() else controlStatements$Sigma
+	
+	.Theta <- if(is.null(controlStatements$Theta)) numeric(0) else controlStatements$Theta[,"Est"]
+	
+	with(controlStatements , 
+			{
+				outTables <- importModelOutputTables( tableStatement = controlStatements$Table, 
+						path = path )
+				if(inherits(outTables, "list")) nDataRows <- max(sapply(outTables, nrow))
+				else nDataRows <- nrow(outTables)	
+				seeds <- as.numeric(ifelse(Sim[c("Seed1", "Seed2")] == -1, NA,	Sim[c("Seed1", "Seed2")]))
+				
+				# now extract initial value estimates of parameters:
+				
+				new("NMSimDataGen", nmVersionMajor = versionInfo["major"],
+						nmVersionMinor = as.numeric(versionInfo["minor"]), numSimulations = as.numeric(controlStatements$Sim["nSub"]), 
+						seeds = seeds, inputData = inData, outputData = outTables, controlStatements = 
+								controlStatements, problemStatement = controlStatements$Problem,
+						thetaInitial = .Theta, omegaInitial = .Omega, sigmaInitial = .Sigma,
+						additionalVars = as.data.frame(matrix(ncol = 0, nrow = nDataRows)))
+			})
+	
+}
+
+
+validity.NMSimModel <- function(object)
+{
+	test1 <- object@numSimulations == dim(object@thetaFinals)[1] 
+	test1 <- test1 & dim(object@omegaFinal)[3] == dim(object@sigmaFinal)[3] 
+	test1 <- test1 & length(object@objectiveFinal)  
+	if(!test1)
+		return("Incompability between number of simulations and dimension of one of the parameter estimates")
+	TRUE
+}
+
+#' This class holds the results of NONMEM problems that both simulate data and fit the model during each simulation
+#' (that is, models with a $SIM statement in the control file but no "ONLY" keyword).
+#' @slot numSimulations Number of simulations generated
+#' @slot objectiveFinal Vector of final values of the objective functions
+#' @slot thetaFinal Final estimates of the "thetas", stored as a matrix with one row for each simulation
+#' @slot omegaFinal Final estimates of the "omegas", stored as a 3-d array with one matrix for each simulation
+#' @slot sigmaFinal Final estimates of the "sigmas", stored as a 3-d array with one matrix for each simulation
+#' @slot thetaInitial Initial values of thetas
+#' @slot omegaInitial Initial values of omegas
+#' @slot sigmaInitial Initial values of sigmas
+#' @slot seeds Values of seeds used for random-number generation
+#' @author fgochez
+#' @export
+
+setClass("NMSimModel", representation("NMProblem", numSimulations = "numeric" ,
+				thetaFinal = "matrix", objectiveFinal = "numeric",
+				omegaFinal = "array", sigmaFinal = "array", 
+				# thetaStdError = "vector", omegaStdError = "matrix",igmaStdError = "matrix", 
+				thetaInitial = "vector", 
+				omegaInitial = "matrix", sigmaInitial = "matrix", seeds = "numeric"
+		))
+
+
+#' Constructor for the NMSimModel class
+#' @param controlStatements Set of parsed control statements 
+#' @param path Path where the run is located
+#' @param reportContents Parsed contents of the report file
+#' @return Newly constructed object 
+#' @author fgochez
+
+NMSimModel <- function(controlStatements, path, reportContents, versionInfo = c("major" = "VI", "minor" = 0))
+{
+	inData <- try(importModelData(dataStatement = controlStatements$Data,inputStatement = controlStatements$Input, path = path))
+	# if we could not read data file for some reason, continue anyway
+	if(inherits(inData, "try-error"))
+	{
+		msg <- paste("Could not import data file.  Error generated was:",
+				inData, "\nWill continue importing other components\n")
+		RNMImportWarning(msg)
+		inData <- data.frame()
+	} # end if(inherits(inData, "try-error"))
+	outTables <- if(!is.null(controlStatements$Table)) 
+				importModelOutputTables( tableStatement = controlStatements$Table, path = path ) 
+			else
+				data.frame()
+	# if the output tables are a "list", then there was a FIRSTONLY statment, or for some other reason
+	# the number of rows of all of the output tables were not equivalent
+	if(inherits(outTables, "list")) nDataRows <- max(sapply(outTables, nrow))
+	else nDataRows <- nrow(outTables)
+	seeds <- as.numeric(ifelse(controlStatements$Sim[c("Seed1", "Seed2")] == -1, NA,	
+					controlStatements$Sim[c("Seed1", "Seed2")]))
+	nSim <- as.numeric(controlStatements$Sim["nSub"])
+	with(reportContents, 
+			{	
+				# check how many simulations there are.  If only one, the minimum of the objective funciton is stored
+				# differently
+				
+				
+				if(nSim == 1)
+					objectiveFinal <- Objective.Minimum
+				else
+					objectiveFinal <- FinalEstimates$Objective.Minimum
+				
+				omegaFinal <- FinalEstimates$OMEGA
+				# Use parameter labels for names, if any were supplied
+				dimnames(omegaFinal)[1:2] <- dimnames(controlStatements$Omega)
+				thetaFinal <- FinalEstimates$THETA
+				colnames(thetaFinal) <- names(controlStatements$Theta[,"Est"])
+				sigmaFinal <- FinalEstimates$SIGMA
+				if(!is.null(sigmaFinal))
+				{
+					dimnames(sigmaFinal)[1:2] <- dimnames(controlStatements$Sigma)
+				}
+				else
+					sigmaFinal <- array(c(0,0, nSim))
+				
+				new("NMSimModel", numSimulations = nSim, 
+						seeds = seeds, inputData = inData, outputData = outTables, controlStatements = 
+								controlStatements, problemStatement = controlStatements$Problem,
+						thetaInitial = controlStatements$Theta[,"Est"], 
+						omegaInitial = controlStatements$Omega, 
+						sigmaInitial = controlStatements$Sigma,
+						omegaFinal = omegaFinal,
+						sigmaFinal = sigmaFinal,
+						thetaFinal = thetaFinal,
+						objectiveFinal = objectiveFinal,
+						additionalVars = as.data.frame(matrix(ncol = 0, nrow = nDataRows)), 
+						nmVersionMajor = versionInfo["major"],
+						nmVersionMinor = as.numeric(versionInfo["minor"]))
+			})
+}
+
+
+validity.NMRun <- function(object)
+{
+	if(length(object@problems) < 1)
+		return("Run has no problem results!")
+	# check that all problelms extend the "NMProblem" class
+	
+	extendsProbClass <- sapply(object@problems, function(x) extends(class(x), "NMProblem"))
+	if(!all(extendsProbClass))
+		return("One or more classes in the set of problems do not extend NMProblem")
+	
+	
+	if(object@numProblems != length(object@problems))
+		return("Indicated number of problems in object@numProblems is not equal to the length of the problems list!")
+	# controlText = "character", 
+	# reportText = "character",
+	if(length(object@controlText) == 0 || length(object@reportText) == 0)
+		return("Empty control file or report file text")
+	if(nrow(object@controlFileInfo) == 0 || nrow(object@reportFileInfo) == 0)
+		return("Control file information or report file information is empty")
+	
+	TRUE
+}
+
+# declared the "Date" S3 class
+setOldClass("Date")
+
+#' This is the basic class for handling a standard NONMEM run.  In essence, it holds
+#' several inidividual problems which may be of type NMBasicModel, NMSimModel, and NMSimDataGen.
+#' It also holds the control file and list output file text
+#' @slot controlText [C,+] Text of the control file, without comments
+#' @slot controlComments [C,1] Comments of each line of the control file
+#' @slot controlFileInfo [data.frame] Information about the control file 
+#' @slot reportFileInfo Information about the list file
+#' @slot numProblems [N,1] - Number of problems in the run
+#' @slot problems [list] - List of the actual problem results 
+#' @slot reportText Text of the lst output file
+#' @author fgochez
+
+setClass(
+		"NMRun", 
+		representation(
+				controlText = "character", 
+				reportText = "character",
+				nmVersionMajor = "character",
+				nmVersionMinor = "numeric",
+				controlComments = "character",
+				controlFileInfo = "data.frame", 
+				reportFileInfo = "data.frame",
+				numProblems = "numeric",
+				problems = "list"
+		),
+		validity = validity.NMRun
+)
