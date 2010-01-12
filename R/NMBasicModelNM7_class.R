@@ -5,36 +5,6 @@
 # Author: fgochez
 ###############################################################################
 
-validity.NMBasicModelNM7 <- function(object)
-{
-	numMethods <- length( object@methodNames )
-	if(! all(numMethods == c( nrow(object@methodInfo), 
-					length(object@thetaFinal), length(object@sigmaFinal), 
-					length(object@omegaFinal)) ))
-		return("Inconsistency between number of methods used and the number of rows of method descriptors, length of theta estimates, sigma estimates, or omega estimates")
-	
-	TRUE
-}
-
-
-setClass(
-		"NMBasicModelNM7", 
-		representation("NMProblem",
-				parameterIterations = "ANY",
-				objectiveFinal = "numeric",
-				methodInfo = "matrix", methodNames = "character",
-				thetaInitial = "matrix", sigmaInitial = "array", omegaInitial = "array", 
-				thetaFinal = "list", sigmaFinal = "list",
-				omegaFinal = "list",
-				thetaStderr = "list", sigmaStderr = "list",
-				omegaStderr = "list",
-				ETAShrinkage = "numeric",
-				EPSShrinkage = "numeric",
-				parameterCovMatrices = "list",
-				parameterCorMatrices = "list",
-				minInfo = "character"),
-		validity = validity.NMBasicModelNM7
-)
 
 #' Constructs an NMBasicModel object from the control statements and output list statements that apply to it.
 #' Meant to be used from within importNm

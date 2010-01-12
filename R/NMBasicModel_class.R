@@ -2,52 +2,7 @@
 # $LastChangedDate$
 
 
-
-validity.NMBasicModel <- function(object)
-{
-
-	# Check for list due to the possibility of output tables with FIRSTONLY option
-	test1 <- inherits(object@outputData, "data.frame") | inherits(object@outputData, "list") 
-	# extract omega estimates.  as.matrix is necessary in case omega matrix is 1x1
-	omegaEstimates <- as.matrix(object@omegaFinal[,, "estimates"])
-	test2 <- all(diag(omegaEstimates) >= 0)
-	test3 <- nrow(object@additionalVars) == 0 || (nrow(object@additionalVars) %% nrow(object@inputData)) == 0
-	test4 <- ncol(object@thetaInitial) == ncol(object@thetaFinal)
-
-	if(!test1) return("Output data is not a data.frame or list\n")
-	if(length(object@objectiveFinal) < 1)
-		return("Objective function final value not present!")
-	if(length(object@thetaFinal) < 1)
-		return("No THETA estimates found!")
-	if(all(dim(object@omegaFinal) == 0))
-		return("No OMEGA estimates found!")
-
-	TRUE
-}
-
-#' This class holds the information for a standard single NONMEM problem  
-#' @slot parameterIterations A data.frame of the iteration of each parameter estimate, if available
-#' @slot objectiveFinal The numeric value of the objective function minimum
-#' @slot thetaFinal Final estimates of the "thetas", together with the standard errors, if available (as a matrix with 1 or 2 rows)
-#' @slot sigmaFinal Final estimates of the "sigmas", together with the standard errors, if available (as an array  with 1 or 2 matrices)
-#' @slot omegaFinal Final estimates of the "omegas", together with the standard errors, if available (as an array  with 1 or 2 matrices) 
-#' @slot parameterCovMatrix The variance-covariance of the parameter estimators, if available
-#' @slot minInfo A string describing the status of the objective function-minimization
-#' @author fgochez
-
-setClass(
-		"NMBasicModel", 
-		representation("NMProblem",
-			parameterIterations = "ANY",
-			objectiveFinal = "numeric", 
-			thetaInitial = "matrix", sigmaInitial = "array", omegaInitial = "array", 
-			thetaFinal = "matrix", sigmaFinal = "array",
-			omegaFinal = "array", 	 
-			parameterCovMatrix = "matrix",
-			parameterCorMatrix = "matrix",
-			minInfo = "character"),validity = validity.NMBasicModel
-	)
-
+	
 #' Constructs an NMBasicModel object from the control statements and output list statements that apply to it.
 #' Meant to be used from within importNm
 #' @title NMBasicModel constructor
