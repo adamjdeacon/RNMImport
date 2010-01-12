@@ -28,13 +28,13 @@
 	
 	blockResult$Objective.Final <- objFinalValue
 	methodTextBlockSectioned <- sectionMethodBlock(methodTextBlock)
-	blockResult$FinalEstimates <- .importNmLstEstimates(methodTextBlockSectioned[["FINAL PARAMETER ESTIMATE"]])
-	blockResult$StandardError           <- .importNmLstEstimates( methodTextBlockSectioned[["STANDARD ERROR OF ESTIMATE"]] )
+	blockResult$FinalEstimates <- .importNmLstEstimates(methodTextBlockSectioned$"FINAL PARAMETER ESTIMATE")
+	blockResult$StandardError           <- .importNmLstEstimates( methodTextBlockSectioned$"STANDARD ERROR OF ESTIMATE" )
 	
-	blockResult$CovarianceMatrix <- .importNmLstMatrix( methodTextBlockSectioned[["COVARIANCE MATRIX OF ESTIMATE"        ]] )
-	blockResult$CorrelationMatrix       <- .importNmLstMatrix( methodTextBlockSectioned[["CORRELATION MATRIX OF ESTIMATE"       ]] )
+	blockResult$CovarianceMatrix <- .importNmLstMatrix( methodTextBlockSectioned$"COVARIANCE MATRIX OF ESTIMATE" )
+	blockResult$CorrelationMatrix       <- .importNmLstMatrix( methodTextBlockSectioned$"CORRELATION MATRIX OF ESTIMATE" )
 
-	blockResult$InverseCovarianceMatrix <- .importNmLstMatrix( methodTextBlockSectioned[["INVERSE COVARIANCE MATRIX OF ESTIMATE"]] )
+	blockResult$InverseCovarianceMatrix <- .importNmLstMatrix( methodTextBlockSectioned$"INVERSE COVARIANCE MATRIX OF ESTIMATE" )
 	
 	blockResult
 }
