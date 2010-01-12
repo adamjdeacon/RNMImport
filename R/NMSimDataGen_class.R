@@ -1,43 +1,6 @@
 # $Rev$
 # $LastChangedDate$
 
-# TODO: THETAS might be missing from that particular problem statement, in which case
-# they should be inherited from a previous problem.  This is currently not implemented
-
-validity.NMSimDataGen <- function(object)
-{
-	if(object@numSimulations < 1)
-		return("Number of simulations is less than 1!")
-	# if(length(object@thetaInitial) < 1)
-	#	return("No initial thetas!")
-	TRUE
-}
-
-#' This class handles NONMEM models that have a $SIM statement but only simulate
-#' data without fitting a model
-#' @slot numSimulations Number of simulations/subproblems 
-#' @slot seeds Seeds used for the random number generator
-#' @slot problemStatement $PROBLEM statement 
-#' @slot thetaInitial Fixed/initial theta values used to generate data
-#' @slot omegaInitial Fixed/initial omega values used to generate data
-#' @slot sigmaInitial Fixed/initial sigma values used to generate data
-#' @author fgochez
-
-setClass(
-		"NMSimDataGen", 
-		representation(
-				"NMProblem", numSimulations = "numeric",	seeds = "numeric", 
-				thetaInitial = "vector", omegaInitial = "matrix", sigmaInitial = "matrix"
-		),validity = validity.NMSimDataGen
-)
-
-#' Constructor for NMSimDataGen
-#' @param controlStatements Statements from the control file that apply to this problem 
-#' @param path Full path to the files where the problem output is located
-#' @param reportContents  
-#' @return An NMSimDataGen object
-#' @author fgochez
-
 NMSimDataGen <- function(controlStatements, path, reportContents = NULL, 
 		versionInfo = c("major" = "VI", "minor" = 0))
 {
