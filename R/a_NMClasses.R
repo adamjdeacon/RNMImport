@@ -138,54 +138,6 @@ setClass(
 		),validity = validity.NMSimDataGen
 )
 
-#' Constructor for NMSimDataGen
-#' @param controlStatements Statements from the control file that apply to this problem 
-#' @param path Full path to the files where the problem output is located
-#' @param reportContents  
-#' @return An NMSimDataGen object
-#' @author fgochez
-
-NMSimDataGen <- function(controlStatements, path, reportContents = NULL, 
-		versionInfo = c("major" = "VI", "minor" = 0))
-{
-	inData <- try(importModelData(dataStatement = controlStatements$Data,
-					inputStatement = controlStatements$Input, path = path))
-	
-	# if we could not read data file for some reason, continue anyway	
-	if(inherits(inData, "try-error"))
-	{
-		msg <- paste("Could not import data file.  Error generated was:", 
-				inData$message, "\nWill continue importing other components")
-		inData <- data.frame()
-	} # end if(inherits(inData, "try-error"))
-	# TODO: replace this logic since it should never happen once problems are parsed correctly
-	
-	.Omega <- if(is.null(controlStatements$Omega)) matrix() else controlStatements$Omega
-	.Sigma <- if(is.null(controlStatements$Sigma)) matrix() else controlStatements$Sigma
-	
-	.Theta <- if(is.null(controlStatements$Theta)) numeric(0) else controlStatements$Theta[,"Est"]
-	
-	with(controlStatements , 
-			{
-				outTables <- importModelOutputTables( tableStatement = controlStatements$Table, 
-						path = path )
-				if(inherits(outTables, "list")) nDataRows <- max(sapply(outTables, nrow))
-				else nDataRows <- nrow(outTables)	
-				seeds <- as.numeric(ifelse(Sim[c("Seed1", "Seed2")] == -1, NA,	Sim[c("Seed1", "Seed2")]))
-				
-				# now extract initial value estimates of parameters:
-				
-				new("NMSimDataGen", nmVersionMajor = versionInfo["major"],
-						nmVersionMinor = as.numeric(versionInfo["minor"]), numSimulations = as.numeric(controlStatements$Sim["nSub"]), 
-						seeds = seeds, inputData = inData, outputData = outTables, controlStatements = 
-								controlStatements, problemStatement = controlStatements$Problem,
-						thetaInitial = .Theta, omegaInitial = .Omega, sigmaInitial = .Sigma,
-						additionalVars = as.data.frame(matrix(ncol = 0, nrow = nDataRows)))
-			})
-	
-}
-
-
 validity.NMSimModel <- function(object)
 {
 	test1 <- object@numSimulations == dim(object@thetaFinals)[1] 
@@ -217,78 +169,6 @@ setClass("NMSimModel", representation("NMProblem", numSimulations = "numeric" ,
 				thetaInitial = "vector", 
 				omegaInitial = "matrix", sigmaInitial = "matrix", seeds = "numeric"
 		))
-
-
-#' Constructor for the NMSimModel class
-#' @param controlStatements Set of parsed control statements 
-#' @param path Path where the run is located
-#' @param reportContents Parsed contents of the report file
-#' @return Newly constructed object 
-#' @author fgochez
-
-NMSimModel <- function(controlStatements, path, reportContents, versionInfo = c("major" = "VI", "minor" = 0))
-{
-	inData <- try(importModelData(dataStatement = controlStatements$Data,inputStatement = controlStatements$Input, path = path))
-	# if we could not read data file for some reason, continue anyway
-	if(inherits(inData, "try-error"))
-	{
-		msg <- paste("Could not import data file.  Error generated was:",
-				inData, "\nWill continue importing other components\n")
-		RNMImportWarning(msg)
-		inData <- data.frame()
-	} # end if(inherits(inData, "try-error"))
-	outTables <- if(!is.null(controlStatements$Table)) 
-				importModelOutputTables( tableStatement = controlStatements$Table, path = path ) 
-			else
-				data.frame()
-	# if the output tables are a "list", then there was a FIRSTONLY statment, or for some other reason
-	# the number of rows of all of the output tables were not equivalent
-	if(inherits(outTables, "list")) nDataRows <- max(sapply(outTables, nrow))
-	else nDataRows <- nrow(outTables)
-	seeds <- as.numeric(ifelse(controlStatements$Sim[c("Seed1", "Seed2")] == -1, NA,	
-					controlStatements$Sim[c("Seed1", "Seed2")]))
-	nSim <- as.numeric(controlStatements$Sim["nSub"])
-	with(reportContents, 
-			{	
-				# check how many simulations there are.  If only one, the minimum of the objective funciton is stored
-				# differently
-				
-				
-				if(nSim == 1)
-					objectiveFinal <- Objective.Minimum
-				else
-					objectiveFinal <- FinalEstimates$Objective.Minimum
-				
-				omegaFinal <- FinalEstimates$OMEGA
-				# Use parameter labels for names, if any were supplied
-				dimnames(omegaFinal)[1:2] <- dimnames(controlStatements$Omega)
-				thetaFinal <- FinalEstimates$THETA
-				colnames(thetaFinal) <- names(controlStatements$Theta[,"Est"])
-				sigmaFinal <- FinalEstimates$SIGMA
-				if(!is.null(sigmaFinal))
-				{
-					dimnames(sigmaFinal)[1:2] <- dimnames(controlStatements$Sigma)
-				}
-				else
-					sigmaFinal <- array(c(0,0, nSim))
-				
-				new("NMSimModel", numSimulations = nSim, 
-						seeds = seeds, inputData = inData, outputData = outTables, controlStatements = 
-								controlStatements, problemStatement = controlStatements$Problem,
-						thetaInitial = controlStatements$Theta[,"Est"], 
-						omegaInitial = controlStatements$Omega, 
-						sigmaInitial = controlStatements$Sigma,
-						omegaFinal = omegaFinal,
-						sigmaFinal = sigmaFinal,
-						thetaFinal = thetaFinal,
-						objectiveFinal = objectiveFinal,
-						additionalVars = as.data.frame(matrix(ncol = 0, nrow = nDataRows)), 
-						nmVersionMajor = versionInfo["major"],
-						nmVersionMinor = as.numeric(versionInfo["minor"]))
-			})
-}
-
-
 validity.NMRun <- function(object)
 {
 	if(length(object@problems) < 1)
