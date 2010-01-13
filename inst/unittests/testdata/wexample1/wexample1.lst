@@ -1,4 +1,4 @@
-Fri Nov 27 15:19:23 GMT 2009
+Mon Jan 11 16:22:20 GMT 2010
 /opt/intel/fc/9.0/bin/ifc
 ;Model Desc: Two compartment Model, Using ADVAN3, TRANS4
 ;Project Name: wexamples
@@ -52,8 +52,7 @@ $EST METHOD=COND INTERACTION MAXEVAL=9999 NSIG=2 SIGL=10 PRINT=5 FILE=wexample1.
 $COV MATRIX=R
 $TABLE ID TIME DV PRED RES WRES CPRED CWRES EPRED ERES EWRES NOAPPEND ONEHEADER 
  FILE=wexample1.TAB NOPRINT
-$TABLE ID CL V1 Q V2 FIRSTONLY NOAPPEND NOPRINT FILE=wexample1.PAR
-$TABLE ID ETA1 ETA2 ETA3 ETA4 FIRSTONLY NOAPPEND NOPRINT FILE=wexample1.ETA
+$TABLE ID ETA1 ETA2 ETA3 ETA4 NOAPPEND NOPRINT FILE=wexample1.ETA
  
  
   
@@ -65,8 +64,8 @@ $TABLE ID ETA1 ETA2 ETA3 ETA4 FIRSTONLY NOAPPEND NOPRINT FILE=wexample1.ETA
  
 License Registered to: Mango Solutions
 Expiration Date:    14 OCT 2010
-Current Date:       27 NOV 2009
-Days until program expires : 322
+Current Date:       11 JAN 2010
+Days until program expires : 273
 1NONLINEAR MIXED EFFECTS MODEL PROGRAM (NONMEM) VERSION 7.1.0
  ORIGINALLY DEVELOPED BY STUART BEAL, LEWIS SHEINER, AND ALISON BOECKMANN
  CURRENT DEVELOPERS ARE ROBERT BAUER, ICON DEVELOPMENT SOLUTIONS,
@@ -88,8 +87,6 @@ Days until program expires : 322
   0  0
  0LABELS FOR DATA ITEMS:
   C SET ID JID TIME DV AMT RATE EVID MDV CMT
-0(NONBLANK) LABELS FOR PRED-DEFINED ITEMS:
- CL      V1      Q       V2  
 0FORMAT FOR DATA:
  (2E2.0,3E4.0,E11.0,E4.0,4E2.0)                                                  
  
@@ -170,7 +167,7 @@ Days until program expires : 322
  EIGENVLS. PRINTED:          NO 
  COMPRESSED FORMAT:          NO 
 0TABLES STEP OMITTED:    NO 
- NO. OF TABLES:           3
+ NO. OF TABLES:           2
 0-- TABLE  1 --
 04 COLUMNS APPENDED:     NO 
  PRINTED:                NO 
@@ -179,15 +176,6 @@ Days until program expires : 322
  0USER-CHOSEN ITEMS:
   ID TIME DV PRED RES WRES CPRED CWRES EPRED ERES EWRES
 0-- TABLE  2 --
-0FIRST RECORDS ONLY:    YES 
-04 COLUMNS APPENDED:     NO 
- PRINTED:                NO 
- HEADER:                YES 
- FILE TO BE FORWARDED:   NO 
- 0USER-CHOSEN ITEMS:
-  ID CL V1 Q V2
-0-- TABLE  3 --
-0FIRST RECORDS ONLY:    YES 
 04 COLUMNS APPENDED:     NO 
  PRINTED:                NO 
  HEADER:                YES 
@@ -274,7 +262,7 @@ Days until program expires : 322
  iteration          105 OBJ=   -1120.30702412937     
  iteration          110 OBJ=   -1120.30702950237     
  Convergence achieved
- Elapsed estimation time in seconds:    10.84
+ Elapsed estimation time in seconds:     9.99
  
  #TERM:
  OPTIMIZATION COMPLETED
@@ -632,7 +620,7 @@ Days until program expires : 322
  iteration          300 SAEMOBJ=   -2475.67017023182     
  iteration          400 SAEMOBJ=   -2475.71083498642     
  iteration          500 SAEMOBJ=   -2477.44333201676     
- Elapsed estimation time in seconds:    53.26
+ Elapsed estimation time in seconds:    54.08
  
  #TERM:
  STOCHASTIC PORTION COMPLETED
@@ -747,7 +735,7 @@ Days until program expires : 322
  iteration            2 OBJ=   -1144.35310823491     
  iteration            3 OBJ=   -1144.69067612959     
  iteration            4 OBJ=   -1147.84442784875     
- Elapsed estimation time in seconds:    14.56
+ Elapsed estimation time in seconds:    14.81
  iteration            5 OBJ=   -1145.16254556381     
  
  #TERM:
@@ -766,7 +754,7 @@ Days until program expires : 322
  EPSshrink(%):   3.1306E+01
  
  #TERE:
- Elapsed covariance time in seconds:    23.97
+ Elapsed covariance time in seconds:    23.87
 1
  
  
@@ -1115,7 +1103,7 @@ Days until program expires : 322
              5.1398E-02  8.9727E-02  1.2820E-01  9.3544E-02  9.3146E-02
  GRADIENT:  -6.3685E-02 -3.0334E-03 -1.8093E-02 -1.7439E-01 -1.8509E-03  2.3628E-04  3.6968E-04 -4.4468E-03  2.3943E-03  4.0911E-04
             -2.1707E-03 -6.9513E-04  1.5654E-03  1.7396E-04  3.0680E-03
- Elapsed estimation time in seconds:     5.32
+ Elapsed estimation time in seconds:     5.36
  
  #TERM:
 0MINIMIZATION SUCCESSFUL
@@ -1134,7 +1122,7 @@ Days until program expires : 322
  EPSshrink(%):   3.0940E+01
  
  #TERE:
- Elapsed covariance time in seconds:     6.57
+ Elapsed covariance time in seconds:     6.47
 1
  
  
@@ -1441,4 +1429,4 @@ Days until program expires : 322
 +       -3.06E+02 -2.45E+02 -5.16E+01 -1.87E+02  2.96E+02  7.61E+02  8.46E+00  5.98E+02  1.14E+03 -3.28E+02 -7.15E+01  9.56E+02
           5.51E+02  8.67E+02  2.63E+04
  
-Fri Nov 27 15:21:19 GMT 2009
+Mon Jan 11 16:24:16 GMT 2010
