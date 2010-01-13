@@ -1,6 +1,6 @@
-# $LastChangedDate: $
-# $LastChangedBy: $
-# $Rev: $
+# $LastChangedDate$
+# $LastChangedBy$
+# $Rev$
 # 
 # Author: fgochez
 ###############################################################################
@@ -170,16 +170,29 @@ setMethod("getOmegas", signature(obj = "NMRun"), getOmegas.NMRun)
 
 getOmegas.NMSimModel <- function(obj, what = "final", subProblemNum = 1,...)
 {
-#	if(stdErrors)
-#		RNMImportWarning(msg = "No standard errors are available!")
+	validWhat <- intersect(what, PARAMITEMS)
+	invalidWhat <- setdiff(what, PARAMITEMS)
+	if("stderrors" %in% validWhat)
+		RNMImportWarning(msg = "No standard errors are available!")
+	
 	numSimulations <- obj@numSimulations
 	if(any(!(subProblemNum %in% 1:numSimulations)))
 		RNMImportStop(msg = "Subproblem number is not valid!")	
-	omegas <- obj@omegaFinal[, , subProblemNum, drop = FALSE]
-#	if(initial)
-	#attr(omegas, "Initial") <- obj@omegaInitial
-	omegas
+	finalEstimates <- obj@omegaFinal[, , subProblemNum, drop = FALSE]
+	initial <- obj@omegaInitial
+	
+	if(length(validWhat) == 1)
+	{
+		res <- switch(validWhat, 
+				"final" = finalEstimates,
+				# TODO: if these are length 0, generate an error?
+				"initial" = initial
+		)
+		# this occurs if the omegas were a 1x1 matrix to begin with.  We wish to force the returned value to be a matrix	
+	} # end if length(validWhat) == 1
+	else
+		res <- list("initial.estimates" = initial, "final.estimates"  = finalEstimates)
+	
+	res
 }
 setMethod("getOmegas", signature(obj = "NMSimModel"), getOmegas.NMSimModel)
-
-
