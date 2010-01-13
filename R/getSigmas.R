@@ -1,6 +1,6 @@
-# $LastChangedDate: $
-# $LastChangedBy: $
-# $Rev: $
+# $LastChangedDate$
+# $LastChangedBy$
+# $Rev$
 # 
 # Author: fgochez
 ###############################################################################
@@ -21,7 +21,7 @@ getSigmas <- function(obj, what = "final", ...)
 }
 setGeneric("getSigmas")
 
-getSigmas.NMBasicModel <- function(obj, what = "final")
+getSigmas.NMBasicModel <- function(obj, what = "final", ...)
 {
 	validWhat <- intersect(what, PARAMITEMS)
 	invalidWhat <- setdiff(what, PARAMITEMS)
@@ -79,7 +79,7 @@ getSigmas.NMBasicModel <- function(obj, what = "final")
 
 setMethod("getSigmas", signature(obj = "NMBasicModel"), getSigmas.NMBasicModel)
 
-getSigmas.NMBasicModelNM7 <- function(obj, what = "final")
+getSigmas.NMBasicModelNM7 <- function(obj, what = "final", method = 1)
 {
 	methodChosen <- .selectMethod(obj@methodNames, method)
 	sigmas <- obj@sigmaFinal[[methodChosen]]
@@ -90,13 +90,15 @@ getSigmas.NMBasicModelNM7 <- function(obj, what = "final")
 	if(length(invalidWhat)) RNMImportWarning("Invalid items chosen:" %pst% paste(invalidWhat, collapse = ","))
 	
 	oneByOne <- all(dim(sigmas)[1:2] == c(1,1) )
-	finalEstimates <- sigmas[,,"estimates", drop = TRUE]
+	finalEstimates <- sigmas
 	if(oneByOne) finalEstimates <- matrix(finalEstimates, dimnames = dimnames(sigmas)[1:2])
-	if("standardErrors" %in% dimnames(sigmas)[[3]]) 
+	
+	if(!is.null(obj@sigmaStderr[[methodChosen]]))
 	{
-		stdErrors <- sigmas[,,"standardErrors", drop = TRUE]
+		stdErrors <- obj@sigmaStderr[[methodChosen]]
 		if(oneByOne) stdErrors <- matrix(stdErrors, dimnames = dimnames(sigmas)[1:2])
 	}
+	else stdErrors <- NULL
 	
 	initialValues <- obj@sigmaInitial
 	if(oneByOne) initialValues <- matrix(initialValues, dimnames = dimnames(sigmas)[1:2])
@@ -139,25 +141,40 @@ getSigmas.NMBasicModelNM7 <- function(obj, what = "final")
 
 setMethod("getSigmas", signature(obj = "NMBasicModelNM7"), getSigmas.NMBasicModelNM7)
 
-getSigmas.NMRun <- function(obj, what = "final", problemNum = 1)
+getSigmas.NMRun <- function(obj, what = "final", problemNum = 1, method = 1)
 {
 	dat <- getProblem(obj, problemNum)
-	sigmas <- getSigmas(dat, what = what)
+	sigmas <- getSigmas(dat, what = what, method = method)
 	sigmas
 }
 setMethod("getSigmas", signature(obj = "NMRun"), getSigmas.NMRun)
 
-getSigmas.NMSimModel <- function(obj, what = "final", subProblemNum = 1)
+getSigmas.NMSimModel <- function(obj, what = "final", subProblemNum = 1, ...)
 {
-#	if(stdErrors)
-#		RNMImportWarning(msg = "No standard errors are available!")
+	validWhat <- intersect(what, PARAMITEMS)
+	invalidWhat <- setdiff(what, PARAMITEMS)
+	if("stderrors" %in% validWhat)
+		RNMImportWarning(msg = "No standard errors are available!")
+	
 	numSimulations <- obj@numSimulations
 	if(any(!(subProblemNum %in% 1:numSimulations)))
 		RNMImportStop(msg = "Subproblem number is not valid!")	
-	sigmas <- obj@sigmaFinal[, , subProblemNum, drop = FALSE]
-#	if(initial)
-#		attr(sigmas, "Initial") <- obj@sigmaInitial
-	sigmas
+	finalEstimates <- obj@sigmaFinal[, , subProblemNum, drop = FALSE]
+	initial <- obj@sigmaInitial
+	
+	if(length(validWhat) == 1)
+	{
+		res <- switch(validWhat, 
+				"final" = finalEstimates,
+				# TODO: if these are length 0, generate an error?
+				"initial" = initial
+		)
+		# this occurs if the omegas were a 1x1 matrix to begin with.  We wish to force the returned value to be a matrix	
+	} # end if length(validWhat) == 1
+	else
+		res <- list("initial.estimates" = initial, "final.estimates"  = finalEstimates)
+	
+	res
 }
 
 setMethod("getSigmas", signature(obj = "NMSimModel"), getSigmas.NMSimModel)
