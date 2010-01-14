@@ -52,37 +52,3 @@ test.importNmMod <- function()
 	checkEquals(x[[1]]$Sim, expectedSim )
 
 }
-
-# tests NONMEM 7-specific functionality
-
-test.importNmModNM7 <- function( )
-{
-	# a NONMEM 7 file that is largely similar to NONMEM 6, but with various EST statements
-	testDir <- file.path(unitTestPath, "testdata")
-	mod1 <- importNmMod("wexample1.ctl", path = testDir, version = "VII")
-	prob1 <- mod1$problemContents[[1]]
-	
-	checkTrue( all(prob1$Theta[,"Est"] == 2), msg = " |Theta initial loaded correctly " )
-	checkTrue( all(prob1$Theta[,"Lower"] == 0.001), msg = " | Theta lower bounds loaded correctly" )
-	
-	checkTrue( all(prob1$Omega == cbind(c(0.4, 0.001, 0.001, 0.001), c(0.001, 0.4, 0.001, 0.001), 
-							c(0.001, 0.001, 0.4, 0.001), c(0.001, 0.001, 0.001, 0.4))), " |Omega initial imported correctly" )
-	
-	checkTrue( all( prob1$Sigma == 0.6 ) )
-	estMatrix1 <- cbind("method" = c("ITS", "SAEM", "IMP", "COND"), 
-						"file" = c("wexample1.EXT", "", "", "wexample1.EXT"),
-						"remainingText" = 
-								c(" INTERACTION CTYPE=3 NITER=1000 PRINT=5 NOABORT MSFO=wexample1.MSF NSIG=3 SIGL=6",
-							" NBURN=2000 NITER=500 PRINT=100",
-							" EONLY=1 NITER=5 ISAMPLE=3000 PRINT=1",
-							" INTERACTION MAXEVAL=9999 NSIG=2 SIGL=10 PRINT=5 ")
-				)
-	checkEquals(prob1$Estimates, 
-			estMatrix1, " | $Est statement parsed correctly" )
-	# PRIOR with NWPRI should cause exception (issue 1811)
-	tryImport <- try(importNmMod("wexample8.ctl", version = "VII", path = testDir), silent = TRUE)
-	checkTrue(length( grep(tryImport, pattern = "\\$PRIOR NWPRI statement detected\\.  Importing of this is not supported") ) > 0,
-	msg = " |Presence of $PRIOR NWPRI raises exception with adequate error message"   )
-	#			msg = " |Presence of $PRIOR NWPRI raises exception with adequate error message" )
-	
-}
