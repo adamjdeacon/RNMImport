@@ -196,3 +196,39 @@ getOmegas.NMSimModel <- function(obj, what = "final", subProblemNum = 1,...)
 	res
 }
 setMethod("getOmegas", signature(obj = "NMSimModel"), getOmegas.NMSimModel)
+
+getOmegas.NMSimModelNM7 <- function(obj, what = "final", subProblemNum = 1, method = 1, ...)
+{
+	validWhat <- intersect(what, PARAMITEMS)
+	invalidWhat <- setdiff(what, PARAMITEMS)
+	
+	if(length(invalidWhat)) RNMImportWarning("Invalid items chosen:" %pst% paste(invalidWhat, collapse = ","))
+	
+	# select the method
+	methodChosen <- .selectMethod(obj@methodNames, method)
+	omegas <- obj@omegaFinal[[methodChosen]]
+	
+	if("stderrors" %in% validWhat)
+		RNMImportWarning(msg = "No standard errors are available!")
+	
+	numSimulations <- obj@numSimulations
+	if(any(!(subProblemNum %in% 1:numSimulations)))
+		RNMImportStop(msg = "Subproblem number is not valid!")	
+	finalEstimates <- obj@omegaFinal[, , subProblemNum, drop = FALSE]
+	initial <- obj@omegaInitial
+	
+	if(length(validWhat) == 1)
+	{
+		res <- switch(validWhat, 
+				"final" = finalEstimates,
+				# TODO: if these are length 0, generate an error?
+				"initial" = initial
+		)
+		# this occurs if the omegas were a 1x1 matrix to begin with.  We wish to force the returned value to be a matrix	
+	} # end if length(validWhat) == 1
+	else
+		res <- list("initial.estimates" = initial, "final.estimates"  = finalEstimates)
+	
+	res
+}
+setMethod("getOmegas", signature(obj = "NMSimModelNM7"), getOmegas.NMSimModelNM7)
