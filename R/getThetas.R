@@ -160,3 +160,39 @@ getThetas.NMSimModel <- function(obj, what = "final", subProblemNum = 1, ...)
 	res
 }
 setMethod("getThetas", signature(obj = "NMSimModel"), getThetas.NMSimModel)
+
+
+getThetas.NMSimModelNM7 <- function(obj, what = "final", subProblemNum = 1, method = 1, ...)
+{
+	validWhat <- intersect(what, PARAMITEMS)
+	invalidWhat <- setdiff(what, PARAMITEMS)
+	
+	methodChosen <- .selectMethod(obj@methodNames, method)
+	
+	if("stderrors" %in% validWhat)
+		RNMImportWarning(msg = "No standard errors are available!")
+	
+	numSimulations <- obj@numSimulations
+	
+	if(any(!(subProblemNum %in% 1:numSimulations)))
+		RNMImportStop(msg = "Subproblem number is not valid!")	
+	
+	finalEstimates <- obj@thetaFinal[subProblemNum,,methodChosen]
+	
+	initial <- obj@thetaInitial
+	
+	if(length(validWhat) == 1)
+	{
+		res <- switch(validWhat, 
+				"final" = finalEstimates,
+				# TODO: if these are length 0, generate an error?
+				"initial" = initial
+		)
+		# this occurs if the omegas were a 1x1 matrix to begin with.  We wish to force the returned value to be a matrix	
+	} # end if length(validWhat) == 1
+	else
+		res <- list("initial.estimates" = initial, "final.estimates"  = finalEstimates)
+	
+	res
+}
+setMethod("getThetas", signature(obj = "NMSimModelNM7"), getThetas.NMSimModelNM7)
