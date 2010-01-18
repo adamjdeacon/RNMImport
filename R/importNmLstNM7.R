@@ -110,11 +110,16 @@ importNmReport.NM7 <- function( content )
 
 .importNmLstBasicProb.NM7 <- function(contents)
 {
+	
 	# extract number of records and individuals
 	outList <- list() 
 	outList$nRecords     <- colonPop( contents, "TOT\\. NO\\. OF OBS RECS"   , inPlace = FALSE, numeric = TRUE )$op.out
 	outList$nIndividuals <- colonPop( contents, "TOT\\. NO\\. OF INDIVIDUALS", inPlace = FALSE, numeric = TRUE )$op.out
 	
+	# we add a "1" so that there is another section delimiter at the end of the file.  Otherwise, the lasdt
+	# method block WILL NOT be parsed correctly.
+	
+	contents <- c(contents, "1")
 	methodBlocks <- partitionMethods(contents)
 	methodResults <- lapply( methodBlocks, .importMethodBlock)
 	outList$MethodResults <- methodResults
