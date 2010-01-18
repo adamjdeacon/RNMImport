@@ -21,7 +21,7 @@ runRNMImportTests <- function(
 		testDataPaths = c(system.file(package="RNMImport", "unittests"), 
 				"\\\\Mango-data1\\mangowork\\MangoProjects\\RNONMEM2\\data"), 
 		testScriptPaths = c(system.file(package="RNMImport", "unittests"), "testing/externaltests"),
-		runExtern = FALSE,
+		runIntern = TRUE, runExtern = FALSE,
 		printTestProtocol = TRUE,
 		cleanup = TRUE
 )
@@ -39,20 +39,38 @@ runRNMImportTests <- function(
 	.innerTestEnv <<- new.env()
 	# the first set of tests depends on the following global path:
 	# TODO: refactor to avoid usage of a globval variable
-	unitTestPath <<- testDataPaths[1]
-	# first, run the unit tests which are internal 
-	testSuite <- defineTestSuite("Internal unit test suite", dirs = testScriptPaths[1],
-			testFileRegexp = "^runit\\..+\\.[rR]$")
-	res <- runTestSuite(testSuite)
-	# output the unit test HTML report created by RUnit if it is requested
-	if(printTestProtocol)
-		printHTMLProtocol(res, fileName = "RNMImport_internalunit.html" )
 	
-	results[["Internal unit"]] <- res
+	if(runIntern)
+	{
+		
+		unitTestPath <<- testDataPaths[1]
+		
+		# load the test runs that come with the package.  This will speed up the unit tests, since then the
+		# data does not have to be loaded over and over
+		# they will be stored in the global environment .innerTestEnv
 	
-	# now run some test suites dependant on external data
+		internalTestRuns <- list()
+		internalTestRuns$NMBasicNM7 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestDataNM7" ))
+		internalTestRuns$NMBasic <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestRun" ))
+		internalTestRuns$NMSimMod <- importNm( "TestData1SIM.con", path = file.path(unitTestPath, "testdata/TestSimRun" ))
+		internalTestRuns$NMBasicNotab <- importNm( "TestData1notab.ctl", path = file.path(unitTestPath, "testdata/TestRunNotab" ))
+		
+		assign("testRuns", internalTestRuns, envir = .innerTestEnv)
+		
+		
+		# first, run the unit tests which are internal 
+		testSuite <- defineTestSuite("Internal unit test suite", dirs = testScriptPaths[1],
+				testFileRegexp = "^runit\\..+\\.[rR]$")
+		res <- runTestSuite(testSuite)
+		# output the unit test HTML report created by RUnit if it is requested
+		if(printTestProtocol)
+			printHTMLProtocol(res, fileName = "RNMImport_internalunit.html" )
+		
+		results[["Internal unit"]] <- res
+		
+		# now run some test suites dependant on external data
+	}
 	"%pst%" <- RNMImport:::"%pst%"
-	
 	if(runExtern)
 	{
 		.externTestEnv <<- new.env()
@@ -128,4 +146,10 @@ closeTestLogs <- function()
 {
 	lapply(availableLogs(), closeLogConnection)
 	RNMImport:::initializeLogs()
+}
+
+getInternalTestRuns <- function()
+{
+	if(!exists(".innerTestEnv")) stop("Internal test data environment not available!")
+	.innerTestEnv$testRuns
 }
