@@ -31,3 +31,58 @@ test.importNmReport.SimModel <- function()
 	
 }
 
+test.importNmReport.BasicNM7 <- function()
+{
+	report3 <- importNmReport("TestData1.lst", path = file.path(unitTestPath, "testdata/TestDataNM7"))
+	
+	probResults <- report3$problemResults[[1]]
+	
+	checkEquals( report3$VersionInfo, c("Version" = "VII", "Level" = "1.0"), 
+			msg = " |correct version")
+	methResults <- probResults$MethodResults
+	
+	allThetas <- sapply(methResults, function(x) x$FinalEstimates$THETA)
+	allSigmas <- lapply(methResults, function(x) x$FinalEstimates$SIGMA)
+	allOmegas <- lapply(methResults, function(x) x$FinalEstimates$OMEGA)
+	
+	# check thetas
+	
+	checkEquals(allThetas, structure(c(20, 77.3, 1.27, 19.1, 76.7, 1.68), .Dim = c(3L, 2L
+					), .Dimnames = list(c("TH1", "TH2", "TH3"), NULL)), 
+			msg = " |thetas imported correctly")
+	
+	# check sigmas
+	
+	checkEquals(allSigmas, list(structure(0.0259, .Dim = c(1L, 1L), .Dimnames = list("EPS1", 
+									"EPS1")), structure(0.0266, .Dim = c(1L, 1L), .Dimnames = list(
+									"EPS1", "EPS1"))),
+		msg = " |sigmas imported correctly")
+
+	
+	# check omegas
+	
+	checkEquals( allOmegas, 
+			list(structure(c(0.157, 0, 0, 0, 0.162, 0, 0, 0, 0.737), .Dim = c(3L, 
+									3L), .Dimnames = list(c("ETA1", "ETA2", "ETA3"), c("ETA1", "ETA2", 
+											"ETA3"))), structure(c(0.145, 0, 0, 0, 0.149, 0, 0, 0, 1.42), .Dim = c(3L, 
+									3L), .Dimnames = list(c("ETA1", "ETA2", "ETA3"), c("ETA1", "ETA2", 
+											"ETA3")))),
+			msg = " |omegas improted correctly")
+
+	allThetaStderr <- sapply(methResults, function(x) x$StandardError$THETA)
+	allSigmaStderr <- lapply(methResults, function(x) x$StandardError$SIGMA)
+	allOmegaStderr <- lapply(methResults, function(x) x$StandardError$OMEGA)
+	
+	checkTrue(is.null(allThetaStderr[[2]]) & is.null(allSigmaStderr[[2]])
+			 & is.null(allOmegaStderr[[2]]))
+	checkEquals(allSigmaStderr[[1]], structure(0.000746, .Dim = c(1L, 1L), .Dimnames = list("EPS1", 
+							"EPS1")))
+	checkEquals(allOmegaStderr[[1]], structure(c(0.0426, 0, 0, 0, 0.0483, 0, 0, 0, 0.201), .Dim = c(3L, 
+							3L), .Dimnames = list(c("ETA1", "ETA2", "ETA3"), c("ETA1", "ETA2", 
+									"ETA3"))))
+	
+	checkEquals(dim(methResults[[1]]$CorrelationMatrix), c(10, 10))
+	checkEquals(dim(methResults[[1]]$CovarianceMatrix), c(10, 10))
+	checkEquals(dim(methResults[[1]]$InverseCovarianceMatrix), c(10, 10))
+	
+}
