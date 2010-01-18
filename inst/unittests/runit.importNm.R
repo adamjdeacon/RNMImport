@@ -78,6 +78,9 @@ test.importNm.Basic <- function()
 	checkEquals(list(getThetas(prob3), getOmegas(prob3), getSigmas(prob3)), 
 			list(getThetas(prob1), getOmegas(prob1), getSigmas(prob1)), " |parameter estimates still the same, and available")
 	
+	obj <- getObjective(run1, addMinInfo = FALSE)
+	
+	checkEquals(obj, 3228.988)
 }
 
 # tests for NMSimModel, still based on internal data (TestData/TestSimRun)
@@ -124,4 +127,61 @@ test.importNm.SimModel <- function()
 	y <- c(3696.247, 3575.252, 3660.355, 3606.526, 3701.472)
 	names(y) <- paste("sim", 1:5, sep = "") 
 	checkEquals(objectives, y)
+}
+
+# import standard NONMEM 7 run
+
+test.importNm.BasicNM7 <- function()
+{
+	# use pre-loaded run 
+	
+	runs <- RNMImport:::getInternalTestRuns()
+	run1 <- runs[["NMBasicNM7"]]
+	
+	allThetas <- sapply(as.numeric(1:2), function(i) getThetas(run1, method = i, what = "final"))
+	allOmegas <- lapply(as.numeric(1:2), function(i) getOmegas(run1, method = i, what = "final"))
+	allSigmas <- lapply(as.numeric(1:2), function(i) getSigmas(run1, method = i, what = "final"))
+	
+	thetaStderr <- getThetas(run1, method = 1, what = "stderrors")
+	omegaStderr <- getOmegas(run1, method = 1, what = "stderrors")
+	sigmaStderr <- getSigmas(run1, method = 1, what = "stderrors") 
+		
+	covMatrixMeth1 <- getEstimateCov( run1, method = 1, corMatrix = TRUE )
+	covMatrixMeth2 <- getEstimateCov( run1, method = 2)
+	
+	checkTrue(is.null(covMatrixMeth2), msg = " |no covariance matrix for second method")
+	
+	# check thetas
+	
+	checkEquals(allThetas, structure(c(20, 77.3, 1.27, 19.1, 76.7, 1.68), .Dim = c(3L, 2L
+					), .Dimnames = list(c("TH1", "TH2", "TH3"), NULL)), 
+			msg = " |thetas imported correctly")
+	
+	# check sigmas
+	
+	checkEquals(allSigmas, list(structure(0.0259, .Dim = c(1L, 1L), .Dimnames = list("EPS1", 
+									"EPS1")), structure(0.0266, .Dim = c(1L, 1L), .Dimnames = list(
+									"EPS1", "EPS1"))),
+			msg = " |sigmas imported correctly")
+	
+	
+	# check omegas
+	
+	checkEquals( allOmegas, 
+			list(structure(c(0.157, 0, 0, 0, 0.162, 0, 0, 0, 0.737), .Dim = c(3L, 
+									3L), .Dimnames = list(c("ETA1", "ETA2", "ETA3"), c("ETA1", "ETA2", 
+											"ETA3"))), structure(c(0.145, 0, 0, 0, 0.149, 0, 0, 0, 1.42), .Dim = c(3L, 
+									3L), .Dimnames = list(c("ETA1", "ETA2", "ETA3"), c("ETA1", "ETA2", 
+											"ETA3")))),
+			msg = " |omegas imported correctly")
+	
+	checkEquals(sigmaStderr
+					, structure(0.000746, .Dim = c(1L, 1L), .Dimnames = list("EPS1", 
+							"EPS1")))
+	checkEquals(omegaStderr, structure(c(0.0426, 0, 0, 0, 0.0483, 0, 0, 0, 0.201), .Dim = c(3L, 
+							3L), .Dimnames = list(c("ETA1", "ETA2", "ETA3"), c("ETA1", "ETA2", 
+									"ETA3"))))
+	
+	checkEquals( getObjective(run1, method = 1:2, addMinInfo = FALSE), c(3335.250, 2339.093) )
+	
 }
