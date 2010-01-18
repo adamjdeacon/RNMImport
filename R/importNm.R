@@ -101,7 +101,9 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 			isSimOnly <- controlStatements$Sim["simOnly"] == "TRUE"
 			if(isSimOnly)
 				modelList[[i]] <- NMSimDataGen(controlStatements, path, NULL, versionInfo = versionInfo)
-			else # this is a simulation+fitting problem
+			else if(nmVersionMajor == "VII")# this is a simulation+fitting problem
+				modelList[[i]] <- NMSimModelNM7(controlStatements, path, reportStatements, versionInfo = versionInfo)
+			else
 				modelList[[i]] <- NMSimModel(controlStatements, path, reportStatements, versionInfo = versionInfo)
 		} # end !is.null(controlStatements$Sim)
 		else
