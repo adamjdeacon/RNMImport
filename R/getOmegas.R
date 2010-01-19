@@ -214,7 +214,7 @@ getOmegas.NMSimModelNM7 <- function(obj, what = "final", subProblemNum = 1, meth
 	numSimulations <- obj@numSimulations
 	if(any(!(subProblemNum %in% 1:numSimulations)))
 		RNMImportStop(msg = "Subproblem number is not valid!")	
-	finalEstimates <- obj@omegaFinal[, , subProblemNum, drop = FALSE]
+	finalEstimates <- omegas[, , subProblemNum, drop = FALSE]
 	initial <- obj@omegaInitial
 	
 	if(length(validWhat) == 1)
