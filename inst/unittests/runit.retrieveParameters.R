@@ -37,7 +37,7 @@ test.getThetas <- function()
 	tryStderrs <- try(getThetas(run1, what = "stderrors"), silent = TRUE)
 	checkTrue(length(grep(tryStderrs, pattern = "Standard errors not available")) > 0, 
 			msg = " | correct error message when no standard errors available")
-	
+	# stderrors and final
 	checkEquals(getThetas(run3, what = c("final", "stderrors")), 
 			rbind("estimates" = expThetas, "standardErrors" = expThetaStderrs), 
 			msg = " | final and stderrs together is correct" )
@@ -58,9 +58,11 @@ test.getThetas <- function()
 	
 	checkEquals(getThetas(prob2, subProblemNum = 1:5),  simThetas, msg = " |for sim model, final as expected")
 	
-	checkEquals(getThetas(prob2, subProblemNum = 1:5, what = c("final", "initial")),  
-			list("initial.estimates" = simInitial, "final.estimates" = simThetas ), 
+	checkEquals(getThetas(prob2, subProblemNum = 3:4, what = c("final", "initial")),  
+			list("initial.estimates" = simInitial, "final.estimates" = simThetas[3:4,] ), 
 			msg = " |for sim model, final + initial as expected")
+	
+	checkEquals(getThetas(prob2, what = "initial"), simInitial, msg = " |initial alone as expected")
 	
 	######## NONMEM 7 run
 	
