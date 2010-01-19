@@ -186,4 +186,10 @@ test.importMethodBlock <- function()
 	checkTrue(all( c(dim(processedBlock$CovarianceMatrix), dim(processedBlock$InverseCovarianceMatrix), dim(processedBlock$CorrelationMatrix)  ) == 15 ),
 			msg  = " |covariance matrices available and of correct dimension" ) 
 	
+	# check that shrink values have been imported correctly
+	
+	checkEquals(processedBlock$ETAshrink,  c(3.3135, 19.596, 22.806, 14.537) )
+	checkEquals(processedBlock$EPSshrink,  31.694 )
+	#
+	
 }
