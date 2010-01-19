@@ -98,8 +98,8 @@ setClass(
 				omegaFinal = "list",
 				thetaStderr = "list", sigmaStderr = "list",
 				omegaStderr = "list",
-				ETAShrinkage = "numeric",
-				EPSShrinkage = "numeric",
+				ETAShrinkage = "matrix",
+				EPSShrinkage = "matrix",
 				parameterCovMatrices = "list",
 				parameterCorMatrices = "list",
 				minInfo = "character"),
@@ -256,3 +256,9 @@ setClass("NMSimModelNM7", representation("NMProblem", numSimulations = "numeric"
 				thetaInitial = "vector", 
 				omegaInitial = "matrix", sigmaInitial = "matrix", seeds = "numeric"
 		), validity = validity.NMSimModelNM7)
+
+# auxilliary classes for representing report file statements and control file statements
+
+setClass("nmRunReport", representation("list"))
+
+setClass("nmModel", representation("list"))

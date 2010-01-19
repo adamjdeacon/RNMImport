@@ -223,7 +223,7 @@ importNmLstSimModel <- function(contents, numSub = NA)
 		
 	result$problemResults <- problems
 	
-	result
+	new("nmRunReport", result)
 }
 
 #' This routine imports the contents in a NONMEM output report file, and then parses different sections of it
@@ -303,7 +303,7 @@ importNmReport <- function( fileName, path = NULL, controlStatements = NULL)
 		}
 	}
 	result$problemResults <- problemResults
-	result
+	new("nmRunReport", result)
 }
 
 #' Removes extraneous content from the report file text

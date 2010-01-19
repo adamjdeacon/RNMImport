@@ -26,6 +26,12 @@
 					start = objFinalValueLoc[[1]], 
 					stop = objFinalValueLoc[[1]] + attr(objFinalValueLoc[[1]], "match.length") - 1 ) )
 	
+	# retrieve termination status
+	termStatusLineNum <- grep(methodTextBlock, pattern = "#TERM")[1] + 1
+	# browser()
+	# termStatusFinalLineNum <- grep(tail(methodTextBlock, -termStatusLineNum), pattern = "^[[:space:]]*$")[1]
+	blockResult$TermStatus <- gsub(methodTextBlock[termStatusLineNum], pattern = "^[[:space:]]+", replacement = "")
+	
 	# retrieve shrink values
 	# TODO: does this work will many ETAs, or might there be issues with the way the text is wrapped?
 	
@@ -110,7 +116,7 @@ importNmReport.NM7 <- function( content )
 		}
 	}
 	result$problemResults <- problemResults
-	result
+	new("nmRunReport", result)
 }
 
 #' Parses the results of a single BASIC MODEL
@@ -250,7 +256,7 @@ importNmLstSimModel.NM7 <- function(contents, numSub = NA)
 	outList$FinalEstimates <- list(THETA = thetaArray, 
 			OMEGA = omegaList, SIGMA = sigmaList)
 	outList$Objective.Minimum <- objectiveMatrix
-	
+	outList$methodNames <- sapply(subprobStatements[[1]]$MethodResults )
 	
 #	}
 #	else
@@ -283,7 +289,7 @@ importNmLstSimModel.NM7 <- function(contents, numSub = NA)
 #		names(outList$Objective.Minimum) <- "sim1"
 #		
 #	}
-	outList	
+	outList
 }
 
 # internal function meant to be used internally by importNmLstSimModel ONLY
@@ -293,14 +299,6 @@ importNmLstSimModel.NM7 <- function(contents, numSub = NA)
 	methodBlocks <- partitionMethods(txt)
 	methodResults <- lapply( methodBlocks, .importMethodBlock)
 	outList$MethodResults <- methodResults
-	### Find the sections of the list file
-	# lstList <- sectionLst( contents )
-	
-
-	
-	### Extract iteration information
-	# outList$Iter <- .importNmLstIter( lstList[["MONITORING OF SEARCH"]])
-	
 	outList
 }
 

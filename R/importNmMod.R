@@ -85,7 +85,7 @@ importNmMod <- function(
 	}
 	outList$controlFile <- .getFile(fileName, path)
 	outList$problemContents <- problemContents 
-	outList 	
+	new("nmModel" , outList)  	
 }
 
 #' Imports a single NONMEM problem into a list structure
