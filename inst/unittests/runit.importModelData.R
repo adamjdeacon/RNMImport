@@ -61,4 +61,29 @@ test.importModelData <- function()
 					TIME = c(0,.27,0.52,1,1.92,3.5,5.02,9,12),
 					DV = c(NA,1.71,7.91,8.31,8.33,6.85,6.08,4.55,3.01)), msg = " |IGNORE=\"I\" same as IGNORE=I " )
 	
+	# now test FORTRAN 90 type code
+	# Test 6 FORTRAN 90 example 1
+	dataStatement6 <- RNMImport:::.importNmModData("$DATA data3.dat IGNORE=I IGNORE=(TIME==1)") 
+
+	testInput6 <- as.matrix(RNMImport:::importModelData(dataStatement6, inputStatement, path = testDir))
+	rownames(testInput6) <- NULL
+	# checkEquals(testInput$TIME, 0, .27)
+	checkEquals(testInput6, cbind(AMT = c(320,NA,NA,NA,NA,NA,NA,NA), 
+					TIME = c(0,.27,0.52,1.92,3.5,5.02,9,12),
+					DV = c(NA,1.71,7.91,8.33,6.85,6.08,4.55,3.01)), msg = " |IGNORE=list with FORTRAN 95 works as expected")
+
+	# seventh test: Another FORTRAN example
+	
+	dataStatement7 <- RNMImport:::.importNmModData("$DATA data3 IGNORE=(TIME<1)")
+	inputStatement7 <- RNMImport:::.importNmModInput("$INPUT AMT TIME DV")
+	
+	testInput7 <- as.matrix( RNMImport:::importModelData(dataStatement7, inputStatement7, path = testDir) )
+	rownames(testInput7) <- NULL
+	
+	checkEquals( testInput7,
+			cbind(AMT = rep(NA, 8), 
+					TIME = c(1,1.92,3.5,5.02,7.03,9,12,24.3),
+					DV = c(8.31,8.33,6.85,6.08,5.40,4.55,3.01,0.9)), 
+			msg = " |IGNORE=code alone works as expected" )
+	
 }
