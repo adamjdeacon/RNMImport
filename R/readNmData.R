@@ -114,10 +114,6 @@ readNmData <- function(
 			
 		}
 	}
-			
-	### deal with the list ignore declaration
-	# TODO: remove from here
-	# .readNmData.nmSubset( ignore, myData, method = "ignore")
 	
 	### deal with the list accept declaration
 	.readNmData.nmSubset( accept, myData, method = "accept")
@@ -148,6 +144,7 @@ readNmData <- function(
 		link = ".OR."  ){
 	if( !is.null( nmCode) && any(regexMatches(nmCode, "^\\(")) ) 
 	{
+		nmCode <- convertFortran95Ops(nmCode)
 		method <- match.arg( method )
 		dname <- deparse(substitute(data))
 		nmCode <- gsub( "," , ".OR.", nmCode)   # see ?$DATA
@@ -166,6 +163,7 @@ readNmData <- function(
 {
 	if(!is.null(nmCode) )
 	{  
+		nmCode <- convertFortran95Ops(nmCode)
 		dname <- deparse(substitute(data))
 		nmCode <- strsplit( nmCode, "," )[[1]]
 		left  <- gsub( "/.*$","", nmCode  )       # after the first /

@@ -26,12 +26,13 @@ importModelData <- function(
 	if( !.canOpen( fileName )) 
 		RNMImportStop(paste("Unable to open requested data file ", fileName , "\n") )
 	 
-		# now extract the options from the data statement.  These will be passed
+	# now extract the options from the data statement, converting FORTRAN 95 ops to 77 
+	# as needed
 
-	ignore <- dataStatement[,"IG"]
-	accept <- dataStatement[,"ACCEPT"]
-	translate <- dataStatement[,"TRANSLATE"]
-	records <- dataStatement[,"RECORDS"]
+	ignore <- convertFortran95Ops(dataStatement[,"IG"])
+	accept <- convertFortran95Ops(dataStatement[,"ACCEPT"])
+	translate <- convertFortran95Ops(dataStatement[,"TRANSLATE"])
+	records <- convertFortran95Ops(dataStatement[,"RECORDS"])
 	
 	# split out the ignore statement, as individuals tokens (or chunks of code) are seperated by ";"
 	ignoreTokens <- unlist(strsplit(ignore, split = ";"))
