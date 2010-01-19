@@ -26,6 +26,18 @@
 					start = objFinalValueLoc[[1]], 
 					stop = objFinalValueLoc[[1]] + attr(objFinalValueLoc[[1]], "match.length") - 1 ) )
 	
+	# retrieve shrink values
+	# TODO: does this work will many ETAs, or might there be issues with the way the text is wrapped?
+	
+	ETAshrinkLine <- grep("ETAshrink\\(%\\)", x = methodTextBlock, value = TRUE)
+	ETAshrinkText <- strsplit(ETAshrinkLine, split = ":[[:space:]]*")[[1]][2]
+	blockResult$ETAshrink <- as.numeric(.readValues( ETAshrinkText, what = numeric(0) ))
+	
+	EPSshrinkLine <- grep("EPSshrink\\(%\\)", x = methodTextBlock, value = TRUE)
+	EPSshrinkText <- strsplit(EPSshrinkLine, split = ":[[:space:]]*")[[1]][2]
+	blockResult$EPSshrink <- as.numeric(.readValues( EPSshrinkText, what = numeric(0) ))
+	
+	
 	blockResult$Objective.Final <- objFinalValue
 	methodTextBlockSectioned <- sectionMethodBlock(methodTextBlock)
 	blockResult$FinalEstimates <- .importNmLstEstimates(methodTextBlockSectioned$"FINAL PARAMETER ESTIMATE")
