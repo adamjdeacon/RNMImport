@@ -102,6 +102,7 @@ nmData.NMBasicModel <- function(obj, dataTypes = c("input", "output") , returnMo
 }
 
 setMethod("nmData", signature(obj = "NMBasicModel"), nmData.NMBasicModel)
+setMethod("nmData", signature(obj = "NMBasicModelNM7"), nmData.NMBasicModel)
 
 nmData.NMSim<- function(obj, dataTypes = c("input", "output") , 
 		returnMode = c("singleDF", "DFList"),  
@@ -177,6 +178,7 @@ nmData.NMSim<- function(obj, dataTypes = c("input", "output") ,
 
 setMethod("nmData", signature(obj = "NMSimDataGen"), nmData.NMSim)
 setMethod("nmData", signature(obj = "NMSimModel"), nmData.NMSim)
+setMethod("nmData", signature(obj = "NMSimModelNM7"), nmData.NMSim)
 
 nmData.NMRun <- function(obj, dataTypes = c("input", "output") , returnMode = c("singleDF", "DFList"),
 		subset = NULL, problemNum = 1, subProblemNum = NA)
