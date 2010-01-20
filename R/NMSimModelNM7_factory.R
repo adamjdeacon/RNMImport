@@ -32,6 +32,7 @@ NMSimModelNM7 <- function(controlStatements, path, reportContents, versionInfo =
 	seeds <- as.numeric(ifelse(controlStatements$Sim[c("Seed1", "Seed2")] == -1, NA,	
 					controlStatements$Sim[c("Seed1", "Seed2")]))
 	nSim <- as.numeric(controlStatements$Sim["nSub"])
+	methodNames <- reportContents
 	
 	with(reportContents, 
 		{	
@@ -52,7 +53,7 @@ NMSimModelNM7 <- function(controlStatements, path, reportContents, versionInfo =
 							controlStatements, problemStatement = controlStatements$Problem,
 					numMethods = numMethods,
 					# TODO: the following is not correct because method names from the list file are not being stored!
-					methodNames = controlStatements$Estimates[,"method"],
+					methodNames = reportStatements$methodNames,
 					thetaInitial = controlStatements$Theta[,"Est"], 
 					omegaInitial = controlStatements$Omega, 
 					sigmaInitial = controlStatements$Sigma,
