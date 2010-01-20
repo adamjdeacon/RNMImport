@@ -104,8 +104,8 @@ setMethod("getOmegas", signature(obj = "NMBasicModel"), getOmegas.NMBasicModel)
 
 getOmegas.NMBasicModelNM7 <- function(obj, what = "final", method = 1)
 {
-	validWhat <- intersect(what, PARAMITEMS)
-	invalidWhat <- setdiff(what, PARAMITEMS)
+	validWhat <- intersect(what, c(PARAMITEMS, "shrinkage"))
+	invalidWhat <- setdiff(what, c(PARAMITEMS, "shrinkage"))
 
 	if(length(invalidWhat)) RNMImportWarning("Invalid items chosen:" %pst% paste(invalidWhat, collapse = ","))
 	
@@ -125,6 +125,9 @@ getOmegas.NMBasicModelNM7 <- function(obj, what = "final", method = 1)
 		if(oneByOne) stdErrors <- matrix(stdErrors, dimnames = dimnames(omegas)[1:2])
 	}
 	else stdErrors <- NULL
+	
+	shrinkage <- obj@ETAShrinkage[methodChosen,]
+	
 	initialValues <- obj@omegaInitial
 	if(oneByOne) initialValues <- matrix(initialValues, dimnames = dimnames(omegas)[1:2])
 	# no valid option selected, thrown an error
@@ -139,7 +142,8 @@ getOmegas.NMBasicModelNM7 <- function(obj, what = "final", method = 1)
 					if(is.null(stdErrors))
 						RNMImportStop("Standard errors not available \n", call = match.call())
 					stdErrors
-				}
+				},
+				"shrinkage" = shrinkage
 		)
 		# this occurs if the omegas were a 1x1 matrix to begin with.  We wish to force the returned value to be a matrix	
 	} # end if length(validWhat) == 1
@@ -154,6 +158,7 @@ getOmegas.NMBasicModelNM7 <- function(obj, what = "final", method = 1)
 			if(is.null(stdErrors)) RNMImportWarning("Standard errors not available \n")
 			else res$standard.errors <- stdErrors
 		}
+		if("shrinkage" %in% validWhat) res$eta.shrinkage <- shrinkage
 	}
 	res
 }

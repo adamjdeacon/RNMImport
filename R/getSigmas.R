@@ -5,7 +5,6 @@
 # Author: fgochez
 ###############################################################################
 
-
 #' Extracts sigma estimates from a NONMEM object
 #' @param obj An object of class NMBasicModel, NMRun or NMSimModel
 #' @param stdErrors A boolean value that specifies whether standard errors should be returned
@@ -84,11 +83,12 @@ getSigmas.NMBasicModelNM7 <- function(obj, what = "final", method = 1)
 	methodChosen <- .selectMethod(obj@methodNames, method)
 	sigmas <- obj@sigmaFinal[[methodChosen]]
 	
-	validWhat <- intersect(what, PARAMITEMS)
-	invalidWhat <- setdiff(what, PARAMITEMS)
+	validWhat <- intersect(what, c(PARAMITEMS, "shrinkage"))
+	invalidWhat <- setdiff(what, c(PARAMITEMS, "shrinkage"))
 	
 	if(length(invalidWhat)) RNMImportWarning("Invalid items chosen:" %pst% paste(invalidWhat, collapse = ","))
-	
+	# check if the sigma final estimate matrix is 1-by-1.  If so, force it to remain as a matrix
+	# even when drop = FALSE tries to make it otherwise
 	oneByOne <- all(dim(sigmas)[1:2] == c(1,1) )
 	finalEstimates <- sigmas
 	if(oneByOne) finalEstimates <- matrix(finalEstimates, dimnames = dimnames(sigmas)[1:2])
@@ -99,7 +99,7 @@ getSigmas.NMBasicModelNM7 <- function(obj, what = "final", method = 1)
 		if(oneByOne) stdErrors <- matrix(stdErrors, dimnames = dimnames(sigmas)[1:2])
 	}
 	else stdErrors <- NULL
-	
+	shrinkage <- obj@EPSShrinkage[methodChosen,]
 	initialValues <- obj@sigmaInitial
 	if(oneByOne) initialValues <- matrix(initialValues, dimnames = dimnames(sigmas)[1:2])
 	
@@ -115,14 +115,10 @@ getSigmas.NMBasicModelNM7 <- function(obj, what = "final", method = 1)
 					if(is.null(stdErrors))
 						RNMImportStop("Standard errors not available \n", call = match.call())
 					stdErrors
-				}
+				},
+				"shrinkage" = shrinkage
 		)
 		# this occurs if the sigmas were a 1x1 matrix to begin with.  We wish to force the returned value to be a matrix
-		if(is.null(dim(res))) 
-		{ 
-			dim(res) <- c(1,1)
-			dimnames(res) <- dimnames(sigmas)[1:2]	
-		}	
 	} # end if length(validWhat) == 1
 	else
 	{
@@ -135,6 +131,8 @@ getSigmas.NMBasicModelNM7 <- function(obj, what = "final", method = 1)
 			if(is.null(stdErrors)) RNMImportWarning("Standard errors not available \n")
 			else res$standard.errors <- stdErrors
 		}
+		if("shrinkage" %in% validWhat)
+			res$eps.shrinkage <- shrinkage
 	}
 	res
 }
