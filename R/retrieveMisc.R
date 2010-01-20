@@ -1,7 +1,6 @@
 # $LastChangedDate$
 # $Rev$
 
-# TODO: implement or raise tickets about invCorMatrix parameters?
 
 #' Retrieved the variance-covariance matrix of the estimators and optionally
 #'  the correlation and inverse correlation matrices of the selected NONMEM run
@@ -10,7 +9,7 @@
 #' @param corMatrix TRUE or FALSE.  If TRUE, returns correlation matrix as well
 #' @param invCorMatrix TRUE or FALSE, Not implemented yet
 #' @param pdMatrix TRUE or FALSE.  If TRUE, will check that a positive-definite covariance matrix is available.  
-#' If it is not, it will create one based on sample variances and covariances of estimates 
+#' If it is not, it will create one based on sample variances and covariances of estimates.  Not implemented yet
 #' @param ... 
 #' @return A matrix if just the covariance matrix is required, a list of matrices otherwise
 #' @author Mango Solutions
@@ -26,19 +25,23 @@ getEstimateCov <- function(obj, corMatrix = FALSE, invCorMatrix = FALSE, pdMatri
 setGeneric("getEstimateCov")
 
 getEstimateCov.NMRun <- function(obj, corMatrix = FALSE, invCorMatrix = FALSE, pdMatrix = FALSE,  
-		problemNum = 1)	
+		problemNum = 1, method = 1)	
 {
-	getEstimateCov(getProblem(obj, problemNum), corMatrix = corMatrix)
+	getEstimateCov(getProblem(obj, problemNum), corMatrix = corMatrix, method = method)
 }
 
 setMethod("getEstimateCov", signature(obj = "NMRun"), getEstimateCov.NMRun)
 
-getEstimateCov.NMBasicModel <- function(obj, corMatrix = FALSE, invCorMatrix = FALSE, pdMatrix = FALSE)
+getEstimateCov.NMBasicModel <- function(obj, corMatrix = FALSE, invCorMatrix = FALSE, pdMatrix = FALSE , ...
+)
 {
+	
 	parameterCovMatrix <- obj@parameterCovMatrix
+	# check for missing variance-covariance matrix
 	if(all(dim(parameterCovMatrix)) == 0)
 	{
-		logMessage("No covariance matrix available, will compute a new one\n", "stdReport")
+		RNMImportWarning( "Covariance matrix not available, returning NULL\n" )
+		return(NULL)
 		
 	}
 	if(!corMatrix | all(dim(obj@parameterCorMatrix) == 0)) obj@parameterCovMatrix
@@ -47,6 +50,26 @@ getEstimateCov.NMBasicModel <- function(obj, corMatrix = FALSE, invCorMatrix = F
 }
 
 setMethod("getEstimateCov", signature(obj = "NMBasicModel"), getEstimateCov.NMBasicModel)
+
+getEstimateCov.NMBasicModelNM7 <- function(obj, corMatrix = FALSE, invCorMatrix = FALSE, pdMatrix = FALSE , method = 1)
+{
+	methodChosen <- .selectMethod(obj@methodNames, method)
+	parameterCovMatrix <- obj@parameterCovMatrices[[methodChosen]]
+	parameterCorMatrix <- obj@parameterCorMatrices[[methodChosen]]
+	# check for missing variance-covariance matrix
+	if(is.null(parameterCovMatrix))
+	{
+		RNMImportWarning( "Covariance matrix not available, returning NULL\n" )
+		return(NULL)
+		
+	}
+	
+	if(!corMatrix | is.null(parameterCorMatrix)) parameterCovMatrix
+	else list("covariance" = parameterCovMatrix, "correlation" = parameterCorMatrix )
+	
+}
+
+setMethod("getEstimateCov", signature(obj = "NMBasicModelNM7"), getEstimateCov.NMBasicModelNM7)
 
 
 #' Retrieves the final value of the objective function together with the minimization 
@@ -66,9 +89,9 @@ getObjective <- function(obj, addMinInfo = TRUE, ...)
 
 setGeneric("getObjective")
 
-getObjective.NMRun <- function(obj, addMinInfo=TRUE, subProblems=1, problemNum=1)
+getObjective.NMRun <- function(obj, addMinInfo=TRUE, subProblems=1, problemNum=1, method = 1)
 {
-	getObjective(getProblem(obj, problemNum), addMinInfo, subProblems)
+	getObjective(getProblem(obj, problemNum), addMinInfo, subProblems, method = method)
 }
 
 setMethod("getObjective", signature(obj="NMRun"), getObjective.NMRun)
@@ -88,6 +111,32 @@ getObjective.NMBasicModel <- function(obj, addMinInfo=TRUE, ...)
 
 setMethod("getObjective", signature(obj="NMBasicModel"), getObjective.NMBasicModel)
 
+getObjective.NMBasicModelNM7 <- function(obj, addMinInfo=TRUE, method = 1, ...)
+{
+	
+	methodsChosen <- intersect(method, seq_along(obj@methodNames))
+
+	if(length(methodsChosen) == 0)
+		RNMImportStop("No valid method chosen!", call = match.call() )
+	
+	objective <- obj@objectiveFinal[methodsChosen]
+	
+	if(addMinInfo)
+	{
+		if(length(obj@minInfo) == 0)
+			RNMImportWarning("Minimization data is missing, will not return\n")
+		else
+		{
+			attr(objective, "minInfo") <- obj@minInfo[methodsChosen]	
+			RNMImportWarning("Only first line of minimization information is available for NONMEM 7 objects")
+		}
+	}
+	
+	objective
+}
+
+setMethod("getObjective", signature(obj="NMBasicModelNM7"), getObjective.NMBasicModelNM7)
+
 
 getObjective.NMSimModel <- function(obj, addMinInfo = TRUE, subProblems = 1,...)
 {	
@@ -96,6 +145,23 @@ getObjective.NMSimModel <- function(obj, addMinInfo = TRUE, subProblems = 1,...)
 }
 
 setMethod("getObjective", signature(obj="NMSimModel"), getObjective.NMSimModel)
+
+
+getObjective.NMSimModelNM7 <- function(obj, addMinInfo = TRUE, subProblems = 1, method = 1, ...)
+{	
+	
+	methodsChosen <- intersect(method, seq_along(obj@methodNames))
+	
+	if(length(methodsChosen) == 0)
+		RNMImportStop("No valid method chosen!", call = match.call() )
+	
+	objective <- obj@objectiveFinal[subProblems, methodsChosen]
+	objective
+}
+
+setMethod("getObjective", signature(obj="NMSimModelNM7"), getObjective.NMSimModelNM7)
+
+
 
 
 #' Retrieves information about a run's control and report files as a data.frame
