@@ -256,39 +256,7 @@ importNmLstSimModel.NM7 <- function(contents, numSub = NA)
 	outList$FinalEstimates <- list(THETA = thetaArray, 
 			OMEGA = omegaList, SIGMA = sigmaList)
 	outList$Objective.Minimum <- objectiveMatrix
-	outList$methodNames <- sapply(subprobStatements[[1]]$MethodResults )
-	
-#	}
-#	else
-#	{
-#		# if there is only one subproblem, then the file looks virtually identical to a basic model list file
-#		outList <- .importNmLstBasicProbNM7(contents)
-#		
-#		numThetas <- length(outList$MethodResults[[1]]$FinalEstimates$THETA)
-#		
-#		# however,we need to change the dimensions of some returned data
-#		# outList$FinalEstimates$THETA <- matrix(outList$FinalEstimates$THETA, 
-#		# 		nrow = 1, dimnames = list("sim1", names(outList$FinalEstimates$THETA)))
-#		thetaFinals <- t(sapply(outList$MethodResults, 
-#						function(x) x$FinalEstimates$THETA))
-#		thetaArray <- array()
-#		
-#		# outList$FinalEstimates$THETA <-
-#		
-#		x <- outList$FinalEstimates$OMEGA
-#		dim(x) <- c(dim(x), 1)
-#		dimnames(x) <- c(dimnames(outList$FinalEstimates$OMEGA), list("sim1"))
-#		outList$FinalEstimates$OMEGA <- x
-#		
-#		x <- outList$FinalEstimates$SIGMA
-#		dim(x) <- c(dim(x), 1)
-#		dimnames(x) <- c(dimnames(outList$FinalEstimates$SIGMA), list("sim1"))
-#		outList$FinalEstimates$SIGMA <- x
-#		
-#		
-#		names(outList$Objective.Minimum) <- "sim1"
-#		
-#	}
+	outList$methodNames <- sapply(subprobStatements[[1]]$MethodResults, "[[", "method" )
 	outList
 }
 
