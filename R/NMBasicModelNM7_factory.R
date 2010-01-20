@@ -89,6 +89,17 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 				
 				objectiveFinal <- sapply(MethodResults, "[[", "Objective.Final")
 				methodsUsed <- sapply(MethodResults, "[[", "method")
+				if(length(MethodResults[[1]]$ETAshrink) > 1)
+					ETAshrinks <- t( sapply(MethodResults, "[[", "ETAshrink") )
+				else
+					ETAshrinks <- sapply(MethodResults, "[[", "ETAshrink") 
+				if(length(MethodResults[[1]]$EPSshrink) == 1)
+					EPSshrinks <-  matrix(sapply(MethodResults, "[[", "EPSshrink"), ncol = 1 ) 
+				
+				else 
+					EPSshrinks <- t(sapply(MethodResults, "[[", "EPSshrink")) 
+				
+				minInfo <- sapply(MethodResults, "[[", "TermStatus")
 				# attr(objectiveFinal, "methods") <- methodsUsed
 				# create the object
 				new("NMBasicModelNM7", parameterIterations = NULL, 
@@ -108,13 +119,16 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 						omegaStderr = omegaStdErrors,
 						thetaStderr = thetaStdErrors,
 						
+						ETAShrinkage = ETAshrinks,
+						EPSShrinkage = EPSshrinks,
+						
 						additionalVars = as.data.frame(matrix(ncol = 0, nrow = max( nOutDataRows, nInDataRows ))),
 						inputData = inData, 
 						outputData = outTables,
 						methodInfo =  controlStatements$Estimates ,
 						controlStatements = controlStatements,
 						reportStatements = reportContents,
-						minInfo = character(0),
+						minInfo = minInfo,
 						nmVersionMajor = versionInfo["major"],
 						nmVersionMinor = as.numeric(versionInfo["minor"])) 
 				
