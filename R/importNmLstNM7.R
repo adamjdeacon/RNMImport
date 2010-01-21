@@ -43,7 +43,6 @@
 	EPSshrinkText <- strsplit(EPSshrinkLine, split = ":[[:space:]]*")[[1]][2]
 	blockResult$EPSshrink <- as.numeric(.readValues( EPSshrinkText, what = numeric(0) ))
 	
-	
 	blockResult$Objective.Final <- objFinalValue
 	methodTextBlockSectioned <- sectionMethodBlock(methodTextBlock)
 	blockResult$FinalEstimates <- .importNmLstEstimates(methodTextBlockSectioned$"FINAL PARAMETER ESTIMATE")
@@ -134,10 +133,10 @@ importNmReport.NM7 <- function( content )
 	outList$nRecords     <- colonPop( contents, "TOT\\. NO\\. OF OBS RECS"   , inPlace = FALSE, numeric = TRUE )$op.out
 	outList$nIndividuals <- colonPop( contents, "TOT\\. NO\\. OF INDIVIDUALS", inPlace = FALSE, numeric = TRUE )$op.out
 	
-	# we add a "1" so that there is another section delimiter at the end of the file.  Otherwise, the lasdt
-	# method block WILL NOT be parsed correctly.
+	# we replace the final line with a "1" (it is normally a date), otherwise, the last
+	# method block WILL NOT be parsed correctly.  Also
 	
-	contents <- c(contents, "1")
+	contents[length(contents)] <- "1"
 	methodBlocks <- partitionMethods(contents)
 	methodResults <- lapply( methodBlocks, .importMethodBlock)
 	outList$MethodResults <- methodResults
