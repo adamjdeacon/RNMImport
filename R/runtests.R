@@ -18,8 +18,8 @@
 # Individual author: Francisco Gochez
 
 runRNMImportTests <- function(
-		testDataPaths = c(system.file(package="RNMImport", "unittests"), 
-				"\\\\Mango-data1\\mangowork\\MangoProjects\\RNONMEM2\\data"), 
+		internalTestDataPath = system.file(package="RNMImport", "unittests"),
+		externalTestDataPath = 	"\\\\Mango-data1\\mangowork\\MangoProjects\\RNONMEM2\\data", 
 		testScriptPaths = c(system.file(package="RNMImport", "unittests"), "testing/externaltests"),
 		runIntern = TRUE, runExtern = FALSE,
 		printTestProtocol = TRUE,
@@ -43,7 +43,7 @@ runRNMImportTests <- function(
 	if(runIntern)
 	{
 		
-		unitTestPath <<- testDataPaths[1]
+		unitTestPath <<- internalTestDataPath
 		
 		# load the test runs that come with the package.  This will speed up the unit tests, since then the
 		# data does not have to be loaded over and over
@@ -75,15 +75,15 @@ runRNMImportTests <- function(
 	{
 		.externTestEnv <<- new.env()
 		# grab all of the test data at once
-		assign("testRuns",externalTestRuns(testDataPaths[2]) , envir = .externTestEnv)
+		assign("testRuns",externalTestRuns(externalTestDataPath) , envir = .externTestEnv)
 		
-		if(is.na(testDataPaths[2]) || !file.exists(testDataPaths[2]))
+		if(is.na(externalTestDataPath) || !file.exists(externalTestDataPath))
 		{
-			RNMImportWarning("Unable to execute test suite since " %pst% testDataPaths[2] %pst% " does not exist\n",
+			RNMImportWarning("Unable to execute test suite since " %pst% externalTestDataPath %pst% " does not exist\n",
 					call = match.call())
 			return(results)
 		}
-		setNmPath("testpath1", testDataPaths[2])
+		setNmPath("testpath1", externalTestDataPath)
 		# run the "external unit tests"
 		testSuite <- defineTestSuite("External unit test suite", dirs = testScriptPaths[2], 
 				testFileRegexp = "^runitextern1.+\\.[rR]$")
