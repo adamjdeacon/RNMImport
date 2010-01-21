@@ -182,6 +182,10 @@ importNmLstSimModel.NM7 <- function(contents, numSub = NA)
 	# extract the number of records and individuals in the data
 	outList$nRecords     <- colonPop( contents, "TOT\\. NO\\. OF OBS RECS"   , inPlace = FALSE, numeric = TRUE )$op.out
 	outList$nIndividuals <- colonPop( contents, "TOT\\. NO\\. OF INDIVIDUALS", inPlace = FALSE, numeric = TRUE )$op.out
+	
+	# slight hack: the last line is a date, so it should be replaced with a "1" for correct parsing
+	contents[length(contents)] <-"1" 
+			
 	# split off the part of the control file that has the subproblems
 	# This line will look as follows (N is any integer greater than 1):
 	#PROBLEM NO.:         N     SUBPROBLEM NO.:      1
@@ -197,7 +201,8 @@ importNmLstSimModel.NM7 <- function(contents, numSub = NA)
 	# HACK ALERT
 	# the last subproblem does not terminate with a "1" section break for some reason.  This causes
 	# importing to fail for the last subproblem, so we "force" "1" to be the last line.
-	subprobContents[[length(subprobContents)]] <- c(subprobContents[[length(subprobContents)]], "1")	
+	# subprobContents[[length(subprobContents)]] <- c(subprobContents[[length(subprobContents)]], "1")	
+	
 	# import the contents of the individual sub-problems
 	subprobStatements <- lapply(subprobContents, .importSubProbNM7)
 	
