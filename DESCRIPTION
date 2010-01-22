@@ -5,7 +5,7 @@ Version: 0.2.8
 Date: 2009-01-05
 Author: Mango Solutions
 Maintainer: <support@mango-solutions.com>
-Suggests: RUnit
-Depends: utils, stats, methods, tools
+Suggests: RUnit (>= 0.4.22)
+Depends: R (>= 2.8.0), utils, stats, methods, tools
 Description: Imports NONMEM data.  This is a development version
 License: Copyright Mango Solutions, Chippenham SN14 0SQ 2008-2009
