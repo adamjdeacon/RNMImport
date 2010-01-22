@@ -69,17 +69,17 @@ importModelOutputTables <- function(
 		# TODO: Make this logic more robust
 		if(allowFirstOnly & tableStatement[i, FIRSTONLYFIELD])
 		{
-			logMessage("detailedReport", "Firstonly flag found, subsetting rows")
+			logMessage("Firstonly flag found, subsetting rows", "detailedReport")
 			if(! "ID" %in% colnames(currentTable))
 			{
 				RNMImportWarning("Firstonly flag detected in $TABLE statement, but no ID variable present in that table \n")
-				attr(currentTable, FIRSTONLYFIELD) <- FALSE
+				attr(currentTable, FIRSTONLYFIELD) <- TRUE
 			}
 			else
 			{
 				firstRows <- match(unique(currentTable$ID), currentTable$ID)
 				currentTable <- currentTable[firstRows,]
-				attr(currentTable, FIRSTONLYFIELD) <- TRUE 
+				attr(currentTable, FIRSTONLYFIELD) <- FALSE 
 			}
 		}
 		else
@@ -93,6 +93,7 @@ importModelOutputTables <- function(
 		return(tableList)
 	else
 	{
+
 		# determine the "FIRSTONLY" tables, as these cannot be bound together with the other ones due to the size difference
 		tableStyles <- sapply(tableList, function(x) attr(x, FIRSTONLYFIELD))
 		normalTables <- tableList[!tableStyles]
@@ -105,7 +106,7 @@ importModelOutputTables <- function(
 		if((sum(tableStyles) * sum(!tableStyles) > 0))
 		{
 			RNMImportWarning("Found tables of both FIRSTONLY and NON-FIRSTONLY type, returning a list")
-			return("normal.tables" = consolidatedTable, "firstonly.tables" = do.call(cbind, consolidatedTable))
+			return(list("normal.tables" = consolidatedTable, "firstonly.tables" = do.call(cbind, firstOnlyTables)))
 		}
 		else
 			return(consolidatedTable)
