@@ -8,11 +8,12 @@ show.NMRun <- function(object)
 	cat("Output report file: \n")
 	print(fileInfo["reportFile", ])
 	cat("Number of problems:", object@numProblems, "\n")
-	
-	probStatements <- sapply(object@problems, 
-			function(x) x@problemStatement)
-	cat("Problem statements:\n")
-	cat(paste(seq_along(probStatements), probStatements, collapse = "\n"), "\n")
+	cat("Problems:\n******************* \n")
+	for(i  in seq_along(object@problems))
+	{
+		cat("Problem ", i, "\n\n")
+		show(object@problems[[i]])
+	}
 }
 
 setMethod("show", signature(object = "NMRun"), show.NMRun )
