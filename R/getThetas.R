@@ -186,9 +186,12 @@ getThetas.NMSimModelNM7 <- function(obj, what = "final", subProblemNum = 1, meth
 		RNMImportStop(msg = "Subproblem number is not valid!")	
 	
 	finalEstimates <- obj@thetaFinal[subProblemNum,,methodChosen]
-	
-	initial <- obj@thetaInitial
-	
+	# the initial values depend on the method chosen
+	if(methodChosen == 1)
+		initial <- obj@thetaInitial
+	else
+		# this has the estimates only, not the upper and lower bounds
+		initial <- obj@thetaFinal[[methodChosen-1]]
 	if(length(validWhat) == 1)
 	{
 		res <- switch(validWhat, 
