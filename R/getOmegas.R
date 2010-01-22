@@ -127,8 +127,10 @@ getOmegas.NMBasicModelNM7 <- function(obj, what = "final", method = 1)
 	else stdErrors <- NULL
 	
 	shrinkage <- obj@ETAShrinkage[methodChosen,]
-	
-	initialValues <- obj@omegaInitial
+	# initial value depends on the method chosen
+	if(method == 1)
+		initialValues <- obj@omegaInitial
+	else initialValues <- obj@omegaFinal[[methodChosen - 1]]
 	if(oneByOne) initialValues <- matrix(initialValues, dimnames = dimnames(omegas)[1:2])
 	# no valid option selected, thrown an error
 	if(length(validWhat) == 0) RNMImportStop("No valid items selected for retrieval!", call = match.call())
@@ -220,7 +222,11 @@ getOmegas.NMSimModelNM7 <- function(obj, what = "final", subProblemNum = 1, meth
 	if(any(!(subProblemNum %in% 1:numSimulations)))
 		RNMImportStop(msg = "Subproblem number is not valid!")	
 	finalEstimates <- omegas[, , subProblemNum, drop = FALSE]
-	initial <- obj@omegaInitial
+	
+	if(method == 1)
+		initialValues <- obj@omegaInitial
+	else initialValues <- obj@omegaFinal[[methodChosen - 1]]
+	
 	
 	if(length(validWhat) == 1)
 	{
@@ -237,3 +243,10 @@ getOmegas.NMSimModelNM7 <- function(obj, what = "final", subProblemNum = 1, meth
 	res
 }
 setMethod("getOmegas", signature(obj = "NMSimModelNM7"), getOmegas.NMSimModelNM7)
+
+getOmegas.NMSimDataGen <- function(obj, what = "initial", ...)
+{
+	obj@omegaInitial
+}
+
+setMethod("getOmegas", signature(obj = "NMSimDataGen"), getOmegas.NMSimDataGen)
