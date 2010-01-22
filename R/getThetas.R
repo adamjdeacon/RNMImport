@@ -196,3 +196,10 @@ getThetas.NMSimModelNM7 <- function(obj, what = "final", subProblemNum = 1, meth
 	res
 }
 setMethod("getThetas", signature(obj = "NMSimModelNM7"), getThetas.NMSimModelNM7)
+
+getThetas.NMSimDataGen <- function(obj, what = "initial", ...)
+{
+	obj@thetaInitial
+}
+
+setMethod("getThetas", signature(obj = "NMSimDataGen"), getThetas.NMSimDataGen)
