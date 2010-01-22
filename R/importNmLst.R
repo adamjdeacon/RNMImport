@@ -234,11 +234,12 @@ importNmLstSimModel <- function(contents, numSub = NA)
 #' @param controlStatements [L,1](optional) Control statements from the run associated with this output.  Using it 
 #' allows cleaner parsing of the report file  
 #' @param version [C,1] NONMEM version that the report file is extracted from
+#' @param textReport [L,1] Logical.  Should statements be logged to "stdReport" log?
 #' @return A named report with elements holding parsed statements in the report file
 #' @author fgochez
 #' @keywords IO
 
-importNmReport <- function( fileName, path = NULL, controlStatements = NULL)
+importNmReport <- function( fileName, path = NULL, controlStatements = NULL, textReport = FALSE)
 {          
 	logMessage("Importing the lst file " %pst% fileName %pst% "\n", logName = "highLevelParse")
 	
@@ -256,7 +257,7 @@ importNmReport <- function( fileName, path = NULL, controlStatements = NULL)
 	versionInfo <- nmVersion(content)
 	# check if the version is NONMEM 7.  If so, import with importNmReport.NM7
 	if(substr(versionInfo[1], start = 1, stop = 1) == "7")
-		return(importNmReport.NM7(content))
+		return(importNmReport.NM7(content, textReport = textReport))
 	
 	# if content is NULL, return NULL
 	
@@ -285,8 +286,8 @@ importNmReport <- function( fileName, path = NULL, controlStatements = NULL)
 		# simulation + model
 		if(simStep & objFun)
 		{	
-			#	RNMImportStop("Simulations + fitting problems for NONMEM 7 not yet imported")
-			logMessage(log = "stdReport", "Appears to be a simulation+modelling problem\n")
+			if(textReport)
+				logMessage(log = "stdReport", "Appears to be a simulation+modelling problem\n")
 			problemResults[[i]] <- importNmLstSimModel(currentProb, NA)
 		}
 		# only data simulation, no fit step
@@ -297,7 +298,8 @@ importNmReport <- function( fileName, path = NULL, controlStatements = NULL)
 		}
 		else
 		{
-			logMessage(log = "stdReport", "Appears to be a standard model\n")
+			if(textReport)
+				logMessage(log = "stdReport", "Appears to be a standard model\n")
 			problemResults[[i]] <- .importNmLstBasicProb(currentProb)
 			
 		}

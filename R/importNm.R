@@ -14,12 +14,13 @@
 #' is surrounded by round brackets
 #' @param dropInputColumns Logical flag.  If TRUE, those columns of the input data flagged for dropping in the 
 #' $INPUT statement will not be imported with the run
+#' @param textReport [L,1] Logical flag.  If TRUE, various standard text outputs will be logged to stdReport
 #' @return An NMRun object that holds the information of the NONMEM run
 #' @author fgochez, rweeks
 #' @keywords IO
 #' @export
 
-importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns = TRUE)
+importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns = TRUE, textReport = FALSE)
 {
 	
 	# collapse the file names to lower case if we are using a windows system
@@ -71,7 +72,7 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 	# read the control file contents
 	
 	# read in the list file contents.  Note that they should only be omitted in the case of a single SIMONLY run
-	reportContents <- importNmReport(reportFile, path = path)
+	reportContents <- importNmReport(reportFile, path = path, textReport = textReport)
 	
 	probResults <- reportContents$problemResults
 	
@@ -83,7 +84,8 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 
 	# read the control file contents, using the appropriate version
 	
-	controlContents <- importNmMod(conFile,  path = path, version = versionInfo["major"])
+	controlContents <- importNmMod(conFile,  path = path, version = versionInfo["major"], 
+			textReport = textReport)
 	problems <- controlContents$problemContents
 	numProblems <- length(problems)
 	

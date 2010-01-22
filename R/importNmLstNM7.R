@@ -59,11 +59,12 @@
 #' Parses the contents of a NONMEM 7 report file into a list of parsed components 
 #' (see the design info for details on the return structure)
 #' @param content [C,+] The report file's text. 
+#' @param textReport [L,1] Should standard text messages be logged to the stdReport log?
 #' @title Import NONMEM 7 report file
 #' @return A list with various parsed components of the report file.
 #' @author fgochez
 
-importNmReport.NM7 <- function( content )
+importNmReport.NM7 <- function( content, textReport = FALSE )
 {
 	if( is.null(content) )  {
 		RNMImportWarning(paste("Contents of the list file", fileName, "were empty or read incorrectly"))
@@ -98,7 +99,8 @@ importNmReport.NM7 <- function( content )
 		if(simStep & objFun)
 		{	
 		#	RNMImportStop("Simulations + fitting problems for NONMEM 7 not yet imported")
-			logMessage(log = "stdReport", "Appears to be a simulation+modelling problem\n")
+			if(textReport)
+				logMessage(log = "stdReport", "Appears to be a simulation+modelling problem\n")
 			problemResults[[i]] <- importNmLstSimModel.NM7(currentProb, NA)
 		}
 		# only data simulation, no fit step
@@ -109,7 +111,8 @@ importNmReport.NM7 <- function( content )
 		}
 		else
 		{
-			logMessage(log = "stdReport", "Appears to be a standard model\n")
+			if(textReport)
+				logMessage(log = "stdReport", "Appears to be a standard model\n")
 			problemResults[[i]] <- .importNmLstBasicProb.NM7(currentProb)
 
 		}
