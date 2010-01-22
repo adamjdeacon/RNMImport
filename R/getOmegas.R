@@ -128,7 +128,7 @@ getOmegas.NMBasicModelNM7 <- function(obj, what = "final", method = 1)
 	
 	shrinkage <- obj@ETAShrinkage[methodChosen,]
 	# initial value depends on the method chosen
-	if(method == 1)
+	if(methodChosen == 1)
 		initialValues <- obj@omegaInitial
 	else initialValues <- obj@omegaFinal[[methodChosen - 1]]
 	if(oneByOne) initialValues <- matrix(initialValues, dimnames = dimnames(omegas)[1:2])
@@ -223,7 +223,7 @@ getOmegas.NMSimModelNM7 <- function(obj, what = "final", subProblemNum = 1, meth
 		RNMImportStop(msg = "Subproblem number is not valid!")	
 	finalEstimates <- omegas[, , subProblemNum, drop = FALSE]
 	
-	if(method == 1)
+	if(methodChosen == 1)
 		initialValues <- obj@omegaInitial
 	else initialValues <- obj@omegaFinal[[methodChosen - 1]]
 	

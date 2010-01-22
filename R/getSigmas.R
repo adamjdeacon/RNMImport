@@ -103,7 +103,7 @@ getSigmas.NMBasicModelNM7 <- function(obj, what = "final", method = 1)
 	
 	# initial value depends on the number of the method 
 	
-	if(method == 1)
+	if(methodChosen == 1)
 		initialValues <- obj@sigmaInitial
 	else initialValues <- obj@sigmaFinal[[methodChosen - 1]]
 	
@@ -165,10 +165,7 @@ getSigmas.NMSimModel <- function(obj, what = "final", subProblemNum = 1, ...)
 		RNMImportStop(msg = "Subproblem number is not valid!")	
 	finalEstimates <- obj@sigmaFinal[, , subProblemNum, drop = FALSE]
 	
-	if(method == 1)
-		initialValues <- obj@sigmaInitial
-	else initialValues <- obj@sigmaFinal[[methodChosen - 1]]
-	
+	initialValues <- obj@sigmaInitial
 	
 	if(length(validWhat) == 1)
 	{
@@ -202,7 +199,9 @@ getSigmas.NMSimModelNM7 <- function(obj, what = "final", subProblemNum = 1, meth
 		RNMImportStop(msg = "Subproblem number is not valid!")	
 	finalEstimates <- sigmas[, , subProblemNum, drop = FALSE]
 	initial <- obj@sigmaInitial
-	
+	if(methodChosen == 1)
+		initialValues <- obj@sigmaInitial
+	else initialValues <- obj@sigmaFinal[[methodChosen - 1]]
 	if(length(validWhat) == 1)
 	{
 		res <- switch(validWhat, 

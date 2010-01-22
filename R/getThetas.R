@@ -93,9 +93,17 @@ getThetas.NMBasicModelNM7 <- function(obj, what = "final",	method = 1,...)
 	
 	finalEstimates <- thetas 
 	stdErrors <- obj@thetaStderr[[methodChosen]]
-
-	initialValues <- obj@thetaInitial
-	
+	# the initial values depend on the method chosen
+	if(methodChosen == 1)
+		initialValues <- obj@thetaInitial
+	else
+	{
+		# this has the estimates only, not the upper and lower bounds
+		x <- obj@thetaFinal[[methodChosen-1]]
+		# extract this to have access to the upper and lower bounds
+		initialValues <- obj@thetaInitial
+		initialValues["initial", ] <- x
+	}
 	if(length(validWhat) == 0) RNMImportStop("No valid items selected for retrieval!", call = match.call())
 	
 	if(length(validWhat) == 1)
