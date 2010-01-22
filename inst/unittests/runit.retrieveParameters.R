@@ -94,10 +94,19 @@ test.getOmegas <- function()
 	checkEquals(omegaTest1,  expOmegaInit)
 	checkEquals(omegaTest2,  expOmegaInit)	
 	
-	run3 <- importNm(conFile = "testdata1notab.ctl", 
-			reportFile = "testdata1notab.lst", 
-			path = file.path(unitTestPath,"testdata/testrunnotab"))
+	run3 <- testRuns$NMBasicNotab
+	omegaTest3 <- getOmegas(run3, what = c("final", "stderrors"))
+	omegaStderrs <- structure(c(0.0239, 0, 0, 0, 0.022, 0, 0, 0, 0.345), .Dim = c(3L, 
+					3L), .Dimnames = list(c("OMEGA1", "OMEGA2", "OMEGA3"), c("OMEGA1", 
+							"OMEGA2", "OMEGA3")))
+	checkEquals(omegaTest3, list(final.estimates = expOmegas, 
+					standard.errors = omegaStderrs), msg = " | final + standard errors as expected")
 	
+	# check exception handling
+
+	tryOmega <- try(getOmegas(run3, what = "foo"))
+	checkTrue( inherits(tryOmega, "try-error") )
+	checkTrue(length(grep( tryOmega, pattern = "No valid items selected for retrieval!" )) > 0)
 	
 	#Check NMSimModel
 	
