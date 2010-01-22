@@ -21,10 +21,11 @@
 #' @keywords IO
 
 importNmMod <- function(
-		fileName = NULL, path = NULL, version = "VI")
+		fileName = NULL, path = NULL, version = "VI", textReport = FALSE )
 {	
 	# log messages
-	logMessage(logName = "stdReport", paste("Importing file", fileName, "\n"))
+	if(textReport)
+		logMessage(logName = "stdReport", paste("Importing file", fileName, "\n"))
 	
 	path <- processPath(path)
 	### import the file or just read the character vector on textFile             
