@@ -100,7 +100,13 @@ getSigmas.NMBasicModelNM7 <- function(obj, what = "final", method = 1)
 	}
 	else stdErrors <- NULL
 	shrinkage <- obj@EPSShrinkage[methodChosen,]
-	initialValues <- obj@sigmaInitial
+	
+	# initial value depends on the number of the method 
+	
+	if(method == 1)
+		initialValues <- obj@sigmaInitial
+	else initialValues <- obj@sigmaFinal[[methodChosen - 1]]
+	
 	if(oneByOne) initialValues <- matrix(initialValues, dimnames = dimnames(sigmas)[1:2])
 	
 	# no valid option selected, thrown an error
@@ -158,7 +164,11 @@ getSigmas.NMSimModel <- function(obj, what = "final", subProblemNum = 1, ...)
 	if(any(!(subProblemNum %in% 1:numSimulations)))
 		RNMImportStop(msg = "Subproblem number is not valid!")	
 	finalEstimates <- obj@sigmaFinal[, , subProblemNum, drop = FALSE]
-	initial <- obj@sigmaInitial
+	
+	if(method == 1)
+		initialValues <- obj@sigmaInitial
+	else initialValues <- obj@sigmaFinal[[methodChosen - 1]]
+	
 	
 	if(length(validWhat) == 1)
 	{
@@ -209,3 +219,10 @@ getSigmas.NMSimModelNM7 <- function(obj, what = "final", subProblemNum = 1, meth
 }
 
 setMethod("getSigmas", signature(obj = "NMSimModelNM7"), getSigmas.NMSimModelNM7)
+
+getSigmas.NMSimDataGen <- function(obj, what = "initial", ...)
+{
+	obj@sigmaInitial
+}
+
+setMethod("getSigmas", signature(obj = "NMSimDataGen"), getSigmas.NMSimDataGen)
