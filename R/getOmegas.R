@@ -233,12 +233,12 @@ getOmegas.NMSimModelNM7 <- function(obj, what = "final", subProblemNum = 1, meth
 		res <- switch(validWhat, 
 				"final" = finalEstimates,
 				# TODO: if these are length 0, generate an error?
-				"initial" = initial
+				"initial" = initialValues
 		)
 		# this occurs if the omegas were a 1x1 matrix to begin with.  We wish to force the returned value to be a matrix	
 	} # end if length(validWhat) == 1
 	else
-		res <- list("initial.estimates" = initial, "final.estimates"  = finalEstimates)
+		res <- list("initial.estimates" = initialValues, "final.estimates"  = finalEstimates)
 	
 	res
 }
