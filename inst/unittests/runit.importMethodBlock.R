@@ -190,6 +190,7 @@ test.importMethodBlock <- function()
 	
 	checkEquals(processedBlock$ETAshrink,  c(3.3135, 19.596, 22.806, 14.537) )
 	checkEquals(processedBlock$EPSshrink,  31.694 )
-	#
 	
+	# check that first line of objective fun termination value is available
+	checkEquals(processedBlock$TermStatus, "OPTIMIZATION COMPLETED")
 }
