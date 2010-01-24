@@ -51,8 +51,9 @@ nmData.NMBasicModel <- function(obj, dataTypes = c("input", "output") , returnMo
 	returnMode <- match.arg(returnMode)
 	
 	# check for FIRSTONLY
-	if("output" %in% dataTypes & class(obj@outputData) == "list") {
-		RNMImportWarning("FIRSTONLY output data without ID column currently ignored\n")
+	if(class(obj@outputData) == "list") {
+		if("output" %in% dataTypes) 
+			RNMImportWarning("FIRSTONLY output data without ID column currently ignored\n")
 		outputData <- obj@outputData[["normal.tables"]]
 		
 	}
@@ -122,21 +123,25 @@ nmData.NMSim<- function(obj, dataTypes = c("input", "output") ,
 	inData <- obj@inputData
 	returnMode <- match.arg(returnMode)
 
-	if("output" %in% dataTypes & class(obj@outputData) == "list") {
-		RNMImportWarning("FIRSTONLY output data without ID column currently ignored\n")
+	if(class(obj@outputData) == "list") {
+		if("output" %in% dataTypes ) 
+			RNMImportWarning("FIRSTONLY output data currently ignored\n")
 		outData <- obj@outputData[["normal.tables"]]
 		
 	}
 	else outData <- obj@outputData
-	
-	
-	# create a simulation number factor
-	simNum <- gl(obj@numSimulations, nrow(outData) / obj@numSimulations , ordered = TRUE)
-	outData <- cbind(outData, "NSIM" = simNum)
-	# extract requested simulations
 	if(is.na(subProblemNum)) subProblemNum = 1:obj@numSimulations
-	outData <- subset(outData, NSIM %in% subProblemNum)
 	
+	if("output" %in% dataTypes)
+	{
+	
+		# create a simulation number factor
+		simNum <- gl(obj@numSimulations, nrow(outData) / obj@numSimulations , ordered = TRUE)
+		outData <- cbind(outData, "NSIM" = simNum)
+		# extract requested simulations
+		if(is.na(subProblemNum)) subProblemNum = 1:obj@numSimulations
+		outData <- subset(outData, NSIM %in% subProblemNum)
+	}
 	# only one data.frame to return
 	if(length(dataTypes) == 1)
 	{
