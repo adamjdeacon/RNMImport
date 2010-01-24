@@ -9,10 +9,10 @@
 #' Imports one of the new files produced by NONMEM 7: .phi, .cor, .cov, etc. into a  list of data.frames.
 #' @param file Name of the file
 #' @param path Path to the file (including NONMEM path in brackets)
-#' @param type Type of the file: One of cov, ext, or phi.  
+#' @param type Type of the file: One of "cov", "ext", or "phi".  
 #' @title Import new NONMEM 7 files
 #' @return a list of data.frames holding the content of the individual sub-tables within each file.  Each
-#' table will ha
+#' table will have as an attribute "method", holding the name of the method associated to it
 #' @author fgochez
 #' @export
 
