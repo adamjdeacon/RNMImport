@@ -37,6 +37,13 @@
 	thetaLines <- .rmSpaceInBrackets( thetaLines )                   # remove spaces inside brackets
 	thetaLines <- stripBlanks( thetaLines )
 	
+	# now we must check for declarations of the form (A B C)
+	# if we find them, we will replace them with (A,B,C)
+	
+	thetaLines <- gsub(x = thetaLines, "\\(([-]{0,1}\\d+(?:\\.\\d+)?)\\s+([-]{0,1}\\d+(?:\\.\\d+)?)\\s+([-]{0,1}\\d+(?:\\.\\d+)?)\\)",
+			replacement = "(\\1,\\2,\\3)", 
+			extended = TRUE, perl = TRUE)
+	
 	thetaLines <- regexSplit(thetaLines, "\\)?[[:space:]]+\\(?")
 	# add additional spaces around "FIX"
 	
