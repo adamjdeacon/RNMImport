@@ -90,7 +90,7 @@ getThetas.NMBasicModelNM7 <- function(obj, what = "final",	method = 1,...)
 	
 	methodChosen <- .selectMethod(obj@methodNames, method)
 	thetas <- obj@thetaFinal[[methodChosen]]
-	
+	#browser()
 	finalEstimates <- thetas 
 	stdErrors <- obj@thetaStderr[[methodChosen]]
 	# the initial values depend on the method chosen
@@ -102,7 +102,7 @@ getThetas.NMBasicModelNM7 <- function(obj, what = "final",	method = 1,...)
 		x <- obj@thetaFinal[[methodChosen-1]]
 		# extract this to have access to the upper and lower bounds
 		initialValues <- obj@thetaInitial
-		initialValues["initial", ] <- x
+		initialValues["initial", ] <- unname(x)
 	}
 	if(length(validWhat) == 0) RNMImportStop("No valid items selected for retrieval!", call = match.call())
 	
@@ -122,7 +122,7 @@ getThetas.NMBasicModelNM7 <- function(obj, what = "final",	method = 1,...)
 	} # end if length(validWhat) == 1
 	else
 	{
-		res <- matrix(ncol = length(thetas), nrow = 0, dimnames = list(NULL, names(thetas)))
+		res <- matrix(ncol = length(thetas), nrow = 0, dimnames = list(NULL, colnames(initialValues)))
 		if("initial" %in% validWhat) res <- rbind(res, initialValues )
 		if("final" %in% validWhat) res <- rbind(res, "estimates" = finalEstimates)
 		if( "stderrors" %in% validWhat )
@@ -191,7 +191,7 @@ getThetas.NMSimModelNM7 <- function(obj, what = "final", subProblemNum = 1, meth
 		initial <- obj@thetaInitial
 	else
 		# this has the estimates only, not the upper and lower bounds
-		initial <- obj@thetaFinal[[methodChosen-1]]
+		initial <- obj@thetaFinal[subProblemNum,, methodChosen - 1]
 	if(length(validWhat) == 1)
 	{
 		res <- switch(validWhat, 
