@@ -201,7 +201,7 @@ getSigmas.NMSimModelNM7 <- function(obj, what = "final", subProblemNum = 1, meth
 	
 	if(methodChosen == 1)
 		initialValues <- obj@sigmaInitial
-	else initialValues <- obj@sigmaFinal[[methodChosen - 1]]
+	else initialValues <- obj@sigmaFinal[[methodChosen - 1]][,,subProblemNum, drop = FALSE]
 	if(length(validWhat) == 1)
 	{
 		res <- switch(validWhat, 
