@@ -66,6 +66,23 @@ test.getThetas <- function()
 	
 	######## NONMEM 7 run
 	
+	run3 <- testRuns[["NMBasicNM7"]]
+	prob3 <- getProblem(run3)
+	
+	checkEquals( getThetas(prob3, what = c("initial", "final"), method = 2), 
+			structure(c(-Inf, 20, Inf, 19.1, -Inf, 77.3, Inf, 76.7, -Inf, 
+							1.27, Inf, 1.68), .Dim = c(4L, 3L), .Dimnames = list(c("lowerBound", 
+									"initial", "upperBound", "estimates"), c("THETA1", "THETA2", 
+									"THETA3"))))
+	
+	checkEquals(getThetas(prob3, what = "initial", method = 1), structure(c(-Inf, 18.7, Inf, -Inf, 87.3, Inf, -Inf, 2.13, Inf
+					), .Dim = c(3L, 3L), .Dimnames = list(c("lowerBound", "initial", 
+									"upperBound"), c("THETA1", "THETA2", "THETA3"))))
+	
+	checkEquals(getThetas(prob3, what = c("stderrors", "final")), 
+			structure(c(20, 1.24, 77.3, 7.71, 1.27, 0.127), .Dim = 2:3, .Dimnames = list(
+							c("estimates", "standardErrors"), c("THETA1", "THETA2", "THETA3"
+							))))
 }
 
 test.getOmegas <- function()
@@ -132,6 +149,18 @@ test.getOmegas <- function()
 	
 	checkEquals(getOmegas(prob2, what = c("final", "initial"), subProblemNum = 1:5), 
 			list("initial.estimates" = initialSimOmegas , "final.estimates" = simOmegas))
+	
+	checkEquals(getOmegas(prob2, what = c("final", "initial"), subProblemNum = 1:5), 
+			list("initial.estimates" = initialSimOmegas , "final.estimates" = simOmegas))
+	
+	# NMBasicModelNM7
+
+	run3 <- testRuns[["NMBasicNM7"]]
+	prob3 <- getProblem(run3)
+	
+	
+	
+	
 }
 
 test.getSigmas <- function()
