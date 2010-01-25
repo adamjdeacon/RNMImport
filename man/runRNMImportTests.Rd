@@ -7,21 +7,19 @@
 }
 
 \usage{
-runRNMImportTests(
-		testDataPaths = c(system.file(package="RNMImport", "unittests"), 
-				"\\\\Mango-data1\\mangowork\\MangoProjects\\RNONMEM2\\data"), 
-		testScriptPaths = c(system.file(package="RNMImport", "unittests"), "testing/externaltests"),
-		runExtern = FALSE,
-		printTestProtocol = TRUE,
-		cleanup = TRUE
-)
+runRNMImportTests(internalTestDataPath = system.file(package = "RNMImport", 
+    "unittests"), externalTestDataPath = "\\\\Mango-data1\\mangowork\\MangoProjects\\RNONMEM2\\data", 
+    testScriptPaths = c(system.file(package = "RNMImport", "unittests"), 
+        "testing/externaltests"), runIntern = TRUE, runExtern = FALSE, 
+    printTestProtocol = TRUE, cleanup = TRUE) 
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{testDataPaths}{ Paths to locate the data for the suites.  Up to 4 may be specified, but the first one should 
-  be located on the user's computer.   }
+  \item{internalTestDataPath}{ Path to the "internal" package-distributed test data }
+  \item{externalTestDataPath}{  Path to the "external" package test data, not distributed with the package}
   \item{testScriptPaths}{ Path where the scripts are located.  By default, will use the package installation directory }
   \item{runExtern}{ Logical flag.  Should the external tests be run? }
+  \item{runIntern}{ Logical flag.  Should the internal tests be run? }
   \item{printTestProtocol}{ Logical flag.  Should HTML reports be produced?}
 	\item{cleanup}{ Should the test environments be deleted after running the tests?  Meant for development purposes. }
 }

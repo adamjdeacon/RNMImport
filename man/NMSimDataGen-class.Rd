@@ -5,6 +5,9 @@
 \alias{show,NMSimDataGen-method}
 \alias{addDerivedCategorical,NMSimDataGen-method}
 \alias{imposeCategoryFormat,NMSimDataGen-method}
+\alias{getOmegas,NMSimDataGen-method}
+\alias{getSigmas,NMSimDataGen-method}
+\alias{getThetas,NMSimDataGen-method}
 
 \title{Class for holding simulation problems that don't fit models}
 \description{This class handles NONMEM models that have a $SIM statement but only simulate data without fitting a mode
@@ -33,6 +36,9 @@ Virtual class \code{"\linkS4class{NMProblem}"}, directly.
 }
 \section{Methods}{
   \describe{
+  	\item{getThetas}{\code{signature(obj = "NMSimDataGen")}: Retrieves initial theta values }
+  	\item{getSigmas}{\code{signature(obj = "NMSimDataGen")}: Retrieves initial sigma values }
+  	\item{getOmegas}{\code{signature(obj = "NMSimDataGen")}: Retrieves initial omega values }
   	\item{addDerivedCategorical}{\code{signature(obj = "NMSimDataGen")}: Create user-defined categorical variables}
     \item{imposeCategoryFormat}{\code{signature(obj = "NMSimDataGen")}: Coerces variables to categories}
     \item{nmData}{\code{signature(object = "NMSimDataGen")}: Retrieves the input/output data, where the output can come from 1 or more subproblems. 

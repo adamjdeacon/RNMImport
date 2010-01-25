@@ -22,7 +22,8 @@ nmData(obj, dataTypes = c("input", "output"), returnMode = c("singleDF", "DFList
 
 
 \value{
-	data.frame or list with "input" and "output" components
+	data.frame or list with "input" and "output" components.  Note that if a table was created with the FIRSTONLY label, it will
+	be ignored.
 }
 
 \author{Mango Solutions <fgochez@mango-solutions.com> }

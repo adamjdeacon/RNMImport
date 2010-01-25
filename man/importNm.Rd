@@ -1,7 +1,8 @@
 \name{importNm}
 \alias{importNm}
 \title{Import a NONMEM run}
-\usage{importNm(conFile, reportFile = NULL, path = NULL, dropInputColumns = TRUE)}
+\usage{importNm(conFile, reportFile = NULL, path = NULL, dropInputColumns = TRUE, 
+    textReport = FALSE) }
 
 \description{Imports a NONMEM run based on a control file and an output list file.  This function assumes that 
 all of the input and output data tables are in the same directory as the control file, though the input
@@ -14,7 +15,7 @@ tables are allowed to be missing.}
 	and the list file extensions stored in the meta-data.}
 	\item{path}{The path where the files are located.  Can be the name of a path stored with setNmPath if it
 	is surrounded by round brackets}
-	\item{dropInputColumns} {Logical flag.  If TRUE, those columns of the input data flagged for dropping in the 
+	\item{dropInputColumns}{Logical flag.  If TRUE, those columns of the input data flagged for dropping in the 
 	 $INPUT statement will not be imported with the run}
 	 \item{textReport}{Logical flag.  If TRUE, various standard text outputs will be logged to stdReport}
 }

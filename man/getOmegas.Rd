@@ -11,7 +11,7 @@ getOmegas(obj, what = "final", ...)
   \item{obj}{NONMEM object}
   \item{what}{[C,+] Character vector of items to extract.  One or more of "final", "stderrors" or "initial" (or "shrinkage" for NONMEM 7 basic models) } 
   \item{\dots}{Additional arguments that apply to different classes. These are problemNum which specifies the run required for NMRun
-    		  ,subProblemNum which specifies the simulation required for NMSimModel[NM7], and method for NONMEM 7 problems}}
+    		  ,subProblemNum which specifies the simulation required for NMSimModel[NM7], and method for NONMEM 7 problems}
 }
 
 \value{
@@ -23,7 +23,7 @@ getOmegas(obj, what = "final", ...)
 \examples{
 	x <- importNm("TestData1.ctl", "TestData1.lst", path  = system.file(package = "RNMImport", "unittests/testdata/TestRun"))
 	x.testModel <- getProblem(x)
-	print(getOmegas(x.testModel, what = "final")	
+	print(getOmegas(x.testModel, what = "final"))	
 }
 
 \keyword{methods}
