@@ -3,7 +3,7 @@
 
 \title{Get Objective Value}
 
-\description{Retrieves the objective function of an NMRun, NMBasicModel, or NMSimModel object }
+\description{Retrieves the objective function of a NONMEM object }
  
  \usage{getObjective(obj, addMinInfo = TRUE, ...) }
  
@@ -12,7 +12,7 @@
 	\item{addMinInfo}{A logical value indicating whether the attribute containing the minimisation
 	information from the NONMEM run should be included with the returned vector} 	
  	
- 	\item{...}{Not implemented yet}
+ 	\item{...}{Additional arguments for other methods (subProblem for simulation model, and method for NONMEM 7 }
  	}
  	
  \value{A numeric vector with an additional attribute if addMinInfo is set to TRUE}

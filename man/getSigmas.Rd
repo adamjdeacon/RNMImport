@@ -4,28 +4,26 @@
 \description{ A generic function that extracts sigma estimates (and initial estimates and standard errors if specified) from a NONMEM object.
 }
 \usage{
-getSigmas(obj, stdErrors = FALSE, initial = FALSE, ...)
+getSigmas(obj, what = "final", ...) 
 }
 
 \arguments{
-  \item{obj}{An object of class NMBasicModel, NMRun or NMSimModel}
-  \item{stdErrors}{A boolean value that specifies whether standard errors should be returned}
-  \item{initial}{A boolean value that specifies whether initial values of sigma should be returned}
+  \item{obj}{NONMEM object}
+  \item{what}{[C,+] Character vector of items to extract.  One or more of "final", "stderrors" or "initial" (or "shrinkage" for NONMEM 7 basic models)  } 
   \item{\dots}{Additional arguments that apply to different classes. These are problemNum which specifies the run required for NMRun
-   and subProblemNum which specifies the simulation required for NMSimModel}
+    		  ,subProblemNum which specifies the simulation required for NMSimModel[NM7], and method for NONMEM 7 problems}}
 }
-
 
 \value{
-	A 3 dimensional array with a matrix of estimates, and if specified, a matrix of initial values and standard errors
+	A named list of matrices with final estimates, initial estimates, standard errors, and EPS shrinkages etc. as applicable
 }
 
-\author{Mango Solutions <rweeks@mango-solutions.com>}
+\author{Mango Solutions}
 
 \examples{
 	x <- importNm("TestData1.ctl", "TestData1.lst", path  = system.file(package = "RNMImport", "unittests/testdata/TestRun"))
 	x.testModel <- getProblem(x)
-	print(getSigmas(x.testModel, stdErrors = FALSE))	
+	print(getSigmas(x.testModel))
 }
 
 \keyword{methods}

@@ -16,6 +16,7 @@ tables are allowed to be missing.}
 	is surrounded by round brackets}
 	\item{dropInputColumns} {Logical flag.  If TRUE, those columns of the input data flagged for dropping in the 
 	 $INPUT statement will not be imported with the run}
+	 \item{textReport}{Logical flag.  If TRUE, various standard text outputs will be logged to stdReport}
 }
 
 \value{An NMRun object that holds the information of the NONMEM run}

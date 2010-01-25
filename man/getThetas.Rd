@@ -4,29 +4,27 @@
 \description{A generic function that extracts theta estimates (and initial estimates and standard errors if specified) from a NONMEM object.
 }
 \usage{
-getThetas(obj, stdErrors = FALSE, initial = FALSE, ...)
+getThetas(obj, what = "final", ...)
 }
 
 \arguments{
-  \item{obj}{An object of class NMBasicModel, NMRun or NMSimModel}
-  \item{stdErrors}{A boolean value that specifies whether standard errors should be returned}
-  \item{initial}{A boolean value that specifies whether initial values of theta should be returned}
+  \item{obj}{NONMEM object}
+  \item{what}{[C,+] Character vector of items to extract.  One or more of "final", "stderrors" or "initial"  } 
   \item{\dots}{Additional arguments that apply to different classes. These are problemNum which specifies the run required for NMRun
-   and subProblemNum which specifies the simulation required for NMSimModel}
+    		  ,subProblemNum which specifies the simulation required for NMSimModel[NM7], and method for NONMEM 7 problems}
 }
 
 \value{
 	A matrix of named rows for final estimates, initial estimates, standard errors etc. as applicable
 }
 
-\author{Mango Solutions <rweeks@mango-solutions.com>}
+\author{Mango Solutions}
 
 \examples{
 	x <- importNm("TestData1.ctl", "TestData1.lst", path  = system.file(package = "RNMImport", "unittests/testdata/TestRun"))
 	x.testModel <- getProblem(x)
-	print(getThetas(x.testModel, stdErrors = FALSE))	
+	print(getThetas(x.testModel, what = c("initial", "final")))	
 }
 
 \keyword{methods}
 \keyword{utilities}
-
