@@ -225,7 +225,7 @@ getOmegas.NMSimModelNM7 <- function(obj, what = "final", subProblemNum = 1, meth
 	
 	if(methodChosen == 1)
 		initialValues <- obj@omegaInitial
-	else initialValues <- obj@omegaFinal[[methodChosen - 1]][,,subProbleNum, drop = FALSE]
+	else initialValues <- obj@omegaFinal[[methodChosen - 1]][,,subProblemNum, drop = FALSE]
 	
 	
 	if(length(validWhat) == 1)
