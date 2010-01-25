@@ -9,13 +9,13 @@
 PARAMITEMS <- c("final", "initial", "stderrors")
 
 #' Extracts theta estimates from a NONMEM object
-#' @param obj An object of class NMBasicModel, NMRun or NMSimModel
-#' @param stdErrors A boolean value that specifies whether standard errors should be returned
-#' @param initial A boolean value that specifies whether initial values of theta should be returned
+#' @title extract THETA information
+#' @param obj NONMEM object
+#' @param what [C,+] Character vector of items to extract.  One or more of "final", "stderrors" or "initial"  
 #' @param ... Additional arguments that apply to different classes. These are problemNum which specifies the run required for NMRun
-#'    		  and subProblemNum which specifies the simulation required for NMSimModel
+#'    		  ,subProblemNum which specifies the simulation required for NMSimModel[NM7]
 #' @return A matrix of named rows for final estimates, initial estimates, standard errors etc. as applicable
-#' @author rweeks
+#' @author rweeks, fgochez
 
 getThetas <- function(obj, what = "final", ...)
 {
