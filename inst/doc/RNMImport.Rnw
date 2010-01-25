@@ -95,10 +95,10 @@ These take an additional parameter \code{stdError}, which controls whether or no
 available.
 
 <<echo=TRUE, print=FALSE>>=
-print(getThetas(prob, stdError=FALSE))
-print(getOmegas(prob, stError=FALSE))
-print(getThetas(simProblem, stdError=FALSE))
-print(getOmegas(simProblem, stdError=FALSE))
+print(getThetas(prob))
+print(getOmegas(prob))
+print(getThetas(simProblem))
+print(getOmegas(simProblem))
 @
 
 Additional extraction functions include \code{getObjective}, \code{getEstimateCov} (extract estimator covariance and correlation matrices),
@@ -107,8 +107,8 @@ Additional extraction functions include \code{getObjective}, \code{getEstimateCo
 objects as long as the problem numnber is specified (it is 1 by default), for instance:
 
 <<echo=TRUE, print=FALSE>>=
-print(getThetas(run, stdError = FALSE, problemNum = 1))
-print(getOmegas(prob, stError=FALSE, problemNum = 1))
+print(getThetas(run, problemNum = 1))
+print(getOmegas(prob, problemNum = 1))
 
 @
 %
