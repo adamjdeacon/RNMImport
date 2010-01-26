@@ -82,18 +82,12 @@ importModelOutputTables <- function(
 		if(allowFirstOnly & tableStatement[i, FIRSTONLYFIELD])
 		{
 			logMessage("Firstonly flag found, subsetting rows", "detailedReport")
-			if(! "ID" %in% colnames(currentTable))
-			{
-				RNMImportWarning("Firstonly flag detected in $TABLE statement, but no ID variable present in that table \n")
-				attr(currentTable, FIRSTONLYFIELD) <- TRUE
-			}
-			else
-			{
-				firstRows <- match(unique(currentTable$ID), currentTable$ID)
-				currentTable <- currentTable[firstRows,]
-				attr(currentTable, FIRSTONLYFIELD) <- FALSE 
-			}
+			attr(currentTable, FIRSTONLYFIELD) <- TRUE
+
 		}
+		
+		else if(!allowFirstOnly & tableStatement[i, FIRSTONLYFIELD])
+			RNMImportStop("FIRSTONLY table detected, yet allowFirstOnly is set to FALSE", match.call() )
 		else
 		{
 			# set an attribute that controls whether or not the table was read via a "FIRSTONLY" statement
