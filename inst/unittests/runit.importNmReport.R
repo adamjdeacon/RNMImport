@@ -6,6 +6,11 @@
 test.importNmReport.Basic <- function()
 {
 	report1 <- importNmReport("TestData1.lst", path = file.path(unitTestPath, "testdata/TestRun"))
+	
+	report1Class <- class(report1)
+	attributes(report1Class) <- NULL
+	checkEquals( report1Class, "nmRunReport", msg = " |class of returned object is correct")
+	
 	checkTrue("VersionInfo" %in% names(report1), msg = " |VersionInfo is a property of the entire report")
 	conStatements <- importNmMod("TestData1.ctl", path = file.path(unitTestPath, "testdata/TestRun"))
 	report1.withCtl <- importNmReport("TestData1.lst", controlStatements = conStatements, path = file.path(unitTestPath, "testdata/TestRun"))

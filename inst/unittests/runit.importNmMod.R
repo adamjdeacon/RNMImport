@@ -13,6 +13,11 @@ test.importNmMod <- function()
 {
 	testDir <- file.path(unitTestPath, "testdata")
 	dat1 <- importNmMod(file.path(testDir, "control3.con"))
+	
+	dat1Class <- class(dat1)
+	attributes(dat1Class) <- NULL
+	
+	checkEquals(dat1Class, "nmModel", msg = " |object returned by importNmMod now of its own class")
 	checkEquals(length(dat1$Raw), 16, msg = "Length of control3\n" )
 	# only one problem
 	checkEquals(length(dat1$problemContents), 1)
