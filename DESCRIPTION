@@ -1,8 +1,8 @@
 Package: RNMImport
 Type: Package
 Title: Imports NONMEM data
-Version: 0.2.9
-Date: 2009-01-05
+Version: 0.3.0
+Date: 2009-01-26
 Author: Mango Solutions
 Maintainer: <support@mango-solutions.com>
 Suggests: RUnit (>= 0.4.22)
