@@ -102,7 +102,7 @@ test.getOmegas <- function()
 	expOmegaInit <- diag(c(0.128, 0.142, 1.82))
 	dimnames(expOmegaInit) = list(c("OMEGA1", "OMEGA2", "OMEGA3"), c("OMEGA1", "OMEGA2", "OMEGA3"))
 	
-	checkEquals(getOmegas(prob1),  expOmegas)
+	checkEquals(getOmegas(prob1),  expOmegas, msg = " |default parameters : extract final values")
 	checkEquals(getOmegas(run1),  expOmegas)
 	
 	omegaTest1 <- getOmegas(prob1, what = "initial")
@@ -150,8 +150,9 @@ test.getOmegas <- function()
 	checkEquals(getOmegas(prob2, what = c("final", "initial"), subProblemNum = 1:5), 
 			list("initial.estimates" = initialSimOmegas , "final.estimates" = simOmegas))
 	
-	checkEquals(getOmegas(prob2, what = c("final", "initial"), subProblemNum = 1:5), 
-			list("initial.estimates" = initialSimOmegas , "final.estimates" = simOmegas))
+	checkEquals(getOmegas(prob2, what = c("final", "initial"), subProblemNum = 4), 
+			list("initial.estimates" = initialSimOmegas , "final.estimates" = simOmegas[,,4, drop = FALSE]))
+	
 	
 	# NMBasicModelNM7
 
@@ -165,29 +166,35 @@ test.getOmegas <- function()
 
 test.getSigmas <- function()
 {
-	testDir1 <- file.path(unitTestPath, "testdata/TestRun")
-	run1 <- importNm(conFile = "testdata1.ctl", reportFile = "testdata1.lst", 
-			path = testDir1)
+	
+	testRuns <- RNMImport:::getInternalTestRuns()
+	run1 <- testRuns[["NMBasicNotab"]]
 	prob1 <- getProblem(run1)
 	
 	expSigmas <- array(0.0202, c(1,1), dimnames = list("SIGMA1", "SIGMA1"))
-	expSigmaInit <- matrix(0.0231, 1,dimnames = list("SIGMA1", "SIGMA1"))
+	expSigmaStderrs <- array(0.00322, c(1,1), dimnames = list("SIGMA1", "SIGMA1"))
+	expSigmaInit <- matrix(0.0231, 1,dimnames = list("SIGMA1", "SIGMA1")) 
+	
 	
 	checkEquals(getSigmas(prob1),  expSigmas)
 	checkEquals(getSigmas(run1),  expSigmas)
 	checkEquals(getSigmas(prob1, what = "initial"),  expSigmaInit)
 	checkEquals(getSigmas(run1, what = "initial"),  expSigmaInit)
 	
+	checkEquals(getSigmas(prob1, what = c("initial", "stderrors")), list("initial.estimates" = expSigmaInit, 
+					"standard.errors" = expSigmaStderrs) )
+	
 	#Check NMSimModel
-	testDir2 <- file.path(unitTestPath, "testdata/TestSimRun")
-	run2 <- importNm(conFile = "testdata1sim.con", reportFile = "testdata1sim.lst", 
-			path = testDir2)
+	run2 <- testRuns[["NMSimMod"]]
+	
 	prob2 <- getProblem(run2)
 	
 	simSigmas <- array(c(0.0241, 0.026, 0.0262, 0.0295, 0.0244), dim = c(1,1,5), 
 			dimnames = list("SIGMA1", "SIGMA1", c("sim1", "sim2", "sim3", "sim4", "sim5")))
 	sigmaInitial <- matrix(0.0202, 1, dimnames = list("SIGMA1", "SIGMA1"))
 	
-	checkEquals(getSigmas(prob2, subProblemNum = 1:5),  simSigmas)
+	checkEquals(getSigmas(prob2, subProblemNum = 2:4),  simSigmas[,, 2:4, drop = FALSE ])
 	checkEquals(getSigmas(prob2, what = "initial", subProblemNum = 1:5), sigmaInitial)
+	checkEquals(getSigmas(prob2, what = c("final", "initial"), subProblemNum = 3), 
+			list("initial.estimates" = sigmaInitial, "final.estimates" = simSigmas[,,3, drop = FALSE] ) )
 }
