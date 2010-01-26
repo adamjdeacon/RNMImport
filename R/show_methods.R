@@ -35,7 +35,7 @@ show.NMBasicModel <- function(object)
 					cat("Input table dimensions:\n")
 					cat(dim(object@inputData), "\n")
 					cat("Input table columns:\n")
-					cat(colnames(object@outputData), "\n")
+					cat(colnames(object@inputData), "\n")
 				
 				if(!is.null(controlStatements$PRED))
 				{		
@@ -49,9 +49,11 @@ show.NMBasicModel <- function(object)
 					print(PK)
 					cat("\n")
 				}
-				cat("Error:\n")
-				print(Error)
-			
+				if(!is.null(controlStatements$Error))
+				{
+					cat("Error:\n")
+					print(Error)
+				}
 				cat("Parameter estimates:\n###############\n")
 				cat("THETAs:\n")
 				print(object@thetaFinal["estimates",])
@@ -93,7 +95,7 @@ show.NMBasicModelNM7 <- function(object)
 				cat("Input table dimensions:\n")
 				cat(dim(object@inputData), "\n")
 				cat("Input table columns:\n")
-				cat(colnames(object@outputData), "\n")
+				cat(colnames(object@inputData), "\n")
 				
 				if(!is.null(controlStatements$PRED))
 				{		
@@ -107,8 +109,11 @@ show.NMBasicModelNM7 <- function(object)
 					print(PK)
 					cat("\n")
 				}
-				cat("Error:\n")
-				print(Error)
+				if(!is.null(controlStatements$Error))
+				{
+					cat("Error:\n")
+					print(Error)
+				}
 				cat("Methods used: \n")
 				print(object@methodNames)
 				cat("Parameter estimates:\n###############\n")
