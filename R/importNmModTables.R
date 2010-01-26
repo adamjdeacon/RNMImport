@@ -61,14 +61,10 @@
 		x <- gsub( "SKIP", "DROP", x)
 		### at this point, only variables names are left
 		columns <- .readValues( x , what = "character")
-		if( append )
-		{
-			addCols <- c("DV", "PRED", "RES", "WRES")
-			columns <- c( columns, addCols %wo% columns )
-		}
+		
 		columns <- paste( columns, collapse = ", ")
 		data.frame( File = fileName, Columns = columns, NoHeader = noHeader,
-				stringsAsFactors = FALSE, firstOnly = firstOnly)
+				stringsAsFactors = FALSE, firstOnly = firstOnly, append = append)
 	}
 	
 	# extract the releveant information for each tab section
