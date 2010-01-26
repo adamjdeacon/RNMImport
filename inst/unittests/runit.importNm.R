@@ -141,7 +141,7 @@ test.importNm.BasicNM7 <- function()
 	allThetas <- sapply(as.numeric(1:2), function(i) getThetas(run1, method = i, what = "final"))
 	allOmegas <- lapply(as.numeric(1:2), function(i) getOmegas(run1, method = i, what = "final"))
 	allSigmas <- lapply(as.numeric(1:2), function(i) getSigmas(run1, method = i, what = "final"))
-	
+#	
 	thetaStderr <- getThetas(run1, method = 1, what = "stderrors")
 	omegaStderr <- getOmegas(run1, method = 1, what = "stderrors")
 	sigmaStderr <- getSigmas(run1, method = 1, what = "stderrors") 
@@ -184,4 +184,14 @@ test.importNm.BasicNM7 <- function()
 	
 	checkEquals( getObjective(run1, method = 1:2, addMinInfo = FALSE), c(3335.250, 2339.093) )
 	
+	# all shrinkages
+
+	ETAShrinks <- lapply(as.numeric(1:2), function(i) getOmegas(run1, method = i, what = "shrinkage"))
+	EPSShrinks <- lapply(as.numeric(1:2), function(i) getSigmas(run1, method = i, what = "shrinkage"))
+	
+	checkEquals( ETAShrinks[[1]], c(5.0139, 12.1730, 14.9980 ), msg = " |ETA shrink correct for method 1")
+	checkEquals( ETAShrinks[[2]], c(0.072367, 6.459000, 5.190400), msg = " |ETA shrink correct for method 2")
+	
+	checkEquals( EPSShrinks[[2]], -10.145, msg = " |EPS shrink correct for method 2" )
+	checkEquals( EPSShrinks[[1]], 12.013, msg = " |EPS shrink correct for method 1" )
 }

@@ -85,9 +85,17 @@ test.importNmReport.BasicNM7 <- function()
 	checkEquals(allOmegaStderr[[1]], structure(c(0.0426, 0, 0, 0, 0.0483, 0, 0, 0, 0.201), .Dim = c(3L, 
 							3L), .Dimnames = list(c("ETA1", "ETA2", "ETA3"), c("ETA1", "ETA2", 
 									"ETA3"))))
-	
+	# check dimensions of correlation and covariance matrices
 	checkEquals(dim(methResults[[1]]$CorrelationMatrix), c(10, 10))
 	checkEquals(dim(methResults[[1]]$CovarianceMatrix), c(10, 10))
 	checkEquals(dim(methResults[[1]]$InverseCovarianceMatrix), c(10, 10))
 	
+	# check shrink values
+
+	checkEquals( methResults[[1]]$ETAshrink, c(5.0139, 12.1730, 14.9980 ), msg = " |ETA shrink correct for method 1")
+	checkEquals( methResults[[2]]$ETAshrink, c(0.072367, 6.459000, 5.190400), msg = " |ETA shrink correct for method 2")
+	
+	checkEquals( methResults[[2]]$EPSshrink, -10.145, msg = " |EPS shrink correct for method 2" )
+	checkEquals( methResults[[1]]$EPSshrink, 12.013, msg = " |EPS shrink correct for method 1" )
+
 }
