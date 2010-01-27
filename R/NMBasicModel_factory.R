@@ -44,8 +44,8 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 			{
 
 				# check for the covariance/correlation matrices
-				covMatrix <- if(!is.null(reportContents$CovarianceMatrix)) CovarianceMatrix else matrix()
-				corMatrix <- if(!is.null(reportContents$CorrelationMatrix)) CorrelationMatrix else matrix()
+				covMatrix <- if(!is.null(reportContents$CovarianceMatrix)) CovarianceMatrix else matrix(ncol = 0, nrow = 0)
+				corMatrix <- if(!is.null(reportContents$CorrelationMatrix)) CorrelationMatrix else matrix(ncol = 0, nrow = 0)
 				# grab parameter initial values
 				thetaInitial <- t(controlStatements$Theta)
 				# these may be missing in the control statements, so try to extract them from the reportContents
