@@ -96,7 +96,7 @@ test.importNm7Tables <- function()
 			msg = " | 3 arbitary ext (1) rows correct")
 	
 	ext2 <- extFile[[2]]
-	checkEquals(dim(ext2), c(23, 12), msg = " |correct dimensions (ext2)")
+	checkEquals(dim(ext2), c(19, 12), msg = " |correct dimensions (ext2)")
 	checkEquals(attr(ext2, "method"),"Stochastic Approximation Expectation-Maximization", msg = " |correct method")
 	
 	checkEquals(as.matrix(ext2[c(1, 10, 18),] ), structure(c(-2000, -1100, 500, 20.0324, 18.8211, 19.1414, 77.252, 
