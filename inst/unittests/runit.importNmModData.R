@@ -10,7 +10,7 @@
 test.importNmModData <- function()
 {
 	DATACOLNAMES <- c("File", "IG", "ACCEPT", "REWIND", "RECORDS", "TRANSLATE", "NULL")
-	
+	.importNmModData <- RNMImport:::.importNmModData
 	# multiple IGNORE= statements (issue )
 	
 	dataStatement1 <- "$DATA data3.dat IGNORE=I IGNORE=(TIME.EQ.1)"
@@ -41,16 +41,26 @@ test.importNmModData <- function()
 					REWIND="TRUE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
 	checkEquals( dataTest5,dataExpected5, msg = " |Multiple IGNORE= with IGNORE=\"I\" is correct" )
 	
+	dataStatement6 <- "$DATA data3.dat IGNORE=\"I\" IGNORE=(TIME=1)"
+	dataTest6 <- RNMImport:::.importNmModData(dataStatement6)
+	dataExpected6 <- matrix(c( File="data3.dat", IG="I;(TIME=1)", ACCEPT="",     
+					REWIND="TRUE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
+	
+	dataStatement7 <- .importNmModData("$DATA data3.dat IGNORE=\"I\" IGNORE=(TIME.EQ.1,DV.LT.2.01)")
+	dataTest7 <- RNMImport:::.importNmModData(dataStatement7)
+	dataExpected7 <- matrix(c( File="data3.dat", IG="I;(TIME.EQ.1,DV.LT.2.01)", ACCEPT="",     
+					REWIND="TRUE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
+	
 	# FORTRAN 90/95 tests
-	
-	dataTest7 <- RNMImport:::.importNmModData("$DATA data3.dat IGNORE=I IGNORE=(TIME/=0) ACCEPT=(FOO<0)")
-	dataExpected7 <- matrix(c( File="data3.dat", IG="I;(TIME/=0)", ACCEPT="(FOO<0)",     
-					REWIND="TRUE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
-	checkEquals( dataTest7,dataExpected7, msg = " |Mutliple IGNORE= and ACCEPT with FORTRAN 90" )
-	
-	dataTest8 <- RNMImport:::.importNmModData("$DATA data3.dat IGNORE=I IGNORE=(TIME>=0) ACCEPT=(BAR<=100)")
-	dataExpected8 <- matrix(c( File="data3.dat", IG="I;(TIME>=0)", ACCEPT="(BAR<=100)",     
-					REWIND="TRUE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
-	checkEquals( dataTest8,dataExpected8, msg = " |Mutliple IGNORE= and ACCEPT now handled" )
+#	
+#	dataTest7 <- RNMImport:::.importNmModData("$DATA data3.dat IGNORE=I IGNORE=(TIME/=0) ACCEPT=(FOO<0)")
+#	dataExpected7 <- matrix(c( File="data3.dat", IG="I;(TIME/=0)", ACCEPT="(FOO<0)",     
+#					REWIND="TRUE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
+#	checkEquals( dataTest7,dataExpected7, msg = " |Mutliple IGNORE= and ACCEPT with FORTRAN 90" )
+#	
+#	dataTest8 <- RNMImport:::.importNmModData("$DATA data3.dat IGNORE=I IGNORE=(TIME>=0) ACCEPT=(BAR<=100)")
+#	dataExpected8 <- matrix(c( File="data3.dat", IG="I;(TIME>=0)", ACCEPT="(BAR<=100)",     
+#					REWIND="TRUE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
+#	checkEquals( dataTest8,dataExpected8, msg = " |Mutliple IGNORE= and ACCEPT now handled" )
 	
 }
