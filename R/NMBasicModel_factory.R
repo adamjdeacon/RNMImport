@@ -27,10 +27,7 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 	} # end if(inherits(inData, "try-error"))
 	
 	# import output tables if the $TABLE statement is present, else outdata is empty
-	outTables <- if(!is.null(controlStatements$Table)) 
-					importModelOutputTables( tableStatement = controlStatements$Table, path = path ) 
-				else
-					data.frame()
+	outTables <- .importTablesSafely(controlStatements$Table, path = path  )
 	
 	# need to know how many rows the data has, handle FIRSTONLY case here
 	if(inherits(outTables, "list")) nOutDataRows <- max(sapply(outTables, nrow))

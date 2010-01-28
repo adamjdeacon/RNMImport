@@ -19,12 +19,12 @@ NMSimModel <- function(controlStatements, path, reportContents, versionInfo = c(
 		RNMImportWarning(msg)
 		inData <- data.frame()
 	} # end if(inherits(inData, "try-error"))
-	outTables <- if(!is.null(controlStatements$Table)) 
-					importModelOutputTables( tableStatement = controlStatements$Table, path = path ) 
-				else
-					data.frame()
+
+	outTables <- .importTablesSafely(controlStatements$Table, path = path  )
+
 	# if the output tables are a "list", then there was a FIRSTONLY statment, or for some other reason
 	# the number of rows of all of the output tables were not equivalent
+	
 	if(inherits(outTables, "list")) nDataRows <- max(sapply(outTables, nrow))
 	else nDataRows <- nrow(outTables)
 	seeds <- as.numeric(ifelse(controlStatements$Sim[c("Seed1", "Seed2")] == -1, NA,	

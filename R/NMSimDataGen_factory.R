@@ -23,8 +23,7 @@ NMSimDataGen <- function(controlStatements, path, reportContents = NULL,
 	
 	with(controlStatements , 
 	{
-			outTables <- importModelOutputTables( tableStatement = controlStatements$Table, 
-					path = path )
+			outTables <- .importTablesSafely(controlStatements$Table, path = path  )
 			if(inherits(outTables, "list")) nDataRows <- max(sapply(outTables, nrow))
 			else nDataRows <- nrow(outTables)	
 			seeds <- as.numeric(ifelse(Sim[c("Seed1", "Seed2")] == -1, NA,	Sim[c("Seed1", "Seed2")]))

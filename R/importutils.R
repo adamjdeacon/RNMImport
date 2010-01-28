@@ -1,4 +1,36 @@
+# $LastChangedDate: $
+# $LastChangedBy: $
+# $Rev: $
 
+ 
+#' Import table files "safely".  This routine attempts to import the Table element of a control file, but does
+#' so with additional error handling.  In particular, if the table statement is NULL, or all tables are missing,
+#' an empty data.frame is returned, rather than an exception
+#' @param tableStatement The Table element of an nmModel class object 
+#' @param path Path to the table files
+#' @title Import table files safely
+#' @return The value returned by importModelOutputTables
+#' @author fgochez
+
+.importTablesSafely <- function(tableStatement = NULL, path = "")
+{
+	# NULL table statement should lead to empty data.frame
+	if(is.null(tableStatement))
+		outTables <- data.frame()
+	else {
+		
+		# try to import, and if one can't, catch the error and return an empty data.frame
+		
+		outTables <- try(importModelOutputTables( tableStatement , path = path )) 
+		if( inherits( outTables, "try-error" ) )
+		{
+			RNMImportWarning("Unable to import table files, will use empty output data set \n")
+			outTables <- data.frame()
+		}
+	}
+	
+	outTables
+}
 
 #' Reads the lines of a file and removes whitespace in the process
 #' @param file name of the file to read
