@@ -30,10 +30,8 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 	} # end if(inherits(inData, "try-error"))
 	
 	# import output tables if the $TABLE statement is present, else outdata is empty
-	outTables <- if(!is.null(controlStatements$Table)) 
-				importModelOutputTables( tableStatement = controlStatements$Table, path = path ) 
-			else
-				data.frame()
+	
+	outTables <- .importTablesSafely(controlStatements$Table, path = path  )
 	
 	# need to know how many rows the data has, handle FIRSTONLY case here
 	if(inherits(outTables, "list")) nOutDataRows <- max(sapply(outTables, nrow))
@@ -92,7 +90,7 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 				if(length(MethodResults[[1]]$ETAshrink) > 1)
 					ETAshrinks <- t( sapply(MethodResults, "[[", "ETAshrink") )
 				else
-					ETAshrinks <- sapply(MethodResults, "[[", "ETAshrink") 
+					ETAshrinks <- matrix(sapply(MethodResults, "[[", "ETAshrink"), ncol = 1) 
 				if(length(MethodResults[[1]]$EPSshrink) == 1)
 					EPSshrinks <-  matrix(sapply(MethodResults, "[[", "EPSshrink"), ncol = 1 ) 
 				
