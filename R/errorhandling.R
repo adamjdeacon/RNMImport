@@ -29,9 +29,9 @@ RNMImportWarning <- function(msg = "Warning!\n", call = NULL)
 RNMImportStop <- function(msg = "Error!\n",  call = NULL)
 {
 	if(!is.null(call))
-		cat(paste("In call: ", call[1],"(", paste(call[-1], collapse = ","), ")\n"))
+		cat(paste("In call: ", call[1],"(", paste(call[-1], collapse = ","), ")\n"), file = stderr())
 	dump.frames()
-	cat(paste(names(head(last.dump, -1)), collapse = " >> \n "), "\n")
+	cat(paste(names(head(last.dump, -1)), collapse = " >> \n "), "\n", file = stderr())
 	
 	stop(simpleError(msg, call))
 }
