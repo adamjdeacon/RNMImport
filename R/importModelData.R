@@ -29,10 +29,10 @@ importModelData <- function(
 	# now extract the options from the data statement, converting FORTRAN 95 ops to 77 
 	# as needed
 
-	ignore <- convertFortran95Ops(dataStatement[,"IG"])
-	accept <- convertFortran95Ops(dataStatement[,"ACCEPT"])
-	translate <- convertFortran95Ops(dataStatement[,"TRANSLATE"])
-	records <- convertFortran95Ops(dataStatement[,"RECORDS"])
+	ignore <-dataStatement[,"IG"]
+	accept <- dataStatement[,"ACCEPT"]
+	translate <- dataStatement[,"TRANSLATE"]
+	records <- dataStatement[,"RECORDS"]
 	
 	# split out the ignore statement, as individuals tokens (or chunks of code) are seperated by ";"
 	ignoreTokens <- unlist(strsplit(ignore, split = ";"))
@@ -75,7 +75,10 @@ importModelData <- function(
 		cNames <- cNames[1:ncol(myData)]
 	dimnames(myData) <- list(dimnames(myData)[[1]], cNames)
 	for(ignoreCode in ignoreCodes)
-		.readNmData.nmSubset(data = myData, nmCode = ignoreCode, method = "ignore")
+	{
+		ignoreCode <- gsub(ignoreCode, pattern = "[[:space:]]*=[[:space:]]*", replacement = ".EQ.")
+		.readNmData.nmSubset(data = myData, nmCode = ignoreCode, method = "ignore", na.keep = TRUE)
+	}
 	### Check numeric and missing values
 	myData <- .importDataNumeric(myData, missToZero = FALSE)
 	
