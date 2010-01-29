@@ -37,7 +37,8 @@ getSigmas.NMBasicModel <- function(obj, what = "final", ...)
 		stdErrors <- sigmas[,,"standardErrors", drop = TRUE]
 		if(oneByOne) stdErrors <- matrix(stdErrors, dimnames = dimnames(sigmas)[1:2])
 	}
-	
+	else
+		stdErrors <- NULL
 	initialValues <- obj@sigmaInitial
 	if(oneByOne) initialValues <- matrix(initialValues, dimnames = dimnames(sigmas)[1:2])
 	

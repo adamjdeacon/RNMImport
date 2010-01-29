@@ -42,6 +42,8 @@ getOmegas.NMBasicModel <- function(obj, what = "final" , ...)
 		stdErrors <- omegas[,,"standardErrors", drop = TRUE]
 		if(oneByOne) stdErrors <- matrix(stdErrors, dimnames = dimnames(omegas)[1:2])
 	}
+	else
+		stdErrors <- NULL
 	initialValues <- obj@omegaInitial
 	if(oneByOne) initialValues <- matrix(initialValues, dimnames = dimnames(omegas)[1:2])
 	# no valid option selected, thrown an error
