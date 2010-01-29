@@ -6,14 +6,14 @@
 #' @title Import NONMEM input data
 #' @param dataStatement [char matrix] - A data statement, as parsed by .importNmModData
 #' @param inputStatement [char matrix] - A 2 column matrix describing the $INPUT statement, see .importNmModInput
-#' @param dropCols 
+#' @param dropCols [L,1].  If TRUE, columns  with XXXX=DROP are eliminated from returned data
 #' @param trim Currently unused
 #' @param path path where the data files are located
 #' @return  A data.frame with the data inside the file
 #' @author fgochez
 
 importModelData <- function(
-		dataStatement, inputStatement, dropCols = TRUE, trim=FALSE,	path = NULL)
+		dataStatement, inputStatement, dropCols = TRUE, trim=FALSE,	path = NULL, duplicateAliased = TRUE)
 {	
 	# TODO: need to handle the case where inputs are read from the previous problem's output 
 	
@@ -51,21 +51,47 @@ importModelData <- function(
 	# Deal with the case of additional columns in the dataset
 	if(nrow(inputStatement) == (ncol(myData) - 1) && all(is.na(myData[, ncol(myData)]))) 
 		myData <- myData[,  - length(myData), drop = F]
+	
+	# determine aliased columns
 
+	aliasedColumns <- (inputStatement[,1] != "DROP" & inputStatement[,2] != "DROP") & (inputStatement[,1] != inputStatement[,2])
+
+	# if there are aliased columns, we will repeat them with their aliased name
+	if(any(aliasedColumns))
+	{
+		# if there are more input columns than are named in the inputStatement, we pad the aliasedColumn vector
+		aliasedColumnsSelect <- aliasedColumns
+		if(ncol(myData) > length(aliasedColumns))
+			aliasedColumnsSelect <- c(aliasedColumns, rep(FALSE, length = ncol(myData) - length(aliasedColumns)) )
+		aliasColumnBlock <- myData[ , aliasedColumnsSelect, drop = FALSE]
+		
+		names(aliasColumnBlock) <- inputStatement[ aliasedColumns, 2]
+	}
 	# now determine which columns should be dropped in case dropCols = TRUE
 	if(dropCols) 
-		colsToKeep <- inputStatement[, 1] != "DROP" & inputStatement[, 2] != "DROP" 
-	else 
-		colsToKeep <- rep(TRUE, nrow(inputStatement))
-	myData <- myData[, colsToKeep, drop = FALSE]
-	# Calculate columns names
-	cNames <- ifelse(inputStatement[, 1] == "DROP", inputStatement[, 2], inputStatement[, 1])[colsToKeep]
-	# add periods to column names to avoid duplicates
-
-	while(any( dup <- duplicated(cNames))){
-		cNames <- replace(cNames, dup, paste(cNames[dup], ".", sep = ""))
+	{
+		colsToKeep <- inputStatement[, 1] != "DROP" & inputStatement[, 2] != "DROP"
+		# if there are extra columns, need to extend the columns to keep
+		colsToKeepSel <- colsToKeep
+		if(length(colsToKeepSel) < ncol(myData))
+			colsToKeepSel <- c(colsToKeep, rep(TRUE, ncol(myData) - length(colsToKeep) ))
 	}
-	nDiff <- ncol(myData) - length(cNames)
+	else {
+		colsToKeep <- rep(TRUE, nrow(inputStatement))
+		colsToKeepSel <- rep(TRUE, ncol(myData))
+	
+	}
+	myData <- myData[, colsToKeepSel, drop = FALSE]
+	
+	# save the number of input columns before any alias duplication is perfomed
+	
+	numInDataColumns <- ncol(myData)
+	
+	# Calculate columns names
+	
+	cNames <- ifelse(inputStatement[, 1] == "DROP", inputStatement[, 2], inputStatement[, 1])[colsToKeep]
+
+	nDiff <- numInDataColumns - length(cNames)
 	# handle columns not present in the $INPUT statement but present in the data file
 	if(nDiff != 0)
 		RNMImportWarning(paste("\nWarning: Number of columns in datafile (", ncol(myData), ") does not equal number of columns in $INPUT statement (", length(cNames), ")\n", sep = ""))
@@ -74,6 +100,11 @@ importModelData <- function(
 	if(nDiff < 0)
 		cNames <- cNames[1:ncol(myData)]
 	dimnames(myData) <- list(dimnames(myData)[[1]], cNames)
+	
+	# now add aliased data
+	if(any(aliasedColumns))
+		myData <- cbind(myData, aliasColumnBlock)
+	
 	for(ignoreCode in ignoreCodes)
 	{
 		ignoreCode <- gsub(ignoreCode, pattern = "[[:space:]]*=[[:space:]]*", replacement = ".EQ.")
