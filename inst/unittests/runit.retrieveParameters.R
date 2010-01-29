@@ -125,6 +125,12 @@ test.getOmegas <- function()
 	checkTrue( inherits(tryOmega, "try-error") )
 	checkTrue(length(grep( tryOmega, pattern = "No valid items selected for retrieval!" )) > 0)
 	
+	# try to get standard errors that aren't there, check for correct error message
+	
+	tryOmega2 <- try(getOmegas(run1, what = "stderrors"))
+	checkTrue( inherits(tryOmega2, "try-error") )
+	checkTrue(length(grep( tryOmega2, pattern = "Standard errors not available" )) > 0)
+	
 	#Check NMSimModel
 	
 	
@@ -184,6 +190,14 @@ test.getSigmas <- function()
 	checkEquals(getSigmas(prob1, what = c("initial", "stderrors")), list("initial.estimates" = expSigmaInit, 
 					"standard.errors" = expSigmaStderrs) )
 	
+	run3 <- testRuns[["NMBasic"]]
+	
+	# try to get standard errors that aren't there, check for correct error message
+	
+	trySigmas2 <- try(getSigmas(run3, what = "stderrors"))
+	checkTrue( inherits(trySigmas2, "try-error") )
+	checkTrue(length(grep( trySigmas2, pattern = "Standard errors not available" )) > 0)
+	
 	#Check NMSimModel
 	run2 <- testRuns[["NMSimMod"]]
 	
@@ -197,4 +211,6 @@ test.getSigmas <- function()
 	checkEquals(getSigmas(prob2, what = "initial", subProblemNum = 1:5), sigmaInitial)
 	checkEquals(getSigmas(prob2, what = c("final", "initial"), subProblemNum = 3), 
 			list("initial.estimates" = sigmaInitial, "final.estimates" = simSigmas[,,3, drop = FALSE] ) )
+	
+	
 }
