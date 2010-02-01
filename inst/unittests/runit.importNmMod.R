@@ -24,10 +24,10 @@ test.importNmMod <- function()
 	x <- dat1$problemContents[[1]]
 	checkEquals(names(x), c("Theta", "Problem", "Tables", "Subroutine", "Input", "Data",
 							"PK", "Error", "Estimates", "Cov") )
-	
+	checkEquals(x$Data[1,"REWIND"], c(REWIND = "FALSE"), msg = "Checking ")
 	dat2 <- importNmMod(file.path(testDir, "control4.con"))
 	checkEquals(rownames(dat2$problemContents[[1]]$Theta), c("A", "B", "C"), msg = "Parameter labels read correctly")
-	
+
 	dat3 <- importNmMod(file.path(testDir, "multiprob1.mod"))
 	
 	checkEquals(length(dat3$problemContents), 2)
