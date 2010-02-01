@@ -36,7 +36,7 @@
 		null <- equalExpressionPop( dataSec, "NULL", absent = "", sep="=", inPlace = TRUE)
 		
 		### REWIND, NOREWIND                                                        
-		rewind <- ynPop( dataSec, "REWIND", default = TRUE, inPlace=TRUE)
+		rewind <- ynPop( dataSec, "REWIND", default = FALSE, inPlace=TRUE)
 		
 		### records, may be coded NRECS, NRECORDS, RECS, RECORDS                    
 		records <- equalExpressionPop( dataSec, "N?RECO?R?D?S", absent = "", sep="=",inPlace = TRUE)

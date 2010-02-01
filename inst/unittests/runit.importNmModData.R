@@ -16,19 +16,19 @@ test.importNmModData <- function()
 	dataStatement1 <- "$DATA data3.dat IGNORE=I IGNORE=(TIME.EQ.1)"
 	dataTest1 <- RNMImport:::.importNmModData("$DATA data3.dat IGNORE=I IGNORE=(TIME.EQ.1)")
 	dataExpected1 <- matrix(c( File="data3.dat", IG="I;(TIME.EQ.1)", ACCEPT="",     
-			REWIND="TRUE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
+			REWIND="FALSE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
 	checkEquals( dataTest1,dataExpected1, msg = " |Mutliple IGNORE= now handled" )
 	
 	dataStatement2 <- "$DATA data3.dat IGNORE=@"
 	dataTest2 <- RNMImport:::.importNmModData(dataStatement2)
 	dataExpected2 <- matrix(c( File="data3.dat", IG="@", ACCEPT="",     
-					REWIND="TRUE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
+					REWIND="FALSE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
 	checkEquals( dataTest2,dataExpected2, msg = " |IGNORE=@ correct" )
 	
 	dataStatement3 <- "$DATA data3.dat IGNORE='C'"
 	dataTest3 <- RNMImport:::.importNmModData(dataStatement3)
 	dataExpected3 <- matrix(c( File="data3.dat", IG="C", ACCEPT="",     
-					REWIND="TRUE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
+					REWIND="FALSE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
 	checkEquals( dataTest3,dataExpected3, msg = " |IGNORE='C' correct" )
 	
 	dataStatement4 <- "$DATA data3.dat IGNORE=\"C\""
@@ -36,31 +36,41 @@ test.importNmModData <- function()
 	checkEquals( dataTest4,dataExpected3, msg = " |IGNORE=\"C\" correct" )
 	
 	dataStatement5 <- "$DATA data3.dat IGNORE=\"I\" IGNORE=(TIME.EQ.1)"
-	dataTest5 <- RNMImport:::.importNmModData(dataStatement5)
+	dataTest5 <- .importNmModData(dataStatement5)
 	dataExpected5 <- matrix(c( File="data3.dat", IG="I;(TIME.EQ.1)", ACCEPT="",     
-					REWIND="TRUE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
+					REWIND="FALSE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
 	checkEquals( dataTest5,dataExpected5, msg = " |Multiple IGNORE= with IGNORE=\"I\" is correct" )
 	
+	# check IGNORE statement with "=" instead of .EQ.
+	
 	dataStatement6 <- "$DATA data3.dat IGNORE=\"I\" IGNORE=(TIME=1)"
-	dataTest6 <- RNMImport:::.importNmModData(dataStatement6)
+	dataTest6 <- .importNmModData(dataStatement6)
 	dataExpected6 <- matrix(c( File="data3.dat", IG="I;(TIME=1)", ACCEPT="",     
-					REWIND="TRUE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
+					REWIND="FALSE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
 	
-	dataStatement7 <- .importNmModData("$DATA data3.dat IGNORE=\"I\" IGNORE=(TIME.EQ.1,DV.LT.2.01)")
-	dataTest7 <- RNMImport:::.importNmModData(dataStatement7)
+	checkEquals( dataTest6, dataExpected6, msg = " |= in code in IGNORE=(code) returned correctly" )
+	
+	# check compound IGNORE= statement
+	
+	dataStatement7 <- "$DATA data3.dat IGNORE=\"I\" IGNORE=(TIME.EQ.1,DV.LT.2.01)"
+	dataTest7 <- .importNmModData(dataStatement7)
 	dataExpected7 <- matrix(c( File="data3.dat", IG="I;(TIME.EQ.1,DV.LT.2.01)", ACCEPT="",     
-					REWIND="TRUE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
+					REWIND="FALSE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
 	
-	# FORTRAN 90/95 tests
-#	
-#	dataTest7 <- RNMImport:::.importNmModData("$DATA data3.dat IGNORE=I IGNORE=(TIME/=0) ACCEPT=(FOO<0)")
-#	dataExpected7 <- matrix(c( File="data3.dat", IG="I;(TIME/=0)", ACCEPT="(FOO<0)",     
-#					REWIND="TRUE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
-#	checkEquals( dataTest7,dataExpected7, msg = " |Mutliple IGNORE= and ACCEPT with FORTRAN 90" )
-#	
-#	dataTest8 <- RNMImport:::.importNmModData("$DATA data3.dat IGNORE=I IGNORE=(TIME>=0) ACCEPT=(BAR<=100)")
-#	dataExpected8 <- matrix(c( File="data3.dat", IG="I;(TIME>=0)", ACCEPT="(BAR<=100)",     
-#					REWIND="TRUE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
-#	checkEquals( dataTest8,dataExpected8, msg = " |Mutliple IGNORE= and ACCEPT now handled" )
+	checkEquals( dataTest7, dataExpected7, msg = " |compound code in IGNORE=(code) returned correctly" )
+			
+	# check REWIND default value
+	
+	dataStatement8 <- "$DATA data3.dat REWIND IGNORE=I ACCEPT=(TIME.NE.1)"
+	dataExpected8 <- matrix(c( File="data3.dat", IG="I", ACCEPT="(TIME.NE.1)",     
+				REWIND="TRUE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
+	dataTest8 <- .importNmModData(dataStatement8)
+	checkEquals( dataTest8, dataExpected8, msg = " | ACCEPT and REWIND are correct " )
+	
+	dataStatement9 <- "$DATA data3.dat NOREWIND IGNORE=I ACCEPT=(TIME.NE.1)"
+	dataExpected9 <- matrix(c( File="data3.dat", IG="I", ACCEPT="(TIME.NE.1)",     
+					REWIND="FALSE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
+	dataTest9 <- .importNmModData(dataStatement9)
+	checkEquals( dataTest9, dataExpected9, msg = " | ACCEPT and REWIND are correct " )
 	
 }
