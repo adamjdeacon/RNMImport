@@ -1,5 +1,5 @@
-# $LastChangeDate: $
-# $LastChangedVersion: $
+# $LastChangedDate$
+# $LastChangedBy$
 # $Rev$
 
 
