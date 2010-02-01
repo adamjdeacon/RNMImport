@@ -4,7 +4,9 @@
 
 test.nmData.NMBasic <- function()
 {
-	run1 <- importNm("TestData1.ctl", "TestData1.lst", path = file.path(unitTestPath, "testdata/TestRun"))
+	testRuns <- RNMImport:::getInternalTestRuns()
+	run1 <- testRuns[["NMBasic"]]
+	
 	prob <- getProblem(run1)
 	test1 <- nmData(run1)
 	checkEquals(test1, nmData(getProblem(run1)), "Extracting from run and problem directly should give same result")
@@ -25,7 +27,14 @@ test.nmData.NMBasic <- function()
 	x <- union( inputColumns, outputColumns	)
 	y <- intersect(inputColumns, outputColumns )
 	checkTrue(setequal(names(test1), c(x, paste(y, ".INPUT", sep = ""))))
-
+	# check error handling
+	
+	checkEquals( test2, nmData(prob, dataType = c("input", "blah")), msg = " |invalid type 'blah'discarded")
+	try.nmData <- try( nmData( prob, dataType = "out" ) )
+	
+	checkTrue(inherits(try.nmData, "try-error"), msg = " | Exception generated when trying to extract invalid data type")
+	checkTrue(length( grep( try.nmData, pattern =  "No valid datatypes selected for retrieval" )) > 0, msg = " |correct exception generated")
+	
 	# tests added for subsetting logic:
 	
 	test5 <- nmData( prob, subset = TRUE )
@@ -96,6 +105,13 @@ test.nmData.NMSim <- function()
 	
 	checkEquals(nmData(prob, subset = FALSE), nmData(prob), msg = " subset = FALSE and susbet = NULL are equivalent")
 	
+	# check error handling
+
+	try.nmData <- try( nmData( prob, dataType = "out" ) )
+	
+	checkTrue(inherits(try.nmData, "try-error"), msg = " | Exception generated when trying to extract invalid data type")
+	checkTrue(length( grep( try.nmData, pattern =  "No valid datatypes selected for retrieval" )) > 0, msg = " |correct exception generated")
+
 	
 	# test subsetting
 	

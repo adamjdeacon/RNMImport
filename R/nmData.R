@@ -48,6 +48,10 @@ nmData.NMBasicModel <- function(obj, dataTypes = c("input", "output") , returnMo
 {
 
 	dataTypes <- intersect(dataTypes, c("input", "output"))
+	
+	if(length(dataTypes) == 0)
+		RNMImportStop("No valid datatypes selected for retrieval\n", match.call())
+	
 	returnMode <- match.arg(returnMode)
 	
 	# check for FIRSTONLY
@@ -120,6 +124,10 @@ nmData.NMSim<- function(obj, dataTypes = c("input", "output") ,
 	dataSub <- .getSubset(obj, subset)
 	
 	dataTypes <- intersect(dataTypes, c("input", "output"))
+	
+	if(length(dataTypes) == 0)
+		RNMImportStop("No valid datatypes selected for retrieval\n", match.call())
+	
 	inData <- obj@inputData
 	returnMode <- match.arg(returnMode)
 
