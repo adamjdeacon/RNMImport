@@ -53,7 +53,7 @@ nmData.NMBasicModel <- function(obj, dataTypes = c("input", "output") , returnMo
 	# check for FIRSTONLY
 	if(class(obj@outputData) == "list") {
 		if("output" %in% dataTypes) 
-			RNMImportWarning("FIRSTONLY output data without ID column currently ignored\n")
+			RNMImportWarning("FIRSTONLY output data currently ignored\n")
 		outputData <- obj@outputData[["normal.tables"]]
 		
 	}
