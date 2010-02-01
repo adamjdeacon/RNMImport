@@ -81,6 +81,19 @@ test.importNm.Basic <- function()
 	obj <- getObjective(run1, addMinInfo = FALSE)
 	
 	checkEquals(obj, 3228.988)
+	
+	# check that importing with missing table files still works -
+
+	run4 <- importNm("TestData1_missingtab.ctl","TestData1.lst" , path = system.file(package = "RNMImport", "unittests/testdata/TestRun"))
+	checkEquals(nmData(run4, dataType = "output"), data.frame(), msg = " |empty output data" )
+	
+	# spot checks that other things were imported correctly
+	checkEquals(getSigmas(run4), getSigmas(run3), msg = " |identical sigmas ")
+	checkEquals(getThetas(run4), getThetas(run3), msg = " | identical thetas")
+	
+	checkEquals(nmData(run4, dataType = "input"), nmData(run3, dataType = "input"))
+	
+	
 }
 
 # tests for NMSimModel, still based on internal data (TestData/TestSimRun)
@@ -127,6 +140,18 @@ test.importNm.SimModel <- function()
 	y <- c(3696.247, 3575.252, 3660.355, 3606.526, 3701.472)
 	names(y) <- paste("sim", 1:5, sep = "") 
 	checkEquals(objectives, y)
+	
+	### check that importing with no tables still works
+	
+	run4 <- importNm("TestData1SIM_missingtab.con","TestData1SIM.lst" , path = system.file(package = "RNMImport", "unittests/testdata/TestSimRun"))
+	checkEquals(nmData(run4, dataType = "output"), structure(list(NSIM = structure(integer(0), .Label = c("1", "2", 
+											"3", "4", "5"), class = c("ordered", "factor"))), .Names = "NSIM", row.names = integer(0), class = "data.frame"), msg = " |empty output data" )
+	
+	# spot checks that other things were imported correctly
+	checkEquals(getSigmas(run4), getSigmas(run2), msg = " |identical sigmas ")
+	checkEquals(getThetas(run4), getThetas(run2), msg = " | identical thetas")
+	
+	checkEquals(nmData(run4, dataType = "input"), nmData(run2, dataType = "input"))
 }
 
 # import standard NONMEM 7 run
@@ -194,4 +219,13 @@ test.importNm.BasicNM7 <- function()
 	
 	checkEquals( EPSShrinks[[2]], -10.145, msg = " |EPS shrink correct for method 2" )
 	checkEquals( EPSShrinks[[1]], 12.013, msg = " |EPS shrink correct for method 1" )
+	
+	run2 <- importNm("TestData1_missingtab.ctl","TestData1.lst" , path = system.file(package = "RNMImport", "unittests/testdata/TestDataNM7"))
+	checkEquals(nmData(run2, dataType = "output"), data.frame(), msg = " |empty output data" )
+	
+	# spot checks that other things were imported correctly
+	checkEquals(getSigmas(run2), getSigmas(run1), msg = " |identical sigmas ")
+	checkEquals(getThetas(run2), getThetas(run1), msg = " | identical thetas")
+	
+	checkEquals(nmData(run2, dataType = "input"), nmData(run2, dataType = "input"))
 }
