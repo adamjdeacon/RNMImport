@@ -42,7 +42,6 @@ test.getObjective <- function()
 	
 	removeNmPath("internalunit")
 	
-	# NMSimModelNM7
 	
 }
 
@@ -95,6 +94,47 @@ test.getEstimateCov <- function()
 	
 	checkTrue(is.null(getEstimateCov(run2)), msg = " |NULL returned when no parameter covariance matrix found" )
 	
+	############## # now NONMEM 7 run
+	run3 <- testRuns$NMBasicNM7
+	prob3 <- getProblem(run3)
+	
+	# for method 2, should be NULL
+	checkTrue( is.null(getEstimateCov(run3, method = 2) ), msg = " |NULL returned when no parameter covariance matrix found")
+	
+	expCov2 <- structure(c(1.53, -6.69, 0.00102, 0.00653, 0, 0, -0.00655, 0, 
+					-0.0794, -0.00023, -6.69, 59.4, -0.0543, 0.0591, 0, 0, -0.14, 
+					0, 0.188, 0.00104, 0.00102, -0.0543, 0.0162, -0.000882, 0, 0, 
+					0.000434, 0, 0.00117, 2.73e-05, 0.00653, 0.0591, -0.000882, 0.00182, 
+					0, 0, -0.00151, 0, -0.00198, -1.23e-06, 0, 0, 0, 0, 0, 0, 0, 
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -0.00655, -0.14, 0.000434, 
+					-0.00151, 0, 0, 0.00233, 0, 0.00143, 2.41e-07, 0, 0, 0, 0, 0, 
+					0, 0, 0, 0, 0, -0.0794, 0.188, 0.00117, -0.00198, 0, 0, 0.00143, 
+					0, 0.0403, -4.54e-06, -0.00023, 0.00104, 2.73e-05, -1.23e-06, 
+					0, 0, 2.41e-07, 0, -4.54e-06, 5.56e-07), .Dim = c(10L, 10L), .Dimnames = list(
+					c("TH1", "TH2", "TH3", "OM11", "OM12", "OM13", "OM22", "OM23", 
+							"OM33", "SG11"), c("TH1", "TH2", "TH3", "OM11", "OM12", "OM13", 
+							"OM22", "OM23", "OM33", "SG11")))
+	
+	expCor2 <- structure(c(1, -0.702, 0.0065, 0.124, 0, 0, -0.11, 0, -0.32, 
+					-0.25, -0.702, 1, -0.0553, 0.18, 0, 0, -0.377, 0, 0.122, 0.181, 
+					0.0065, -0.0553, 1, -0.162, 0, 0, 0.0705, 0, 0.0457, 0.288, 0.124, 
+					0.18, -0.162, 1, 0, 0, -0.733, 0, -0.232, -0.0388, 0, 0, 0, 0, 
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -0.11, -0.377, 
+					0.0705, -0.733, 0, 0, 1, 0, 0.148, 0.0067, 0, 0, 0, 0, 0, 0, 
+					0, 0, 0, 0, -0.32, 0.122, 0.0457, -0.232, 0, 0, 0.148, 0, 1, 
+					-0.0303, -0.25, 0.181, 0.288, -0.0388, 0, 0, 0.0067, 0, -0.0303, 
+					1), .Dim = c(10L, 10L), .Dimnames = list(c("TH1", "TH2", "TH3", 
+							"OM11", "OM12", "OM13", "OM22", "OM23", "OM33", "SG11"), c("TH1", 
+							"TH2", "TH3", "OM11", "OM12", "OM13", "OM22", "OM23", "OM33", 
+							"SG11"))) 
+	
+	cov2Test <- getEstimateCov( prob3, method = 1 )
+	
+	checkEquals(cov2Test, expCov2, msg = " | covariance matrix OK")
+	
+	checkEquals(getEstimateCov(prob3, corMatrix = TRUE), 
+			list("covariance" = expCov2, "correlation" = expCor2),
+			msg = " |retrieving both at the same time works")
 }
 
 # tests the following functions:
