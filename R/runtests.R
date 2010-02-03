@@ -117,7 +117,7 @@ runRNMImportTests <- function(
 }
 
 #' 
-#' @title
+#' @title Store external test runs
 #' @return 
 #' @author fgochez
 #' @keywords
@@ -130,6 +130,13 @@ externalTestRuns <- function(dataPath)
 	conFiles <- paste("TestData", 1:10, ".ctl" , sep = "")
 	conFiles <- c(conFiles, "TestData5SIM.ctl", "psn-1.mod", "psn-1.mod")
 	res <- lapply(seq_along(conFiles), function(i) try(importNm(conFiles[i], path = paths[i])))
+	
+	# read NONMEM 7 runs
+	nm7Paths <- file.path(dataPath, file.path("importNONMEM7Files", c("wexample1", "wexample2", "wexample1sim")))
+	conFiles <- c("wexample1.ctl", "wexample2.ctl", "wexample1sim.ctl")
+	nm7Runs <- lapply( seq_along(conFiles), function(i) try(importNm(conFiles[i], path = nm7Paths[i])) )
+	names(nm7Runs) <- c("NM7BasicExample1", "NM7BasicExample2", "NM7SimExample1")
+	res <- c(res, nm7Runs)
 	setNmFileExtensions("report", y)
 	res
 }
@@ -152,4 +159,10 @@ getInternalTestRuns <- function()
 {
 	if(!exists(".innerTestEnv")) stop("Internal test data environment not available!")
 	.innerTestEnv$testRuns
+}
+
+getExternalTestRuns <- function()
+{
+	if(!exists(".externTestEnv")) stop("External test data environment not available!")
+	.externTestEnv$testRuns
 }
