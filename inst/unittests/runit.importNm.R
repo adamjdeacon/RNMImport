@@ -221,11 +221,12 @@ test.importNm.BasicNM7 <- function()
 	checkEquals( EPSShrinks[[1]], 12.013, msg = " |EPS shrink correct for method 1" )
 	
 	run2 <- importNm("TestData1_missingtab.ctl","TestData1.lst" , path = system.file(package = "RNMImport", "unittests/testdata/TestDataNM7"))
+	
 	checkEquals(nmData(run2, dataType = "output"), data.frame(), msg = " |empty output data" )
 	
 	# spot checks that other things were imported correctly
 	checkEquals(getSigmas(run2), getSigmas(run1), msg = " |identical sigmas ")
 	checkEquals(getThetas(run2), getThetas(run1), msg = " | identical thetas")
 	
-	checkEquals(nmData(run2, dataType = "input"), nmData(run2, dataType = "input"))
+	checkEquals(nmData(run2, dataType = "input"), nmData(run1, dataType = "input"))
 }
