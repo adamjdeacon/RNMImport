@@ -1,4 +1,57 @@
+# $LastChangedDate$
+# $LastChangedBy$
+# $Rev$
 
+
+#' Displays information about output data.  Utility function for use with show methods
+#' @param object NMProblem object 
+#' @title Show output table info
+#' @return none
+#' @author fgochez
+
+showOutput <- function(object)
+{
+	
+	controlStatements <- object@controlStatements
+	with( controlStatements, 
+		{ 
+			# output data will be a list if there were "FIRSTONLY" tables
+			if(class(object@outputData) != "list")
+			{
+				if(all(dim(object@outputData) == c(0,0)))
+					cat("No output table data\n")
+				else
+				{
+					cat("Output table files: ")
+					cat(paste(Tables[,"File"], collapse = ","), "\n")
+					cat("Output table dimensions:\n")
+					cat(dim(object@outputData), "\n")
+					cat("Output table columns:\n")
+					cat(colnames(object@outputData), "\n")
+				}	
+			}
+			else
+			{
+				cat("Output table files: ")
+				cat(paste(Tables[,"File"], collapse = ","), "\n")
+				cat("Output table dimensions:\n")
+				
+				if(!is.null(object@outputData[["normal.tables"]]))
+					cat("Normal tables: ",  dim(object@outputData[["normal.tables"]]), "\n")
+				if(!is.null(object@outputData[["firstonly.tables"]]))
+					cat("FIRSTONLY tables: ",  dim(object@outputData[["firstonly.tables"]]), "\n")
+				
+				cat("Output table columns:\n")
+				if(!is.null(object@outputData[["normal.tables"]]))
+					cat("Normal tables: ", colnames(object@outputData[["normal.tables"]]), "\n")
+				if(!is.null(object@outputData[["firstonly.tables"]]))
+					cat("FIRSTONLY tables: " , colnames(object@outputData[["firstonly.tables"]]), "\n")
+				
+			}
+	})
+}
+
+# TODO: reduce amount of copy-paste code in this!
 
 show.NMRun <- function(object)
 {
@@ -62,18 +115,7 @@ show.NMBasicModel <- function(object)
 				cat("SIGMAs:\n")
 				print(object@sigmaFinal[,,"estimates"])
 				
-				if(all(dim(object@outputData) == c(0,0)))
-					cat("No output table data\n")
-				else 
-				if(class(object@outputData) != "list")
-				{
-					cat("Output table files: ")
-					cat(paste(Tables[,"File"], collapse = ","), "\n")
-					cat("Output table dimensions:\n")
-					cat(dim(object@outputData), "\n")
-					cat("Output table columns:\n")
-					cat(colnames(object@outputData), "\n")
-				}
+				showOutput(object)
 			} ) # end with(controlStatements ...
 }
 
@@ -124,18 +166,7 @@ show.NMBasicModelNM7 <- function(object)
 				cat("SIGMAs:\n")
 				print(object@sigmaFinal)
 				
-				if(all(dim(object@outputData) == c(0,0)))
-					cat("No output table data\n")
-				else 
-				if(class(object@outputData) != "list")
-				{
-					cat("Output table files: ")
-					cat(paste(Tables[,"File"], collapse = ","), "\n")
-					cat("Output table dimensions:\n")
-					cat(dim(object@outputData), "\n")
-					cat("Output table columns:\n")
-					cat(colnames(object@outputData), "\n")
-				}
+				showOutput(object)
 			} ) # end with(controlStatements ...
 }
 
@@ -157,11 +188,7 @@ show.NMSimDataGen <- function(object)
 			cat("Input table columns:\n")
 			cat(colnames(object@inputData), "\n")
 			
-			cat("Output table dimensions:\n")
-			cat(dim(object@outputData), "\n")
-			
-			cat("Output table columns:\n")
-			cat(colnames(object@outputData), "\n")
+			showOutput(object)
 			
 			cat("Number of simulations performed: ", Sim["nSub"], "\n")
 			
@@ -205,11 +232,7 @@ show.NMSimModel <- function(object)
 		cat("Input table columns:\n")
 		cat(colnames(object@inputData), "\n")
 		
-		cat("Output table dimensions:\n")
-		cat(dim(object@outputData), "\n")
-		
-		cat("Output table columns:\n")
-		cat(colnames(object@outputData), "\n")
+		showOutput(object)
 		
 		cat("Number of simulations performed: ", Sim["nSub"], "\n")
 		
@@ -259,11 +282,7 @@ show.NMSimModelNM7 <- function(object)
 				cat("Input table columns:\n")
 				cat(colnames(object@inputData), "\n")
 				
-				cat("Output table dimensions:\n")
-				cat(dim(object@outputData), "\n")
-				
-				cat("Output table columns:\n")
-				cat(colnames(object@outputData), "\n")
+				showOutput(object)
 				
 				cat("Number of simulations performed: ", Sim["nSub"], "\n")
 				
