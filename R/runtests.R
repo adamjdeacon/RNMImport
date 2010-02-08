@@ -132,10 +132,10 @@ externalTestRuns <- function(dataPath)
 	res <- lapply(seq_along(conFiles), function(i) try(importNm(conFiles[i], path = paths[i])))
 	
 	# read NONMEM 7 runs
-	nm7Paths <- file.path(dataPath, file.path("importNONMEM7Files", c("wexample1", "wexample2", "wexample1sim")))
-	conFiles <- c("wexample1.ctl", "wexample2.ctl", "wexample1sim.ctl")
+	nm7Paths <- file.path(dataPath, file.path("importNONMEM7Files", c("wexample1", "wexample2", "wexample1sim", "ktest1")))
+	conFiles <- c("wexample1.ctl", "wexample2.ctl", "wexample1sim.ctl", "ktest1.mod")
 	nm7Runs <- lapply( seq_along(conFiles), function(i) try(importNm(conFiles[i], path = nm7Paths[i])) )
-	names(nm7Runs) <- c("NM7BasicExample1", "NM7BasicExample2", "NM7SimExample1")
+	names(nm7Runs) <- c("NM7BasicExample1", "NM7BasicExample2", "NM7SimExample1", "NM7OneEtaShrink")
 	res <- c(res, nm7Runs)
 	setNmFileExtensions("report", y)
 	res
