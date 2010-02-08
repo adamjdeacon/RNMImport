@@ -20,7 +20,23 @@ test.importNmReport.Basic <- function()
 	checkEquals(names(probRes[[1]]), c("nRecords", "nIndividuals", "Objective.Minimum", "FinalEstimates","Iter" ), 
 			"checking presence of correct elements in report")
 	
+	##################
+	# test_stoptimefooter.lst
+	# checks that it is possible to import a file with the footer of the type
+	#Stop Time: 
+	# Tue 01/26/2010 
+	# 11:17 AM
+	#################
 	
+	report2 <- importNmReport("test.lst", path = file.path(unitTestPath, "testdata") )
+	report3 <- importNmReport("test_stoptimefooter.lst", path = file.path(unitTestPath, "testdata") )
+	
+	# compare the reports without the raw contents.  They should be equal
+	
+	checkEquals( tail(report2, -1), tail(report3, - 1 ) )
+	# check that the sigma matrix has not been misread, as it is the last element and could cause problems
+	checkEquals( report3$problemResults[[2]]$FinalEstimates$SIGMA, structure(0.0197, .Dim = c(1L, 1L), .Dimnames = list("EPS1", 
+							"EPS1")) )
 }
 
 test.importNmReport.SimModel <- function()
@@ -97,5 +113,16 @@ test.importNmReport.BasicNM7 <- function()
 	
 	checkEquals( methResults[[2]]$EPSshrink, -10.145, msg = " |EPS shrink correct for method 2" )
 	checkEquals( methResults[[1]]$EPSshrink, 12.013, msg = " |EPS shrink correct for method 1" )
-
+	
+	##################
+	# test_stoptimefooter.lst
+	# checks that it is possible to import a file with the footer of the type
+	#Stop Time: 
+	# Tue 01/26/2010 
+	# 11:17 AM
+	#################
+	
+	report4 <- importNmReport("TestData1_stoptimefooter.lst", path = file.path(unitTestPath, "testdata"))
+	
+	checkEquals( tail( report3, - 1), tail(report4, -1  ) )
 }
