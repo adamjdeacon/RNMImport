@@ -342,5 +342,16 @@ cleanReportContents <- function(content)
 		logMessage(log = "lowLevelParse", "Stripping out the final lines from " %pst% (min(grepFinal) - 1))
 		content <- content[1:(min(grepFinal)-1)]
 	}
+	
+	#################
+	# WARNING: the following code is somewhat dubious, but is necessary for dealing with the footers
+	# of certain lst files.  In some cases, footers such as the following occur:
+	# Stop Time: 
+	# Tue 01/26/2010 
+	# 11:17 AM
+	
+	unusualFooterLine <- grep(content, pattern = "[Ss]top [Tt]ime" )
+	if(length(unusualFooterLine) > 0)
+		content <- head(content, n = unusualFooterLine[1])
 	content
 }

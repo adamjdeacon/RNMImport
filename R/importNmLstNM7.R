@@ -143,16 +143,6 @@ importNmReport.NM7 <- function( content, textReport = FALSE )
 	outList$nRecords     <- colonPop( contents, "TOT\\. NO\\. OF OBS RECS"   , inPlace = FALSE, numeric = TRUE )$op.out
 	outList$nIndividuals <- colonPop( contents, "TOT\\. NO\\. OF INDIVIDUALS", inPlace = FALSE, numeric = TRUE )$op.out
 	
-	#################
-	# WARNING: the following code is somewhat dubious, but is necessary for dealing with the footers
-	# of lst files.  In some cases, footers such as the following occur:
-	# Stop Time: 
-	# Tue 01/26/2010 
-	# 11:17 AM
-	
-	unusualFooterLine <- grep(contents, pattern = "[Ss]top" )
-	if(length(unusualFooterLine) > 0)
-		contents <- head(contents, n = unusualFooterLine)
 	# we replace the final line with a "1" (it is normally a date), otherwise, the last
 	# method block WILL NOT be parsed correctly.  Also
 	
@@ -203,21 +193,11 @@ importNmLstSimModel.NM7 <- function(contents, numSub = NA)
 	outList$nRecords     <- colonPop( contents, "TOT\\. NO\\. OF OBS RECS"   , inPlace = FALSE, numeric = TRUE )$op.out
 	outList$nIndividuals <- colonPop( contents, "TOT\\. NO\\. OF INDIVIDUALS", inPlace = FALSE, numeric = TRUE )$op.out
 	
-	#################
-	# WARNING: the following code is somewhat dubious, but is necessary for dealing with the footers
-	# of lst files.  In some cases, footers such as the following occur:
-	# Stop Time: 
-	# Tue 01/26/2010 
-	# 11:17 AM
-	
-	unusualFooterLine <- grep(contents, pattern = "^[Ss]top [Tt]ime" )
-	if(length(unusualFooterLine) > 0)
-		contents <- head(contents, n = unusualFooterLine)
 	# WARNING:
 	# slight hack: the last line is a date (or "unusual footer") , 
 	#so it should be replaced with a "1" for correct parsing
 	
-	# ideally, one should replace the above code with proper detection for the end of the parameter estimates
+	# ideally, one should replace the following code with proper detection for the end of the parameter estimates
 	contents[length(contents)] <-"1" 
 			
 	# split off the part of the control file that has the subproblems
@@ -231,11 +211,6 @@ importNmLstSimModel.NM7 <- function(contents, numSub = NA)
 	subprobContents <- tail(contents, -subprobStartLine + 1)
 	# cut the subproblems into chunks
 	subprobContents <- partitionLstSubproblems(subprobContents)
-	
-	# HACK ALERT
-	# the last subproblem does not terminate with a "1" section break for some reason.  This causes
-	# importing to fail for the last subproblem, so we "force" "1" to be the last line.
-	# subprobContents[[length(subprobContents)]] <- c(subprobContents[[length(subprobContents)]], "1")	
 	
 	# import the contents of the individual sub-problems
 	subprobStatements <- lapply(subprobContents, .importSubProbNM7)
