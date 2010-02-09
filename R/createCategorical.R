@@ -17,14 +17,14 @@
 #' @return A new object with a user-specified "binned" variable added
 #' @author Mango Solutions <rweeks@mango-solutions.com>
 
-addDerivedCategorical <- function(obj, varName, newVar = paste(varName, "|CUT", sep = ""), breaks = 5, binType = "range", labels = NULL, ...)
+addDerivedCategorical <- function(obj, varName, newVar = paste(varName, ".CUT", sep = ""), breaks = 5, binType = "range", labels = NULL, ...)
 {
 	NULL
 }
 setGeneric("addDerivedCategorical")
 
 
-addDerivedCategorical.NMBasicModel <- function(obj, varName, newVar = paste(varName, "|CUT", sep = ""), breaks = 5, binType = "range", labels = NULL, dataType = "output")
+addDerivedCategorical.NMBasicModel <- function(obj, varName, newVar = paste(varName, ".CUT", sep = ""), breaks = 5, binType = "range", labels = NULL, dataType = "output")
 {
 	#Get input or output dataframe
 	df <- switch(dataType, 
@@ -62,7 +62,7 @@ addDerivedCategorical.NMBasicModel <- function(obj, varName, newVar = paste(varN
 }
 setMethod("addDerivedCategorical", signature(obj = "NMBasicModel"), addDerivedCategorical.NMBasicModel)
 
-addDerivedCategorical.NMRun <- function(obj, varName, newVar = paste(varName, "|CUT", sep = ""), breaks = 5, binType = "range", labels = NULL, problemNum = 1, dataType = "output")
+addDerivedCategorical.NMRun <- function(obj, varName, newVar = paste(varName, ".CUT", sep = ""), breaks = 5, binType = "range", labels = NULL, problemNum = 1, dataType = "output")
 {
 	specObj <- getProblem(obj, problemNum)
 	newObj <- addDerivedCategorical(specObj, varName, newVar, breaks, binType, labels, dataType)
@@ -71,7 +71,7 @@ addDerivedCategorical.NMRun <- function(obj, varName, newVar = paste(varName, "|
 setMethod("addDerivedCategorical", signature(obj = "NMRun"), addDerivedCategorical.NMRun)
 
 setOldClass("data.frame")
-addDerivedCategorical.data.frame <- function(obj, varName, newVar = paste(varName, "|CUT", sep = ""), breaks = 5, binType = "range", labels = NULL)
+addDerivedCategorical.data.frame <- function(obj, varName, newVar = paste(varName, ".CUT", sep = ""), breaks = 5, binType = "range", labels = NULL)
 {
 	#Various logical conditions that must pass
 	if(is.na(match(varName, names(obj))))
@@ -101,7 +101,7 @@ addDerivedCategorical.data.frame <- function(obj, varName, newVar = paste(varNam
 }
 setMethod("addDerivedCategorical", signature(obj = "data.frame"), addDerivedCategorical.data.frame)
 
-addDerivedCategorical.NMSimModel <- function(obj, varName, newVar = paste(varName, "|CUT", sep = ""), breaks = 5, binType = "range", labels = NULL, dataType = "output")
+addDerivedCategorical.NMSimModel <- function(obj, varName, newVar = paste(varName, ".CUT", sep = ""), breaks = 5, binType = "range", labels = NULL, dataType = "output")
 {
 	#Get input or output dataframe
 	df <- switch(dataType, 
@@ -136,7 +136,7 @@ addDerivedCategorical.NMSimModel <- function(obj, varName, newVar = paste(varNam
 }
 setMethod("addDerivedCategorical", signature(obj = "NMSimModel"), addDerivedCategorical.NMSimModel)
 
-addDerivedCategorical.NMSimDataGen <- function(obj, varName, newVar = paste(varName, "|CUT", sep = ""), breaks = 5, binType = "range", labels = NULL, dataType = "output")
+addDerivedCategorical.NMSimDataGen <- function(obj, varName, newVar = paste(varName, ".CUT", sep = ""), breaks = 5, binType = "range", labels = NULL, dataType = "output")
 {
 	#Get input or output dataframe
 	df <- switch(dataType, 

@@ -34,7 +34,7 @@ test.createCategorical <- function()
 													stringsAsFactors = FALSE)
 	
 	#Force name of third column factors	
-	names(testDF)[names(testDF) == "A.CUT"] <- "A|CUT"
+	names(testDF)[names(testDF) == "A.CUT"] <- "A.CUT"
 
 	#Test Exceptions
 	checkException(addDerivedCategorical(testDF, varName = "D"))
@@ -67,16 +67,16 @@ test.createCategorical <- function()
 	testBas <- addDerivedCategorical(prob1, varName = "WT", breaks = 6, dataType = "input")
 	checkException(addDerivedCategorical(prob2, varName = "WT", breaks = 6, dataType = "Intermediate"))
 	checkEquals(nrow(testBas@additionalVars), nrow(prob1@inputData))
-	checkEquals(names(testBas@additionalVars), "WT|CUT")
-	checkEquals(length(levels(testBas@additionalVars[["WT|CUT"]])), 6)
+	checkEquals(names(testBas@additionalVars), "WT.CUT")
+	checkEquals(length(levels(testBas@additionalVars[["WT.CUT"]])), 6)
 	
 	# a test for "addedData"
 
 	addedDataTest <- addedData(testBas)
 	checkEquals(class(addedDataTest), "data.frame", " |Added data extracted is a data.frame")
-	checkEquals( names( addedDataTest ) ,"WT|CUT", " |Correct column names" )
+	checkEquals( names( addedDataTest ) ,"WT.CUT", " |Correct column names" )
 	checkEquals(dim(addedDataTest), c(1061, 1), " |Dimensions of extracted data are corrected")
-	checkEquals(levels(addedDataTest$"WT|CUT"), c("(50.9,65.7]", "(65.7,80.5]", "(80.5,95.2]", "(95.2,110]", "(110,125]", "(125,139]")  )
+	checkEquals(levels(addedDataTest$"WT.CUT"), c("(50.9,65.7]", "(65.7,80.5]", "(80.5,95.2]", "(95.2,110]", "(110,125]", "(125,139]")  )
 	
 	
 	#Check NMRun
@@ -91,9 +91,9 @@ test.createCategorical <- function()
 	testRun2 <- addDerivedCategorical(prob1, varName = "WT", breaks = 6, dataType = "input")
 	addedDataTest2 <- addedData(testRun2)
 	checkEquals(class(addedDataTest2), "data.frame", " |Added data extracted is a data.frame")
-	checkEquals( names( addedDataTest2 ) ,"WT|CUT", " |Correct column names" )
+	checkEquals( names( addedDataTest2 ) ,"WT.CUT", " |Correct column names" )
 	checkEquals(dim(addedDataTest2), c(1061, 1), " |Dimensions of extracted data are corrected")
-	checkEquals(levels(addedDataTest2$"WT|CUT"), c("(50.9,65.7]", "(65.7,80.5]", "(80.5,95.2]", "(95.2,110]", "(110,125]", "(125,139]")  )
+	checkEquals(levels(addedDataTest2$"WT.CUT"), c("(50.9,65.7]", "(65.7,80.5]", "(80.5,95.2]", "(95.2,110]", "(110,125]", "(125,139]")  )
 	
 }
 

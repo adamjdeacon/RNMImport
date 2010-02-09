@@ -13,7 +13,7 @@ object is a data.frame. The methods for creating the categorical variables are:
 }}
 
 \usage{
-addDerivedCategorical(obj, varName, newVar = paste(varName, "|CUT", sep = ""), breaks = 5, binType = "range", labels = NULL, ...)
+addDerivedCategorical(obj, varName, newVar = paste(varName, ".CUT", sep = ""), breaks = 5, binType = "range", labels = NULL, ...)
 }
 
 \arguments{
