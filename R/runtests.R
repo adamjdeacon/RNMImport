@@ -54,6 +54,7 @@ runRNMImportTests <- function(
 		internalTestRuns$NMBasic <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestRun" ))
 		internalTestRuns$NMSimMod <- importNm( "TestData1SIM.con", path = file.path(unitTestPath, "testdata/TestSimRun" ))
 		internalTestRuns$NMBasicNotab <- importNm( "TestData1notab.ctl", path = file.path(unitTestPath, "testdata/TestRunNotab" ))
+		internalTestRuns$NMBasicNoSigMaxeval0 <- importNm("Test.ctl",path = file.path(unitTestPath, "testdata/TestNoSigMaxeval0" ))
 		
 		assign("testRuns", internalTestRuns, envir = .innerTestEnv)
 		

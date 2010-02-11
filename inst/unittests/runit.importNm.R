@@ -93,6 +93,16 @@ test.importNm.Basic <- function()
 	
 	checkEquals(nmData(run4, dataType = "input"), nmData(run3, dataType = "input"))
 	
+	#### check that a run with MAXEVAL=0 and no sigma declaration was imported correctly
+	
+	testRuns <- RNMImport:::getInternalTestRuns()
+	run5 <- testRuns$NMBasicNoSigMaxeval0
+	objective <- getObjective(run5)
+	checkTrue(is.na(objective), msg = " |objective function not present!")
+	checkEquals(attr(objective, "minInfo"), character(0), msg = " | missing objective minimization info")
+	
+	checkEquals( unname(getThetas(run5, what = "final")), unname(getThetas(run1, what = "initial")["initial",, drop = TRUE]), msg = " | final values of THETAS same as run 1 initial")
+	checkEquals( unname(getOmegas(run5, what = "final")), unname(getSigmas(run1, what = "initial")), msg = " | final values of THETAS same as run 1 initial")
 	
 }
 

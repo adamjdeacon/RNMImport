@@ -62,6 +62,8 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 				rownames(thetaInitial) <- c("lowerBound", "initial", "upperBound")
 				
 				# if standard errors are available in the lst file,store them with the "XXXFinal" slots
+				# TODO: In the future, recomment changing this logic and method of storage as this is getting 
+				# quite convoluted
 				if(!is.null(reportContents$StandardError))
 				{
 					# browser()
@@ -105,6 +107,11 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 					  	dimnames = c(dimnames(sigmaInitial), list("estimates")))
 				}
 				colnames(thetaFinal) <- colnames(thetaInitial)
+				
+				# extract minimization status.  If this is missing, use an empty character vector so
+				# that the slot type is correct
+				minInfo <- unlist(attr(reportContents$Iter, "min.info"))
+				if(is.null(minInfo)) minInfo <- character(0)
 
 				# create the object
 				new("NMBasicModel", parameterIterations = reportContents$Iter, 
@@ -122,7 +129,7 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 						outputData = outTables, 
 						controlStatements = controlStatements,
 						reportStatements = reportContents,
-						minInfo = unlist(attr(reportContents$Iter, "min.info")),
+						minInfo = minInfo,
 						nmVersionMajor = versionInfo["major"],
 						nmVersionMinor = as.numeric(versionInfo["minor"])) 
 						
