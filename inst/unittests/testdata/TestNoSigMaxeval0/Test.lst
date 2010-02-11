@@ -1,0 +1,114 @@
+Thu Feb 11 12:02:07 GMT 2010
+$PROB System Test 1
+$INPUT SID SEX AGE RACE HT SMOK HCTZ PROP CON DOSE=AMT WT TIME SECR
+       DV DROP=RATE EVID SS II ID OCC
+$DATA input.tab IGNORE=@
+$PRED
+  KA = THETA(1)
+  KE = THETA(2)
+  CL = THETA(3)
+  F = (DOSE*KE*KA) /(CL * (KE-KA)) * (EXP(-KE*TIME) - EXP(-KA*TIME))
+  Y = F + ERR(1)
+  IPRED = F
+  IWRES = F - DV
+
+$THETA 18.7 FIX
+87.3 FIX
+2.13 FIX
+$OMEGA  0.0231 FIX 
+$EST METHOD=0 MAXEVAL=0
+ 
+ 
+1NONLINEAR MIXED EFFECTS MODEL PROGRAM (NONMEM)    DOUBLE PRECISION NONMEM    VERSION VI LEVEL 1.0  
+ DEVELOPED AND PROGRAMMED BY STUART BEAL AND LEWIS SHEINER
+ 
+ PROBLEM NO.:         1
+ System Test 1                                                           
+0DATA CHECKOUT RUN:              NO 
+ DATA SET LOCATED ON UNIT NO.:    2
+ THIS UNIT TO BE REWOUND:        NO 
+ NO. OF DATA RECS IN DATA SET:   22
+ NO. OF DATA ITEMS IN DATA SET:  20
+ ID DATA ITEM IS DATA ITEM NO.:  20
+ DEP VARIABLE IS DATA ITEM NO.:  14
+0LABELS FOR DATA ITEMS:
+  SID     SEX     AGE    RACE      HT    SMOK    HCTZ    PROP     CON
+ DOSE      WT    TIME    SECR      DV    EVID      SS      II      ID
+  OCC    .ID.
+0FORMAT FOR DATA:
+ (E3.0,E2.0,E3.0,E2.0,E4.0,4E2.0,2E6.0,E3.0,E5.0,E7.0,2E2.0,3E4.0,1F2.0)         
+ 
+ TOT. NO. OF OBS RECS:      22
+ TOT. NO. OF INDIVIDUALS:   22
+0LENGTH OF THETA:  3
+0OMEGA HAS SIMPLE DIAGONAL FORM WITH DIMENSION:  1
+0INITIAL ESTIMATE OF THETA:
+ LOWER BOUND    INITIAL EST    UPPER BOUND
+  0.1870E+02     0.1870E+02     0.1870E+02
+  0.8730E+02     0.8730E+02     0.8730E+02
+  0.2130E+01     0.2130E+01     0.2130E+01
+0INITIAL ESTIMATE OF OMEGA:
+ 0.2310E-01
+0OMEGA CONSTRAINED TO BE THIS INITIAL ESTIMATE
+0ESTIMATION STEP OMITTED:          YES 
+ EPS-ETA INTERACTION:               NO 
+1
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ ************************************************************************************************************************
+ ********************                                                                                ********************
+ ********************                           MINIMUM VALUE OF OBJECTIVE FUNCTION                  ********************
+ ********************                                                                                ********************
+ ************************************************************************************************************************
+ 
+
+
+
+
+
+ **************************************************     **********     **************************************************
+1
+ ************************************************************************************************************************
+ ********************                                                                                ********************
+ ********************                                  FINAL PARAMETER ESTIMATE                      ********************
+ ********************                                                                                ********************
+ ************************************************************************************************************************
+ 
+
+
+ THETA - VECTOR OF FIXED EFFECTS PARAMETERS   *********
+
+
+            TH 1      TH 2      TH 3
+ 
+         1.87E+01  8.73E+01  2.13E+00
+ 
+
+
+ OMEGA - COV MATRIX FOR RANDOM EFFECTS - ETAS  ********
+
+
+            ETA1
+ 
+ ETA1
++        2.31E-02
+ 
+Thu Feb 11 12:02:07 GMT 2010
