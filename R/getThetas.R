@@ -17,13 +17,13 @@ PARAMITEMS <- c("final", "initial", "stderrors")
 #' @return A matrix of named rows for final estimates, initial estimates, standard errors etc. as applicable
 #' @author rweeks, fgochez
 
-getThetas <- function(obj, what = "final", ...)
+getThetas <- function(obj, what = "final", subProblemNum = 1, method = 1, problemNum = 1 )
 {
 	RNMImportStop(msg = "This method is not implemented for this class!")
 }
 setGeneric("getThetas")
 
-getThetas.NMBasicModel <- function(obj, what = "final",...)
+getThetas.NMBasicModel <- function( obj, what = "final", subProblemNum = 1, method = 1, problemNum = 1)
 {
 	validWhat <- intersect(what, PARAMITEMS)
 	invalidWhat <- setdiff(what, PARAMITEMS)
@@ -73,7 +73,7 @@ getThetas.NMBasicModel <- function(obj, what = "final",...)
 
 setMethod("getThetas", signature(obj = "NMBasicModel"), getThetas.NMBasicModel)
 
-getThetas.NMRun <- function(obj, what = "final", problemNum = 1, method = 1)
+getThetas.NMRun <- function( obj, what = "final", subProblemNum = 1, method = 1, problemNum = 1 )
 {
 	dat <- getProblem(obj, problemNum)
 	thetas <- getThetas(dat, what = what, method = method)
@@ -81,63 +81,68 @@ getThetas.NMRun <- function(obj, what = "final", problemNum = 1, method = 1)
 }
 setMethod("getThetas", signature(obj = "NMRun"), getThetas.NMRun)
 
-getThetas.NMBasicModelNM7 <- function(obj, what = "final",	method = 1,...)
+getThetas.NMBasicModelNM7 <- function( obj, what = "final", subProblemNum = 1, method = 1, problemNum = 1 )
 {
 	validWhat <- intersect(what, PARAMITEMS)
 	invalidWhat <- setdiff(what, PARAMITEMS)
 	
 	if(length(invalidWhat)) RNMImportWarning("Invalid items chosen:" %pst% paste(invalidWhat, collapse = ","))
 	
-	methodChosen <- .selectMethod(obj@methodNames, method)
-	thetas <- obj@thetaFinal[[methodChosen]]
-	#browser()
-	finalEstimates <- thetas 
-	stdErrors <- obj@thetaStderr[[methodChosen]]
-	# the initial values depend on the method chosen
-	if(methodChosen == 1)
-		initialValues <- obj@thetaInitial
-	else
+	.getThetasSingleMethod <- function (meth = 1) 
 	{
-		# this has the estimates only, not the upper and lower bounds
-		x <- obj@thetaFinal[[methodChosen-1]]
-		# extract this to have access to the upper and lower bounds
-		initialValues <- obj@thetaInitial
-		initialValues["initial", ] <- unname(x)
-	}
-	if(length(validWhat) == 0) RNMImportStop("No valid items selected for retrieval!", call = match.call())
-	
-	if(length(validWhat) == 1)
-	{
-		res <- switch(validWhat, 
-				"final" = finalEstimates,
-				# TODO: if these are length 0, generate an error?
-				"initial" = initialValues,
-				"stderrors" = {
-					if(is.null(stdErrors))
-						RNMImportStop("Standard errors not available \n", call = match.call())
-					stdErrors
-				}
-		)
-		# this occurs if the omegas were a 1x1 matrix to begin with.  We wish to force the returned value to be a matrix	
-	} # end if length(validWhat) == 1
-	else
-	{
-		res <- matrix(ncol = length(thetas), nrow = 0, dimnames = list(NULL, colnames(initialValues)))
-		if("initial" %in% validWhat) res <- rbind(res, initialValues )
-		if("final" %in% validWhat) res <- rbind(res, "estimates" = finalEstimates)
-		if( "stderrors" %in% validWhat )
+		methodChosen <- .selectMethod(obj@methodNames, method)
+		thetas <- obj@thetaFinal[[methodChosen]]
+		#browser()
+		finalEstimates <- thetas 
+		stdErrors <- obj@thetaStderr[[methodChosen]]
+		# the initial values depend on the method chosen
+		if(methodChosen == 1)
+			initialValues <- obj@thetaInitial
+		else
 		{
-			if(is.null(stdErrors)) RNMImportWarning("Standard errors not available \n")
-			else res <- rbind(res, "standardErrors" = stdErrors)
+			# this has the estimates only, not the upper and lower bounds
+			x <- obj@thetaFinal[[methodChosen-1]]
+			# extract this to have access to the upper and lower bounds
+			initialValues <- obj@thetaInitial
+			initialValues["initial", ] <- unname(x)
 		}
+		if(length(validWhat) == 0) RNMImportStop("No valid items selected for retrieval!", call = match.call())
+		
+		if(length(validWhat) == 1)
+		{
+			res <- switch(validWhat, 
+					"final" = finalEstimates,
+					# TODO: if these are length 0, generate an error?
+					"initial" = initialValues,
+					"stderrors" = {
+						if(is.null(stdErrors))
+							RNMImportStop("Standard errors not available \n", call = match.call())
+						stdErrors
+					}
+			)
+			# this occurs if the omegas were a 1x1 matrix to begin with.  We wish to force the returned value to be a matrix	
+		} # end if length(validWhat) == 1
+		else
+		{
+			res <- matrix(ncol = length(thetas), nrow = 0, dimnames = list(NULL, colnames(initialValues)))
+			if("initial" %in% validWhat) res <- rbind(res, initialValues )
+			if("final" %in% validWhat) res <- rbind(res, "estimates" = finalEstimates)
+			if( "stderrors" %in% validWhat )
+			{
+				if(is.null(stdErrors)) RNMImportWarning("Standard errors not available \n")
+				else res <- rbind(res, "standardErrors" = stdErrors)
+			}
+		}
+		res
 	}
-	res
-	
+	if(length(method) > 1)
+		lapply(as.numeric(method), .getThetasSingleMethod)
+	.getThetasSingleMethod(method)
 }
 
 setMethod("getThetas", signature(obj = "NMBasicModelNM7"), getThetas.NMBasicModelNM7)
 
-getThetas.NMSimModel <- function(obj, what = "final", subProblemNum = 1, ...)
+getThetas.NMSimModel <- function( obj, what = "final", subProblemNum = 1, method = 1, problemNum = 1 )
 {
 	
 	validWhat <- intersect(what, PARAMITEMS)
@@ -170,12 +175,10 @@ getThetas.NMSimModel <- function(obj, what = "final", subProblemNum = 1, ...)
 setMethod("getThetas", signature(obj = "NMSimModel"), getThetas.NMSimModel)
 
 
-getThetas.NMSimModelNM7 <- function(obj, what = "final", subProblemNum = 1, method = 1, ...)
+getThetas.NMSimModelNM7 <- function(obj, what = "final", subProblemNum = 1, method = 1, problemNum = 1)
 {
 	validWhat <- intersect(what, PARAMITEMS)
 	invalidWhat <- setdiff(what, PARAMITEMS)
-	
-	methodChosen <- .selectMethod(obj@methodNames, method)
 	
 	if("stderrors" %in% validWhat)
 		RNMImportWarning(msg = "No standard errors are available!")
@@ -185,30 +188,38 @@ getThetas.NMSimModelNM7 <- function(obj, what = "final", subProblemNum = 1, meth
 	if(any(!(subProblemNum %in% 1:numSimulations)))
 		RNMImportStop(msg = "Subproblem number is not valid!")	
 	
-	finalEstimates <- obj@thetaFinal[subProblemNum,,methodChosen]
-	# the initial values depend on the method chosen
-	if(methodChosen == 1)
-		initial <- obj@thetaInitial
-	else
-		# this has the estimates only, not the upper and lower bounds
-		initial <- obj@thetaFinal[subProblemNum,, methodChosen - 1]
-	if(length(validWhat) == 1)
-	{
-		res <- switch(validWhat, 
-				"final" = finalEstimates,
-				# TODO: if these are length 0, generate an error?
-				"initial" = initial
-		)
-		# this occurs if the omegas were a 1x1 matrix to begin with.  We wish to force the returned value to be a matrix	
-	} # end if length(validWhat) == 1
-	else
-		res <- list("initial.estimates" = initial, "final.estimates"  = finalEstimates)
+	.getThetasSingleMethod <- function(meth = 1) {
+		
+		methodChosen <- .selectMethod(obj@methodNames, method)
+		finalEstimates <- obj@thetaFinal[subProblemNum,,methodChosen]
+		# the initial values depend on the method chosen
+		if(methodChosen == 1)
+			initial <- obj@thetaInitial
+		else
+			# this has the estimates only, not the upper and lower bounds
+			initial <- obj@thetaFinal[subProblemNum,, methodChosen - 1]
+		if(length(validWhat) == 1)
+		{
+			res <- switch(validWhat, 
+					"final" = finalEstimates,
+					# TODO: if these are length 0, generate an error?
+					"initial" = initial
+			)
+			# this occurs if the omegas were a 1x1 matrix to begin with.  We wish to force the returned value to be a matrix	
+		} # end if length(validWhat) == 1
+		else
+			res <- list("initial.estimates" = initial, "final.estimates"  = finalEstimates)
+		
+		res
+	}
 	
-	res
+	if(length(method) > 1)
+		lapply(as.numeric(method), .getThetasSingleMethod)
+	.getThetasSingleMethod(method)
 }
 setMethod("getThetas", signature(obj = "NMSimModelNM7"), getThetas.NMSimModelNM7)
 
-getThetas.NMSimDataGen <- function(obj, what = "initial", ...)
+getThetas.NMSimDataGen <- function(obj, what = "initial", subProblemNum = 1, method = 1, problemNum = 1 )
 {
 	obj@thetaInitial
 }

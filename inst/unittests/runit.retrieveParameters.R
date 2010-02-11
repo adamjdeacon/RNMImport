@@ -172,25 +172,25 @@ test.getOmegas <- function()
 	checkEquals(omegaTest1, 
 			list(initial.estimates = getOmegas(prob3, what = "final"), 
 				final.estimates = getOmegas(prob3, method = 2) ),
-		msg = " | getOmegas correct (1)")
+		msg = " | getOmegas correct (1)", check.attributes = FALSE)
 	
 	omegaTest2 <- getOmegas(prob3, what = c("stderrors", "initial"), method = 1)
 	
 	checkEquals(omegaTest2, 
 			structure(list(initial.estimates = structure(c(0.128, 0, 0, 0, 
-											0.142, 0, 0, 0, 1.82), .Dim = c(3L, 3L), .Dimnames = list(c("OMEGA1", 
-													"OMEGA2", "OMEGA3"), c("OMEGA1", "OMEGA2", "OMEGA3"))), standard.errors = structure(c(0.0426, 
+											0.142, 0, 0, 0, 1.82), .Dim = c(3L,  3L), .Dimnames = list(c("OMEGA1", 
+													"OMEGA2", "OMEGA3"), c("OMEGA1", "OMEGA2", "OMEGA3"))), 
+											standard.errors = structure(c(0.0426, 
 											0, 0, 0, 0.0483, 0, 0, 0, 0.201), .Dim = c(3L, 3L), .Dimnames = list(
 											c("ETA1", "ETA2", "ETA3"), c("ETA1", "ETA2", "ETA3")))), .Names = c("initial.estimates", 
-							"standard.errors")), 
+							"standard.errors"), methodName = "Iterative Two Stage"), 
 			msg = " | getOmegas correct (2)")
 	
 	omegaTest3 <- getOmegas( prob3, what = c("stderrors", "final"))
 	
 	checkEquals(omegaTest3, list( final.estimates = getOmegas(prob3, what = "final"), 
 					standard.errors = getOmegas(prob3, what = "stderrors")),
-			 	msg = " | getOmegas correct (3)")
-	
+			 	msg = " | getOmegas correct (3)", check.attributes = FALSE)
 	
 }
 
@@ -250,7 +250,7 @@ test.getSigmas <- function()
 	checkEquals(sigmaTest1, 
 			list(initial.estimates = getSigmas(prob3, what = "final"), 
 					final.estimates = getSigmas(prob3, method = 2) ),
-			msg = " | getSigmas correct (1)")
+			msg = " | getSigmas correct (1)", check.attributes = FALSE)
 	
 	sigmaTest2 <- getSigmas(prob3, what = c("stderrors", "initial"), method = 1)
 	
@@ -258,13 +258,13 @@ test.getSigmas <- function()
 			structure(list(initial.estimates = structure(0.0231, .Dim = c(1L, 
 											1L), .Dimnames = list("EPS1", "EPS1")), standard.errors = structure(0.000746, .Dim = c(1L, 
 											1L), .Dimnames = list("EPS1", "EPS1"))), .Names = c("initial.estimates", 
-							"standard.errors")), 
+							"standard.errors"), methodName = "Iterative Two Stage"), 
 			msg = " | getSigmas correct (2)")
 	
 	sigmaTest3 <- getSigmas( prob3, what = c("stderrors", "final") )
 	
 	checkEquals(sigmaTest3,	list(final.estimates = getSigmas(prob3, what = "final"), 
 					standard.errors = getSigmas(prob3, what = "stderrors")),
-			msg = " | getSigmas correct (3)")
+			msg = " | getSigmas correct (3)", check.attributes = FALSE)
 	
 }

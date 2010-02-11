@@ -195,8 +195,8 @@ test.importNm.BasicNM7 <- function()
 	# check sigmas
 	
 	checkEquals(allSigmas, list(structure(0.0259, .Dim = c(1L, 1L), .Dimnames = list("EPS1", 
-									"EPS1")), structure(0.0266, .Dim = c(1L, 1L), .Dimnames = list(
-									"EPS1", "EPS1"))),
+									"EPS1"), methodName = "Iterative Two Stage"), structure(0.0266, .Dim = c(1L, 1L), .Dimnames = list(
+									"EPS1", "EPS1"), methodName = "Stochastic Approximation Expectation-Maximization")),
 			msg = " |sigmas imported correctly")
 	
 	
@@ -205,17 +205,18 @@ test.importNm.BasicNM7 <- function()
 	checkEquals( allOmegas, 
 			list(structure(c(0.157, 0, 0, 0, 0.162, 0, 0, 0, 0.737), .Dim = c(3L, 
 									3L), .Dimnames = list(c("ETA1", "ETA2", "ETA3"), c("ETA1", "ETA2", 
-											"ETA3"))), structure(c(0.145, 0, 0, 0, 0.149, 0, 0, 0, 1.42), .Dim = c(3L, 
+											"ETA3")),  methodName = "Iterative Two Stage"), 
+					structure(c(0.145, 0, 0, 0, 0.149, 0, 0, 0, 1.42), .Dim = c(3L, 
 									3L), .Dimnames = list(c("ETA1", "ETA2", "ETA3"), c("ETA1", "ETA2", 
-											"ETA3")))),
+											"ETA3")), methodName = "Stochastic Approximation Expectation-Maximization")),
 			msg = " |omegas imported correctly")
 	
 	checkEquals(sigmaStderr
 					, structure(0.000746, .Dim = c(1L, 1L), .Dimnames = list("EPS1", 
-							"EPS1")))
+							"EPS1"), methodName = "Iterative Two Stage"))
 	checkEquals(omegaStderr, structure(c(0.0426, 0, 0, 0, 0.0483, 0, 0, 0, 0.201), .Dim = c(3L, 
 							3L), .Dimnames = list(c("ETA1", "ETA2", "ETA3"), c("ETA1", "ETA2", 
-									"ETA3"))))
+									"ETA3")), methodName = "Iterative Two Stage"))
 	
 	checkEquals( getObjective(run1, method = 1:2, addMinInfo = FALSE), c(3335.250, 2339.093) )
 	
@@ -224,11 +225,11 @@ test.importNm.BasicNM7 <- function()
 	ETAShrinks <- lapply(as.numeric(1:2), function(i) getOmegas(run1, method = i, what = "shrinkage"))
 	EPSShrinks <- lapply(as.numeric(1:2), function(i) getSigmas(run1, method = i, what = "shrinkage"))
 	
-	checkEquals( ETAShrinks[[1]], c(5.0139, 12.1730, 14.9980 ), msg = " |ETA shrink correct for method 1")
-	checkEquals( ETAShrinks[[2]], c(0.072367, 6.459000, 5.190400), msg = " |ETA shrink correct for method 2")
+	checkEqualsNumeric( ETAShrinks[[1]], c(5.0139, 12.1730, 14.9980 ), msg = " |ETA shrink correct for method 1")
+	checkEqualsNumeric( ETAShrinks[[2]], c(0.072367, 6.459000, 5.190400), msg = " |ETA shrink correct for method 2")
 	
-	checkEquals( EPSShrinks[[2]], -10.145, msg = " |EPS shrink correct for method 2" )
-	checkEquals( EPSShrinks[[1]], 12.013, msg = " |EPS shrink correct for method 1" )
+	checkEqualsNumeric( EPSShrinks[[2]], -10.145, msg = " |EPS shrink correct for method 2" )
+	checkEqualsNumeric( EPSShrinks[[1]], 12.013, msg = " |EPS shrink correct for method 1" )
 	
 	run2 <- importNm("TestData1_missingtab.ctl","TestData1.lst" , path = system.file(package = "RNMImport", "unittests/testdata/TestDataNM7"))
 	
