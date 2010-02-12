@@ -6,6 +6,8 @@
 # Author: rweeks
 ###############################################################################
 
+.removeMethName <- RNMImport:::.removeMethName
+
 # tests getThetas to ensure that  behaviour under various combinations of parameters works as expected
 # note that this function is also tested in runit.importNm.R, so this focuses more on
 # parameter combinations than anything else
@@ -73,16 +75,28 @@ test.getThetas <- function()
 			structure(c(-Inf, 20, Inf, 19.1, -Inf, 77.3, Inf, 76.7, -Inf, 
 							1.27, Inf, 1.68), .Dim = c(4L, 3L), .Dimnames = list(c("lowerBound", 
 									"initial", "upperBound", "estimates"), c("THETA1", "THETA2", 
-									"THETA3"))))
+									"THETA3")), methodName = "Stochastic Approximation Expectation-Maximization"))
 	
 	checkEquals(getThetas(prob3, what = "initial", method = 1), structure(c(-Inf, 18.7, Inf, -Inf, 87.3, Inf, -Inf, 2.13, Inf
 					), .Dim = c(3L, 3L), .Dimnames = list(c("lowerBound", "initial", 
-									"upperBound"), c("THETA1", "THETA2", "THETA3"))))
+									"upperBound"), c("THETA1", "THETA2", "THETA3")), 
+					methodName = "Iterative Two Stage"))
 	
 	checkEquals(getThetas(prob3, what = c("stderrors", "final")), 
 			structure(c(20, 1.24, 77.3, 7.71, 1.27, 0.127), .Dim = 2:3, .Dimnames = list(
 							c("estimates", "standardErrors"), c("THETA1", "THETA2", "THETA3"
-							))))
+							)), methodName = "Iterative Two Stage" ))
+
+	thetaTest4 <- getThetas(prob3, what = "final", method = 1:2)
+	thetaTest5 <- getThetas(prob3, what = c("initial", "final", "stderrors"), method = 1:2 )
+	
+	checkEquals(thetaTest4, list(getThetas(prob3, what = "final", method = 1), 
+					getThetas(prob3, what = "final", method = 2)), msg = " |multiple methods correct (1) " )
+	
+	checkEquals(thetaTest5, list(getThetas(prob3, what = c("initial", "stderrors", "final"), method = 1), 
+					getThetas(prob3, what = c("initial", "stderrors", "final"), method = 2)), 
+			msg = " |multiple methods correct (2)")
+	
 }
 
 test.getOmegas <- function()
@@ -169,10 +183,12 @@ test.getOmegas <- function()
 	
 	omegaTest1 <- getOmegas(prob3, what = c("initial", "final"), method = 2)
 	
-	checkEquals(omegaTest1, 
-			list(initial.estimates = getOmegas(prob3, what = "final"), 
-				final.estimates = getOmegas(prob3, method = 2) ),
-		msg = " | getOmegas correct (1)", check.attributes = FALSE)
+	expOmega1 <- list(initial.estimates = .removeMethName( getOmegas(prob3, what = "final", method = 1) ),	
+			final.estimates = .removeMethName(getOmegas(prob3, method = 2)))
+	
+	attr(expOmega1, "methodName") <- "Stochastic Approximation Expectation-Maximization"
+	
+	checkEquals(omegaTest1, expOmega1,	msg = " | getOmegas correct (1)")
 	
 	omegaTest2 <- getOmegas(prob3, what = c("stderrors", "initial"), method = 1)
 	
@@ -188,9 +204,25 @@ test.getOmegas <- function()
 	
 	omegaTest3 <- getOmegas( prob3, what = c("stderrors", "final"))
 	
-	checkEquals(omegaTest3, list( final.estimates = getOmegas(prob3, what = "final"), 
-					standard.errors = getOmegas(prob3, what = "stderrors")),
-			 	msg = " | getOmegas correct (3)", check.attributes = FALSE)
+	expOmega3 <- list(final.estimates =  .removeMethName(getOmegas(prob3, what = "final")), 
+			standard.errors = .removeMethName(getOmegas(prob3, what = "stderrors")))
+	
+	attr(expOmega3, "methodName" ) <- "Iterative Two Stage"
+	
+	checkEquals(omegaTest3, expOmega3,
+			 	msg = " | getOmegas correct (3)")
+		
+	## add additional tests for extracting multple methods at once
+	
+	omegaTest4 <- getOmegas(prob3, what = "final", method = 1:2)
+	omegaTest5 <- getOmegas(prob3, what = c("final", "stderrors"), method = 1:2 )
+	
+	checkEquals(omegaTest4, list(getOmegas(prob3, what = "final", method = 1), 
+					getOmegas(prob3, what = "final", method = 2)), msg = " |multiple methods correct (1) " )
+	
+	checkEquals(omegaTest5, list(getOmegas(prob3, what = c("stderrors", "final"), method = 1), 
+					getOmegas(prob3, what = c("stderrors", "final"), method = 2)), 
+			msg = " |multiple methods correct (2)")
 	
 }
 
@@ -247,10 +279,14 @@ test.getSigmas <- function()
 	
 	sigmaTest1 <- getSigmas(prob3, what = c("initial", "final"), method = 2)
 	
-	checkEquals(sigmaTest1, 
-			list(initial.estimates = getSigmas(prob3, what = "final"), 
-					final.estimates = getSigmas(prob3, method = 2) ),
-			msg = " | getSigmas correct (1)", check.attributes = FALSE)
+	
+	expSigma1 <- list(initial.estimates = .removeMethName( getSigmas(prob3, what = "final", method = 1) ),	
+			final.estimates = .removeMethName(getSigmas(prob3, method = 2)))
+	
+	attr(expSigma1, "methodName") <- "Stochastic Approximation Expectation-Maximization"
+	
+	checkEquals(sigmaTest1, expSigma1,
+			msg = " | getSigmas correct (1)")
 	
 	sigmaTest2 <- getSigmas(prob3, what = c("stderrors", "initial"), method = 1)
 	
@@ -262,9 +298,21 @@ test.getSigmas <- function()
 			msg = " | getSigmas correct (2)")
 	
 	sigmaTest3 <- getSigmas( prob3, what = c("stderrors", "final") )
+	expSigma3 <- list(final.estimates = .removeMethName(getSigmas(prob3, what = "final")), 
+			standard.errors = .removeMethName(getSigmas(prob3, what = "stderrors")))
+	attr(expSigma3, "methodName") <- "Iterative Two Stage"
+	checkEquals(sigmaTest3,	expSigma3,	msg = " | getSigmas correct (3)")
 	
-	checkEquals(sigmaTest3,	list(final.estimates = getSigmas(prob3, what = "final"), 
-					standard.errors = getSigmas(prob3, what = "stderrors")),
-			msg = " | getSigmas correct (3)", check.attributes = FALSE)
+	# check multiple methods at once
+	
+	sigmaTest4 <- getSigmas(prob3, what = "final", method = 1:2)
+	sigmaTest5 <- getSigmas(prob3, what = c("initial", "final", "stderrors"), method = 1:2 )
+	
+	checkEquals(sigmaTest4, list(getSigmas(prob3, what = "final", method = 1), 
+					getSigmas(prob3, what = "final", method = 2)), msg = " |multiple methods correct (1) " )
+	
+	checkEquals(sigmaTest5, list(getSigmas(prob3, what = c("initial", "stderrors", "final"), method = 1), 
+					getSigmas(prob3, what = c("initial", "stderrors", "final"), method = 2)), 
+			msg = " |multiple methods correct (2)")
 	
 }

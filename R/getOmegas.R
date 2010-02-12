@@ -90,7 +90,7 @@ setMethod("getOmegas", signature(obj = "NMBasicModel"), getOmegas.NMBasicModel)
 {
 	methodChosen <- method[1]
 	
-	if(class(method) == "integer") method <- as.numeric(method)
+	if(class(methodChosen) == "integer") methodChosen <- as.numeric(methodChosen)
 	assertClass(methodChosen, "numeric")
 	
 	if(methodChosen < 1 | methodChosen > length(availableMethods)) RNMImportStop("Invalid method index")

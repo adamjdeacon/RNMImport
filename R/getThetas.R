@@ -8,13 +8,15 @@
 
 PARAMITEMS <- c("final", "initial", "stderrors")
 
+
 #' Extracts theta estimates from a NONMEM object
-#' @title extract THETA information
-#' @param obj NONMEM object
-#' @param what [C,+] Character vector of items to extract.  One or more of "final", "stderrors" or "initial"  
-#' @param ... Additional arguments that apply to different classes. These are problemNum which specifies the run required for NMRun
-#'    		  ,subProblemNum which specifies the simulation required for NMSimModel[NM7]
-#' @return A matrix of named rows for final estimates, initial estimates, standard errors etc. as applicable
+#' @param obj An object of class NMBasicModel, NMRun or NMSimModel
+#' @param what [C,+] Character vector of items to extract. One or more of "final", "stderrors" or "initial" (or "shrinkage" for NONMEM 7 basic models) 
+#' @param subProblemNum [N,+] Numeric vector of simulation sub-problems to use.  Only applies to simulation models
+#' @param method [N,+] Vector of methods to extract when dealing with NONMEM 7 problems
+#' @param problemNum [N,1] Number of problem to reference - applies to runs only
+#' @return A matrix of named rows for final estimates, initial estimates, standard errors etc. as applicable, or a list
+#' of matrices if multiple methods are chosen in NONMEM 7
 #' @author rweeks, fgochez
 
 getThetas <- function(obj, what = "final", subProblemNum = 1, method = 1, problemNum = 1 )
@@ -90,7 +92,7 @@ getThetas.NMBasicModelNM7 <- function( obj, what = "final", subProblemNum = 1, m
 	
 	.getThetasSingleMethod <- function (meth = 1) 
 	{
-		methodChosen <- .selectMethod(obj@methodNames, method)
+		methodChosen <- .selectMethod(obj@methodNames, meth)
 		thetas <- obj@thetaFinal[[methodChosen]]
 		#browser()
 		finalEstimates <- thetas 
@@ -133,11 +135,13 @@ getThetas.NMBasicModelNM7 <- function( obj, what = "final", subProblemNum = 1, m
 				else res <- rbind(res, "standardErrors" = stdErrors)
 			}
 		}
+		attr(res, "methodName") <- obj@methodNames[[methodChosen]]
 		res
 	}
 	if(length(method) > 1)
-		lapply(as.numeric(method), .getThetasSingleMethod)
-	.getThetasSingleMethod(method)
+		lapply(method, .getThetasSingleMethod)
+	else
+		.getThetasSingleMethod(method)
 }
 
 setMethod("getThetas", signature(obj = "NMBasicModelNM7"), getThetas.NMBasicModelNM7)
@@ -190,7 +194,7 @@ getThetas.NMSimModelNM7 <- function(obj, what = "final", subProblemNum = 1, meth
 	
 	.getThetasSingleMethod <- function(meth = 1) {
 		
-		methodChosen <- .selectMethod(obj@methodNames, method)
+		methodChosen <- .selectMethod(obj@methodNames, meth)
 		finalEstimates <- obj@thetaFinal[subProblemNum,,methodChosen]
 		# the initial values depend on the method chosen
 		if(methodChosen == 1)
@@ -209,13 +213,15 @@ getThetas.NMSimModelNM7 <- function(obj, what = "final", subProblemNum = 1, meth
 		} # end if length(validWhat) == 1
 		else
 			res <- list("initial.estimates" = initial, "final.estimates"  = finalEstimates)
-		
+		# attach the name of the method used
+		attr(res, "methodName") <- obj@methodNames[[methodChosen]]
 		res
 	}
 	
 	if(length(method) > 1)
-		lapply(as.numeric(method), .getThetasSingleMethod)
-	.getThetasSingleMethod(method)
+		lapply(method, .getThetasSingleMethod)
+	else
+		.getThetasSingleMethod(method)
 }
 setMethod("getThetas", signature(obj = "NMSimModelNM7"), getThetas.NMSimModelNM7)
 
