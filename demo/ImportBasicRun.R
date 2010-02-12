@@ -18,12 +18,13 @@ testModel <- getProblem(testRun)
 show(testModel)
 cat("\n")
 # extract the parameters.  No standard errors are available for this run unfortunately
-print(getThetas(testModel, stdErrors = FALSE))
-print(getOmegas(testModel, stdErrors = FALSE))
-print(getSigmas(testModel, stdErrors = FALSE))
+print(getThetas(testModel))
+print(getOmegas(testModel))
+print(getSigmas(testModel))
+						
 
 # we can also extract them from the full run object
-print(getThetas(testRun, stdErrors = FALSE), problemNum = 1)
+print(getThetas(testRun, problemNum = 1))
 
 # extract the iterations.  This must be done manually for now, but will be changed in the future
 print(testModel@parameterIterations)
