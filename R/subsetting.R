@@ -63,11 +63,12 @@ dataSubset <- function(x)
 #' Applies a set of subset expressions to a data.frame
 #' @param obj A data.frame to be subsetted
 #' @param sub Character vector of subsets to apply
+#' @param verboseWarnings [L, 1] Logical flag.  If TRUE, will emit a warning whenever a subset statement fails
 #' @return subsetted data.frame, with subsets in sub applied
 #' @author fgochez
 #' @export
 
-applyDataSubset <- function(obj, sub = NULL)
+applyDataSubset <- function(obj, sub = NULL, verboseWarnings = FALSE)
 {
 	assertClass(obj, "data.frame")
 	if(is.null(sub))
@@ -78,7 +79,7 @@ applyDataSubset <- function(obj, sub = NULL)
 	{
 		res <- try(subset(obj, eval(parse(text = x)) ), silent = TRUE)
 		if(!inherits(res, "try-error")) obj <- res
-		else{
+		else if(verboseWarnings){
 			RNMImportWarning(paste("Unable to apply subset:",x,"\n" ), call = match.call())
 		}
 		

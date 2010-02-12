@@ -11,7 +11,7 @@
   used to modify and retrieve associated data subsets with particular NONMEM data objects.
 }
 \usage{
-	applyDataSubset(obj, sub = NULL)
+	applyDataSubset(obj, sub = NULL, verboseWarnings = FALSE)
 	dataSubset(x)
 	dataSubset(x) <- value
 	augmentDataSubset(x) <- value
@@ -23,6 +23,7 @@
   \item{obj}{ Object of class data.frame to which a subset will be applied}
   \item{value}{Character vector of subset expressions}
   \item{sub}{ Character vector of subset expressions }
+  \item{verboseWarnings}{ Logical flag.  If TRUE, will emit a warning whenever a subset statement fails }
 }
 
 \value{
