@@ -1,5 +1,8 @@
 test.imposeCategoryFormat <- function()
 {
+	
+	testRuns <- RNMImport:::getInternalTestRuns()
+	
 	#Test data frame 
 	testDF <- data.frame(SEX = factor(c("male", "female", "female", "male", "female")), 
 						 SMOK = factor(c("no", "yes", "yes", "no", "no")),
@@ -17,8 +20,7 @@ test.imposeCategoryFormat <- function()
 	
 	#Test NMBasic
 	setNmPath("internalunit",  file.path(unitTestPath, "testdata/TestRun"))
-	run1 <- importNm(conFile = "testdata1.ctl", reportFile = "testdata1.lst", 
-			path = "(internalunit)")
+	run1 <- testRuns$NMBasic
 	prob1 <- getProblem(run1)
 	testB1 <- imposeCategoryFormat(prob1)
 	checkEquals(levels(testB1@inputData[["SEX"]]), c("female", "male"))
@@ -36,6 +38,7 @@ test.imposeCategoryFormat <- function()
 	checkEquals(levels(testB4@outputData[["SEX"]]), c("female", "male"))
 	checkEquals(levels(testB4@outputData[["SMOK"]]), NULL)
 	checkEquals(levels(testB4@inputData[["SMOK"]]), NULL)
+	
 	
 	#Test NMRun
 	testR1 <- imposeCategoryFormat(run1)
@@ -56,7 +59,7 @@ test.imposeCategoryFormat <- function()
 	checkEquals(levels(testR4@outputData[["SMOK"]]), NULL)
 	
 	#Test NMSim
-	run2 <- importNm(conFile = "../TestSimRun/TestData1SIM.con", path = "(internalunit)")
+	run2 <- testRuns$NMSimMod
 	prob2 <- getProblem(run2)
 	testS1 <- imposeCategoryFormat(prob2)
 	checkEquals(levels(testS1@inputData[["SEX"]]), c("female", "male"))
@@ -75,5 +78,24 @@ test.imposeCategoryFormat <- function()
 	checkEquals(levels(testS4@inputData[["SMOK"]]), NULL)
 	checkEquals(levels(testS4@outputData[["SMOK"]]), NULL)
 	
+	# NMBasicNM7
+	run3 <- testRuns$NMBasic
+	prob3 <- getProblem(run3)
+	testB1 <- imposeCategoryFormat(prob3)
+	checkEquals(levels(testB1@inputData[["SEX"]]), c("female", "male"))
+	checkEquals(levels(testB1@inputData[["SMOK"]]), c("no", "yes"))
+	
+	testB2 <- imposeCategoryFormat(prob3, c("SEX", "SMOK"))
+	checkEquals(levels(testB2@outputData[["SEX"]]), c("female", "male"))
+	checkEquals(levels(testB2@outputData[["SMOK"]]), c("no", "yes"))
+	
+	testB3 <- imposeCategoryFormat(prob3, "SEX, SMOK")
+	checkEquals(levels(testB3@inputData[["SEX"]]), c("female", "male"))
+	checkEquals(levels(testB3@inputData[["SMOK"]]), c("no", "yes"))
+	
+	testB4 <- imposeCategoryFormat(prob3, "SEX")
+	checkEquals(levels(testB4@outputData[["SEX"]]), c("female", "male"))
+	checkEquals(levels(testB4@outputData[["SMOK"]]), NULL)
+	checkEquals(levels(testB4@inputData[["SMOK"]]), NULL)
 }
 

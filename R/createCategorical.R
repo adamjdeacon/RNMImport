@@ -61,6 +61,7 @@ addDerivedCategorical.NMBasicModel <- function(obj, varName, newVar = paste(varN
 	invisible(obj)
 }
 setMethod("addDerivedCategorical", signature(obj = "NMBasicModel"), addDerivedCategorical.NMBasicModel)
+setMethod("addDerivedCategorical", signature(obj = "NMBasicModelNM7"), addDerivedCategorical.NMBasicModel)
 
 addDerivedCategorical.NMRun <- function(obj, varName, newVar = paste(varName, ".CUT", sep = ""), breaks = 5, binType = "range", labels = NULL, problemNum = 1, dataType = "output")
 {
@@ -135,6 +136,7 @@ addDerivedCategorical.NMSimModel <- function(obj, varName, newVar = paste(varNam
 	invisible(obj)
 }
 setMethod("addDerivedCategorical", signature(obj = "NMSimModel"), addDerivedCategorical.NMSimModel)
+setMethod("addDerivedCategorical", signature(obj = "NMSimModelNM7"), addDerivedCategorical.NMSimModel)
 
 addDerivedCategorical.NMSimDataGen <- function(obj, varName, newVar = paste(varName, ".CUT", sep = ""), breaks = 5, binType = "range", labels = NULL, dataType = "output")
 {

@@ -58,6 +58,7 @@ imposeCategoryFormat.NMBasicModel <- function(obj, varSubset)
 	invisible(obj)
 }
 setMethod("imposeCategoryFormat", signature(obj = "NMBasicModel"), imposeCategoryFormat.NMBasicModel)
+setMethod("imposeCategoryFormat", signature(obj = "NMBasicModelNM7"), imposeCategoryFormat.NMBasicModel)
 
 imposeCategoryFormat.NMRun <- function(obj, varSubset, problemNum = 1)
 {
@@ -154,6 +155,7 @@ imposeCategoryFormat.NMSimModel <- function(obj, varSubset)
 	invisible(obj)
 }
 setMethod("imposeCategoryFormat", signature(obj = "NMSimModel"), imposeCategoryFormat.NMSimModel)
+setMethod("imposeCategoryFormat", signature(obj = "NMSimModelNM7"), imposeCategoryFormat.NMSimModel)
 
 imposeCategoryFormat.NMSimDataGen <- function(obj, varSubset)
 {

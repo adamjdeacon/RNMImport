@@ -56,29 +56,21 @@ test.createCategorical <- function()
 		checkEquals(attr(testSix[,i], "class"), attr(testDF[,i], "class"))
 		checkEquals(as.character(testSix[,i]), as.character(testDF[,i]))
 	}
+	
+	testRuns <- RNMImport:::getInternalTestRuns()
 
 	#Perform some simple tests on NMRun, NMBasicModel and NMSimModel
 	setNmPath("internalunit",  file.path(unitTestPath, "testdata/TestRun"))
-	run1 <- importNm(conFile = "testdata1.ctl", reportFile = "testdata1.lst", 
-			path = "(internalunit)")
+	run1 <- testRuns$NMBasic
 	prob1 <- getProblem(run1)
 	
 	#Check NMBasic
 	testBas <- addDerivedCategorical(prob1, varName = "WT", breaks = 6, dataType = "input")
-	checkException(addDerivedCategorical(prob2, varName = "WT", breaks = 6, dataType = "Intermediate"))
+	checkException(addDerivedCategorical(prob1, varName = "WT", breaks = 6, dataType = "Intermediate"))
 	checkEquals(nrow(testBas@additionalVars), nrow(prob1@inputData))
 	checkEquals(names(testBas@additionalVars), "WT.CUT")
-	checkEquals(length(levels(testBas@additionalVars[["WT.CUT"]])), 6)
-	
-	# a test for "addedData"
-
-	addedDataTest <- addedData(testBas)
-	checkEquals(class(addedDataTest), "data.frame", " |Added data extracted is a data.frame")
-	checkEquals( names( addedDataTest ) ,"WT.CUT", " |Correct column names" )
-	checkEquals(dim(addedDataTest), c(1061, 1), " |Dimensions of extracted data are corrected")
-	checkEquals(levels(addedDataTest$"WT.CUT"), c("(50.9,65.7]", "(65.7,80.5]", "(80.5,95.2]", "(95.2,110]", "(110,125]", "(125,139]")  )
-	
-	
+	checkEquals(length(levels(testBas@additionalVars[["WT.CUT"]])), 6) 
+		
 	#Check NMRun
 	testRun <- addDerivedCategorical(run1, varName = "SEX", binType = "unique", newVar = "FactorSEX")
 	checkException(addDerivedCategorical(run1, varName = "SEX",  binType = "unique", dataType = "Intermediate"))
@@ -86,15 +78,19 @@ test.createCategorical <- function()
 	checkEquals(names(testRun@additionalVars), "FactorSEX")
 	checkEquals(length(levels(testRun@additionalVars[["FactorSEX"]])), 2)
 	
-	# a test for "addedData"
+}
+
+# very simple test 
+
+test.createCategorical.NMBasicNM7 <- function()
+{
+	testRun <- RNMImport:::getInternalTestRuns()$NMBasicNM7
+	testProb <- getProblem(testRun)
+	testProb2 <- addDerivedCategorical(testProb, "DV")
 	
-	testRun2 <- addDerivedCategorical(prob1, varName = "WT", breaks = 6, dataType = "input")
-	addedDataTest2 <- addedData(testRun2)
-	checkEquals(class(addedDataTest2), "data.frame", " |Added data extracted is a data.frame")
-	checkEquals( names( addedDataTest2 ) ,"WT.CUT", " |Correct column names" )
-	checkEquals(dim(addedDataTest2), c(1061, 1), " |Dimensions of extracted data are corrected")
-	checkEquals(levels(addedDataTest2$"WT.CUT"), c("(50.9,65.7]", "(65.7,80.5]", "(80.5,95.2]", "(95.2,110]", "(110,125]", "(125,139]")  )
-	
+	testFrame <- nmData(testProb2)
+	expFrame <- addDerivedCategorical(testFrame, "DV")
+	checkEquals(addedData(testProb2)$DV.CUT, expFrame$DV.CUT, msg = " |add derived categorical works for NMBasicModelNM7"  )
 }
 
 test.createCategorical.NMSim <- function()
@@ -114,3 +110,33 @@ test.createCategorical.NMSim <- function()
 	checkEquals(names(testSim2@additionalVars), "ExplicitWTCut")
 	checkEquals(length(levels(testSim2@additionalVars[["ExplicitWTCut"]])), 4)
 }
+
+# tests the addedData function.  Moved here for cleaner code
+
+test.addedData <- function()
+{
+	testRuns <- RNMImport:::getInternalTestRuns()
+
+	run1 <- testRuns$NMBasic
+	prob1 <- getProblem(run1)
+	
+	# check NMBasicModel
+	
+	testBas <- addDerivedCategorical(prob1, varName = "WT", breaks = 6, dataType = "input")	
+	addedDataTest <- addedData(testBas)
+	checkEquals(class(addedDataTest), "data.frame", " |Added data extracted is a data.frame")
+	checkEquals( names( addedDataTest ) ,"WT.CUT", " |Correct column names" )
+	checkEquals(dim(addedDataTest), c(1061, 1), " |Dimensions of extracted data are corrected")
+	checkEquals(levels(addedDataTest$"WT.CUT"), c("(50.9,65.7]", "(65.7,80.5]", "(80.5,95.2]", "(95.2,110]", "(110,125]", "(125,139]")  )
+	
+	# test for run method
+	
+	testRun2 <- addDerivedCategorical(run1, varName = "WT", breaks = 6, dataType = "input")
+	addedDataTest2 <- addedData(testRun2)
+	checkEquals(class(addedDataTest2), "data.frame", " |Added data extracted is a data.frame")
+	checkEquals( names( addedDataTest2 ) ,"WT.CUT", " |Correct column names" )
+	checkEquals(dim(addedDataTest2), c(1061, 1), " |Dimensions of extracted data are corrected")
+	checkEquals(levels(addedDataTest2$"WT.CUT"), c("(50.9,65.7]", "(65.7,80.5]", "(80.5,95.2]", "(95.2,110]", "(110,125]", "(125,139]")  )
+	
+}
+	
