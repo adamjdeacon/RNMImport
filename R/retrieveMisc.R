@@ -235,3 +235,31 @@ getNmVersion.NMRunProb <- function(obj)
 
 setMethod("getNmVersion", signature(obj = "NMRun"), getNmVersion.NMRunProb)
 setMethod("getNmVersion", signature(obj = "NMProblem"), getNmVersion.NMRunProb)
+
+
+getMethodNames <- function(obj, what = c("report", "control" ), problemNum = 1)
+{
+	RNMImportStop("This function is not implemented for objects of this class")
+}
+
+setGeneric("getMethodNames")
+
+getMethodNames.NMRun <- function(obj, what = c("report", "control" ), problemNum = 1)
+{
+	what <- match.arg(what)
+	getMethodNames( getProblem(obj, problemNum = problemNum), what = what )
+}
+
+setMethod("getMethodNames", signature(obj = "NMRun"), getMethodNames.NMRun )
+
+getMethodNames.NMProblemNM7 <- function(obj, what = c("report", "control"), problemNum = 1)
+{
+	what <- match.arg(what)
+	if(what == "report")
+		obj@methodNames
+	else
+		unname(obj@methodInfo[,"method"])
+}
+
+setMethod("getMethodNames", signature(obj = "NMBasicModelNM7"), getMethodNames.NMProblemNM7)
+setMethod("getMethodNames", signature(obj = "NMSimModelNM7"), getMethodNames.NMProblemNM7)

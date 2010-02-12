@@ -156,3 +156,23 @@ test.getNmVersion <- function()
 	checkEquals( getNmVersion(prob2), c(major = "VI", "minor" = "1" ) , " version of run2 problem is correct")
 	
 }
+
+# test the following function:
+# getMethodNames
+
+test.getMethodNames <- function()
+{
+	testRuns <- RNMImport:::getInternalTestRuns()
+	run1 <- testRuns$NMBasicNM7
+	prob1 <- getProblem(run1)
+	
+	# check that getMethodNames works in the same way for runs as for problems
+	
+	checkEquals(getMethodNames(run1, what = "control"), getMethodNames(prob1, what = "control"))
+	checkEquals(getMethodNames(run1, what = "report"), getMethodNames(prob1, what = "report"))
+	
+	checkEquals(getMethodNames(prob1, what = "control"),c("ITS","SAEM"), msg = " |control stream captured correctly" )
+	checkEquals(getMethodNames(prob1, what = "report"),c( "Iterative Two Stage",  "Stochastic Approximation Expectation-Maximization"), 
+			msg = " |report stream captured correctly" )
+	
+}
