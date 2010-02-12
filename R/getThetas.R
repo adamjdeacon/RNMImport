@@ -78,7 +78,7 @@ setMethod("getThetas", signature(obj = "NMBasicModel"), getThetas.NMBasicModel)
 getThetas.NMRun <- function( obj, what = "final", subProblemNum = 1, method = 1, problemNum = 1 )
 {
 	dat <- getProblem(obj, problemNum)
-	thetas <- getThetas(dat, what = what, method = method)
+	thetas <- getThetas(dat, what = what, method = method, subProblemNum = subProblemNum)
 	thetas	
 }
 setMethod("getThetas", signature(obj = "NMRun"), getThetas.NMRun)

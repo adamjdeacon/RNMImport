@@ -66,6 +66,12 @@ test.getThetas <- function()
 	
 	checkEquals(getThetas(prob2, what = "initial"), simInitial, msg = " |initial alone as expected")
 	
+	## check that parameters are passed through correctly from run to simModel
+	# see also issue 1969
+	
+	checkEquals(getThetas(run2, subProblemNum = 1:3, what = c("initial", "final")), 
+			getThetas(prob2, subProblemNum = 1:3,  what = c("initial", "final") ))
+	
 	######## NONMEM 7 run
 	
 	run3 <- testRuns[["NMBasicNM7"]]
@@ -172,6 +178,10 @@ test.getOmegas <- function()
 	
 	checkEquals(getOmegas(prob2, what = c("final", "initial"), subProblemNum = 4), 
 			list("initial.estimates" = initialSimOmegas , "final.estimates" = simOmegas[,,4, drop = FALSE]))
+	# check that parameters passed down correctly (see also issue 1969)
+	checkEquals(getOmegas(run2, subProblemNum = 1:3, what = c("initial", "final")), 
+			getOmegas(prob2, subProblemNum = 1:3,  what = c("initial", "final") ))
+	
 	
 	###################################
 	# NMBasicModelNM7
@@ -267,6 +277,12 @@ test.getSigmas <- function()
 	checkEquals(getSigmas(prob2, what = "initial", subProblemNum = 1:5), sigmaInitial)
 	checkEquals(getSigmas(prob2, what = c("final", "initial"), subProblemNum = 3), 
 			list("initial.estimates" = sigmaInitial, "final.estimates" = simSigmas[,,3, drop = FALSE] ) )
+	
+	# check that parameters passed down correctly (see also issue 1969)
+	
+	checkEquals(getSigmas(run2, subProblemNum = 1:3, what = c("initial", "final")), 
+			getSigmas(prob2, subProblemNum = 1:3,  what = c("initial", "final") ))
+	
 	
 	###############################
 	#
