@@ -159,3 +159,78 @@ test.importModelDataAliasDrop <- function()
 									"DV"))), msg = " |dropping columns with extra columns in data set works correctly" )
 	
 }
+
+# tests model importing with ACCEPT=(list) statement
+
+test.importModelData.accept <- function()
+{
+	testDir <- file.path(unitTestPath, "testdata")
+	
+	.importNmModData <- RNMImport:::.importNmModData
+	importModelData <- RNMImport:::importModelData
+	.importNmModInput <- RNMImport:::.importNmModInput
+	
+	dataStatement1 <- .importNmModData("$DATA data3 ACCEPT=(TIME.GE.1)")
+	inputStatement <- .importNmModInput("$INPUT AMT TIME=TIM DV=FOO")
+	
+	testInput1 <- as.matrix( importModelData(dataStatement1, inputStatement, path = testDir) )
+	rownames(testInput1) <- NULL
+	
+	checkEquals( testInput1,
+			cbind(AMT = rep(NA, 8), 
+					TIME = c(1,1.92,3.5,5.02,7.03,9,12,24.3),
+					DV = c(8.31,8.33,6.85,6.08,5.40,4.55,3.01,0.9), 
+					TIM = c(1,1.92,3.5,5.02,7.03,9,12,24.3), 
+					FOO = c(8.31,8.33,6.85,6.08,5.40,4.55,3.01,0.9)), 
+			msg = " | ACCEPT = works with one name for TIME" )
+	
+	# now check aliased version
+	dataStatement2 <- .importNmModData("$DATA data3 ACCEPT=(TIM.GE.1)")
+	
+	testInput2 <- as.matrix( importModelData(dataStatement1, inputStatement, path = testDir) )
+	rownames(testInput2) <- NULL
+	
+	checkEquals( testInput2,
+			cbind(AMT = rep(NA, 8), 
+					TIME = c(1,1.92,3.5,5.02,7.03,9,12,24.3),
+					DV = c(8.31,8.33,6.85,6.08,5.40,4.55,3.01,0.9), 
+					TIM = c(1,1.92,3.5,5.02,7.03,9,12,24.3), 
+					FOO = c(8.31,8.33,6.85,6.08,5.40,4.55,3.01,0.9)), 
+			msg = " | ACCEPT = works with another name for TIME" )
+}
+
+
+# tests model importing with RECORDS=n statement
+
+test.importModelData.records <- function()
+{
+	.importNmModData <- RNMImport:::.importNmModData
+	importModelData <- RNMImport:::importModelData
+	.importNmModInput <- RNMImport:::.importNmModInput
+	
+	# first test: checks that RECORDS=n is handled correctly
+	testDir <- file.path(unitTestPath, "testdata")
+
+	
+	dataStatement1 <- .importNmModData("$DATA data4.dat RECORDS=5")
+	inputStatement <- .importNmModInput("$INPUT AMT TIME=TIM DV=FOO")
+	testInput1 <-  as.matrix(importModelData( dataStatement1, inputStatement, path = testDir ))
+	rownames(testInput1) <- NULL
+	checkEquals(testInput1, cbind(AMT = c(320,NA,NA,NA,NA), 
+					TIME = c(0,.27,0.52,1,1.92), DV = c(NA,1.71,7.91,8.31,8.33),
+					TIM = c(0,.27,0.52,1,1.92), FOO = c(NA,1.71,7.91,8.31,8.33) ) ,
+			" | Only first 5 records used")
+	
+	# second test: checks RECORD=label
+	
+	inputStatement2 <- .importNmModInput("$INPUT MDV AMT ID TIME CONC=DV")
+	dataStatement2 <- .importNmModData("$DATA data5.csv RECORDS=ID")
+	
+	testInput2 <-  as.matrix(importModelData( dataStatement2, inputStatement2, path = testDir ))
+	rownames(testInput2) <- NULL
+	
+	# test that only the first two rows were imported
+	expectedData2 <- rbind( c(1,10,1,1,0), c(0,0,1,2,9) )
+	colnames(expectedData2) <-  c("MDV", "AMT", "ID", "TIME", "CONC")
+	checkEquals( testInput2[,1:5], expectedData2, msg = " |only first two rows imported" )
+}

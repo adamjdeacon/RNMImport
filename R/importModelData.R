@@ -44,9 +44,9 @@ importModelData <- function(
 	if(length(ignoreChars) == 0) ignoreChars <- ""
 	
 	# Call readNmData, which is the workhorse function that actually reads the table
-
-	myData <- readNmData(file = fileName, ignore = ignoreChars, accept = accept, 
-			translate = translate, records = records)
+	# single IGNORE=c characters are handled here, whereas IGNORE=(list) is handled below 
+	myData <- readNmData(file = fileName, ignore = ignoreChars, 
+			translate = translate)
 		
 	# Deal with the case of additional columns in the dataset
 	if(nrow(inputStatement) == (ncol(myData) - 1) && all(is.na(myData[, ncol(myData)]))) 
@@ -105,11 +105,23 @@ importModelData <- function(
 	if(any(aliasedColumns))
 		myData <- cbind(myData, aliasColumnBlock)
 	
+	# apply the IGNORE=(list) statement
+	
 	for(ignoreCode in ignoreCodes)
 	{
+		# convert "=" to ".EQ."
 		ignoreCode <- gsub(ignoreCode, pattern = "[[:space:]]*=[[:space:]]*", replacement = ".EQ.")
 		.readNmData.nmSubset(data = myData, nmCode = ignoreCode, method = "ignore", na.keep = TRUE)
 	}
+	# handle ACCEPT=(list)
+	if(accept != "")
+		.readNmData.nmSubset(data = myData, nmCode = accept, method = "accept", na.keep = TRUE)
+	
+	# handle RECORDS=
+	# note that according to the NONMEM manual, this should come last
+	if(records != "")
+		.readNmData.nmRecords( records, data = myData )
+	
 	### Check numeric and missing values
 	myData <- .importDataNumeric(myData, missToZero = FALSE)
 	

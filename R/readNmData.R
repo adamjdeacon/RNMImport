@@ -180,12 +180,16 @@ readNmData <- function(
 		dname <- deparse(substitute(data))
 		### first try to use the records as numeric values
 		nrec <- try( as.numeric(records) , silent = TRUE)
-		if( !inherits(nrec, "try-error" ))
-		{
+		if( !inherits(nrec, "try-error") & !is.na(nrec)){
 			assign( dname, head( data, nrec ), parent.frame( ) )
 		} else {
-			RNMImportWarning("Error occured when attempting to coerce records to numeric \n", match.call())
+			# in this case records refers to a column in the data, and we want to take the rows  whose 
+			# records column matches the first element of that column AND appear in a contiguous block
+			firstLevel <- data[[records]][1] 
+			# use the rle function to find contiguous blocks
+			x <- rle(data[[records]] == firstLevel)
+			assign(dname, data[1:x$lengths[1],], parent.frame())
+			
 		}
 	}
 }
-
