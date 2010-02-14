@@ -157,7 +157,7 @@ test.getNmVersion <- function()
 	
 }
 
-# test the following function:
+# test the following functions:
 # getMethodNames
 
 test.getMethodNames <- function()
@@ -175,4 +175,25 @@ test.getMethodNames <- function()
 	checkEquals(getMethodNames(prob1, what = "report"),c( "Iterative Two Stage",  "Stochastic Approximation Expectation-Maximization"), 
 			msg = " |report stream captured correctly" )
 	
+}
+
+# tests the following functions:
+# getFileinfo
+
+test.getFileinfo <- function()
+{
+	testRuns <- RNMImport:::getInternalTestRuns()
+	run1 <- testRuns$NMBasic
+	
+	fInfoTest <- getFileinfo(run1) 
+	checkEquals(colnames(fInfoTest), c("size", "mode", "mtime", "ctime", "atime", "exe", "fileName"), 
+			msg = " |correct columns present")
+	checkEquals(rownames(fInfoTest), c("controlFile", "reportFile" ))
+	
+	checkEquals(fInfoTest$size, c(941, 7820))
+	# checkEquals(fInfoTest$mtime, structure(c(1231859719, 1231859719), class = c("POSIXt", "POSIXct")))
+	
+	checkEquals(tolower(basename(fInfoTest["controlFile","fileName"])), "testdata1.ctl", msg = " | correct control file name" )
+	
+	checkEquals(tolower(basename(fInfoTest["reportFile","fileName"])),"testdata1.lst" , msg = " | correct report file name" )
 }
