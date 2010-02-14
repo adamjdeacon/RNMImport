@@ -231,3 +231,15 @@ getThetas.NMSimDataGen <- function(obj, what = "initial", subProblemNum = 1, met
 }
 
 setMethod("getThetas", signature(obj = "NMSimDataGen"), getThetas.NMSimDataGen)
+
+getThetas.nmModel <- function( obj, what = "initial", subProblemNum = 1, method = 1, problemNum = 1 )
+{
+	# make sure that the problem is not out of bounds
+	RNMImportStopifnot(problemNum %in% seq_along(obj$problemContents), "Invalid problem chosen", match.call())
+	probResults <- obj$problemContents[[problemNum]]
+	# transpose to be in a more standard format
+	t(probResults$Theta)
+	
+}
+
+setMethod("getThetas", signature(obj = "nmModel"), getThetas.nmModel)

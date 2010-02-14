@@ -153,3 +153,15 @@ getOmegas.NMSimDataGen <- function( obj, what = "final", subProblemNum = 1, meth
 }
 
 setMethod("getOmegas", signature(obj = "NMSimDataGen"), getOmegas.NMSimDataGen)
+
+getOmegas.nmModel <- function( obj, what = "initial", subProblemNum = 1, method = 1, problemNum = 1 )
+{
+	# make sure that the problem is not out of bounds
+	RNMImportStopifnot(problemNum %in% seq_along(obj$problemContents), "Invalid problem chosen", match.call())
+	probResults <- obj$problemContents[[problemNum]]
+	
+	probResults$Omega
+	
+}
+
+setMethod("getOmegas", signature(obj = "nmModel"), getOmegas.nmModel)

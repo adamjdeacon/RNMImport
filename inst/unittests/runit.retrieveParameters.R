@@ -103,6 +103,9 @@ test.getThetas <- function()
 					getThetas(prob3, what = c("initial", "stderrors", "final"), method = 2)), 
 			msg = " |multiple methods correct (2)")
 	
+	testDir <- file.path(unitTestPath, "testdata/TestRun")	
+	mod1 <- importNmMod("TestData1.ctl",  path = testDir)
+	checkEquals(getThetas(mod1), t(mod1$problemContents[[1]]$Theta))
 }
 
 test.getOmegas <- function()
@@ -234,6 +237,9 @@ test.getOmegas <- function()
 					getOmegas(prob3, what = c("stderrors", "final"), method = 2)), 
 			msg = " |multiple methods correct (2)")
 	
+	testDir <- file.path(unitTestPath, "testdata/TestRun")	
+	mod1 <- importNmMod("TestData1.ctl",  path = testDir)
+	checkEquals(getOmegas(mod1), mod1$problemContents[[1]]$Omega)
 }
 
 test.getSigmas <- function()
@@ -330,5 +336,11 @@ test.getSigmas <- function()
 	checkEquals(sigmaTest5, list(getSigmas(prob3, what = c("initial", "stderrors", "final"), method = 1), 
 					getSigmas(prob3, what = c("initial", "stderrors", "final"), method = 2)), 
 			msg = " |multiple methods correct (2)")
+	
+	# check nmModel
+	
+	testDir <- file.path(unitTestPath, "testdata/TestRun")	
+	mod1 <- importNmMod("TestData1.ctl",  path = testDir)
+	checkEquals(getSigmas(mod1), mod1$problemContents[[1]]$Sigma)
 	
 }

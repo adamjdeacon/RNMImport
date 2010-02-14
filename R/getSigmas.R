@@ -142,3 +142,15 @@ getSigmas.NMSimDataGen <- function(obj, what = "final", method = 1, problemNum =
 }
 
 setMethod("getSigmas", signature(obj = "NMSimDataGen"), getSigmas.NMSimDataGen)
+
+getSigmas.nmModel <- function(obj, what = "final", method = 1, problemNum = 1, subProblemNum = 1)
+{
+	# make sure that the problem is not out of bounds
+	RNMImportStopifnot(problemNum %in% seq_along(obj$problemContents), "Invalid problem chosen", match.call())
+	probResults <- obj$problemContents[[problemNum]]
+	
+	probResults$Sigma
+	
+}
+
+setMethod("getSigmas", signature(obj = "nmModel"), getSigmas.nmModel)
