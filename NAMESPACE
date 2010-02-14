@@ -17,7 +17,7 @@ export("graphSubset<-", defaultDataSubset, "dataSubset<-")
 export(dataSubset, augmentDefaultDataSubset, setDefaultDataSubset)
 export("augmentDataSubset<-", applyDataSubset, importNm7Tables)
 
-exportClasses("NMRun", "NMProblem", "NMBasicModel", "NMBasicModelNM7", "NMSimDataGen", "NMSimModel", "NMSimModelNM7")
+exportClasses("NMRun", "NMProblem", "NMBasicModel", "NMBasicModelNM7", "NMSimDataGen", "NMSimModel", "NMSimModelNM7", "nmModel", "nmRunReport")
 exportMethods(nmData, getThetas, show, getOmegas, getSigmas, addDerivedCategorical, imposeCategoryFormat)
 exportMethods(getObjective, nmDatabyVarType, getEstimateCov, getControlStatements, addedData)
 exportMethods(getNmVersion, getMethodNames)
