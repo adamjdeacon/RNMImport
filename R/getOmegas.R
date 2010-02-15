@@ -7,8 +7,8 @@
 
 PARAMITEMS <- c("final", "initial", "stderrors")
 
-#' Extracts omega estimates from a NONMEM object
-#' @param obj An object of class NMBasicModel, NMRun or NMSimModel
+#' A generic function that extracts omega estimates (and initial estimates and standard errors if specified) from a NONMEM object.
+#' @param obj An object of class NMBasicModel, NMRun, NMSimModel, NMBasicModelNM7, NMSimModelNM7, or nmModel 
 #' @param what [C,+] Character vector of items to extract. One or more of "final", "stderrors" or "initial" (or "shrinkage" for NONMEM 7 basic models) 
 #' @param subProblemNum [N,+] Numeric vector of simulation sub-problems to use.  Only applies to simulation models
 #' @param method [N,+] Vector of methods to extract when dealing with NONMEM 7 problems

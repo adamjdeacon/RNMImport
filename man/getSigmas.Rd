@@ -4,18 +4,21 @@
 \description{ A generic function that extracts sigma estimates (and initial estimates and standard errors if specified) from a NONMEM object.
 }
 \usage{
-getSigmas(obj, what = "final", ...) 
+getSigmas(obj, what = "final", subProblemNum = 1, method = 1, problemNum = 1)
 }
 
 \arguments{
-  \item{obj}{NONMEM object}
-  \item{what}{[C,+] Character vector of items to extract.  One or more of "final", "stderrors" or "initial" (or "shrinkage" for NONMEM 7 basic models)  } 
-  \item{\dots}{Additional arguments that apply to different classes. These are problemNum which specifies the run required for NMRun
-    		  ,subProblemNum which specifies the simulation required for NMSimModel[NM7], and method for NONMEM 7 problems}
+  \item{obj}{An object of class NMBasicModel, NMRun, NMSimModel, NMBasicModelNM7, NMSimModelNM7, or nmModel}
+  \item{what}{[C,+] Character vector of items to extract. One or more of "final", "stderrors" or "initial" (or "shrinkage" for NONMEM 7 basic models)} 
+  \item{subProblemNum}{A[N,+] Numeric vector of simulation sub-problems to use.  Only applies to simulation models}
+  \item{method}{[N,+] Vector of methods to extract when dealing with NONMEM 7 problems}
+  \item{problemNum}{[N,1] Number of problem to reference - applies to runs only}
 }
 
 \value{
-	A named list of matrices with final estimates, initial estimates, standard errors, and EPS shrinkages etc. as applicable
+ For NONMEM 6 - either a list of matrices if multiple "what=" are used, or a single matrix otherwise
+ For NONMEM 7 - The same as above for a single method.  If multiple methods, a list of lists or a list of matrices
+
 }
 
 \author{Mango Solutions}

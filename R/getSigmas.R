@@ -5,8 +5,8 @@
 # Author: fgochez
 ###############################################################################
 
-#' Extracts sigma estimates from a NONMEM object
-#' @param obj An object of class NMBasicModel, NMRun or NMSimModel
+#' A generic function that extracts sigma estimates (and initial estimates and standard errors if specified) from a NONMEM object.
+#' @param obj An object of class NMBasicModel, NMRun, NMSimModel, NMBasicModelNM7, NMSimModelNM7, or nmModel 
 #' @param what [C,+] Character vector of items to extract. One or more of "final", "stderrors" or "initial" (or "shrinkage" for NONMEM 7 basic models) 
 #' @param subProblemNum [N,+] Numeric vector of simulation sub-problems to use.  Only applies to simulation models
 #' @param method [N,+] Vector of methods to extract when dealing with NONMEM 7 problems
@@ -15,15 +15,13 @@
 #' For NONMEM 7 - The same as above for a single method.  If multiple methods, a list of lists or a list of matrices
 #' @author Mango Solutions <support@mango-solutions.com>
 
-
-
-getSigmas <- function(obj, what = "final", method = 1, problemNum = 1, subProblemNum = 1)
+getSigmas <- function(obj, what = "final",  subProblemNum = 1, method = 1, problemNum = 1)
 {
 	RNMImportStop(msg = "This method is not implemented for this class!")
 }
 setGeneric("getSigmas")
 
-getSigmas.NMBasicModel <- function(obj, what = "final", method = 1, problemNum = 1, subProblemNum = 1)
+getSigmas.NMBasicModel <- function(obj, what = "final",  subProblemNum = 1, method = 1, problemNum = 1)
 {
 	validWhat <- intersect(what, PARAMITEMS)
 	invalidWhat <- setdiff(what, PARAMITEMS)
@@ -82,7 +80,7 @@ getSigmas.NMBasicModel <- function(obj, what = "final", method = 1, problemNum =
 
 setMethod("getSigmas", signature(obj = "NMBasicModel"), getSigmas.NMBasicModel)
 
-getSigmas.NMBasicModelNM7 <- function(obj, what = "final", method = 1, problemNum = 1, subProblemNum = 1)
+getSigmas.NMBasicModelNM7 <- function(obj, what = "final",  subProblemNum = 1, method = 1, problemNum = 1)
 {
 	getSigmasOrOmegas.NM7(obj, what = what, item = "sigma", method = method)
 }
@@ -90,7 +88,7 @@ getSigmas.NMBasicModelNM7 <- function(obj, what = "final", method = 1, problemNu
 
 setMethod("getSigmas", signature(obj = "NMBasicModelNM7"), getSigmas.NMBasicModelNM7)
 
-getSigmas.NMRun <- function(obj, what = "final", method = 1, problemNum = 1, subProblemNum = 1)
+getSigmas.NMRun <- function(obj, what = "final",  subProblemNum = 1, method = 1, problemNum = 1)
 {
 	dat <- getProblem(obj, problemNum)
 	sigmas <- getSigmas(dat, what = what, method = method, subProblemNum = subProblemNum)
@@ -98,7 +96,7 @@ getSigmas.NMRun <- function(obj, what = "final", method = 1, problemNum = 1, sub
 }
 setMethod("getSigmas", signature(obj = "NMRun"), getSigmas.NMRun)
 
-getSigmas.NMSimModel <- function(obj, what = "final", method = 1, problemNum = 1, subProblemNum = 1)
+getSigmas.NMSimModel <- function(obj, what = "final",  subProblemNum = 1, method = 1, problemNum = 1)
 {
 	validWhat <- intersect(what, PARAMITEMS)
 	invalidWhat <- setdiff(what, PARAMITEMS)
@@ -129,21 +127,21 @@ getSigmas.NMSimModel <- function(obj, what = "final", method = 1, problemNum = 1
 
 setMethod("getSigmas", signature(obj = "NMSimModel"), getSigmas.NMSimModel)
 
-getSigmas.NMSimModelNM7 <- function(obj, what = "final", method = 1, problemNum = 1, subProblemNum = 1)
+getSigmas.NMSimModelNM7 <- function(obj, what = "final",  subProblemNum = 1, method = 1, problemNum = 1)
 {
 	getSigmasOrOmegas.NM7(obj, what = what, item = "sigma", method = method, probType = "sim", subProblemNum = subProblemNum )
 }
 
 setMethod("getSigmas", signature(obj = "NMSimModelNM7"), getSigmas.NMSimModelNM7)
 
-getSigmas.NMSimDataGen <- function(obj, what = "final", method = 1, problemNum = 1, subProblemNum = 1)
+getSigmas.NMSimDataGen <- function(obj, what = "final",  subProblemNum = 1, method = 1, problemNum = 1)
 {
 	obj@sigmaInitial
 }
 
 setMethod("getSigmas", signature(obj = "NMSimDataGen"), getSigmas.NMSimDataGen)
 
-getSigmas.nmModel <- function(obj, what = "final", method = 1, problemNum = 1, subProblemNum = 1)
+getSigmas.nmModel <- function(obj, what = "final",  subProblemNum = 1, method = 1, problemNum = 1)
 {
 	# make sure that the problem is not out of bounds
 	RNMImportStopifnot(problemNum %in% seq_along(obj$problemContents), "Invalid problem chosen", match.call())
