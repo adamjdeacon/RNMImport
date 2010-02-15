@@ -321,7 +321,6 @@ cleanReportContents <- function(content)
 	grepErrors <- grep("1THERE ARE ERROR MESSAGES", content)
 	if (length(grepErrors)) content <- content[1:(min(grepErrors)-1)]
 	
-	
 	# fgochez: change on Feb 18 2009
 	# strip out the everything up until the version of NONMEM used, as it is extraneous as well
 	startLine <- grep("1NONLINEAR MIXED EFFECTS MODEL", content)
@@ -333,7 +332,6 @@ cleanReportContents <- function(content)
 			content <- tail(content, -(min(startLine) - 1))
 	}
 		
-		# RNMImportStop("The statement 1NONLINEAR MIXED EFFECTS MODEL was not found in the report file\n", match.call())
 	# Remove final statements and onwards
 	grepFinal <- grep("^This file was created", content)
 	
@@ -352,6 +350,10 @@ cleanReportContents <- function(content)
 	
 	unusualFooterLine <- grep(content, pattern = "[Ss]top [Tt]ime" )
 	if(length(unusualFooterLine) > 0)
-		content <- head(content, n = unusualFooterLine[1])
-	content
+		content <- head(content, n = unusualFooterLine[1] - 1)
+	
+	# strip out lines containing a date/time of execution, e.g.
+	# "Thu Jan 14 13:03:59 GMT 2010" 
+	negGrep(content, value = TRUE, 
+			pattern = "^[A-Z][a-z][a-z][[:space:]][A-Z][a-z][a-z][[:space:]][0-9]{1,2}[[:space:]][0-9]{2}\\:[0-9]{2}")
 }
