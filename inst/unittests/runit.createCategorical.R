@@ -88,7 +88,7 @@ test.createCategorical.NMBasicNM7 <- function()
 	testProb <- getProblem(testRun)
 	testProb2 <- addDerivedCategorical(testProb, "DV")
 	
-	testFrame <- nmData(testProb2)
+	testFrame <- nmData(testProb)
 	expFrame <- addDerivedCategorical(testFrame, "DV")
 	checkEquals(addedData(testProb2)$DV.CUT, expFrame$DV.CUT, msg = " |add derived categorical works for NMBasicModelNM7"  )
 }
