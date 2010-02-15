@@ -71,7 +71,7 @@ getSigmasOrOmegas.NM7 <- function(obj, what = "final", item = c("sigma", "omega"
 			if(oneByOne) stdErrors <- matrix(stdErrors, dimnames = dimnames(final)[1:2])
 		}
 		else stdErrors <- NULL
-		shrinkage <- shrinks[methodChosen,]
+		shrinkage <- shrinks[[methodChosen]]
 		
 		# initial value depends on the number of the method 
 		

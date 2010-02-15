@@ -87,16 +87,8 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 				
 				objectiveFinal <- sapply(MethodResults, "[[", "Objective.Final")
 				methodsUsed <- sapply(MethodResults, "[[", "method")
-				if(length(MethodResults[[1]]$ETAshrink) > 1)
-					ETAshrinks <- t( sapply(MethodResults, "[[", "ETAshrink") )
-				else
-					ETAshrinks <- matrix(sapply(MethodResults, "[[", "ETAshrink"), ncol = 1) 
-				if(length(MethodResults[[1]]$EPSshrink) == 1)
-					EPSshrinks <-  matrix(sapply(MethodResults, "[[", "EPSshrink"), ncol = 1 ) 
-				
-				else 
-					EPSshrinks <- t(sapply(MethodResults, "[[", "EPSshrink")) 
-				
+				ETAshrinks <- lapply(MethodResults, "[[", "ETAshrink") 
+				EPSshrinks <-  lapply(MethodResults, "[[", "EPSshrink") 
 				minInfo <- sapply(MethodResults, "[[", "TermStatus")
 				# attr(objectiveFinal, "methods") <- methodsUsed
 				# create the object
