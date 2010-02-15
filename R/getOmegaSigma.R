@@ -120,8 +120,8 @@ getSigmasOrOmegas.NM7 <- function(obj, what = "final", item = c("sigma", "omega"
 	.getSigOrOmSingleMethodSim <- function(meth = 1)
 	{
 		# select the method
-		methodChosen <- .selectMethod(obj@methodNames, method)
-		methodName <- obj@methodNames[method]
+		methodChosen <- .selectMethod(obj@methodNames, meth)
+		methodName <- obj@methodNames[methodChosen]
 		
 		if(item == "omega")
 		{
