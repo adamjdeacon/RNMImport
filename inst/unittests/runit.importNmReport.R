@@ -5,22 +5,40 @@
 
 test.importNmReport.Basic <- function()
 {
-	report1 <- importNmReport("TestData1.lst", path = file.path(unitTestPath, "testdata/TestRun"))
+	report1 <- importNmReport("TestData1notab.lst", path = file.path(unitTestPath, "testdata/TestRunNoTab"))
 	
 	report1Class <- class(report1)
 	attributes(report1Class) <- NULL
 	checkEquals( report1Class, "nmRunReport", msg = " |class of returned object is correct")
 	
-	checkEquals(report1$VersionInfo, structure(c("VI", "1.0"), .Names = c("Version", "Level")), msg = " | correct version info")
+	checkEquals(report1$VersionInfo, structure(c("VI", "2.0"), .Names = c("Version", "Level")), msg = " | correct version info")
 	
-	conStatements <- importNmMod("TestData1.ctl", path = file.path(unitTestPath, "testdata/TestRun"))
-	report1.withCtl <- importNmReport("TestData1.lst", controlStatements = conStatements, path = file.path(unitTestPath, "testdata/TestRun"))
-	checkEquals(report1, report1.withCtl, "report loaded with control statements and without are identical (1)")
-	checkEquals(length(report1$Raw), 166, msg = "Raw contents correct length")
-	probRes <- report1$problemResults
-	checkEquals(names(probRes[[1]]), c("nRecords", "nIndividuals", "Objective.Minimum", "FinalEstimates","Iter" ), 
+	 #conStatements <- importNmMod("TestData1.ctl", path = file.path(unitTestPath, "testdata/TestRun"))
+	# report1.withCtl <- importNmReport("TestData1.lst", controlStatements = conStatements, path = file.path(unitTestPath, "testdata/TestRun"))
+	# checkEquals(report1, report1.withCtl, "report loaded with control statements and without are identical (1)")
+	
+	checkEquals(length(report1$Raw), 231, msg = "Raw contents correct length")
+	
+	probRes <- report1$problemResults[[1]]
+	checkTrue(setequal(names(probRes), c("nRecords", "nIndividuals", "Objective.Minimum", "FinalEstimates","Iter",
+							"InverseCovarianceMatrix", "CovarianceMatrix", "CorrelationMatrix", "StandardError")), 
 			"checking presence of correct elements in report")
 	
+	checkEquals( probRes$FinalEstimates, structure(list(THETA = structure(c(19.6, 84.6, 1.66), .Names = c("TH1", 
+											"TH2", "TH3")), OMEGA = structure(c(0.164, 0, 0, 0, 0.165, 0, 
+											0, 0, 1.3), .Dim = c(3L, 3L), .Dimnames = list(c("ETA1", "ETA2", 
+													"ETA3"), c("ETA1", "ETA2", "ETA3"))), SIGMA = structure(0.0202, .Dim = c(1L, 
+											1L), .Dimnames = list("EPS1", "EPS1"))), .Names = c("THETA", 
+							"OMEGA", "SIGMA")), msg = " | final estimates correct" )
+	
+	checkEquals( probRes$StandardError, structure(list(THETA = structure(c(0.963, 3.56, 0.218), .Names = c("TH1", 
+											"TH2", "TH3")), OMEGA = structure(c(0.0239, 0, 0, 0, 0.022, 0, 
+											0, 0, 0.345), .Dim = c(3L, 3L), .Dimnames = list(c("ETA1", "ETA2", 
+													"ETA3"), c("ETA1", "ETA2", "ETA3"))), SIGMA = structure(0.00322, .Dim = c(1L, 
+											1L), .Dimnames = list("EPS1", "EPS1"))), .Names = c("THETA", 
+							"OMEGA", "SIGMA")), msg = " |standard error correct" )
+	checkEquals(c(probRes$nIndividuals, probRes$nRecord), c(99, 887))
+	checkEquals(probRes$Objective.Minimum, 3228.988 )
 	##################
 	# test_stoptimefooter.lst
 	# checks that it is possible to import a file with the footer of the type
@@ -50,9 +68,25 @@ test.importNmReport.SimModel <- function()
 	checkEquals(report2$VersionInfo , c("VI", "1.0"), check.attributes = FALSE , msg = " | correct version info")
 	
 	checkEquals(report2, report2.withCtl, "report loaded with control statements and without are identical (2)")
-	probRes <- report2$problemResults
-	checkEquals(names(probRes[[1]]), c("nRecords", "nIndividuals", "FinalEstimates"), "checking presence of correct elements in report" )
-	
+	probRes <- report2$problemResults[[1]]
+	checkEquals(names(probRes), c("nRecords", "nIndividuals", "FinalEstimates"), "checking presence of correct elements in report" )
+	checkEquals(c(probRes$nIndividuals, probRes$nRecord), c(99, 887))
+	checkEquals(probRes$FinalEstimates, 
+			structure(list(THETA = structure(c(17.2, 18.3, 18, 19, 17.1, 
+											117, 108, 108, 98.9, 109, 1.24, 1.4, 1.24, 1.55, 1.38), .Dim = c(5L, 
+											3L), .Dimnames = list(c("sim1", "sim2", "sim3", "sim4", "sim5"
+											), c("TH1", "TH2", "TH3"))), OMEGA = structure(c(0.174, 0, 0, 
+											0, 0.19, 0, 0, 0, 1.45, 0.167, 0, 0, 0, 0.143, 0, 0, 0, 1.24, 
+											0.181, 0, 0, 0, 0.142, 0, 0, 0, 1.57, 0.245, 0, 0, 0, 0.189, 
+											0, 0, 0, 0.945, 0.174, 0, 0, 0, 0.197, 0, 0, 0, 1.47), .Dim = c(3L, 
+											3L, 5L), .Dimnames = list(c("ETA1", "ETA2", "ETA3"), c("ETA1", 
+													"ETA2", "ETA3"), c("sim1", "sim2", "sim3", "sim4", "sim5"))), 
+							SIGMA = structure(c(0.0241, 0.026, 0.0262, 0.0295, 0.0244
+									), .Dim = c(1L, 1L, 5L), .Dimnames = list("EPS1", "EPS1", 
+											c("sim1", "sim2", "sim3", "sim4", "sim5"))), Objective.Minimum = structure(c(3696.247, 
+											3575.252, 3660.355, 3606.526, 3701.472), .Names = c("sim1", 
+											"sim2", "sim3", "sim4", "sim5"))), .Names = c("THETA", "OMEGA", 
+							"SIGMA", "Objective.Minimum")), msg = " | ")
 	
 }
 
