@@ -54,7 +54,8 @@ getSigmasOrOmegas.NM7 <- function(obj, what = "final", item = c("sigma", "omega"
 		}
 		# choose single final value
 		final <- finals[[methodChosen]]
-		
+		# initialize to avoid missing object error
+		oneByOne <- FALSE
 		if(!is.null(final)) {
 			# check if the final estimate matrix is 1-by-1.  If so, force it to remain as a matrix
 			# even when drop = FALSE tries to make it otherwise
@@ -78,7 +79,7 @@ getSigmasOrOmegas.NM7 <- function(obj, what = "final", item = c("sigma", "omega"
 			initialValues <- initials
 		else initialValues <- finals[[methodChosen - 1]]
 		
-		if(oneByOne & length(final) > 0) initialValues <- matrix(initialValues, dimnames = dimnames(final)[1:2])
+		if( length(final) > 0 && oneByOne ) initialValues <- matrix(initialValues, dimnames = dimnames(final)[1:2])
 		
 		# no valid option selected, thrown an error
 		if(length(validWhat) == 0) RNMImportStop("No valid items selected for retrieval!", call = match.call())
@@ -113,7 +114,7 @@ getSigmasOrOmegas.NM7 <- function(obj, what = "final", item = c("sigma", "omega"
 			}
 			if("shrinkage" %in% validWhat)	res$eps.shrinkage <- shrinkage
 		}
-		attr(res, "methodName") <- methodName
+		if(!is.null(res)) attr(res, "methodName") <- methodName
 		res
 	}
 	
@@ -163,7 +164,7 @@ getSigmasOrOmegas.NM7 <- function(obj, what = "final", item = c("sigma", "omega"
 		} # end if length(validWhat) == 1
 		else
 			res <- list("initial.estimates" = initialValues, "final.estimates"  = finalEstimates)
-		attr(res, "methodName") <- methodName
+		if(!is.null(res)) attr(res, "methodName") <- methodName
 		res
 	}
 	
