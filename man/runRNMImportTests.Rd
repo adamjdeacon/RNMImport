@@ -8,7 +8,7 @@
 
 \usage{
 runRNMImportTests(internalTestDataPath = system.file(package = "RNMImport", 
-    "unittests"), externalTestDataPath = "\\\\Mango-data1\\mangowork\\MangoProjects\\RNONMEM2\\data", 
+    "unittests"), externalTestDataPath = "//Mango-data1/mangowork/MangoProjects/RNONMEM2/data", 
     testScriptPaths = c(system.file(package = "RNMImport", "unittests"), 
         "testing/externaltests"), runIntern = TRUE, runExtern = FALSE, 
     printTestProtocol = TRUE, cleanup = TRUE) 
