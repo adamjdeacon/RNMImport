@@ -1,12 +1,19 @@
-# 
+# $Rev$
+# $LastChangedDate$
+# $LastChangedBy$
+# Tests the show methods
 # Author: fgochez
 ###############################################################################
 
-# NOTE:
+# ** NOTE:**
 # These tests only appear to work if executed from inside the Rgui using runRNMImportTests(...)
 # they DO NOT work when run from ant test (thus Hudson), because the output dumped by the show methods
 # there can have a different number of lines.
 # TODO: Find some way around this.
+
+
+
+# this is currently disabled
 
 .test.show.NMRun <- function()
 {
@@ -92,7 +99,6 @@ test.show.NMSimModel <- function()
 			"SIGMA1 0.0295", "", ", , sim5", "", "       SIGMA1", "SIGMA1 0.0244", 
 			"", "Objective function(s): ", "    sim1     sim2     sim3     sim4     sim5 ", 
 			"3696.247 3575.252 3660.355 3606.526 3701.472 ")
-	writeLines(test1,"showtest2.txt")
 	checkEquals(test1, expected1, msg = " | show for sim model correct\n")
 	
 }
