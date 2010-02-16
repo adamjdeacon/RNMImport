@@ -237,6 +237,17 @@ setMethod("getNmVersion", signature(obj = "NMRun"), getNmVersion.NMRunProb)
 setMethod("getNmVersion", signature(obj = "NMProblem"), getNmVersion.NMRunProb)
 
 
+#' Extracts estimation method names from a run or problem that used NONMEM 7.  These
+#' can be the names used in the control file, or the report file
+#' @param obj NMRun, NMBasicModelNM7, or NMSimModelNM7
+#' @param what [C,1] The string "report" or "control" - selects which file should be used
+#' for the method names
+#' @param problemNum Problem number in run
+#' @title Get method names
+#' @return A character vector of method names used
+#' @author fgochez
+#' @export
+
 getMethodNames <- function(obj, what = c("report", "control" ), problemNum = 1)
 {
 	RNMImportStop("This function is not implemented for objects of this class")
