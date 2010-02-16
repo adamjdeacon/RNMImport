@@ -74,7 +74,7 @@
 importNmReport.NM7 <- function( content, textReport = FALSE )
 {
 	if( is.null(content) )  {
-		RNMImportWarning(paste("Contents of the list file", fileName, "were empty or read incorrectly"))
+		RNMImportWarning("Contents of the list file were empty or read incorrectly")
 		return(NULL)
 	}
 	
