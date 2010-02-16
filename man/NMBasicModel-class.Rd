@@ -48,7 +48,7 @@ The virtual class \code{"\linkS4class{NMProblem}"}, directly.
     \item{addDerivedCategorical}{\code{signature(obj = "NMBasicModel")}: Create user-defined categorical variables}
     \item{imposeCategoryFormat}{\code{signature(obj = "NMBasicModel")}: Coerces variables to categories}
     \item{nmData}{Extracts the input and output data from the problem }
-    \item{show}{}
+    \item{show}{Display overview of problem}
     \item{getObjective}{\code{signature(obj = "NMBasicModel")}}
     \item{getEstimateCov}{\code{signature(obj = "NMBasicModel")}: Extracts the covariance matrix and optionally the correlation matrix of the estimators for this problem.}
 	}
