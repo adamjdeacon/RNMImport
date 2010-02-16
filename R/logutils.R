@@ -95,3 +95,11 @@ availableLogs <- function()
 {
 	names(.RNMImportEnv$logConnections)
 }
+
+# internal utility function to extract full log config.  Meant to be used with unit tests to reload
+# logs after running tests.
+
+.getLogConfig <- function()
+{
+	.RNMImportEnv$logConnections
+}
