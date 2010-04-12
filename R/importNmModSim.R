@@ -21,6 +21,9 @@
 	### extract the SIM section                                                   
 	txt <- if(.extract) section( txt, "SIM", "", strip = TRUE, as.list = FALSE) else txt
 	
+	# we wish to store this raw statement for later use
+	
+	simStatement <- txt
 	### remove the unwanted NONMEM keywords                                       
 	# determine whether this is data generating-only simulation
 	simOnly <- any(regexMatches(txt, rx = "ONLY"))
@@ -46,6 +49,7 @@
 	
 	### build the output structure                                                
 	out <- c( "nSub" = nSub, "Seed1" = Seed1, "Seed2" = Seed2, "TRUE" = true, "simOnly" = simOnly )
+	attr(out, "rawStatement") <- simStatement
 	out 
 	
 }

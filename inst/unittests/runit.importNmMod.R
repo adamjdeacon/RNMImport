@@ -53,7 +53,7 @@ test.importNmMod <- function()
 	names(expectedSim) <- c("nSub", "Seed1", "Seed2", "TRUE", "simOnly" )
 	#nSub     Seed1     Seed2      TRUE   simOnly 
 	#"1000" "5566898"      "-1" "INITIAL"    "TRUE" 
-	
+	attr(expectedSim, "rawStatement") <- "(5566898) ONLY SUB=1000"
 	checkEquals(x[[1]]$Sim, expectedSim )
 
 }
