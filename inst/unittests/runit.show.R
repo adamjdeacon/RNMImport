@@ -36,7 +36,7 @@
 
 }
 
-test.show.NMBasicModel <- function()
+.test.show.NMBasicModel <- function()
 {
 	testRuns <- RNMImport:::getInternalTestRuns()
 	
@@ -63,7 +63,7 @@ test.show.NMBasicModel <- function()
 	
 }
 
-test.show.NMSimModel <- function()
+.test.show.NMSimModel <- function()
 {
 	testRuns <- RNMImport:::getInternalTestRuns()
 	
@@ -103,7 +103,7 @@ test.show.NMSimModel <- function()
 	
 }
 
-test.show.NMBasicNM7 <- function()
+.test.show.NMBasicNM7 <- function()
 {
 	testRuns <- RNMImport:::getInternalTestRuns()
 	
