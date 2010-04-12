@@ -1,11 +1,12 @@
 Package: RNMImport
 Type: Package
-Title: Tools for importing and manipulating NONMEM data.
-Version: 0.3.5
-Date: 2009-02-16
+Title: Tools for importing and manipulating NONMEM data (PME branch).
+Version: 0.3.6
+Date: $LastChangedDate$
 Author: Mango Solutions
 Maintainer: <support@mango-solutions.com>
 Suggests: RUnit (>= 0.4.22)
 Depends: R (>= 2.8.0), utils, stats, methods, tools
-Description: Imports NONMEM data, and provides utilities for manipulation reporting on it. SVN revision: $Rev$
+Description: Imports NONMEM data, and provides utilities for manipulation reporting on it. 
+ SVN revision: $Rev$.
 License: Copyright Mango Solutions, Chippenham SN14 0SQ 2008-2010
