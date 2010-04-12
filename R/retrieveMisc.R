@@ -274,3 +274,48 @@ getMethodNames.NMProblemNM7 <- function(obj, what = c("report", "control"), prob
 
 setMethod("getMethodNames", signature(obj = "NMBasicModelNM7"), getMethodNames.NMProblemNM7)
 setMethod("getMethodNames", signature(obj = "NMSimModelNM7"), getMethodNames.NMProblemNM7)
+
+#' Extract information simulation information from a simulation problem
+#' @param obj Object of class NMRun, or NMSim*
+#' @param problemNum Number of problem (applicable only when obj is of class NMRun)
+#' @param addRawInfo Should the raw contents of the $SIM statement be added to the returned information?
+#' @title Get Simulation Information
+#' @return A numeric vector with 3 entries : numSimulations, seed1, and seed2.  These are self-explanatory.
+#' If addRawInfo is TRUE, the returned result will have an attribute named "rawStatement" that will have the text
+#' of the control stream $SIM field.
+#' @author fgochez
+#' @keywords classes, manip, utilities
+#' @export
+
+getSimInfo <- function(obj, problemNum = 1, addRawInfo = TRUE)
+{
+	RNMImportStop("This function is not implemented for objects of this class")
+}
+
+setGeneric("getSimInfo")
+
+getSimInfo.NMRun <- function(obj, problemNum = 1, addRawInfo = TRUE)
+{
+	getSimInfo(getProblem(obj, problemNum = problemNum), addRawInfo = addRawInfo)
+}
+
+setMethod("getSimInfo", signature(obj = "NMRun"), getSimInfo.NMRun)
+
+getSimInfo.NMSim <- function(obj, problemNum = 1, addRawInfo = TRUE)
+{
+	# extract the aprsed contgrol statments
+	
+	controlStatements <- obj@controlStatements
+	
+	# the raw $SIM statemnet is an attribute of the Sim element
+	
+	rawSim <- attr(controlStatements$Sim, "rawStatement")
+	simInfo <- c(obj@numSimulations, obj@seeds)
+	names(simInfo) <- c( "numSimulations", "seed1", "seed2" )
+	if(addRawInfo) attr(simInfo, "rawStatement") <- rawSim
+	simInfo
+}
+
+setMethod("getSimInfo", signature(obj = "NMSimModelNM7"), getSimInfo.NMSim)
+setMethod("getSimInfo", signature(obj = "NMSimDataGen"), getSimInfo.NMSim)
+setMethod("getSimInfo", signature(obj = "NMSimModel"), getSimInfo.NMSim)

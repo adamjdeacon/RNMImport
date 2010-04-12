@@ -197,3 +197,21 @@ test.getFileinfo <- function()
 	
 	checkEquals(tolower(basename(fInfoTest["reportFile","fileName"])),"testdata1.lst" , msg = " | correct report file name" )
 }
+
+# tests the getSimInfo function on a NMSimMode object
+
+test.getSimInfo <- function()
+{
+	testRuns <- RNMImport:::getInternalTestRuns()
+	run <- testRuns$NMSimMod
+	simInfo <- getSimInfo(run)
+	rawInfo <- attr(simInfo, "rawStatement")
+	attr(simInfo, "rawStatement") <- NULL
+	checkEquals(rawInfo, "(20050213) SUBPROBLEMS=5", msg = " | Correct raw statement extracted")
+	checkEquals(simInfo, c("numSimulations" = 5, "seed1" = 20050213, "seed2" = NA), msg = " | Seeds ")
+	
+	prob <- getProblem(run)
+	
+	checkEquals(getSimInfo(prob, addRawInfo = FALSE), c("numSimulations" = 5, "seed1" = 20050213, "seed2" = NA) )
+	 
+}
