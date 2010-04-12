@@ -14,10 +14,9 @@
 #' Imports the contents of the report file of a SimModel type problem
 #' @param contents Contents of the report file for a single problem
 #' @param numSub Number of sub-problems in the problem 
-#' @title
+#' @title Import simulation+fit report 
 #' @return 
 #' @author fgochez
-#' @keywords
 
 importNmLstSimModel <- function(contents, numSub = NA)
 {
@@ -135,6 +134,22 @@ importNmLstSimModel <- function(contents, numSub = NA)
 	outList
 	
 }
+
+#' Imports the contents of a simulation data generation problem from a report file into a list
+#' @param contents [C,+] Character vector of 
+#' @title Import report file contents of a simulation data generation problem ( without model fitting step )
+#' @return A list with 2 elements: nRecords and nIndividuals, holding the number of individuals and number of
+#' records in the problem respectively
+#' @author fgochez
+
+importNmLstSimDataGen <- function(contents)
+{
+	outList <- list() 
+	outList$nRecords     <- colonPop( contents, "TOT\\. NO\\. OF OBS RECS"   , inPlace = FALSE, numeric = TRUE )$op.out
+	outList$nIndividuals <- colonPop( contents, "TOT\\. NO\\. OF INDIVIDUALS", inPlace = FALSE, numeric = TRUE )$op.out
+	outList
+}
+
 
 #' Takes the content of a report file and splits into a list of problems
 #' @name
@@ -293,8 +308,7 @@ importNmReport <- function( fileName, path = NULL, controlStatements = NULL, tex
 		# only data simulation, no fit step
 		else if(simStep & !objFun)
 		{	
-			RNMImportWarning( "This is a simulation without modelling step, will only return raw contents\n", match.call() )
-			problemResults[[i]] <- character(0)
+			problemResults[[i]] <- importNmLstSimDataGen(currentProb)
 		}
 		else
 		{

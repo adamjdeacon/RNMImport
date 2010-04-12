@@ -35,7 +35,8 @@ NMSimDataGen <- function(controlStatements, path, reportContents = NULL,
 					seeds = seeds, inputData = inData, outputData = outTables, controlStatements = 
 							controlStatements, problemStatement = controlStatements$Problem,
 					thetaInitial = .Theta, omegaInitial = .Omega, sigmaInitial = .Sigma,
-					additionalVars = as.data.frame(matrix(ncol = 0, nrow = nDataRows)))
+					additionalVars = as.data.frame(matrix(ncol = 0, nrow = nDataRows)),
+					reportStatements = reportContents)
 	})
 
 }
