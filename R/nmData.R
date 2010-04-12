@@ -103,7 +103,7 @@ nmData.NMBasicModel <- function(obj, dataTypes = c("input", "output") , returnMo
 	uniqueOut <- setdiff(outColumns, clashingColumns)
 	
 	res <- cbind(outData, inData[uniqueIn])
-	clashIn <- inData[,clashingColumns]
+	clashIn <- inData[,clashingColumns, drop = FALSE]
 	
 	names(clashIn) <- paste(clashingColumns, "INPUT", sep = ".")
 	applyDataSubset( cbind(res, clashIn), dataSub )
@@ -190,7 +190,7 @@ nmData.NMSim<- function(obj, dataTypes = c("input", "output") ,
 	uniqueIn <- setdiff(inColumns, clashingColumns)
 	uniqueOut <- setdiff(outColumns, clashingColumns)
 	res <- cbind(outData, inData[uniqueIn])
-	clashIn <- inData[,clashingColumns]
+	clashIn <- inData[,clashingColumns, drop = FALSE]
 	
 	names(clashIn) <- paste(clashingColumns, "INPUT", sep = ".")
 	

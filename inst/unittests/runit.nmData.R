@@ -59,14 +59,29 @@ test.nmData.NMBasic <- function()
 	# check that subset is passed to NMRun method correctly
 	
 	checkEquals(nmData(prob, subset = TRUE), nmData(run1, subset = TRUE), " subset is passed to NMRun method correctly")
+	
+	# check fix for case 2298
+	# modify test data so that it only has one column repeated in output and input
+# SEX.INPUT AGE.INPUT RACE.INPUT HT.INPUT SMOK.INPUT HCTZ.INPUT PROP.INPUT CON.INPUT WT.INPUT TIME.INPUT SECR.INPUT DV.INPUT ID.INPUT OCC.INPUT
+	
+	prob@outputData <- subset(prob@outputData, select = - c(AGE, RACE, HT, SMOK, HCTZ, PROP, CON, WT, TIME, SECR, DV, ID, OCC, SID) )
+	test2298 <- nmData(	prob )
+	
+	checkTrue( setequal( colnames(test2298), c("IPRED", "IWRES", "PRED", "RES", "WRES", "CL", "V", "KA", "SEX", 
+							"absWRES", "SID", "AGE", "RACE", "HT", "SMOK", "HCTZ", "PROP", 
+							"CON", "AMT", "WT", "TIME", "SECR", "DV", "EVID", "SS", "II", 
+							"ID", "OCC", "SEX.INPUT")
+	), msg = "Single clashing column is now correct" )
 }
 
 # test nmData for an object of class "NMSimDataGen" and "NMSimModel"
 
 test.nmData.NMSim <- function()
 {
-	run1 <- importNm("TestData1SIM.con", "TestData1SIM.lst", path = file.path(unitTestPath, "testdata/TestSimRun"))
-	prob <- getProblem(run1)
+	# run1 <- importNm("TestData1SIM.con", "TestData1SIM.lst", path = file.path(unitTestPath, "testdata/TestSimRun"))
+	testRuns <- RNMImport:::getInternalTestRuns() 
+	run2 <- testRuns[["NMSimMod"]]
+	prob <- getProblem(run2)
 
 	dataSubset(prob) <- NULL
 	inputColumns <- c("SID", "SEX" ,"AGE" ,"RACE",  "HT",  "SMOK",  "HCTZ","PROP", "CON", "AMT", "WT" ,"TIME", "SECR", "DV", "EVID", "SS", "II" ,"ID", "OCC")
@@ -74,7 +89,7 @@ test.nmData.NMSim <- function()
 			"SMOK", "HCTZ", "PROP", "CON", "OCC", "absWRES", "DV", "WRES", "PRED", "RES", "SID") 
 	
 	test1 <- nmData(prob, dataType = "input")
-	checkEquals(nmData(run1, subProblemNum = 2 ), nmData(getProblem(run1), subProblemNum = 2), 
+	checkEquals(nmData(prob, subProblemNum = 2 ), nmData(getProblem(run2), subProblemNum = 2), 
 			"Extracting from run and problem directly should give same result")
 	test2 <- nmData(prob, dataType = "output")
 	checkTrue(setequal(names(test1), inputColumns), msg = "Checking presence of input data")
@@ -128,6 +143,15 @@ test.nmData.NMSim <- function()
 	test7.inoutdf  <- nmData(prob, returnMode = "singleDF", subset = "ID == 1")
 #	
 	checkEquals( test7.inoutdf, subset(nmData(prob), ID == 1 ))
+	
+	prob@outputData <- subset(prob@outputData, select = - c(AGE, RACE, HT, SMOK, HCTZ, PROP, CON, WT, TIME, SECR, DV, ID, OCC, SID) )
+	test2298 <- nmData(	prob )
+	
+	checkTrue( setequal( colnames(test2298), c("IPRED", "IWRES", "PRED", "RES", "WRES", "CL", "V", "KA", "SEX", 
+							"absWRES", "SID", "AGE", "RACE", "HT", "SMOK", "HCTZ", "PROP", 
+							"CON", "AMT", "WT", "TIME", "SECR", "DV", "EVID", "SS", "II", 
+							"ID", "OCC", "SEX.INPUT", "NSIM")
+			), msg = "Single clashing column is now correct" )
 }
 
 test.nmDatabyVarType <- function()
