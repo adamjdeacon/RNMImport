@@ -55,7 +55,7 @@ convertNm <- function(
 		newline <- ""
 		
 		# is this a IF command ?
-		if( any(regexMatches("^IF", currentLine) ))
+		if( any(regexMatches("^IF", txt = currentLine) ))
 		{
 			# TODO: it seems that "removeBrackets" does not actually exist as a function.  Need
 			# to add this back in , written properly!
@@ -65,7 +65,7 @@ convertNm <- function(
 			all.subs <- current.subscript
 			
 			# if the line ends with "THEN"
-			if(any(regexMatches("THEN$", currentLine)))
+			if(any(regexMatches("THEN$", txt = currentLine)))
 			{
 				iflevel <- 1
 			} 
