@@ -233,6 +233,13 @@ test.importNm.SimModel <- function()
 									"RACE", "SMOK", "HCTZ", "PROP", "CON", "OCC", "SID", "absWRES"
 							))), msg = " |output data correct" )
 	
+	# ensure that parsed report statements are captured properly
+	# regression tests issue 2387 
+
+	repStatements <- prob@reportStatements
+	# should simply match what is given by importNmReport
+	fullRep <- importNmReport( "../TestSimRun/TestData1SIM.lst", path = "(internalunit)" )
+	checkEquals(repStatements, fullRep$problemResults[[1]], msg = " |report statments in problem object equal to those obtained via importNmReport") 
 	
 }
 

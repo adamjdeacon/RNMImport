@@ -66,6 +66,7 @@ NMSimModel <- function(controlStatements, path, reportContents, versionInfo = c(
 					objectiveFinal = objectiveFinal,
 					additionalVars = as.data.frame(matrix(ncol = 0, nrow = nDataRows)), 
 					nmVersionMajor = versionInfo["major"],
-					nmVersionMinor = as.numeric(versionInfo["minor"]))
+					nmVersionMinor = as.numeric(versionInfo["minor"]), 
+					reportStatements = reportContents)
 		})
 }

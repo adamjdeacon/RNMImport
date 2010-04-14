@@ -60,7 +60,8 @@ NMSimModelNM7 <- function(controlStatements, path, reportContents, versionInfo =
 					additionalVars = as.data.frame(matrix(ncol = 0, nrow = nDataRows)),
 					methodInfo =  controlStatements$Estimates ,
 					nmVersionMajor = versionInfo["major"],
-					nmVersionMinor = as.numeric(versionInfo["minor"]))
+					nmVersionMinor = as.numeric(versionInfo["minor"]),
+					reportStatements = reportContents)
 		})
 }
 
