@@ -136,4 +136,13 @@ test.importNm7Tables <- function()
 							), .Dim = c(3L, 12L), .Dimnames = list(c("1", "50", "99"), c("SUBJECT_NO", 
 											"ID", "PHI.1.", "PHI.2.", "PHI.3.", "PHC.1.1.", "PHC.2.1.", "PHC.2.2.", 
 											"PHC.3.1.", "PHC.3.2.", "PHC.3.3.", "SAEMOBJ"))))	
+			
+	# regression test for issue 2393
+	# check that default path works
+	currentPath <- getwd()
+	setwd(testDataPath)
+	x <- importNm7Tables("TestData1.ext", type = "ext")
+	checkEquals(x, extFile, msg = " |EXT file succesfully loaded with default path")
+	
+	setwd(currentPath)
 }
