@@ -16,7 +16,7 @@
 #' @author fgochez
 #' @export
 
-importNm7Tables <- function(file, path = "", type = c("cov", "ext", "phi"))
+importNm7Tables <- function(file, path = ".", type = c("cov", "ext", "phi"))
 {
 	type <- match.arg(type)
 	filePath <- processPath(path)
