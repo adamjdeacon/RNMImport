@@ -310,6 +310,13 @@ test.importNm.BasicNM7 <- function()
 	checkEqualsNumeric( EPSShrinks[[2]], -10.145, msg = " |EPS shrink correct for method 2" )
 	checkEqualsNumeric( EPSShrinks[[1]], 12.013, msg = " |EPS shrink correct for method 1" )
 	
+	# iterations
+	
+	iter <- getIterations(run1)
+	expectedIter <- importNm7Tables("TestData1.EXT", path = file.path(RNMImport:::getUnitTestPath(), "testdata/TestDataNM7"), type = "ext")
+	checkEquals(iter[[1]], expectedIter[[1]], check.attributes = FALSE, "msg = | iterations imported correctly")
+	checkEquals(iter[[2]], expectedIter[[2]], check.attributes = FALSE, "msg = | iterations imported correctly")
+
 	run2 <- importNm("TestData1_missingtab.ctl","TestData1.lst" , path = system.file(package = "RNMImport", "unittests/testdata/TestDataNM7"))
 	
 	checkEquals(nmData(run2, dataType = "output"), data.frame(), msg = " |empty output data" )
