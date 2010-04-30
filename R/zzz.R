@@ -37,7 +37,7 @@ initializeLogs <- function()
 # Last modified: Jan 20 2009
 ##################################################################
 
-initializeVariables <- function(libName)
+initializeVariables <- function(libName = file.path(system.file(), "../"))
 {
 	
 	fileName <- file.path(libName, "RNMImport", "configdata/NONMEM2_Variables.csv" )
@@ -83,6 +83,11 @@ initializeSubsets <- function()
 	.RNMImportEnv$subsets <- list("default" = c("MDV != 1", "EVID == 0", "AMT <= 0"), applyOnLoad = TRUE)
 }
 
+initializeMiscOptions <- function(libName = file.path(system.file(), "../"))
+{
+	.RNMImportEnv$unitTestPath <- file.path(libName, "RNMImport/unittests") 
+}
+
 .onLoad <- function(libname, pkgname)
 {
 	initializeLogs()
@@ -90,7 +95,7 @@ initializeSubsets <- function()
 	initializeFileNameExtensions()
 	initializeDataPath()
 	initializeSubsets()
-	
+	initializeMiscOptions()
 	cat("------------------------------------------------------\n")
 	cat("|\n")
 	cat("|\n") 

@@ -167,3 +167,10 @@ getExternalTestRuns <- function()
 	if(!exists(".externTestEnv")) stop("External test data environment not available!")
 	.externTestEnv$testRuns
 }
+
+getUnitTestPath <- function()
+{
+	if(!exists("unitTestPath"))
+		.RNMImportEnv$unitTestPath
+	else unitTestPath
+}

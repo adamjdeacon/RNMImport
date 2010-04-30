@@ -25,6 +25,9 @@ importNm7Iterations <- function( files = NULL, noTitles = NULL, noLabels = NULL,
 	RNMImportStopifnot( all(noLabels == "0") 
 	, msg = "NOLABELS=1 option currently disallowed", match.call())
 	
+	# if an iteration file name is duplicated, it should (apparently) be disregarded.  
+	files[duplicated(files)] <- ""
+
 	iterations <- vector(mode = "list", length = numFiles)
 	for(i in seq_along(files))
 	{

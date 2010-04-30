@@ -20,7 +20,7 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 		versionInfo = c("major" = "VII", "minor" = 1))
 {
 	inData <- try(importModelData(dataStatement = controlStatements$Data,inputStatement = controlStatements$Input, path = path,
-					dropCols = dropInputColumns))
+					dropCols = dropInputColumns), silent = TRUE)
 	# if we could not read data file for some reason, continue anyway
 	if(inherits(inData, "try-error"))
 	{
@@ -40,7 +40,15 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 	if(nInDataRows != nOutDataRows)
 		RNMImportWarning("Number of rows of output data does not match the number of rows of input data!!\n", match.call())
 	
+	# automatically import NONMEM7-generated iterations from files if available:
+	estStatement <- controlStatements$Estimates
 	
+	paramIter <- try( importNm7Iterations( files = estStatement[,"file"], noLabels = estStatement[,"noLabel"],
+					noTitles = estStatement[,"noTitle"], methods = estStatement[,"method"], path = path) , silent = TRUE )
+	if(inherits(paramIter, "try-error")) { 
+		RNMImportWarning("Unable to import parameter iterations, proceeding anyway\n")
+		paramIter <- list()
+	}
 	with(reportContents,
 			{
 
@@ -92,7 +100,7 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 				minInfo <- sapply(MethodResults, "[[", "TermStatus")
 				# attr(objectiveFinal, "methods") <- methodsUsed
 				# create the object
-				new("NMBasicModelNM7", parameterIterations = NULL, 
+				new("NMBasicModelNM7", parameterIterations = paramIter, 
 						problemStatement = controlStatements$Prob,
 						objectiveFinal = objectiveFinal, 
 						parameterCovMatrices = covMatrices,
