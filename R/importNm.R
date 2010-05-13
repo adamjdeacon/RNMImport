@@ -50,7 +50,7 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 		whichFile <- sapply(strsplit(allListFiles, split = "\\."), function(x, y)
 							{
 								#Condition 1 to test the correct file extension
-								conOne <- x[length(x)] %in% getNmFileExtensions("report")
+								conOne <- casefold(x[length(x)]) %in% getNmFileExtensions("report")
 								#Condition 2 to test the correct names (multiple .s allowed)
 								conTwo <- ifelse(length(x) == length(y), all(x[-length(x)] == y[-length(x)]), FALSE)
 								conOne && conTwo
