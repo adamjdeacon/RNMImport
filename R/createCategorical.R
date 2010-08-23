@@ -66,7 +66,8 @@ setMethod("addDerivedCategorical", signature(obj = "NMBasicModelNM7"), addDerive
 addDerivedCategorical.NMRun <- function(obj, varName, newVar = paste(varName, ".CUT", sep = ""), breaks = 5, binType = "range", labels = NULL, problemNum = 1, dataType = "output")
 {
 	specObj <- getProblem(obj, problemNum)
-	newObj <- addDerivedCategorical(specObj, varName, newVar, breaks, binType, labels, dataType)
+	newObj <- 
+			addDerivedCategorical(specObj, varName, newVar, breaks, binType, labels, dataType)
 	invisible(newObj)
 }
 setMethod("addDerivedCategorical", signature(obj = "NMRun"), addDerivedCategorical.NMRun)
