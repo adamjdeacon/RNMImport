@@ -49,8 +49,10 @@
 		#firstOnly <- ynpop(x, "FIRSTONLY")
 		
 		# Now check for the presence of a "FIRSTONLY" statement
-		
-		firstOnly <- length(grep(x, pattern = paste("[[:space:]]","FIRSTONLY","[[:space:]]", sep =""))) > 0
+
+# 		0004822 note
+#		firstOnly <- length(grep(x, pattern = paste("[[:space:]]","FIRSTONLY","[[:space:]]", sep =""))) > 0
+		firstOnly <- ynPop(x, "FIRSTONLY", inPlace = TRUE) 
 		
 		nmKey <- c("noprint", "noprin", "nopri", "print", "firstonly",
 				"unconditional", "conditional", "omitted")

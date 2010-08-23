@@ -6,7 +6,7 @@
 DEFAULTLOGS <- c("stdReport", "detailedReport", "warnings", "highLevelParse", "lowLevelParse")
 
 # The file extensions
-FILEEXTENSIONS <- list(control = c("mod", "ctl", "con"), report = c("lst", "out", "sep"), 
+FILEEXTENSIONS <- list(control = c("mod", "ctl", "con"), report = c("rep", "lst", "out", "sep"), 
 					outputTable = c("fit", "tab"), inputData = c("", "txt", "dat"))
 
 ##################################################################

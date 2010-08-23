@@ -10,6 +10,7 @@ test.nmData.NMBasic <- function()
 	prob <- getProblem(run1)
 	test1 <- nmData(run1)
 	checkEquals(test1, nmData(getProblem(run1)), "Extracting from run and problem directly should give same result")
+
 	test2 <- nmData(run1, dataType = "input")
 	inputColumns <- c("SID", "SEX" ,"AGE" ,"RACE",  "HT",  "SMOK",  "HCTZ","PROP", "CON", "AMT", "WT" ,"TIME", "SECR", "DV", "EVID", "SS", "II" ,"ID", "OCC")
 	outputColumns <- c("ID", "TIME", "IPRED", "IWRES", "CL", "V", "KA", "AGE", "HT", "WT", "SECR", "SEX", "RACE", 
@@ -19,6 +20,7 @@ test.nmData.NMBasic <- function()
 
 	test3 <- nmData(run1, dataType = "output")
 	checkTrue(setequal(names(test3), outputColumns), "Checking that all output data is present")
+
 	test4 <- nmData(prob, returnMode = "DFList")
 	checkEquals(names(test4), c("input", "output"), "Check return list names")
 	checkEquals(test2, test4$input)
@@ -28,8 +30,8 @@ test.nmData.NMBasic <- function()
 	y <- intersect(inputColumns, outputColumns )
 	checkTrue(setequal(names(test1), c(x, paste(y, ".INPUT", sep = ""))))
 	# check error handling
-	
 	checkEquals( test2, nmData(prob, dataType = c("input", "blah")), msg = " |invalid type 'blah'discarded")
+
 	try.nmData <- try( nmData( prob, dataType = "out" ) )
 	
 	checkTrue(inherits(try.nmData, "try-error"), msg = " | Exception generated when trying to extract invalid data type")
@@ -65,7 +67,8 @@ test.nmData.NMBasic <- function()
 # SEX.INPUT AGE.INPUT RACE.INPUT HT.INPUT SMOK.INPUT HCTZ.INPUT PROP.INPUT CON.INPUT WT.INPUT TIME.INPUT SECR.INPUT DV.INPUT ID.INPUT OCC.INPUT
 	
 	prob@outputData <- subset(prob@outputData, select = - c(AGE, RACE, HT, SMOK, HCTZ, PROP, CON, WT, TIME, SECR, DV, ID, OCC, SID) )
-	test2298 <- nmData(	prob )
+	test2298 <- 
+			nmData(	prob )
 	
 	checkTrue( setequal( colnames(test2298), c("IPRED", "IWRES", "PRED", "RES", "WRES", "CL", "V", "KA", "SEX", 
 							"absWRES", "SID", "AGE", "RACE", "HT", "SMOK", "HCTZ", "PROP", 

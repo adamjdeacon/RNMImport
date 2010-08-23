@@ -84,7 +84,9 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 
 	# read the control file contents, using the appropriate version
 	
-	controlContents <- importNmMod(conFile,  path = path, version = versionInfo["major"], 
+	controlContents <- importNmMod(fileName=conFile,  
+			path = path, 
+			version = versionInfo["major"], 
 			textReport = textReport)
 	problems <- controlContents$problemContents
 	numProblems <- length(problems)

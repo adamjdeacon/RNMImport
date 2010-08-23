@@ -20,7 +20,13 @@
 	# retrieve objective function value
 	
 	objFinalLine <- grep(methodTextBlock, pattern = "#OBJV", value = TRUE)
-	objFinalValueLoc <- gregexpr(objFinalLine, pattern = "-{0,1}[0-9\\.]+")
+	if(length(objFinalLine)< 1){
+		message <- 'No #OBJV tag found'
+		warning(message, immediate. = TRUE )
+		return(NULL)
+	}
+	objFinalValueLoc <- 
+			gregexpr(objFinalLine, pattern = "-{0,1}[0-9\\.]+")
 	
 	objFinalValue <- as.numeric( substr(objFinalLine, 
 					start = objFinalValueLoc[[1]], 

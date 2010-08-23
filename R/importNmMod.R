@@ -75,14 +75,14 @@ importNmMod <- function(
 	# For example, a simulation that follows a normal problem might need access to the THETAs from the previous
 	# estimation (which are found in the report file)
 	
-	problemContents[[1]] <- .importSingleProb(problemTexts[[1]], fileName)
+	problemContents[[1]] <- 
+			.importSingleProb(contents=problemTexts[[1]], fileName)
 	
-	for(i in seq_along(problemTexts[-1]) + 1)
+	for(i in seq_along(problemTexts))
 	{
 		contents <- .importSingleProb(problemTexts[[i]], fileName)
 		# problemContents[[i]] <- .mergeMissing(contents, problemContents[[i-1]])
 		problemContents[[i]] <- contents
-		 
 	}
 	outList$controlFile <- .getFile(fileName, path)
 	outList$problemContents <- problemContents 

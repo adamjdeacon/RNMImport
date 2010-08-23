@@ -12,8 +12,6 @@ test.getVarDescription <- function()
 	testFrameTwo <- data.frame(Variable = "BILT", Label = "Total Bilirubin (µmol/L)", Format = "", VarType = "Lab Covariate", stringsAsFactors = FALSE)
 	
 	x <- varDescription(c("ID", "SEX"))
-	rownames(x) <- NULL
-	
 	checkEquals(x, testFrameOne, check.attributes = FALSE)	
 	checkEquals(names(varDescription(c("ID", "SEX"))), names(testFrameOne))
 	checkEquals(varDescription("BILT"), testFrameTwo, check.attributes = FALSE)
@@ -53,7 +51,7 @@ test.getNmFileExtensions <- function()
 	fileExtension <- RNMImport:::getNmFileExtensions
 	checkException(fileExtension("NONSENSE"))
 	checkEquals(fileExtension("control"), c("mod", "ctl", "con"))
-	checkEquals(fileExtension("report"), c("lst", "out", "sep"))
+	checkEquals(fileExtension("report"), c("rep", "lst", "out", "sep"))
 	checkEquals(fileExtension("table"), c("fit", "tab"))
 	checkEquals(fileExtension("input"), c("", "txt", "dat"))
 }

@@ -2,7 +2,7 @@
 # $LastChangedDate$
 
 
-	
+
 #' Constructs an NMBasicModel object from the control statements and output list statements that apply to it.
 #' Meant to be used from within importNm
 #' @title NMBasicModel constructor
@@ -27,22 +27,34 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 	} # end if(inherits(inData, "try-error"))
 	
 	# import output tables if the $TABLE statement is present, else outdata is empty
-	outTables <- .importTablesSafely(controlStatements$Table, path = path  )
+	outTables <- .importTablesSafely(tableStatement=controlStatements$Table, path = path  )
 	
 	# need to know how many rows the data has, handle FIRSTONLY case here
-	if(inherits(outTables, "list")) nOutDataRows <- max(sapply(outTables, nrow))
-	else nOutDataRows <- nrow(outTables)
+	if(inherits(outTables, "list")) 
+		nOutDataRows <- max(sapply(outTables, nrow))
+	else 
+		nOutDataRows <- nrow(outTables)
 	nInDataRows <- nrow(inData)
 	if(nInDataRows != nOutDataRows)
-		RNMImportWarning("Number of rows of output data does not match the number of rows of input data!!\n", match.call())
+		RNMImportWarning(paste("Number of rows of output data", nOutDataRows, 
+						"\ndoes not match the number of rows of input data", nInDataRows,
+						"!\n"), match.call())
 	# now create the class
 	# TODO: The following is too complex, simplify in future releases
 	with(reportContents,
 			{
-
+				
 				# check for the covariance/correlation matrices
-				covMatrix <- if(!is.null(reportContents$CovarianceMatrix)) CovarianceMatrix else matrix(ncol = 0, nrow = 0)
-				corMatrix <- if(!is.null(reportContents$CorrelationMatrix)) CorrelationMatrix else matrix(ncol = 0, nrow = 0)
+				covMatrix <- if(!is.null(reportContents$CovarianceMatrix)) {
+					CovarianceMatrix 
+				} else {
+					matrix(ncol = 0, nrow = 0)
+				}
+				corMatrix <- if(!is.null(reportContents$CorrelationMatrix)) {
+					CorrelationMatrix 
+				} else {
+					matrix(ncol = 0, nrow = 0)
+				}
 				# grab parameter initial values
 				thetaInitial <- t(controlStatements$Theta)
 				# these may be missing in the control statements, so try to extract them from the reportContents
@@ -70,12 +82,12 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 					thetaFinal <-  rbind(StandardError$THETA, FinalEstimates$THETA )
 					
 					rownames(thetaFinal) <- c("standardErrors","estimates")
-				
+					
 					omegaFinal <- array(dim = c(omegaDim, 2), 
 							dimnames = c(omegaDimNames, list(c("estimates", "standardErrors"))))
 					omegaFinal[,,"estimates"] <- FinalEstimates$OMEGA
 					omegaFinal[,,"standardErrors"] <- StandardError$OMEGA
-
+					
 					sigmaDim <- dim(FinalEstimates$SIGMA)
 					# SIGMA can be omitted
 					if(is.null(sigmaDim))
@@ -86,7 +98,7 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 					else
 					{
 						sigmaFinal <- array(dim = c(sigmaDim, 2), dimnames = c(dimnames(sigmaInitial),
-							list(c("estimates", "standardErrors"))))
+										list(c("estimates", "standardErrors"))))
 						sigmaFinal[,,"estimates"] <- FinalEstimates$SIGMA
 						sigmaFinal[,,"standardErrors"] <- StandardError$SIGMA
 					}
@@ -94,9 +106,9 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 				else
 				{
 					thetaFinal <- matrix(FinalEstimates$THETA, nrow = 1, dimnames = list( "estimates" , NULL ))
-										
+					
 					omegaFinal <- array(FinalEstimates$OMEGA, dim = c(omegaDim, 1),
-						dimnames = c(dimnames(omegaInitial), list("estimates")))
+							dimnames = c(dimnames(omegaInitial), list("estimates")))
 					
 					sigmaDim <- dim(FinalEstimates$SIGMA)					
 					# if missing sigmas, fill in an "empty" sigma array anyway
@@ -104,7 +116,7 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 						sigmaFinal <- array(dim = c(0,0,1), dimnames = list(NULL, NULL, "estimates"))
 					else
 						sigmaFinal <- array(FinalEstimates$SIGMA, dim = c(dim(FinalEstimates$SIGMA), 1),
-					  	dimnames = c(dimnames(sigmaInitial), list("estimates")))
+								dimnames = c(dimnames(sigmaInitial), list("estimates")))
 				}
 				colnames(thetaFinal) <- colnames(thetaInitial)
 				
@@ -112,7 +124,7 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 				# that the slot type is correct
 				minInfo <- unlist(attr(reportContents$Iter, "min.info"))
 				if(is.null(minInfo)) minInfo <- character(0)
-
+				
 				# create the object
 				new("NMBasicModel", parameterIterations = reportContents$Iter, 
 						problemStatement = controlStatements$Prob,
@@ -132,7 +144,7 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 						minInfo = minInfo,
 						nmVersionMajor = versionInfo["major"],
 						nmVersionMinor = as.numeric(versionInfo["minor"])) 
-						
+				
 			} ) # end with(reportContents)
 	
 }

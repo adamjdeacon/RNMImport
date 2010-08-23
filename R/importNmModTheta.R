@@ -111,7 +111,8 @@
 	{
 		rx.out <- regexpr( rx, comments )
 		trythat <- ogrep( rx, comments[rx.out!=-1], filter = "\\1" ) 
-		alright <- any( regexpr(trythat, "[\\(\\)]" ) == -1 )
+#		alright <- any( regexpr(trythat, "[\\(\\)]" ) == -1 )
+		alright <- any( regexpr(trythat, "[\\]" ) == -1 )
 		rownames(out)[rx.out!=-1][alright] <- trythat[alright]
 	}
 	out 	

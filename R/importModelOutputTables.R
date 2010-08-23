@@ -71,7 +71,15 @@ importModelOutputTables <- function(
 				
 		if(length(newColNames))
 		{
+			if(length(colNames)> length(colnames(currentTable))){
+				currentTable <- 
+						cbind(currentTable, 
+								data.frame(matrix(NA,
+										nrow=dim(currentTable)[1],
+										ncol=(length(colNames)-length(colnames(currentTable))))))
+			}
 			colnames(currentTable)[1:length(colNames)] <- colNames
+			
 			# use only the non-repeated columns
 			currentTable <- currentTable[,newColNames, drop = FALSE]
 			# assign as many names from the table statement to currentTable's columns as possible	
