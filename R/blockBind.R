@@ -48,9 +48,12 @@ blockBind <- function(
 	if( giveNames ) 
 	{
 		### get the names that are already there
-		names <- unlist( sapply( mList, function(x){ 
-							if(is.null(dimnames(x))) rep("", nrow(x)) else rownames(x)  
-						}))
+		names <- unlist( 
+				lapply( mList, function(x){ 
+							if(is.null(dimnames(x)[[1]])) rep("FALSE", nrow(x)) else rownames(x)  
+						}
+				)
+		)
 		### replace empty with appropriate name
 		names <- ifelse( names == "", sprintf("%s%d", defaultPrefix, 1:nrow(outMat)), names  )
 		dimnames( outMat ) <- rep( list(names), 2)
