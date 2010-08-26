@@ -24,6 +24,7 @@ getSigmasOrOmegas.NM7 <- function(obj, what = "final", item = c("sigma", "omega"
 	
 	if(length(invalidWhat)) RNMImportWarning("Invalid items chosen:" %pst% paste(invalidWhat, collapse = ","))
 	item <- match.arg(item)
+#	item <- "omega"
 	probType <- match.arg(probType)
 	
 	# function to retrieve objects for a single method
@@ -40,6 +41,7 @@ getSigmasOrOmegas.NM7 <- function(obj, what = "final", item = c("sigma", "omega"
 		
 		if(item == "sigma")
 		{
+			dimNames <- dimnames(obj@sigmaInitial)
 			finals <- obj@sigmaFinal
 			initials <- obj@sigmaInitial
 			stdErrs <- obj@sigmaStderr
@@ -47,12 +49,15 @@ getSigmasOrOmegas.NM7 <- function(obj, what = "final", item = c("sigma", "omega"
 		}
 		else
 		{
+			dimNames <- dimnames(obj@omegaInitial)
 			finals <- obj@omegaFinal
 			initials <- obj@omegaInitial
 			stdErrs <- obj@omegaStderr	
 			shrinks <- obj@ETAShrinkage
 		}
+		
 		# choose single final value
+		
 		final <- finals[[methodChosen]]
 		# initialize to avoid missing object error
 		oneByOne <- FALSE
@@ -86,6 +91,11 @@ getSigmasOrOmegas.NM7 <- function(obj, what = "final", item = c("sigma", "omega"
 		
 		# single object selected, don't return a list
 		
+		if(!is.null(initialValues))
+			dimnames(initialValues) <- dimNames
+		if(!is.null(finalEstimates))
+			dimnames(finalEstimates) <- dimNames
+		
 		if(length(validWhat) == 1)
 		{
 			res <- switch(validWhat, 
@@ -104,7 +114,7 @@ getSigmasOrOmegas.NM7 <- function(obj, what = "final", item = c("sigma", "omega"
 		else
 		{
 			res <- list()
-
+			
 			if("initial" %in% validWhat) res$initial.estimates <- initialValues
 			if("final" %in% validWhat) res$final.estimates <- finalEstimates
 			if("stderrors" %in% validWhat) 

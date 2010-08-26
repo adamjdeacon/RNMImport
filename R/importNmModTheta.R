@@ -17,7 +17,7 @@
 .importNmModTheta <- function(
 		txt = NULL,       
 		guessNames = TRUE,
-		rx = "([^~[:space:]]+)$", # TODO: This should be a changeable option 		 
+		rx = .getPattern('thetas'), 		 
 		fileName = NULL
 )
 {					
@@ -53,6 +53,9 @@
 			dimnames = list( sprintf("THETA%d", 1:length(thetaLines)), 
 					c("Lower", "Est", "Upper")) )
 	# now iterate through all of the lines of input
+	
+	fixedTHETAS <- vector()
+	
 	for( i in seq(along=thetaLines) ){
 		th <- thetaLines[i]
 		th <- killRegex(th , "\\).*")
@@ -65,8 +68,8 @@
 		numberpoints <- equalExpressionPop( th, "NUM", shortcut = TRUE, inPlace = TRUE)
 		
 		### import the FIXED  option                                                
-		fixed <- logicalPop( th, "FIX", inPlace = TRUE)
-
+		fixedTHETAS[i] <-fixed <- logicalPop( th, "FIX", inPlace = TRUE)
+		
 		### guess the kind of theta line                                            
 		th <- gsub( "[\\(\\)]", "", th) # remove the brackets       
 		th <- gsub( "inf", "Inf", th, ignore.case = TRUE ) # tidy up Inf
@@ -107,13 +110,24 @@
 			out[i,3] <- upper
 		}
 	}  
+#	browser()
 	if( guessNames && length(comments) == nrow(out)  )
 	{
-		rx.out <- regexpr( rx, comments )
+		rx.out <- 
+				regexpr( rx, comments )
 		trythat <- ogrep( rx, comments[rx.out!=-1], filter = "\\1" ) 
-#		alright <- any( regexpr(trythat, "[\\(\\)]" ) == -1 )
-		alright <- any( regexpr(trythat, "[\\]" ) == -1 )
+#		alright <- any( regexpr(trythat,  pattern = "[\\(\\)]" ) == -1 )
+# 		removes names with ()
+#		alright <- any( regexpr("[\\(\\)]", trythat ) == -1 )
+		alright <- rep(TRUE, dim(out)[1])
+		missingNames <- which(nchar(trythat[alright])==0)
+		if(length(missingNames)>0)
+			trythat[alright][missingNames] <-
+					paste('THETA', missingNames, sep='')
 		rownames(out)[rx.out!=-1][alright] <- trythat[alright]
 	}
+#	out <- cbind.data.frame(out, FIX=fixedTHETAS, stringsAsFactors=FALSE)
+	rownames(out) <- paste(rownames(out), fixedTHETAS)
+#	print(out)
 	out 	
 }

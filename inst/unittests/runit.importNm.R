@@ -273,9 +273,9 @@ test.importNm.BasicNM7 <- function()
 	
 	# check sigmas
 	
-	checkEquals(allSigmas, list(structure(0.0259, .Dim = c(1L, 1L), .Dimnames = list("EPS1", 
-									"EPS1"), methodName = "Iterative Two Stage"), structure(0.0266, .Dim = c(1L, 1L), .Dimnames = list(
-									"EPS1", "EPS1"), methodName = "Stochastic Approximation Expectation-Maximization")),
+	checkEquals(allSigmas, list(structure(0.0259, .Dim = c(1L, 1L), .Dimnames = list("SIGMA1", 
+									"SIGMA1"), methodName = "Iterative Two Stage"), structure(0.0266, .Dim = c(1L, 1L), .Dimnames = list(
+									"SIGMA1", "SIGMA1"), methodName = "Stochastic Approximation Expectation-Maximization")),
 			msg = " |sigmas imported correctly")
 	
 	

@@ -78,7 +78,6 @@ test.importNmModTheta <- function(){
 	checkEquals( c(5.8, 0  , .94, 1.45, 0, -Inf, 1, 1, 0, 0, 0, -Inf), nonames( output6[ , "Lower"] ) )
 	checkEquals( c(5.8, 9.4, .94, 1.45, 0, .1  , 1, 1, 0, 0, 0, .1  ), nonames( output6[ , "Est"]   ) )
 	checkEquals( c(5.8, Inf, .94, 1.45, 0, Inf , 1, 1, 0, 0, 0, Inf ), nonames( output6[ , "Upper"] ) )
-	
 	input7 <- c(
 			"$THETA  (0,0.29,2.4)       ;  ~X1",
 			"$THETA  (0,0.7,5.8)        ;  ~X2",
@@ -90,14 +89,25 @@ test.importNmModTheta <- function(){
 			"$THETA  (0,0.19,1.6)       ;  ~X9")
 	output7 <- RNMImport:::.importNmModTheta( input7 )
 	n7 <- rownames(output7)
-	checkEquals( n7[1], "X1")
-	checkEquals( n7[2], "X2")
-	checkEquals( n7[3], "X3")
-	checkEquals( n7[4], "X4")
-	checkEquals( n7[5], "X5")
-	checkEquals( n7[6], "X6")
-	checkEquals( n7[7], "THETA7")
-	checkEquals( n7[8], "X9")
+	if(RNMImport:::.getPattern('thetas')=='(.*)'){
+		checkEquals( n7[1], "~X1")
+		checkEquals( n7[2], "~X2")
+		checkEquals( n7[3], "~X3")
+		checkEquals( n7[4], "~X4")
+		checkEquals( n7[5], "~X5")
+		checkEquals( n7[6], "~X6")
+		checkEquals( n7[7], "THETA7")
+		checkEquals( n7[8], "~X9")
+	} else {
+		checkEquals( n7[1], "X1")
+		checkEquals( n7[2], "X2")
+		checkEquals( n7[3], "X3")
+		checkEquals( n7[4], "X4")
+		checkEquals( n7[5], "X5")
+		checkEquals( n7[6], "X6")
+		checkEquals( n7[7], "THETA7")
+		checkEquals( n7[8], "X9")
+	}
 	
 	input8 <- c(
 			"$THETA  (0,0.29,2.4)         ; # X1",
@@ -155,8 +165,8 @@ test.importNmModTheta <- function(){
 	checkEquals(expected, output12)
 	
 	input13 <- c("$THETA",	"(-1000.0  4.3 1000.0)",
-	"(-1000.0 -2.9 1000.0)", "(-1000.0 -0.67 1000.0)", 
-	"(0.0001 0.667 0.9999)")
+			"(-1000.0 -2.9 1000.0)", "(-1000.0 -0.67 1000.0)", 
+			"(0.0001 0.667 0.9999)")
 	output13 <- RNMImport:::.importNmModTheta(input13)
 	expected <- cbind(Lower = c(-1000, -1000, -1000, 0.0001 ), 
 			Est = c(4.3, -2.9, -0.67, 0.667), Upper = c(1000, 1000, 1000, 0.9999))

@@ -7,7 +7,7 @@ DEFAULTLOGS <- c("stdReport", "detailedReport", "warnings", "highLevelParse", "l
 
 # The file extensions
 FILEEXTENSIONS <- list(control = c("mod", "ctl", "con"), report = c("rep", "lst", "out", "sep"), 
-					outputTable = c("fit", "tab"), inputData = c("", "txt", "dat"))
+		outputTable = c("fit", "tab"), inputData = c("", "txt", "dat"))
 
 ##################################################################
 # initializeLogs
@@ -88,6 +88,12 @@ initializeMiscOptions <- function(libName = file.path(system.file(), "../"))
 	.RNMImportEnv$unitTestPath <- file.path(libName, "RNMImport/unittests") 
 }
 
+initializePatterns <- function(libName = file.path(system.file(), "../"))
+{
+	source(system.file(package="RNMImport", "configdata/searchPatterns.R" ))
+	.RNMImportEnv$patterns <- .patterns
+}
+
 .onLoad <- function(libname, pkgname)
 {
 	initializeLogs()
@@ -96,6 +102,7 @@ initializeMiscOptions <- function(libName = file.path(system.file(), "../"))
 	initializeDataPath()
 	initializeSubsets()
 	initializeMiscOptions()
+	initializePatterns()
 	cat("------------------------------------------------------\n")
 	cat("|\n")
 	cat("|\n") 

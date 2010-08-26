@@ -203,7 +203,8 @@ test.getOmegas <- function()
 	
 	checkEquals(omegaTest1, expOmega1,	msg = " | getOmegas correct (1)")
 	
-	omegaTest2 <- getOmegas(prob3, what = c("stderrors", "initial"), method = 1)
+	omegaTest2 <-
+			getOmegas(prob3, what = c("stderrors", "initial"), method = 1)
 	
 	checkEquals(omegaTest2, 
 			structure(list(initial.estimates = structure(c(0.128, 0, 0, 0, 
@@ -314,7 +315,7 @@ test.getSigmas <- function()
 	
 	checkEquals(sigmaTest2, 
 			structure(list(initial.estimates = structure(0.0231, .Dim = c(1L, 
-											1L), .Dimnames = list("EPS1", "EPS1")), standard.errors = structure(0.000746, .Dim = c(1L, 
+											1L), .Dimnames = list("SIGMA1", "SIGMA1")), standard.errors = structure(0.000746, .Dim = c(1L, 
 											1L), .Dimnames = list("EPS1", "EPS1"))), .Names = c("initial.estimates", 
 							"standard.errors"), methodName = "Iterative Two Stage"), 
 			msg = " | getSigmas correct (2)")

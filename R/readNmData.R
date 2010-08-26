@@ -37,7 +37,16 @@ readNmData <- function(
 		whichSep <- (1:length(possSeps))[maxFields == max(maxFields)][1]
 		sep <- possSeps[whichSep]
 	}
-	allScan <- scanFile( file )	
+	CALL <- match.call()
+	allScan <- 
+			tryCatch(scanFile( file ), 
+					warning=function(e){
+						return(simpleError(e), CALL)
+					},
+					error=function(e){
+						return(simpleError(e), CALL)
+					}
+			)
 	
 	### Initialise rows to skip:
 	#     tabRows    - Rows with "TABLE NO." string in first 10 characters
@@ -67,7 +76,7 @@ readNmData <- function(
 	
 	### Deal with "ignore" string          
 	if(any(nchar(ignore) > 1)) RNMImportStop("readNmData cannot handle IGNORE tokens with more than one character", match.call())
-		 
+	
 	ignoreMod <- replace(ignore, ignore == "@", "[[:alpha:]@]")
 	if(length(ignoreMod > 0)) {
 		ignoreMod <- sprintf("^[[:space:]]*%s", ignoreMod)
@@ -95,7 +104,7 @@ readNmData <- function(
 	
 	### apply the header as the names of the data
 	if(length(theHeadRow) != 0 && theHeadRow != 0) {
-
+		
 		headLine <- allScan[theHeadRow]
 		ignoreMod <- replace(ignore, ignore == "@", "[[:alpha:]@]")
 		if(length(ignoreMod > 0)) {
@@ -144,7 +153,7 @@ readNmData <- function(
 		link = ".OR."  ){
 	if( !is.null( nmCode) && any(regexMatches(nmCode, "^\\(")) ) 
 	{
-	#	nmCode <- convertFortran95Ops(nmCode)
+		#	nmCode <- convertFortran95Ops(nmCode)
 		method <- match.arg( method )
 		dname <- deparse(substitute(data))
 		nmCode <- gsub( "," , ".OR.", nmCode)   # see ?$DATA
@@ -163,7 +172,7 @@ readNmData <- function(
 {
 	if(!is.null(nmCode) )
 	{  
-	#	nmCode <- convertFortran95Ops(nmCode)
+		#	nmCode <- convertFortran95Ops(nmCode)
 		dname <- deparse(substitute(data))
 		nmCode <- strsplit( nmCode, "," )[[1]]
 		left  <- gsub( "/.*$","", nmCode  )       # after the first /

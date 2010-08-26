@@ -16,7 +16,7 @@
 
 .importNmModPrior <- function(
 		txt = NULL,       
-		rx = "([^~[:space:]]+)$", # TODO: This should be a changeable option 		 
+		rx = .getPattern('priors'), 		 
 		fileName = NULL
 	)
 {

@@ -1,40 +1,85 @@
 
-.extractInformation <- function( x, guessNames = TRUE, rx = "([^[:space:]~]+)$")
+.extractInformation <- function( x, guessNames = TRUE, rx = .getPattern('omegas'))
 {
 	# extract comments	
 	comments <- commentPop( x, inPlace = TRUE )  
 	# check for the presence of "FIXED"
-	fixed <- logicalPop( x, "FIXE?D?", inPlace = TRUE) 
-		
-	### SAME STYLE                                                              
-	
-	if(logicalPop( x, "SAME", inPlace = TRUE) )  
-		out <- matrix("SAME", 1, 1)
-	else
-	{ ### BLOCK style, indicates a block diagonal specification                                                             
-		# retrieve the number of blocks present
-		nBlocks <- equalExpressionPop( x, "BLOCK", sep = "[[:space:]]*", removeBrackets = TRUE, 
-					absent =  NULL, inPlace = TRUE)
-		if( !is.null(nBlocks)){        
-			out <- try( .buildSymMatrix( as.numeric( .readValues(x) ) ) )
-		} 
-		else 
-		{  ### DIAG style                                                              
-				equalExpressionPop( x, "DIAG", sep = "[[:space:]]*", inPlace = TRUE )                                                
-				x <- gsub( "[\\(\\)]", "", x )
-				out <- as.numeric( .readValues( x ) )
-				out <- if( length(out)==1) as.matrix(out) else diag(out)
-		}
-		
+	fixedOMEGAS <- fixed <- logicalPop( x, "FIXE?D?", inPlace = TRUE) 
+	if(length(fixedOMEGAS)!=length(x)){
+		fixedOMEGAS <- rep(fixedOMEGAS, length(x))
 	}
+		
 	if( !is.null( comments) && guessNames )
 	{
 		guess <- ogrep( rx, comments, filter = "\\1")
 		guess <- negGrep( "^[[:digit:]]", guess, value = TRUE ) # name should not start with a digit
-		if( length(guess) == nrow(out) ){
-			dimnames(out) <- rep(list(guess), 2)
-		}
 	}
+	
+	if(logicalPop( x, "SAME", inPlace = TRUE) ){
+		### SAME STYLE                                                              
+		out <- matrix("SAME", 1, 1)
+		if( !is.null( comments) && guessNames )
+		{
+			if( length(guess) == nrow(out) ){
+				dimnames(out) <- rep(list(guess), 2)
+				attr(out, 'comments') <- comments
+			}
+		}
+	} else{ 
+		### BLOCK style, indicates a block diagonal specification                                                             
+		# retrieve the number of blocks present
+		nBlocks <- equalExpressionPop( x, "BLOCK", sep = "[[:space:]]*", removeBrackets = TRUE, 
+				absent =  NULL, inPlace = TRUE)
+		if( !is.null(nBlocks)){        
+			out <- try( .buildSymMatrix( as.numeric( .readValues(x) ) ) )
+			if( !is.null( comments) && guessNames )
+			{
+				dim1 <- dim(out)[1]
+				# looking for 
+				half <- dim1*(dim1 + 1)/2
+				# 2 possibilities: either we have counted the BLOCK as a ''	
+				if(length(comments) == half + 1)
+					comments <- comments[-1]
+				if(length(comments) == half )
+				{
+					dimNames <- vector()
+					for(i in 1:dim1)
+						dimNames[i]  <- paste(comments[i + 1:i -1], collapse='&%&')
+					dimnames(out) <- rep(list(dimNames), 2)
+					attr(out, 'comments') <- comments
+				}
+			}
+		} else {
+			### DIAG style                                                              
+			equalExpressionPop( x, "DIAG", sep = "[[:space:]]*", inPlace = TRUE )                                                
+			x <- gsub( "[\\(\\)]", "", x )
+			out <- as.numeric( .readValues( x ) )
+			out <- if( length(out)==1) as.matrix(out) else diag(out)
+			if( !is.null( comments) && guessNames )
+			{
+				if( length(guess) == nrow(out) ){
+					dimnames(out) <- rep(list(guess), 2)
+					attr(out, 'comments') <- comments
+				}
+			}
+		}
+		
+	}
+#	browser()
+	dim1 <- dim(out)[1]
+	# looking for 
+	half <- dim1*(dim1 + 1)/2
+	dimNames <- vector()
+	if(length(fixedOMEGAS) == half + 1 )
+		fixedOMEGAS <- fixedOMEGAS[-1]
+	if(length(fixedOMEGAS) == half )
+	{
+		for(i in 1:dim1)
+			dimNames[i]  <- paste(fixedOMEGAS[i + 1:i -1], collapse='.')
+	}
+	dimnames(out)<- list( paste(dimnames(out)[[1]],dimNames), paste(dimnames(out)[[2]],dimNames))
+#	print(out)
+	
 	out
 }
 
@@ -53,14 +98,13 @@
 # See the NONMEM documentation, parts IV and VIII for a description of some of the ways that $OMEGA can be
 # specified
 ##################################################################
-	
+
 .importNmModOmega <- function(
 		txt = NULL, 
 		guessNames = TRUE, 
 		component = c("OMEGA", "SIGMA"), 		 
 		file = NULL
-		#rx = "([^[:space:]~]+)$" 
-		)
+)
 {	
 	if(!is.null(file))
 		txt <- scanFile(file)
@@ -73,7 +117,8 @@
 	
 	### each $OMEGA is a separate block
 	# this is somewhat complex because omegas can be specified in different ways
-	mList <- lapply( omegas, .extractInformation, guessNames = guessNames)
+	mList <- 
+			lapply( omegas, .extractInformation, guessNames = guessNames, rx = .getPattern('omegas'))
 	
 	### structure the output in one single matrix                                 
 	out <- blockBind( mList, component, TRUE )

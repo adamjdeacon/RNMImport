@@ -47,7 +47,7 @@ importModelOutputTables <- function(
 		# try to read table file, emitting a warning if it fails and continuing to next
 		if(inherits(currentTable, "try-error"))
 		{
-			msg <- paste("Unable to read table file", tableStatement[i, FILEFIELD], "due to error", currentTable$message, "\n") 
+			msg <- paste("Unable to read table file", tableStatement[i, FILEFIELD], "due to error", currentTable, "\n") 
 			RNMImportWarning(msg, call = match.call())
 			tableList[[i]] <- NA
 			next

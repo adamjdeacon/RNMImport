@@ -5,6 +5,15 @@
 # and lst files
 ###############################################################################
 
+.getPattern <- function(what='thetas'){
+	switch (what,
+			thetas=.RNMImportEnv$patterns$THETAPATTERN,
+			omegas=.RNMImportEnv$patterns$OMEGAPATTERN,
+			sigmas=.RNMImportEnv$patterns$SIGMAPATTERN,
+			priors=.RNMImportEnv$patterns$PRIORPATTERN,
+	)	
+}
+
 ################################################################
 # GREP functions:
 # a collection of small wrappers for "grep", written by

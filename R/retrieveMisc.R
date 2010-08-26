@@ -89,6 +89,15 @@ getObjective <- function(obj, addMinInfo = TRUE, ...)
 
 setGeneric("getObjective")
 
+getObjective.NMSimDataGen <- function(obj, addMinInfo = TRUE, subProblems = 1,...)
+{	
+	
+	'Not Calculated'
+}
+
+setMethod("getObjective", signature(obj="NMSimDataGen"), getObjective.NMSimDataGen)
+
+
 getObjective.NMRun <- function(obj, addMinInfo=TRUE, subProblems=1, problemNum=1, method = 1)
 {
 	getObjective(getProblem(obj, problemNum), addMinInfo, subProblems, method = method)
