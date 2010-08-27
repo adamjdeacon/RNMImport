@@ -90,14 +90,14 @@ test.importNmModTheta <- function(){
 	output7 <- RNMImport:::.importNmModTheta( input7 )
 	n7 <- rownames(output7)
 	if(RNMImport:::.getPattern('thetas')=='(.*)'){
-		checkEquals( n7[1], "~X1")
-		checkEquals( n7[2], "~X2")
-		checkEquals( n7[3], "~X3")
-		checkEquals( n7[4], "~X4")
-		checkEquals( n7[5], "~X5")
-		checkEquals( n7[6], "~X6")
-		checkEquals( n7[7], "THETA7")
-		checkEquals( n7[8], "~X9")
+		checkEquals( n7[1], "~X1 FALSE")
+		checkEquals( n7[2], "~X2 FALSE")
+		checkEquals( n7[3], "~X3 FALSE")
+		checkEquals( n7[4], "~X4 FALSE")
+		checkEquals( n7[5], "~X5 TRUE")
+		checkEquals( n7[6], "~X6 TRUE")
+		checkEquals( n7[7], "THETA7 FALSE")
+		checkEquals( n7[8], "~X9 FALSE")
 	} else {
 		checkEquals( n7[1], "X1")
 		checkEquals( n7[2], "X2")
@@ -120,14 +120,14 @@ test.importNmModTheta <- function(){
 			"$THETA  (0,0.19,1.6)         ;~ X9")
 	output8 <- RNMImport:::.importNmModTheta( input8, rx = "#[[:space:]]*([[:alnum:]]*)" )
 	n8 <- rownames(output8)
-	checkEquals( n8[1], "X1")
-	checkEquals( n8[2], "X2")
-	checkEquals( n8[3], "X3")
-	checkEquals( n8[4], "X4")
-	checkEquals( n8[5], "X5")
-	checkEquals( n8[6], "X6")
-	checkEquals( n8[7], "THETA7")
-	checkEquals( n8[8], "THETA8")
+	checkEquals( n8[1], "X1 FALSE")
+	checkEquals( n8[2], "X2 FALSE")
+	checkEquals( n8[3], "X3 FALSE")
+	checkEquals( n8[4], "X4 FALSE")
+	checkEquals( n8[5], "X5 TRUE")
+	checkEquals( n8[6], "X6 TRUE")
+	checkEquals( n8[7], "THETA7 FALSE")
+	checkEquals( n8[8], "THETA8 FALSE")
 	
 	input9 <- c("$THETA (9,11,13) (0,0.01,0.1)            ",
 			"     (0,0.4,2) (0,0.06,0.1) (0,40,90)    ",
@@ -152,7 +152,7 @@ test.importNmModTheta <- function(){
 	output11 <- RNMImport:::.importNmModTheta(input11)
 	
 	expected <- cbind("Lower" = c(0,1,0,0), "Est" = c(90,1,50,0.5), "Upper" = c(480, 1, 500, 1))
-	rownames(expected) <- c("PCB", "EMAX", "EC50", "ZOLPIDEM")
+	rownames(expected) <- c("PCB FALSE", "EMAX TRUE", "EC50 FALSE", "ZOLPIDEM FALSE")
 	
 	checkEquals(output11, expected)
 	
@@ -161,7 +161,7 @@ test.importNmModTheta <- function(){
 	expected <- cbind( "Lower" = c(-Inf, -Inf, -Inf, -Inf, 1e-06),
 			"Est" = c(4.3, -2.9, 4.3, -0.670, 0.667), 
 			"Upper" = c(Inf, Inf, Inf, Inf, 0.9999) )
-	rownames(expected) <- paste("THETA", 1:5, sep = "")
+	rownames(expected) <- paste("THETA", 1:5, ' FALSE', sep = "")
 	checkEquals(expected, output12)
 	
 	input13 <- c("$THETA",	"(-1000.0  4.3 1000.0)",
@@ -170,7 +170,7 @@ test.importNmModTheta <- function(){
 	output13 <- RNMImport:::.importNmModTheta(input13)
 	expected <- cbind(Lower = c(-1000, -1000, -1000, 0.0001 ), 
 			Est = c(4.3, -2.9, -0.67, 0.667), Upper = c(1000, 1000, 1000, 0.9999))
-	rownames(expected) <- paste("THETA", 1:4, sep = "")
+	rownames(expected) <- paste("THETA", 1:4, ' FALSE', sep = "")
 	
 	checkEquals(output13, expected)
 }

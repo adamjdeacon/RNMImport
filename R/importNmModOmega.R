@@ -2,7 +2,7 @@
 .extractInformation <- function( x, guessNames = TRUE, rx = .getPattern('omegas'))
 {
 	# extract comments	
-	comments <- commentPop( x, inPlace = TRUE )  
+	comments <- commentPop( x, inPlace = TRUE ) 
 	# check for the presence of "FIXED"
 	fixedOMEGAS <- fixed <- logicalPop( x, "FIXE?D?", inPlace = TRUE) 
 	if(length(fixedOMEGAS)!=length(x)){
@@ -48,6 +48,8 @@
 					dimnames(out) <- rep(list(dimNames), 2)
 					attr(out, 'comments') <- comments
 				}
+			} else {
+				dimnames(out)<- list(rep(' ', dim(out)[1]),rep(' ', dim(out)[2]) )
 			}
 		} else {
 			### DIAG style                                                              
@@ -118,10 +120,12 @@
 	### each $OMEGA is a separate block
 	# this is somewhat complex because omegas can be specified in different ways
 	mList <- 
-			lapply( omegas, .extractInformation, guessNames = guessNames, rx = .getPattern('omegas'))
+			lapply( omegas, 
+					.extractInformation, guessNames = guessNames, rx = .getPattern(paste(tolower(component),'s',sep='')))
 	
 	### structure the output in one single matrix                                 
-	out <- blockBind( mList, component, TRUE )
+	out <- 
+			blockBind( mList, component, TRUE )
 	out
 	
 }

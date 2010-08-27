@@ -40,19 +40,21 @@ test.importNm.Basic <- function()
 	# test that the theta final estimates were as expected
 	
 	expThetas <- c(19.6, 84.6, 1.66)
-	names(expThetas) <- paste("THETA", 1:3, sep = "")
+	names(expThetas) <- paste("THETA", 1:3, ' FALSE', sep = "")
 	# rownames(expThetas) <- c("estimates") 
 	checkEquals( getThetas(prob1, what = "final"),  expThetas, msg = " |theta final estimates correct")
 	
 	# test that omega final estimates imported as expected
 	
 	"%pst%" <- RNMImport:::"%pst%"
-	expOmega <- array(diag(c(.164, .165, 1.3)), c(3,3), dimnames = list( "OMEGA" %pst% 1:3, "OMEGA" %pst% 1:3))
-	checkEquals(expOmega, getOmegas(prob1, what = "final"), msg = " |omega final estimates imported as expected")
+	omegas <- getOmegas(prob1, what = "final")
+	expOmega <- array(diag(c(.164, .165, 1.3)), c(3,3), 
+			dimnames = list( c("FALSE", "FALSE", " FALSE"), c("FALSE", "FALSE", " FALSE")))
+	checkEquals(omegas , expOmega, msg = " |omega final estimates imported as expected")
 	
 	# check that sigma final estimates imported as expected
 	
-	expSigma <- array(0.0202, c(1,1), dimnames = list("SIGMA1", "SIGMA1"))
+	expSigma <- array(0.0202, c(1,1), dimnames = list(" FALSE", " FALSE"))
 	checkEquals(getSigmas(run1, what = "final"), expSigma, msg = " |sigma final estimates imported as expected")
 	
 	## check import of data
@@ -78,22 +80,22 @@ test.importNm.Basic <- function()
 	rownames(outDataTest) <- NULL
 	
 	checkEquals(outDataTest, structure(c(1, 1, 65, 65, 0, 1, 10, 12, 8.2032, 113.58, 8.7492, 
-		5.6597, 19.721, 0.0086953, -0.12792, 0.086636, 169.98, 114.57, 
-	7.63, 6.15, 9.0449, 89.979, 7.1931, 4.5225, 0, 24.591, 0.43694, 
-	1.6275, 0, 0.33079, -0.51811, 1.4561, 18.004, 18.004, 20.978, 
-	20.978, 72.62, 72.62, 95.784, 95.784, 2.5569, 2.5569, 0.774, 
-	0.774, 55, 55, 64, 64, 154, 154, 180, 180, 80.97, 80.97, 99.79, 
-	99.79, 1, 1, 1.1, 1.1, 2, 2, 1, 1, 2, 2, 1, 1, 0, 0, 0, 0, 1, 
-	1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 65, 65, 0, 
-	0.33079, 0.51811, 1.4561), .Dim = c(4L, 24L), .Dimnames = list(
-	    NULL, c("ID", "TIME", "IPRED", "IWRES", "DV", "PRED", "RES", 
-	    "WRES", "CL", "V", "KA", "AGE", "HT", "WT", "SECR", "SEX", 
-	    "RACE", "SMOK", "HCTZ", "PROP", "CON", "OCC", "SID", "absWRES"
-	    ))), msg = " |output data correct")
+							5.6597, 19.721, 0.0086953, -0.12792, 0.086636, 169.98, 114.57, 
+							7.63, 6.15, 9.0449, 89.979, 7.1931, 4.5225, 0, 24.591, 0.43694, 
+							1.6275, 0, 0.33079, -0.51811, 1.4561, 18.004, 18.004, 20.978, 
+							20.978, 72.62, 72.62, 95.784, 95.784, 2.5569, 2.5569, 0.774, 
+							0.774, 55, 55, 64, 64, 154, 154, 180, 180, 80.97, 80.97, 99.79, 
+							99.79, 1, 1, 1.1, 1.1, 2, 2, 1, 1, 2, 2, 1, 1, 0, 0, 0, 0, 1, 
+							1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 65, 65, 0, 
+							0.33079, 0.51811, 1.4561), .Dim = c(4L, 24L), .Dimnames = list(
+							NULL, c("ID", "TIME", "IPRED", "IWRES", "DV", "PRED", "RES", 
+									"WRES", "CL", "V", "KA", "AGE", "HT", "WT", "SECR", "SEX", 
+									"RACE", "SMOK", "HCTZ", "PROP", "CON", "OCC", "SID", "absWRES"
+							))), msg = " |output data correct")
 	
 	# check importNm works correctly with dropInputColumns = FALSE
 	run2 <- importNm(conFile = "testdata1.ctl", reportFile = "testdata1.lst", 
-				path = "(internalunit)", dropInputColumns = FALSE)
+			path = "(internalunit)", dropInputColumns = FALSE)
 	
 	run1.inData <- nmData(run1, dataType = "input")
 	run2.inData <- nmData(run2, dataType = "input")
@@ -119,7 +121,7 @@ test.importNm.Basic <- function()
 	checkEquals(obj, 3228.988)
 	
 	# check that importing with missing table files still works -
-
+	
 	run4 <- importNm("TestData1_missingtab.ctl","TestData1.lst" , path = system.file(package = "RNMImport", "unittests/testdata/TestRun"))
 	checkEquals(nmData(run4, dataType = "output"), data.frame(), msg = " |empty output data" )
 	
@@ -235,7 +237,7 @@ test.importNm.SimModel <- function()
 	
 	# ensure that parsed report statements are captured properly
 	# regression tests issue 2387 
-
+	
 	repStatements <- prob@reportStatements
 	# should simply match what is given by importNmReport
 	fullRep <- importNmReport( "../TestSimRun/TestData1SIM.lst", path = "(internalunit)" )
@@ -259,7 +261,7 @@ test.importNm.BasicNM7 <- function()
 	thetaStderr <- getThetas(run1, method = 1, what = "stderrors")
 	omegaStderr <- getOmegas(run1, method = 1, what = "stderrors")
 	sigmaStderr <- getSigmas(run1, method = 1, what = "stderrors") 
-		
+	
 	covMatrixMeth1 <- getEstimateCov( run1, method = 1, corMatrix = TRUE )
 	covMatrixMeth2 <- getEstimateCov( run1, method = 2)
 	
@@ -272,26 +274,25 @@ test.importNm.BasicNM7 <- function()
 			msg = " |thetas imported correctly")
 	
 	# check sigmas
-	
-	checkEquals(allSigmas, list(structure(0.0259, .Dim = c(1L, 1L), .Dimnames = list("SIGMA1", 
-									"SIGMA1"), methodName = "Iterative Two Stage"), structure(0.0266, .Dim = c(1L, 1L), .Dimnames = list(
-									"SIGMA1", "SIGMA1"), methodName = "Stochastic Approximation Expectation-Maximization")),
+	checkEquals(allSigmas, list(structure(0.0259, .Dim = c(1L, 1L), .Dimnames = list(" FALSE", 
+									" FALSE"), methodName = "Iterative Two Stage"), structure(0.0266, .Dim = c(1L, 1L), .Dimnames = list(
+									" FALSE", " FALSE"), methodName = "Stochastic Approximation Expectation-Maximization")),
 			msg = " |sigmas imported correctly")
 	
 	
 	# check omegas
-	
+	fixedInfo <- c("FALSE", "FALSE", " FALSE")
 	checkEquals( allOmegas, 
 			list(structure(c(0.157, 0, 0, 0, 0.162, 0, 0, 0, 0.737), .Dim = c(3L, 
-									3L), .Dimnames = list(c("ETA1", "ETA2", "ETA3"), c("ETA1", "ETA2", 
-											"ETA3")),  methodName = "Iterative Two Stage"), 
+									3L), .Dimnames = list(fixedInfo , fixedInfo ),  
+							methodName = "Iterative Two Stage"), 
 					structure(c(0.145, 0, 0, 0, 0.149, 0, 0, 0, 1.42), .Dim = c(3L, 
-									3L), .Dimnames = list(c("ETA1", "ETA2", "ETA3"), c("ETA1", "ETA2", 
-											"ETA3")), methodName = "Stochastic Approximation Expectation-Maximization")),
+									3L), .Dimnames = list(fixedInfo , fixedInfo ),
+							methodName = "Stochastic Approximation Expectation-Maximization")),
 			msg = " |omegas imported correctly")
 	
 	checkEquals(sigmaStderr
-					, structure(0.000746, .Dim = c(1L, 1L), .Dimnames = list("EPS1", 
+			, structure(0.000746, .Dim = c(1L, 1L), .Dimnames = list("EPS1", 
 							"EPS1"), methodName = "Iterative Two Stage"))
 	checkEquals(omegaStderr, structure(c(0.0426, 0, 0, 0, 0.0483, 0, 0, 0, 0.201), .Dim = c(3L, 
 							3L), .Dimnames = list(c("ETA1", "ETA2", "ETA3"), c("ETA1", "ETA2", 
@@ -300,7 +301,7 @@ test.importNm.BasicNM7 <- function()
 	checkEquals( getObjective(run1, method = 1:2, addMinInfo = FALSE), c(3335.250, 2339.093) )
 	
 	# all shrinkages
-
+	
 	ETAShrinks <- lapply(as.numeric(1:2), function(i) getOmegas(run1, method = i, what = "shrinkage"))
 	EPSShrinks <- lapply(as.numeric(1:2), function(i) getSigmas(run1, method = i, what = "shrinkage"))
 	
@@ -316,7 +317,7 @@ test.importNm.BasicNM7 <- function()
 	expectedIter <- importNm7Tables("TestData1.EXT", path = file.path(RNMImport:::getUnitTestPath(), "testdata/TestDataNM7"), type = "ext")
 	checkEquals(iter[[1]], expectedIter[[1]], check.attributes = FALSE, "msg = | iterations imported correctly")
 	checkEquals(iter[[2]], expectedIter[[2]], check.attributes = FALSE, "msg = | iterations imported correctly")
-
+	
 	run2 <- importNm("TestData1_missingtab.ctl","TestData1.lst" , path = system.file(package = "RNMImport", "unittests/testdata/TestDataNM7"))
 	
 	checkEquals(nmData(run2, dataType = "output"), data.frame(), msg = " |empty output data" )
