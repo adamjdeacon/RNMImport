@@ -31,11 +31,15 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 	
 	# import output tables if the $TABLE statement is present, else outdata is empty
 	
-	outTables <- .importTablesSafely(controlStatements$Table, path = path  )
+	outTables <- 
+			.importTablesSafely(tableStatement=controlStatements$Table, path = path  )
 	
 	# need to know how many rows the data has, handle FIRSTONLY case here
-	if(inherits(outTables, "list")) nOutDataRows <- max(sapply(outTables, nrow))
-	else nOutDataRows <- nrow(outTables)
+	if(inherits(outTables, "list")){
+		nOutDataRows <- max(sapply(outTables, nrow))
+	} else {
+		nOutDataRows <- nrow(outTables)
+	}
 	nInDataRows <- nrow(inData)
 	if(nInDataRows != nOutDataRows)
 		RNMImportWarning("Number of rows of output data does not match the number of rows of input data!!\n", match.call())
@@ -58,6 +62,7 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 				
 				# grab parameter initial values
 				thetaInitial <- t(controlStatements$Theta)
+				rownames(thetaInitial) <- c("lowerBound", "initial", "upperBound")
 				
 				# these may be missing in the control statements, so try to extract them from the reportContents
 				omegaInitial <- if(!is.null(controlStatements$Omega)) controlStatements$Omega  else  MethodResults[[1]]$initialEstimates$OMEGA
@@ -76,7 +81,6 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 				
 				sigmaInitial <- controlStatements$Sigma
 				if(is.null(sigmaInitial)) sigmaInitial <- matrix()
-				rownames(thetaInitial) <- c("lowerBound", "initial", "upperBound")
 				
 				# get standard errors
 				stdErrors <- lapply(MethodResults, "[[", "StandardError")

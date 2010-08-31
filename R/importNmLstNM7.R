@@ -16,14 +16,17 @@
 {
 	blockResult <- list(  )
 	blockResult$method <- attr(methodTextBlock, "method.name")
-	
+#	cat(blockResult$method,'\n')
 	# retrieve objective function value
 	
 	objFinalLine <- grep(methodTextBlock, pattern = "#OBJV", value = TRUE)
 	if(length(objFinalLine)< 1){
-		message <- 'No #OBJV tag found'
-		warning(message, immediate. = TRUE )
-		return(NULL)
+		message <- paste('No #OBJV tag found for', attr(methodTextBlock, "method.name"),
+				'in .importMethodBlock')
+		warning(message, call. = FALSE, immediate. = TRUE )
+		blockResult$TermStatus <- message
+		blockResult$Objective.Final <- NA
+		return(blockResult)
 	}
 	objFinalValueLoc <- 
 			gregexpr(objFinalLine, pattern = "-{0,1}[0-9\\.]+")
@@ -34,7 +37,7 @@
 	
 	# retrieve termination status
 	termStatusLineNum <- grep(methodTextBlock, pattern = "#TERM")[1] + 1
-	# browser()
+
 	# termStatusFinalLineNum <- grep(tail(methodTextBlock, -termStatusLineNum), pattern = "^[[:space:]]*$")[1]
 	blockResult$TermStatus <- gsub(methodTextBlock[termStatusLineNum], pattern = "^[[:space:]]+", replacement = "")
 	
@@ -114,7 +117,7 @@ importNmReport.NM7 <- function( content, textReport = FALSE )
 		# check for the presence of  SIMULATION STEP PERFORMED
 		simStep <- any(regexMatches("SIMULATION STEP PERFORMED", txt= currentProb))
 		# check for value of objective function
-		objFun <- any(regexMatches("MINIMUM VALUE OF OBJECTIVE FUNCTION", txt = currentProb))
+		objFun <- any(regexMatches("OBJECTIVE FUNCTION EVALUATION|MINIMUM VALUE OF OBJECTIVE FUNCTION", txt = currentProb))
 		# simulation + model
 		if(simStep & objFun)
 		{	
@@ -128,6 +131,11 @@ importNmReport.NM7 <- function( content, textReport = FALSE )
 		{	
 			RNMImportWarning( "This is a simulation without modelling step, will only return raw contents\n", match.call() )
 			problemResults[[i]] <- character(0)
+		}
+		# no data simulation,  EST step (JJ)
+		else if(!simStep & objFun)
+		{	
+			problemResults[[i]] <- .importNmLstBasicProb.NM7(contents=currentProb)
 		}
 		else
 		{

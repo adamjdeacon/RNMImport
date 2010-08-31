@@ -2,13 +2,11 @@
 .extractInformation <- function( x, guessNames = TRUE, rx = .getPattern('omegas'))
 {
 	# extract comments	
+#	browser('.extractInformation')
 	comments <- commentPop( x, inPlace = TRUE ) 
 	# check for the presence of "FIXED"
 	fixedOMEGAS <- fixed <- logicalPop( x, "FIXE?D?", inPlace = TRUE) 
-	if(length(fixedOMEGAS)!=length(x)){
-		fixedOMEGAS <- rep(fixedOMEGAS, length(x))
-	}
-		
+
 	if( !is.null( comments) && guessNames )
 	{
 		guess <- ogrep( rx, comments, filter = "\\1")
@@ -47,6 +45,8 @@
 						dimNames[i]  <- paste(comments[i + 1:i -1], collapse='&%&')
 					dimnames(out) <- rep(list(dimNames), 2)
 					attr(out, 'comments') <- comments
+				} else {
+					dimnames(out)<- list(rep(' ', dim(out)[1]),rep(' ', dim(out)[2]) )
 				}
 			} else {
 				dimnames(out)<- list(rep(' ', dim(out)[1]),rep(' ', dim(out)[2]) )
@@ -67,13 +67,22 @@
 		}
 		
 	}
-#	browser()
+	
+#	get size of OMEGAS
 	dim1 <- dim(out)[1]
-	# looking for 
+# 	looking for this number of names etc. 
 	half <- dim1*(dim1 + 1)/2
-	dimNames <- vector()
+	
+#	If there is no mention of FIX then replicate FALSE the necessary number of times
+	if(length(fixedOMEGAS)!=half){
+		fixedOMEGAS <- rep(fixedOMEGAS, half)
+	}
+	
+#	If there is a comment however on the $OMEGA line but no OMEGAVALUE actuall specified there
 	if(length(fixedOMEGAS) == half + 1 )
 		fixedOMEGAS <- fixedOMEGAS[-1]
+	
+	dimNames <- vector()
 	if(length(fixedOMEGAS) == half )
 	{
 		for(i in 1:dim1)
@@ -115,10 +124,14 @@
 	if( is.null( txt)) return(NULL)
 	
 	### import the OMEGA declarations                                             
-	omegas <- if(.extract) section( txt, component, "", strip = TRUE ) else txt
-	
+	omegas <- if(.extract) {
+				section( txt, component, "", strip = TRUE ) 
+			} else {
+				txt
+			}
 	### each $OMEGA is a separate block
 	# this is somewhat complex because omegas can be specified in different ways
+	
 	mList <- 
 			lapply( omegas, 
 					.extractInformation, guessNames = guessNames, rx = .getPattern(paste(tolower(component),'s',sep='')))

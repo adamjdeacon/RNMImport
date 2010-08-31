@@ -24,12 +24,12 @@ getSigmasOrOmegas.NM7 <- function(obj, what = "final", item = c("sigma", "omega"
 	
 	if(length(invalidWhat)) RNMImportWarning("Invalid items chosen:" %pst% paste(invalidWhat, collapse = ","))
 	item <- match.arg(item)
-#	item <- "omega"
+#	item <- "omega"; probType<- 'basic'
 	probType <- match.arg(probType)
 	
 	# function to retrieve objects for a single method
 	
-	.getSigOrOmSingleMethod <- function(meth = 1)
+	.getSigOrOmSingleMethod <- function(meth = 1, item=NULL)
 	{
 		# restrict the method chosen to a valid one
 		
@@ -37,7 +37,6 @@ getSigmasOrOmegas.NM7 <- function(obj, what = "final", item = c("sigma", "omega"
 		#capture the report file name of the method
 		
 		methodName <- obj@methodNames[methodChosen]
-		
 		
 		if(item == "sigma")
 		{
@@ -67,34 +66,52 @@ getSigmasOrOmegas.NM7 <- function(obj, what = "final", item = c("sigma", "omega"
 			oneByOne <- all(dim(final)[1:2] == c(1,1) )
 			finalEstimates <- final
 			if(oneByOne) finalEstimates <- matrix(finalEstimates, dimnames = dimnames(final)[1:2])
-		}
-		else
+		} else {
 			finalEstimates <- NULL
+		}
+		
 		if(!is.null(stdErrs[[methodChosen]]))
 		{
 			stdErrors <- stdErrs[[methodChosen]]
 			if(oneByOne) stdErrors <- matrix(stdErrors, dimnames = dimnames(final)[1:2])
+		} else {
+			stdErrors <- NULL
 		}
-		else stdErrors <- NULL
+		
 		shrinkage <- shrinks[[methodChosen]]
 		
 		# initial value depends on the number of the method 
 		
-		if(methodChosen == 1)
+		if(methodChosen == 1){
 			initialValues <- initials
-		else initialValues <- finals[[methodChosen - 1]]
+		} else {
+			initialValues <- finals[[methodChosen - 1]]
+		}
 		
-		if( length(final) > 0 && oneByOne ) initialValues <- matrix(initialValues, dimnames = dimnames(final)[1:2])
+		if( length(final) > 0 && oneByOne ) 
+			initialValues <- matrix(initialValues, dimnames = dimnames(final)[1:2])
 		
 		# no valid option selected, thrown an error
 		if(length(validWhat) == 0) RNMImportStop("No valid items selected for retrieval!", call = match.call())
 		
 		# single object selected, don't return a list
 		
-		if(!is.null(initialValues))
-			dimnames(initialValues) <- dimNames
-		if(!is.null(finalEstimates))
-			dimnames(finalEstimates) <- dimNames
+		if('Prior' %in% names(obj@controlStatements)){
+			useEta <- 1:length(dimNames[[1]])
+			if(item==	'omega'){
+				useEta <- 1:obj@controlStatements$Prior['nEta']
+			}
+			if(!is.null(initialValues))
+				dimnames(initialValues) <- list(dimNames[[1]][useEta], dimNames[[2]][useEta])
+			if(!is.null(finalEstimates))
+				dimnames(finalEstimates) <- dimNames
+			
+		} else {
+			if(!is.null(initialValues))
+				dimnames(initialValues) <- dimNames
+			if(!is.null(finalEstimates))
+				dimnames(finalEstimates) <- dimNames
+		}
 		
 		if(length(validWhat) == 1)
 		{
@@ -128,7 +145,7 @@ getSigmasOrOmegas.NM7 <- function(obj, what = "final", item = c("sigma", "omega"
 		res
 	}
 	
-	.getSigOrOmSingleMethodSim <- function(meth = 1)
+	.getSigOrOmSingleMethodSim <- function(meth = 1, item=NULL)
 	{
 		# select the method
 		methodChosen <- .selectMethod(obj@methodNames, meth)
@@ -178,15 +195,19 @@ getSigmasOrOmegas.NM7 <- function(obj, what = "final", item = c("sigma", "omega"
 		res
 	}
 	
-	retrievalFunc <- if(probType == "sim") .getSigOrOmSingleMethodSim else .getSigOrOmSingleMethod
+	if(probType == "sim") {
+		retrievalFunc <- .getSigOrOmSingleMethodSim
+	} else {
+		retrievalFunc <- .getSigOrOmSingleMethod	
+	}
 	
 	if(length(method) > 1) 
 	{
 		# if more than one method selected, extract all of them
-		x <- lapply(method, retrievalFunc)
+		x <- lapply(method, retrievalFunc, item)
 		# names(x) <- paste("METHOD", seq_along(obj@methodNames), sep = "")
 		x
 	}
 	else
-		retrievalFunc(method)
+		retrievalFunc(method, item)
 }

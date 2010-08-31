@@ -21,14 +21,13 @@
 	{	
 		logMessage(log = "lowLevelParse", "$PRIOR found \n")
 		prob$Prior <- .importNmModPrior( contents )
-		if(attr(prob$Prior, "NWPRI") == TRUE)
-			RNMImportStop("$PRIOR NWPRI statement detected.  Importing of this is not supported, so will halt.\n", match.call())
+# 		handle case with priors here, else ignore
+#		if(attr(prob$Prior, "NWPRI") == TRUE)
+#			RNMImportStop("$PRIOR NWPRI statement detected.  Importing of this is not supported, so will halt.\n", match.call())
 		
-		# handle case with priors here, else ignore
 	}
 	
 	# deal with parameters
-	
 	prob$Theta <- if( "THE" %in% titles | "THT" %in% titles ) .importNmModTheta( contents )
 	prob$Omega <- if("OME" %in% titles ) .importNmModOmega( contents, component = "OMEGA")
 	prob$Sigma <- if( "SIG" %in% titles ) .importNmModOmega( contents, component = "SIGMA" )

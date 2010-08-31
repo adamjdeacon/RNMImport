@@ -27,8 +27,6 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 	# TODO: uncomment following verification
 	# conFile <- .windowsToLower(conFile)
 	# reportFile <- .windowsToLower(reportFile)
-	
-	
 	logMessage(logName = "detailedReport", paste("Importing control file", conFile, "\n"))
 	#deal with the 	"path" parameter
 	if(!is.null(path))
@@ -48,13 +46,13 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 		conFileVector <- strsplit(conFile, split = "\\.")[[1]]
 		allListFiles <- list.files(path)
 		whichFile <- sapply(strsplit(allListFiles, split = "\\."), function(x, y)
-							{
-								#Condition 1 to test the correct file extension
-								conOne <- casefold(x[length(x)]) %in% getNmFileExtensions("report")
-								#Condition 2 to test the correct names (multiple .s allowed)
-								conTwo <- ifelse(length(x) == length(y), all(x[-length(x)] == y[-length(x)]), FALSE)
-								conOne && conTwo
- 							}, y = conFileVector)
+				{
+					#Condition 1 to test the correct file extension
+					conOne <- casefold(x[length(x)]) %in% getNmFileExtensions("report")
+					#Condition 2 to test the correct names (multiple .s allowed)
+					conTwo <- ifelse(length(x) == length(y), all(x[-length(x)] == y[-length(x)]), FALSE)
+					conOne && conTwo
+				}, y = conFileVector)
 		reportFile <- allListFiles[whichFile]
 		if(!length(reportFile))
 			RNMImportStop(msg = "No report file in the directory!")
@@ -72,8 +70,8 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 	# read the control file contents
 	
 	# read in the list file contents.  Note that they should only be omitted in the case of a single SIMONLY run
-	reportContents <- importNmReport(reportFile, path = path, textReport = textReport)
-	
+#	importNmReport(fileName, path = NULL, controlStatements = NULL, textReport = FALSE)
+	reportContents <- importNmReport(fileName=reportFile, path = path, controlStatements = NULL, textReport = textReport)
 	probResults <- reportContents$problemResults
 	
 	# capture the version
@@ -81,7 +79,7 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 	nmVersionMinor <- as.numeric(reportContents$VersionInfo[2])
 	versionInfo <- c(nmVersionMajor,  as.character(nmVersionMinor))
 	names(versionInfo) <- c("major", "minor")
-
+	
 	# read the control file contents, using the appropriate version
 	
 	controlContents <- importNmMod(fileName=conFile,  
@@ -92,7 +90,7 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 	numProblems <- length(problems)
 	
 	modelList <- vector(mode = "list", length = numProblems)
-		
+	
 	# iterate through the problems
 	for(i in 1:numProblems)
 	{
@@ -112,12 +110,14 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 		} # end !is.null(controlStatements$Sim)
 		else
 		{			 			
-			if(nmVersionMajor == "VII")
-				modelList[[i]] <- NMBasicModelNM7(controlStatements, path, reportStatements, 
+			if(nmVersionMajor == "VII"){
+				modelList[[i]] <- NMBasicModelNM7(controlStatements, path, 
+						reportContents = reportStatements, 
 						dropInputColumns = dropInputColumns, versionInfo = versionInfo)
+			} 
 			else
 				modelList[[i]] <- NMBasicModel(controlStatements, path, reportStatements, 
-					dropInputColumns = dropInputColumns, versionInfo = versionInfo)
+						dropInputColumns = dropInputColumns, versionInfo = versionInfo)
 		}
 		# set the subset for graphing - note that this should probably be dropped in the future
 		# and replaced with the data subset only.

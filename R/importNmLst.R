@@ -272,7 +272,7 @@ importNmReport <- function( fileName, path = NULL, controlStatements = NULL, tex
 	versionInfo <- nmVersion(content)
 	# check if the version is NONMEM 7.  If so, import with importNmReport.NM7
 	if(substr(versionInfo[1], start = 1, stop = 1) == "7")
-		return(importNmReport.NM7(content, textReport = textReport))
+		return(importNmReport.NM7(content=content, textReport = textReport))
 	
 	# if content is NULL, return NULL
 	

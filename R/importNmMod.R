@@ -74,7 +74,6 @@ importNmMod <- function(
 	# TODO: The logic for handling the additional problems probably needs to be dealt with elsewhere.
 	# For example, a simulation that follows a normal problem might need access to the THETAs from the previous
 	# estimation (which are found in the report file)
-	
 	problemContents[[1]] <- 
 			.importSingleProb(contents=problemTexts[[1]], fileName)
 	
