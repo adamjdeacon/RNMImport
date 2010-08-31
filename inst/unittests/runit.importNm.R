@@ -47,9 +47,10 @@ test.importNm.Basic <- function()
 	# test that omega final estimates imported as expected
 	
 	"%pst%" <- RNMImport:::"%pst%"
+	fixed <- c(" FALSE", " FALSE.FALSE", " FALSE")
 	omegas <- getOmegas(prob1, what = "final")
 	expOmega <- array(diag(c(.164, .165, 1.3)), c(3,3), 
-			dimnames = list( c("FALSE", "FALSE", " FALSE"), c("FALSE", "FALSE", " FALSE")))
+			dimnames = list( fixed, fixed))
 	checkEquals(omegas , expOmega, msg = " |omega final estimates imported as expected")
 	
 	# check that sigma final estimates imported as expected
@@ -281,7 +282,8 @@ test.importNm.BasicNM7 <- function()
 	
 	
 	# check omegas
-	fixedInfo <- c("FALSE", "FALSE", " FALSE")
+	dimnames(allOmegas[[1]])
+	fixedInfo <- c(" FALSE", " FALSE.FALSE", " FALSE")
 	checkEquals( allOmegas, 
 			list(structure(c(0.157, 0, 0, 0, 0.162, 0, 0, 0, 0.737), .Dim = c(3L, 
 									3L), .Dimnames = list(fixedInfo , fixedInfo ),  

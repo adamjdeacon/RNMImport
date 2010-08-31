@@ -20,12 +20,13 @@
 	else {
 		# try to import, and if one can't, catch the error and return an empty data.frame
 		lookFor <- names(tableStatement)[min(grep('^File*', names(tableStatement)))]
-		if(!file.exists(tableStatement[,lookFor])){
-			RNMImportWarning(paste('cannot find', tableStatement[lookFor]))
-			outTables <- data.frame()
-		} else {
-			outTables <- try(importModelOutputTables( tableStatement , path = path )) 
+		missingFiles <- which(!file.exists(file.path(path, tableStatement[,lookFor])))
+		if(length(missingFiles)>0){
+			msg <- 
+					paste('cannot find', paste(tableStatement[missingFiles,lookFor], collapse=','))
+			RNMImportWarning(msg)
 		}
+		outTables <- try(importModelOutputTables( tableStatement , path = path )) 
 		if( inherits( outTables, "try-error" ) )
 		{
 			RNMImportWarning("Unable to import table files, will use empty output data set \n")

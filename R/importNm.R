@@ -62,7 +62,6 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 			reportFile <- reportFile[1]
 		}		
 	}else{
-		
 		reportFile <- basename(reportFile)
 		path <- dirname(fullConFilePath)
 	}

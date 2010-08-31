@@ -123,7 +123,7 @@ test.getOmegas <- function()
 	expOmegas <- array(c(0.164, 0, 0, 0, 0.165, 0, 0, 0, 1.3), c(3,3))
 #	dimnames(expOmegas) = list(c("ETA1", "ETA2", "ETA3"), c("ETA1", "ETA2", "ETA3"), "estimates)
 	
-	isFixed <- c("FALSE",  "FALSE",  " FALSE")
+	isFixed <- c(" FALSE",  " FALSE.FALSE",  " FALSE")
 	dimnames(expOmegas) = list(isFixed , isFixed )
 	expOmegaInit <- diag(c(0.128, 0.142, 1.82))
 	dimnames(expOmegaInit) = list(isFixed , isFixed )
