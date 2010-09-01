@@ -26,7 +26,6 @@
 #			RNMImportStop("$PRIOR NWPRI statement detected.  Importing of this is not supported, so will halt.\n", match.call())
 		
 	}
-	
 	# deal with parameters
 	prob$Theta <- if( "THE" %in% titles | "THT" %in% titles ) .importNmModTheta( contents )
 	prob$Omega <- if("OME" %in% titles ) .importNmModOmega( contents, component = "OMEGA")

@@ -40,9 +40,17 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 	} else {
 		nOutDataRows <- nrow(outTables)
 	}
+	if(is.null(nOutDataRows))
+		nOutDataRows <- 0
+	
 	nInDataRows <- nrow(inData)
-	if(nInDataRows != nOutDataRows)
-		RNMImportWarning("Number of rows of output data does not match the number of rows of input data!!\n", match.call())
+	if(nInDataRows != nOutDataRows){
+		msg <- paste("Number of rows of output data", nOutDataRows, 
+				"\ndoes not match the number of rows of input data", nInDataRows,
+				"!\n")
+		cat(msg)
+		RNMImportWarning(msg)
+	}
 	
 	# automatically import NONMEM7-generated iterations from files if available:
 	estStatement <- controlStatements$Estimates
@@ -55,14 +63,15 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 	}
 	with(reportContents,
 			{
-
 				# check for the covariance/correlation matrices
 				covMatrices <- lapply(MethodResults, "[[", "CovarianceMatrix")
 				corMatrices <- lapply(MethodResults, "[[", "CorrelationMatrix")
 				
 				# grab parameter initial values
-				thetaInitial <- t(controlStatements$Theta)
-				rownames(thetaInitial) <- c("lowerBound", "initial", "upperBound")
+				thetaInitial <- 
+						if(!is.null(controlStatements$Theta)) t(controlStatements$Theta) else  NULL
+				if(!is.null(thetaInitial))
+					rownames(thetaInitial) <- c("lowerBound", "initial", "upperBound")
 				
 				# these may be missing in the control statements, so try to extract them from the reportContents
 				omegaInitial <- if(!is.null(controlStatements$Omega)) controlStatements$Omega  else  MethodResults[[1]]$initialEstimates$OMEGA
@@ -95,7 +104,7 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 				omegaFinal <- lapply(MethodResults, function(x) x$FinalEstimates$OMEGA)
 				sigmaFinal <- lapply(MethodResults, function(x) x$FinalEstimates$SIGMA)					
 				
-			#	colnames(thetaFinal) <- colnames(thetaInitial)
+				#	colnames(thetaFinal) <- colnames(thetaInitial)
 				
 				objectiveFinal <- sapply(MethodResults, "[[", "Objective.Final")
 				methodsUsed <- sapply(MethodResults, "[[", "method")

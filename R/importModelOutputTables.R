@@ -67,16 +67,16 @@ importModelOutputTables <- function(
 			colNames <- c(colNames, APPENDEDCOLUMNS)
 		}
 		newColNames <- setdiff(colNames, allColNames)
-				
-				
+		
+		
 		if(length(newColNames))
 		{
 			if(length(colNames)> length(colnames(currentTable))){
 				currentTable <- 
 						cbind(currentTable, 
 								data.frame(matrix(NA,
-										nrow=dim(currentTable)[1],
-										ncol=(length(colNames)-length(colnames(currentTable))))))
+												nrow=dim(currentTable)[1],
+												ncol=(length(colNames)-length(colnames(currentTable))))))
 			}
 			colnames(currentTable)[1:length(colNames)] <- colNames
 			
@@ -91,7 +91,7 @@ importModelOutputTables <- function(
 		{
 			logMessage("Firstonly flag found, subsetting rows", "detailedReport")
 			attr(currentTable, FIRSTONLYFIELD) <- TRUE
-
+			
 		}
 		
 		else if(!allowFirstOnly & tableStatement[i, FIRSTONLYFIELD])
@@ -107,22 +107,27 @@ importModelOutputTables <- function(
 		return(tableList)
 	else
 	{
-
-		# determine the "FIRSTONLY" tables, as these cannot be bound together with the other ones due to the size difference
-		tableStyles <- sapply(tableList, function(x) attr(x, FIRSTONLYFIELD))
-		normalTables <- tableList[!tableStyles]
-		firstOnlyTables <- tableList[tableStyles]
-		
-		consolidatedTable <- do.call(cbind, normalTables)
-		if(!trim)
-			consolidatedTable <- .deriveNmColumns(consolidatedTable)
-		# Check if there are both FIRSTONLY and non-FIRSTONLY tables
-		if((sum(tableStyles) * sum(!tableStyles) > 0))
-		{
-			RNMImportWarning("Found tables of both FIRSTONLY and NON-FIRSTONLY type, returning a list")
-			return(list("normal.tables" = consolidatedTable, "firstonly.tables" = do.call(cbind, firstOnlyTables)))
+		if(is.na(tableList[[1]])){
+			return(NULL)
+			
+		} else {
+			
+			# determine the "FIRSTONLY" tables, as these cannot be bound together with the other ones due to the size difference
+			tableStyles <- sapply(tableList, function(x) attr(x, FIRSTONLYFIELD))
+			normalTables <- tableList[!tableStyles]
+			firstOnlyTables <- tableList[tableStyles]
+			
+			consolidatedTable <- do.call(cbind, normalTables)
+			if(!trim)
+				consolidatedTable <- .deriveNmColumns(consolidatedTable)
+			# Check if there are both FIRSTONLY and non-FIRSTONLY tables
+			if((sum(tableStyles) * sum(!tableStyles) > 0))
+			{
+				RNMImportWarning("Found tables of both FIRSTONLY and NON-FIRSTONLY type, returning a list")
+				return(list("normal.tables" = consolidatedTable, "firstonly.tables" = do.call(cbind, firstOnlyTables)))
+			}
+			else
+				return(consolidatedTable)
 		}
-		else
-			return(consolidatedTable)
 	}
 }

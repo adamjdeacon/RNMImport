@@ -3,7 +3,8 @@
 {
 	# extract comments	
 #	browser('.extractInformation')
-	comments <- commentPop( x, inPlace = TRUE ) 
+	comments <- commentPop( x, inPlace = TRUE )
+	comments<- stripBlanks( comments)
 	# check for the presence of "FIXED"
 	fixedOMEGAS <- fixed <- logicalPop( x, "FIXE?D?", inPlace = TRUE) 
 
@@ -42,7 +43,7 @@
 				{
 					dimNames <- vector()
 					for(i in 1:dim1)
-						dimNames[i]  <- paste(comments[i + 1:i -1], collapse='&%&')
+						dimNames[i]  <- paste(comments[i + 1:i -1], collapse='|')
 					dimnames(out) <- rep(list(dimNames), 2)
 					attr(out, 'comments') <- comments
 				} else {
@@ -86,7 +87,7 @@
 	if(length(fixedOMEGAS) == half )
 	{
 		for(i in 1:dim1)
-			dimNames[i]  <- paste(fixedOMEGAS[i + 1:i -1], collapse='.')
+			dimNames[i]  <- paste(fixedOMEGAS[i + 1:i -1], collapse='|')
 	}
 	dimnames(out)<- list( paste(dimnames(out)[[1]],dimNames), paste(dimnames(out)[[2]],dimNames))
 #	print(out)

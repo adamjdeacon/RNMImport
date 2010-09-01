@@ -68,7 +68,7 @@
 		numberpoints <- equalExpressionPop( th, "NUM", shortcut = TRUE, inPlace = TRUE)
 		
 		### import the FIXED  option                                                
-		fixedTHETAS[i] <-fixed <- logicalPop( th, "FIX", inPlace = TRUE)
+		fixedTHETAS[i] <- fixed <- logicalPop( th, "FIX", inPlace = TRUE)
 		
 		### guess the kind of theta line                                            
 		th <- gsub( "[\\(\\)]", "", th) # remove the brackets       

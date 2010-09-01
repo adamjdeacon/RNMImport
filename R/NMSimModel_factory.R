@@ -20,7 +20,7 @@ NMSimModel <- function(controlStatements, path, reportContents, versionInfo = c(
 		inData <- data.frame()
 	} # end if(inherits(inData, "try-error"))
 
-	outTables <- .importTablesSafely(controlStatements$Table, path = path  )
+	outTables <- .importTablesSafely(tableStatement=controlStatements$Table, path = path  )
 
 	# if the output tables are a "list", then there was a FIRSTONLY statment, or for some other reason
 	# the number of rows of all of the output tables were not equivalent

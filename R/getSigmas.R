@@ -23,6 +23,7 @@ setGeneric("getSigmas")
 
 getSigmas.NMBasicModel <- function(obj, what = "final",  subProblemNum = 1, method = 1, problemNum = 1)
 {
+	
 	validWhat <- intersect(what, PARAMITEMS)
 	invalidWhat <- setdiff(what, PARAMITEMS)
 	
@@ -30,7 +31,12 @@ getSigmas.NMBasicModel <- function(obj, what = "final",  subProblemNum = 1, meth
 	
 	sigmas <- obj@sigmaFinal
 	oneByOne <- all(dim(sigmas)[1:2] == c(1,1) )
-	finalEstimates <- sigmas[,,"estimates", drop = TRUE]
+	if(all(dim(sigmas)==c(1,1,1))){
+		finalEstimates <- sigmas[,,1, drop=TRUE]
+	} else {
+		finalEstimates <- sigmas[,,"estimates", drop = TRUE]
+	}
+
 	if(oneByOne) finalEstimates <- matrix(finalEstimates, dimnames = dimnames(sigmas)[1:2])
 	if("standardErrors" %in% dimnames(sigmas)[[3]]) 
 	{
@@ -39,6 +45,7 @@ getSigmas.NMBasicModel <- function(obj, what = "final",  subProblemNum = 1, meth
 	}
 	else
 		stdErrors <- NULL
+	
 	initialValues <- obj@sigmaInitial
 	if(oneByOne) initialValues <- matrix(initialValues, dimnames = dimnames(sigmas)[1:2])
 	

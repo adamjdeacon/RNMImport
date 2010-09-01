@@ -26,8 +26,9 @@
 					paste('cannot find', paste(tableStatement[missingFiles,lookFor], collapse=','))
 			RNMImportWarning(msg)
 		}
+#		Changed the behaviour of importModelOutputTables to handle missing files more informatively
 		outTables <- try(importModelOutputTables( tableStatement , path = path )) 
-		if( inherits( outTables, "try-error" ) )
+		if( inherits( outTables, "try-error" ) | is.null(outTables))
 		{
 			RNMImportWarning("Unable to import table files, will use empty output data set \n")
 			outTables <- data.frame()

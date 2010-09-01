@@ -95,7 +95,9 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 	{
 		controlStatements <- problems[[i]]
 		reportStatements <- probResults[[i]]
+
 		# check if there is a simulation statement.  If so, proceed accordingly
+		
 		if(!is.null(controlStatements$Sim))
 		{			
 			# there is a simulation statement, so check if it is a "simulation only" run, or a simulation+model fitting run

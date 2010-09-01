@@ -218,7 +218,7 @@ nmData.NMRun <- function(obj, dataTypes = c("input", "output") , returnMode = c(
 		subset = NULL, problemNum = 1, subProblemNum = NA)
 {
 	returnMode <- match.arg(returnMode)
-	nmData(getProblem(obj, problemNum),dataTypes,returnMode, subset = subset, subProblemNum)
+	nmData(getProblem(obj, problemNum), dataTypes,returnMode, subset = subset, subProblemNum)
 }
 
 setMethod("nmData", signature(obj = "NMRun"), nmData.NMRun)
