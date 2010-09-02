@@ -74,6 +74,7 @@ importNmMod <- function(
 	# TODO: The logic for handling the additional problems probably needs to be dealt with elsewhere.
 	# For example, a simulation that follows a normal problem might need access to the THETAs from the previous
 	# estimation (which are found in the report file)
+
 	problemContents[[1]] <- 
 			.importSingleProb(contents=problemTexts[[1]], fileName)
 	
@@ -108,9 +109,9 @@ importNmMod <- function(
 	
 	# deal with THETAs
 	
-	prob$Theta <- if( "THE" %in% titles | "THT" %in% titles ) .importNmModTheta( contents )
-	prob$Omega <- if("OME" %in% titles ) .importNmModOmega( contents, component = "OMEGA")
-	prob$Sigma <- if( "SIG" %in% titles ) .importNmModOmega( contents, component = "SIGMA" )
+	prob$Theta <- if( "THE" %in% titles | "THT" %in% titles ) .importNmModTheta( txt = contents )
+	prob$Omega <- if("OME" %in% titles ) .importNmModOmega( txt = contents, component = "OMEGA")
+	prob$Sigma <- if( "SIG" %in% titles ) .importNmModOmega( txt = contents, component = "SIGMA" )
 	
 	# extract any raw FORTRAN code
 	prob$Script <- fortranPop(poppedTxt, inPlace = TRUE)

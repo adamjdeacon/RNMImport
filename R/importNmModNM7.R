@@ -27,9 +27,9 @@
 		
 	}
 	# deal with parameters
-	prob$Theta <- if( "THE" %in% titles | "THT" %in% titles ) .importNmModTheta( contents )
-	prob$Omega <- if("OME" %in% titles ) .importNmModOmega( contents, component = "OMEGA")
-	prob$Sigma <- if( "SIG" %in% titles ) .importNmModOmega( contents, component = "SIGMA" )
+	prob$Theta <- if( "THE" %in% titles | "THT" %in% titles ) .importNmModTheta( txt=contents )
+	prob$Omega <- if("OME" %in% titles ) .importNmModOmega( txt=contents, component = "OMEGA")
+	prob$Sigma <- if( "SIG" %in% titles ) .importNmModOmega( txt=contents, component = "SIGMA" )
 	# extract any raw FORTRAN code
 	prob$Script <- fortranPop(poppedTxt, inPlace = TRUE)
 	

@@ -9,11 +9,11 @@ test.importNmModOmega <- function(){
 	nonames.matrix <- RNMImport:::nonames.matrix
 	test <- RNMImport:::.importNmModOmega( "0.02" )
 	checkEquals( test, 
-			matrix(0.02, dimnames = rep(list(" FALSE"), 2) ) , msg = "single object")
+			matrix(0.02, dimnames = rep(list("OMEGA11  FALSE"), 2) ) , msg = "single object")
 	
 	test <- RNMImport:::.importNmModOmega( " 0.02 FIXED ") 
 	checkEquals( test,  
-			matrix(0.02, dimnames = rep(list(" TRUE"), 2) ) , msg = "single object, fixed ")
+			matrix(0.02, dimnames = rep(list("OMEGA11  TRUE"), 2) ) , msg = "single object, fixed ")
 	
 	out3 <- RNMImport:::.importNmModOmega( c(" 0.2 0.2 0.15  ") )
 
@@ -23,7 +23,7 @@ test.importNmModOmega <- function(){
 	
 	out4 <- RNMImport:::.importNmModOmega( c("BLOCK (1) 0.0102 ","BLOCK (1)  0.0147 ","BLOCK (1)  0.0212 "))
 	expec4 <- cbind( c(0.0102,0,0) , c(0,0.0147,0) , c(0,0,0.0212) ) 
-	checkEquals( rownames(out4), sprintf(rep("  FALSE", 3), msg = "dimnames" ))
+	checkEquals( rownames(out4), paste("OMEGA", 1:3, 1:3,  "  FALSE", sep=''), msg = "dimnames" )
 	checkEquals( nonames(out4), diag(  c( 0.0102, 0.0147, 0.0212)  ) , msg = "diag")
 	
 	out5 <- RNMImport:::.importNmModOmega( 
@@ -47,7 +47,9 @@ test.importNmModOmega <- function(){
 			c(0,0,0,0,0,0,0,0.21,0,0) , 
 			c(0,0,0,0,0,0,0,0,0.21,0) , 
 			c(0,0,0,0,0,0,0,0,0,0.5) )
-	checkEquals( rownames(out5), c(" FALSE", " FALSE", " TRUE",  "  FALSE", " FALSE", " FALSE" ,"  FALSE" ," FALSE" ," FALSE", " FALSE"), msg = "dimnames" )
+	checkEquals( rownames(out5), c("OMEGA11  FALSE", "OMEGA22  FALSE", "OMEGA33  TRUE",  "OMEGA44  FALSE",
+									"OMEGA55 FALSE",  "OMEGA66 FALSE",  "OMEGA77  FALSE", "OMEGA88 FALSE", 
+									"OMEGA99 FALSE",  "OMEGA1010  FALSE"), msg = "dimnames" )
 	dimnames(out5) <- NULL
 	checkEquals( out5, expec5 )
 	

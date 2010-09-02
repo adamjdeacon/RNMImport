@@ -1,13 +1,15 @@
 
-.extractInformation <- function( x, guessNames = TRUE, rx = .getPattern('omegas'))
+.extractInformation <- function( x, guessNames = TRUE, component)
 {
+	startAt <- 1
+	rx = .getPattern(paste(tolower(component),'s',sep=''))
 	# extract comments	
-#	browser('.extractInformation')
+	theLines <- x
 	comments <- commentPop( x, inPlace = TRUE )
-	comments<- stripBlanks( comments)
+	comments <- stripBlanks( comments)
 	# check for the presence of "FIXED"
 	fixedOMEGAS <- fixed <- logicalPop( x, "FIXE?D?", inPlace = TRUE) 
-
+	
 	if( !is.null( comments) && guessNames )
 	{
 		guess <- ogrep( rx, comments, filter = "\\1")
@@ -21,7 +23,7 @@
 		{
 			if( length(guess) == nrow(out) ){
 				dimnames(out) <- rep(list(guess), 2)
-				attr(out, 'comments') <- comments
+				attr(out, 'comments') <- guess
 			}
 		}
 	} else{ 
@@ -29,28 +31,49 @@
 		# retrieve the number of blocks present
 		nBlocks <- equalExpressionPop( x, "BLOCK", sep = "[[:space:]]*", removeBrackets = TRUE, 
 				absent =  NULL, inPlace = TRUE)
-		if( !is.null(nBlocks)){        
-			out <- try( .buildSymMatrix( as.numeric( .readValues(x) ) ) )
+		sortIt <- lapply(.readValues(x),function(X)tryCatch(as.numeric(X), 
+							warning=function(e){NA}, 
+							error = function(e){NA})
+		)
+		dropGuess <- which(sapply(sortIt, is.na))
+		if(length(dropGuess)>0){
+			guess <- guess[-dropGuess]
+			sortIt <- sortIt[-dropGuess]
+		}
+		surplus <- regexpr('[0-9.+-E]', x)
+		if(length(which(surplus<0))>0){
+			guess <- guess[-which(surplus<0)]
+		}
+		sortIt <- unlist(sortIt)
+		if(length(guess) > length(sortIt)){
+			guess <- guess[1:length(sortIt)]
+		}
+		if( !is.null(nBlocks)){
+			
+			if(length(guess) < length(sortIt)) {
+				guess <- c(guess, rep(' ', length(sortIt) - length(guess)))
+			}
+			out <- try( .buildSymMatrix( sortIt )) 
 			if( !is.null( comments) && guessNames )
 			{
 				dim1 <- dim(out)[1]
 				# looking for 
 				half <- dim1*(dim1 + 1)/2
 				# 2 possibilities: either we have counted the BLOCK as a ''	
-				if(length(comments) == half + 1)
-					comments <- comments[-1]
-				if(length(comments) == half )
+				if(length(guess) == half + 1)
+					guess <- guess[-1]
+				if(length(guess) == half )
 				{
 					dimNames <- vector()
 					for(i in 1:dim1)
-						dimNames[i]  <- paste(comments[i + 1:i -1], collapse='|')
+						dimNames[i]  <- paste(guess[i + 1:i -1], collapse='|')
 					dimnames(out) <- rep(list(dimNames), 2)
-					attr(out, 'comments') <- comments
+					attr(out, 'comments') <- guess
 				} else {
-					dimnames(out)<- list(rep(' ', dim(out)[1]),rep(' ', dim(out)[2]) )
+					dimnames(out)<- list(guess, guess)
 				}
 			} else {
-				dimnames(out)<- list(rep(' ', dim(out)[1]),rep(' ', dim(out)[2]) )
+				dimnames(out)<- list(rep(' ', dim(out)[1]), rep(' ', dim(out)[2]) )
 			}
 		} else {
 			### DIAG style                                                              
@@ -58,11 +81,20 @@
 			x <- gsub( "[\\(\\)]", "", x )
 			out <- as.numeric( .readValues( x ) )
 			out <- if( length(out)==1) as.matrix(out) else diag(out)
+			if(length(guess) < length(sortIt)) {
+				guess <- c(guess, rep(' ',length(sortIt) - length(guess) ))
+			}
 			if( !is.null( comments) && guessNames )
 			{
+#				stretch the dimnames...
+				simpleGuess <- guess	
+				for (i in 1:dim(out)[1]){
+					guess[i] <- 
+							paste(simpleGuess[1:i], collapse='|')
+				}
 				if( length(guess) == nrow(out) ){
 					dimnames(out) <- rep(list(guess), 2)
-					attr(out, 'comments') <- comments
+					attr(out, 'comments') <- guess
 				}
 			}
 		}
@@ -89,7 +121,7 @@
 		for(i in 1:dim1)
 			dimNames[i]  <- paste(fixedOMEGAS[i + 1:i -1], collapse='|')
 	}
-	dimnames(out)<- list( paste(dimnames(out)[[1]],dimNames), paste(dimnames(out)[[2]],dimNames))
+	dimnames(out)<- list( paste(dimnames(out)[[1]], dimNames), paste(dimnames(out)[[2]],dimNames))
 #	print(out)
 	
 	out
@@ -125,21 +157,21 @@
 	if( is.null( txt)) return(NULL)
 	
 	### import the OMEGA declarations                                             
-	omegas <- if(.extract) {
-				section( txt, component, "", strip = TRUE ) 
-			} else {
-				txt
-			}
+	if(.extract) {
+		omegas <- 	section( txt, component, "", strip = TRUE ) 
+	} else {
+		omegas <- txt
+	}
 	### each $OMEGA is a separate block
 	# this is somewhat complex because omegas can be specified in different ways
 	
 	mList <- 
 			lapply( omegas, 
-					.extractInformation, guessNames = guessNames, rx = .getPattern(paste(tolower(component),'s',sep='')))
+					.extractInformation, guessNames = guessNames, component)
 	
 	### structure the output in one single matrix                                 
 	out <- 
-			blockBind( mList, component, TRUE )
+			blockBind( mList, defaultPrefix=component, TRUE )
 	out
 	
 }

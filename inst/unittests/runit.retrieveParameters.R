@@ -33,7 +33,8 @@ test.getThetas <- function()
 	
 	# final and initial together
 	
-	checkEquals(getThetas(prob1, what = c("final", "initial")), rbind( expThetaInitial, "estimates" = expThetas),
+	checkEquals(getThetas(prob1, what = c("final", "initial")), 
+			rbind( expThetaInitial, "estimates" = expThetas),
 			msg = " |what = final and initial works correctly")
 	
 	tryStderrs <- try(getThetas(run1, what = "stderrors"), silent = TRUE)
@@ -123,10 +124,10 @@ test.getOmegas <- function()
 	expOmegas <- array(c(0.164, 0, 0, 0, 0.165, 0, 0, 0, 1.3), c(3,3))
 #	dimnames(expOmegas) = list(c("ETA1", "ETA2", "ETA3"), c("ETA1", "ETA2", "ETA3"), "estimates)
 	
-	isFixed <- c(" FALSE",  " FALSE.FALSE",  " FALSE")
-	dimnames(expOmegas) = list(isFixed , isFixed )
+	isFixed <- c("OMEGA11  FALSE",  "OMEGA22 |  FALSE|FALSE",  "OMEGA33  FALSE")
 	expOmegaInit <- diag(c(0.128, 0.142, 1.82))
 	dimnames(expOmegaInit) = list(isFixed , isFixed )
+	dimnames(expOmegas) = list(isFixed , isFixed )
 	checkEquals(getOmegas(prob1),  expOmegas, msg = " |default parameters : extract final values")
 	checkEquals(getOmegas(run1),  expOmegas)
 	
@@ -198,8 +199,8 @@ test.getOmegas <- function()
 	
 	omegaTest1 <- getOmegas(prob3, what = c("initial", "final"), method = 2)
 	
-	expOmega1 <- list(initial.estimates = .removeMethName( getOmegas(prob3, what = "final", method = 1) ),	
-			final.estimates = .removeMethName(getOmegas(prob3, method = 2)))
+	expOmega1 <- list(initial.estimates = RNMImport:::.removeMethName( getOmegas(prob3, what = "final", method = 1) ),	
+			final.estimates = RNMImport:::.removeMethName(getOmegas(prob3, method = 2)))
 	
 	attr(expOmega1, "methodName") <- "Stochastic Approximation Expectation-Maximization"
 	
@@ -221,8 +222,8 @@ test.getOmegas <- function()
 	
 	omegaTest3 <- getOmegas( prob3, what = c("stderrors", "final"))
 	
-	expOmega3 <- list(final.estimates =  .removeMethName(getOmegas(prob3, what = "final")), 
-			standard.errors = .removeMethName(getOmegas(prob3, what = "stderrors")))
+	expOmega3 <- list(final.estimates =  RNMImport:::.removeMethName(getOmegas(prob3, what = "final")), 
+			standard.errors = RNMImport:::.removeMethName(getOmegas(prob3, what = "stderrors")))
 	
 	attr(expOmega3, "methodName" ) <- "Iterative Two Stage"
 	
@@ -253,9 +254,9 @@ test.getSigmas <- function()
 	run1 <- testRuns[["NMBasicNotab"]]
 	prob1 <- getProblem(run1)
 	
-	expSigmas <- array(0.0202, c(1,1), dimnames = list(" FALSE", " FALSE"))
-	expSigmaStderrs <- array(0.00322, c(1,1), dimnames = list(" FALSE", " FALSE"))
-	expSigmaInit <- matrix(0.0231, 1,dimnames = list(" FALSE", " FALSE")) 
+	expSigmas <- array(0.0202, c(1,1), dimnames = list("SIGMA11  FALSE", "SIGMA11  FALSE"))
+	expSigmaStderrs <- array(0.00322, c(1,1), dimnames = list("SIGMA11  FALSE", "SIGMA11  FALSE"))
+	expSigmaInit <- matrix(0.0231, 1,dimnames = list("SIGMA11  FALSE", "SIGMA11  FALSE")) 
 	
 	checkEquals(getSigmas(prob1),  expSigmas)
 	checkEquals(getSigmas(run1),  expSigmas)
@@ -279,8 +280,8 @@ test.getSigmas <- function()
 	prob2 <- getProblem(run2)
 	
 	simSigmas <- array(c(0.0241, 0.026, 0.0262, 0.0295, 0.0244), dim = c(1,1,5), 
-			dimnames = list(" FALSE", " FALSE", c("sim1", "sim2", "sim3", "sim4", "sim5")))
-	sigmaInitial <- matrix(0.0202, 1, dimnames = list(" FALSE", " FALSE"))
+			dimnames = list("SIGMA11  FALSE", "SIGMA11  FALSE", c("sim1", "sim2", "sim3", "sim4", "sim5")))
+	sigmaInitial <- matrix(0.0202, 1, dimnames = list("SIGMA11  FALSE", "SIGMA11  FALSE"))
 	
 	checkEquals(getSigmas(prob2, subProblemNum = 2:4),  simSigmas[,, 2:4, drop = FALSE ])
 	checkEquals(getSigmas(prob2, what = "initial", subProblemNum = 1:5), sigmaInitial)
@@ -305,8 +306,8 @@ test.getSigmas <- function()
 	sigmaTest1 <- getSigmas(prob3, what = c("initial", "final"), method = 2)
 	
 	
-	expSigma1 <- list(initial.estimates = .removeMethName( getSigmas(prob3, what = "final", method = 1) ),	
-			final.estimates = .removeMethName(getSigmas(prob3, method = 2)))
+	expSigma1 <- list(initial.estimates = RNMImport:::.removeMethName( getSigmas(prob3, what = "final", method = 1) ),	
+			final.estimates = RNMImport:::.removeMethName(getSigmas(prob3, method = 2)))
 	
 	attr(expSigma1, "methodName") <- "Stochastic Approximation Expectation-Maximization"
 	
@@ -317,15 +318,15 @@ test.getSigmas <- function()
 	
 	checkEquals(sigmaTest2, 
 			structure(list(initial.estimates = structure(0.0231, .Dim = c(1L, 
-											1L), .Dimnames = list(" FALSE", " FALSE")), 
+											1L), .Dimnames = list("SIGMA11  FALSE", "SIGMA11  FALSE")), 
 							standard.errors = structure(0.000746, .Dim = c(1L, 
 											1L), .Dimnames = list("EPS1", "EPS1"))), .Names = c("initial.estimates", 
 							"standard.errors"), methodName = "Iterative Two Stage"), 
 			msg = " | getSigmas correct (2)")
 	
 	sigmaTest3 <- getSigmas( prob3, what = c("stderrors", "final") )
-	expSigma3 <- list(final.estimates = .removeMethName(getSigmas(prob3, what = "final")), 
-			standard.errors = .removeMethName(getSigmas(prob3, what = "stderrors")))
+	expSigma3 <- list(final.estimates = RNMImport:::.removeMethName(getSigmas(prob3, what = "final")), 
+			standard.errors = RNMImport:::.removeMethName(getSigmas(prob3, what = "stderrors")))
 	attr(expSigma3, "methodName") <- "Iterative Two Stage"
 	checkEquals(sigmaTest3,	expSigma3,	msg = " | getSigmas correct (3)")
 	

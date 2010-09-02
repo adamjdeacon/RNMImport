@@ -29,7 +29,12 @@
 	
 	### import the THETA declarations                                             
 	
-	thetaLines <- if(.extract) section( txt, "TH(E){0,1}TA", "", as.list = FALSE, stripout = TRUE) else txt 
+	if(.extract) {
+		thetaLines <- section( txt, "TH(E){0,1}TA", "", as.list = FALSE, stripout = TRUE) 
+	} else {
+		thetaLines <- txt
+	}
+	
 	# extract the comments
 	comments   <- stripBlanks( commentPop( thetaLines, inPlace = TRUE ) )  
 	# remove space before FIXED
@@ -39,6 +44,7 @@
 	
 	# now we must check for declarations of the form (A B C)
 	# if we find them, we will replace them with (A,B,C)
+	possibleAdditionalComments <- which(nchar(thetaLines)==0)
 	
 	thetaLines <- gsub(x = thetaLines, "\\(([-]{0,1}\\d+(?:\\.\\d+)?)\\s+([-]{0,1}\\d+(?:\\.\\d+)?)\\s+([-]{0,1}\\d+(?:\\.\\d+)?)\\)",
 			replacement = "(\\1,\\2,\\3)", 
@@ -110,7 +116,24 @@
 			out[i,3] <- upper
 		}
 	}  
-#	browser()
+	if(length(comments)==0){
+		comments <- paste('THETA', 1:nrow(out), sep='') 
+	} else {
+		if(length(comments) != nrow(out)){
+#		try to sort out
+			if(length(possibleAdditionalComments)+ nrow(out) == length(comments)){
+				comments <- comments[-possibleAdditionalComments]
+			} else {
+				if(length(comments) > nrow(out)){
+					comments <- comments[1:nrow(out)]
+				} else {
+					comments <- comments + rep(' ', nrow(out) - length(comments) )
+				}
+				
+			}
+		}
+		
+	}
 	if( guessNames && length(comments) == nrow(out)  )
 	{
 		rx.out <- 
@@ -126,6 +149,7 @@
 					paste('THETA', missingNames, sep='')
 		rownames(out)[rx.out!=-1][alright] <- trythat[alright]
 	}
+	
 #	out <- cbind.data.frame(out, FIX=fixedTHETAS, stringsAsFactors=FALSE)
 	rownames(out) <- paste(rownames(out), fixedTHETAS)
 #	print(out)
