@@ -157,6 +157,7 @@ getOmegas.NMSimDataGen <- function( obj, what = "final", subProblemNum = 1, meth
 						return(NULL)
 					return(ret)
 				}
+				return(ret)
 			},
 			{
 				return(ret)
