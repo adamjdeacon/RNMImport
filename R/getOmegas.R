@@ -149,7 +149,19 @@ setMethod("getOmegas", signature(obj = "NMSimModelNM7"), getOmegas.NMSimModelNM7
 
 getOmegas.NMSimDataGen <- function( obj, what = "final", subProblemNum = 1, method = 1, problemNum = 1 )
 {
-	obj@omegaInitial
+	ret <- obj@omegaInitial
+	switch(class(ret),
+			matrix={
+				if(prod(dim(ret))==1){
+					if(is.na(ret[1,1]))
+						return(NULL)
+					return(ret)
+				}
+			},
+			{
+				return(ret)
+			}
+	)
 }
 
 setMethod("getOmegas", signature(obj = "NMSimDataGen"), getOmegas.NMSimDataGen)

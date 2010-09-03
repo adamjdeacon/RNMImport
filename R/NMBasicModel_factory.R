@@ -46,6 +46,7 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 	}
 	# now create the class
 	# TODO: The following is too complex, simplify in future releases
+	
 	with(reportContents,
 			{
 				# check for the covariance/correlation matrices
@@ -60,14 +61,21 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 							matrix(ncol = 0, nrow = 0)
 						}
 				# grab parameter initial values
-#				browser('theta missing matrix')
-				thetaInitial <- 
-						if(!is.null(controlStatements$Theta)) t(controlStatements$Theta) else matrix(nrow=0, ncol=0)
+				if(!is.null(controlStatements$Theta)) {
+					thetaInitial <- 
+							t(controlStatements$Theta)
+				} else {
+					thetaInitial <- 
+							matrix(nrow=0, ncol=0)
+				}
 				if(prod(dim(thetaInitial))>0)
 					rownames(thetaInitial) <- c("lowerBound", "initial", "upperBound")
-				
 				# these may be missing in the control statements, so try to extract them from the reportContents
-				omegaInitial <- if(!is.null(controlStatements$Omega)) controlStatements$Omega  else  reportContents$initialEstimates$OMEGA
+				if(!is.null(controlStatements$Omega)) {
+					omegaInitial <- controlStatements$Omega
+				} else  {
+					omegaInitial <- reportContents$initialEstimates$OMEGA
+				}
 				# grab dimensions of omega final estimates
 				omegaDim <- dim(FinalEstimates$OMEGA)
 				# if no initial omega, fall back on a defualt set of names
@@ -75,7 +83,8 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 					omegaInitial <- matrix(NA, nrow = omegaDim[1], ncol = omegaDim[2])
 					omegaDimNames <- list(paste( "ETA", 1:omegaDim[1], sep = "" ), paste( "ETA", 1:omegaDim[2], sep = "" ))
 				} else {
-					omegaDimNames <- dimnames(omegaInitial)
+					omegaDimNames <- list(dimnames(omegaInitial)[[1]][1:omegaDim[1]],
+							dimnames(omegaInitial)[[1]][1:omegaDim[1]])
 				}
 				
 				sigmaInitial <- controlStatements$Sigma
@@ -124,13 +133,13 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 						sigmaFinal <- array(FinalEstimates$SIGMA, dim = c(dim(FinalEstimates$SIGMA), 1),
 								dimnames = c(dimnames(sigmaInitial), list("estimates")))
 				}
-				colnames(thetaFinal) <- colnames(thetaInitial)
+				colnames(thetaFinal) <- colnames(thetaInitial)[1:dim(thetaFinal)[2]]
 				
 				# extract minimization status.  If this is missing, use an empty character vector so
 				# that the slot type is correct
 				minInfo <- unlist(attr(reportContents$Iter, "min.info"))
 				if(is.null(minInfo)) minInfo <- character(0)
-
+				
 				if(is.null(outTables))
 					outTables<- data.frame()
 				

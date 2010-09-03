@@ -143,7 +143,20 @@ setMethod("getSigmas", signature(obj = "NMSimModelNM7"), getSigmas.NMSimModelNM7
 
 getSigmas.NMSimDataGen <- function(obj, what = "final",  subProblemNum = 1, method = 1, problemNum = 1)
 {
-	obj@sigmaInitial
+	ret <- obj@sigmaInitial
+	switch(class(ret),
+			matrix={
+				if(prod(dim(ret))==1){
+					if(is.na(ret[1,1]))
+						return(NULL)
+					return(ret)
+				}
+			},
+			{
+				return(ret)
+			}
+	)
+	
 }
 
 setMethod("getSigmas", signature(obj = "NMSimDataGen"), getSigmas.NMSimDataGen)

@@ -262,6 +262,7 @@ importNmReport <- function( fileName, path = NULL, controlStatements = NULL, tex
 	
 	# use getNmPath if necessary
 	path <- processPath(path)
+#	browser()
 	
 	if(!is.null(controlStatements))
 		return(.importNmLstWithCtl(.getFile(fileName, path ), controlStatements) )

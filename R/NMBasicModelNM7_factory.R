@@ -68,9 +68,10 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 				corMatrices <- lapply(MethodResults, "[[", "CorrelationMatrix")
 				
 				# grab parameter initial values
-				thetaInitial <- 
-						if(!is.null(controlStatements$Theta)) t(controlStatements$Theta) else  NULL
-				if(!is.null(thetaInitial))
+#			browser()
+			thetaInitial <- 
+						if(!is.null(controlStatements$Theta)) t(controlStatements$Theta) else  matrix(0, nrow=0,ncol=0)
+				if(prod(dim(thetaInitial))>0)
 					rownames(thetaInitial) <- c("lowerBound", "initial", "upperBound")
 				
 				# these may be missing in the control statements, so try to extract them from the reportContents

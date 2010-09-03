@@ -67,7 +67,6 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 	}
 	fullLstFilePath <- tools:::file_path_as_absolute(.getFile(reportFile, path))
 	# read the control file contents
-	
 	# read in the list file contents.  Note that they should only be omitted in the case of a single SIMONLY run
 #	importNmReport(fileName, path = NULL, controlStatements = NULL, textReport = FALSE)
 	reportContents <- importNmReport(fileName=reportFile, path = path, controlStatements = NULL, textReport = textReport)
@@ -96,13 +95,15 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 		reportStatements <- probResults[[i]]
 
 		# check if there is a simulation statement.  If so, proceed accordingly
-		
 		if(!is.null(controlStatements$Sim))
 		{			
 			# there is a simulation statement, so check if it is a "simulation only" run, or a simulation+model fitting run
 			isSimOnly <- controlStatements$Sim["simOnly"] == "TRUE"
 			if(isSimOnly)
-				modelList[[i]] <- NMSimDataGen(controlStatements, path, reportStatements, versionInfo = versionInfo)
+				modelList[[i]] <- NMSimDataGen(controlStatements=controlStatements, 
+						path=path, 
+						reportContents = reportStatements, 
+						versionInfo = versionInfo)
 			else if(nmVersionMajor == "VII")# this is a simulation+fitting problem
 				modelList[[i]] <- NMSimModelNM7(controlStatements, path, reportStatements, versionInfo = versionInfo)
 			else

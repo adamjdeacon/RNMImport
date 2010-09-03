@@ -86,7 +86,7 @@ importNmReport.NM7 <- function( content, textReport = FALSE )
 		RNMImportWarning("Contents of the list file were empty or read incorrectly")
 		return(NULL)
 	}
-	
+
 	result <- list(Raw = content)
 	# clean up report contents
 	content <- cleanReportContents(content)
@@ -108,7 +108,6 @@ importNmReport.NM7 <- function( content, textReport = FALSE )
 	for(i in seq_along(problemResults))
 	{
 		currentProb <- partitionedContent[[i]]
-		
 		# we force the final line to be a "1", otherwise the  method block WILL NOT be parsed correctly. 
 		# TODO: Find a more elegant way of handling this
 		if(tail(currentProb, 1) != "1")
@@ -130,7 +129,7 @@ importNmReport.NM7 <- function( content, textReport = FALSE )
 		else if(simStep & !objFun)
 		{	
 			RNMImportWarning( "This is a simulation without modelling step, will only return raw contents\n", match.call() )
-			problemResults[[i]] <- character(0)
+			problemResults[[i]] <-list(0)
 		}
 		# no data simulation,  EST step (JJ)
 		else if(!simStep & objFun)

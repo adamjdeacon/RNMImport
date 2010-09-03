@@ -57,7 +57,7 @@ blockBind <- function(
 #		test for those names that aren't marked at all
 		addThese <- which(nchar(gsub(' |TRUE|FALSE|[|]', '', names))==0)
 		if(length(addThese )>0){
-			names <- paste(defaultPrefix, addThese, addThese, names[addThese], sep='')
+			names[addThese] <- paste(defaultPrefix, addThese, addThese, names[addThese], sep='')
 		}
 		### replace empty with appropriate name
 		names <- ifelse( names == "", sprintf("%s%d", defaultPrefix, 1:nrow(outMat)), names  )

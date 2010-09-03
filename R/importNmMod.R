@@ -34,7 +34,7 @@ importNmMod <- function(
 	
 	if( is.null(fileContents) ) 	
 		RNMImportStop(paste("Contents of the file", fileName, "are empty \n"), match.call())
-	
+
 	# remove lines that only contains spaces and semicolons
 	fileContents <- negGrep( "^[;[:space:]]+$", fileContents, value = TRUE)
 	
@@ -44,7 +44,7 @@ importNmMod <- function(
 	# remove comments.  Currently they are not used anywhere, but might facilitate certain operations
 	comments <-  commentPop(fileContents, inPlace = FALSE)$op.out
 	
-	# split the text by problem		
+	# split the text by problem	
 	problemTexts <- partitionByProblem(fileContents)
 	
 	numProblems <- length(problemTexts)
@@ -106,9 +106,8 @@ importNmMod <- function(
 	prob <- list()	
 	# find the existent sections in the current problem
 	titles <- sectionTitles(poppedTxt)	
-	
+#	browser()
 	# deal with THETAs
-	
 	prob$Theta <- if( "THE" %in% titles | "THT" %in% titles ) .importNmModTheta( txt = contents )
 	prob$Omega <- if("OME" %in% titles ) .importNmModOmega( txt = contents, component = "OMEGA")
 	prob$Sigma <- if( "SIG" %in% titles ) .importNmModOmega( txt = contents, component = "SIGMA" )

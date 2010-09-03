@@ -13,7 +13,8 @@
 	if( !is.null( comments) && guessNames )
 	{
 		guess <- ogrep( rx, comments, filter = "\\1")
-		guess <- negGrep( "^[[:digit:]]", guess, value = TRUE ) # name should not start with a digit
+#		Coomented out rule!!
+#		guess <- negGrep( "^[[:digit:]]", guess, value = TRUE ) # name should not start with a digit
 	}
 	
 	if(logicalPop( x, "SAME", inPlace = TRUE) ){
@@ -121,6 +122,7 @@
 		for(i in 1:dim1)
 			dimNames[i]  <- paste(fixedOMEGAS[i + 1:i -1], collapse='|')
 	}
+	guess
 	dimnames(out)<- list( paste(dimnames(out)[[1]], dimNames), paste(dimnames(out)[[2]],dimNames))
 #	print(out)
 	
@@ -164,14 +166,13 @@
 	}
 	### each $OMEGA is a separate block
 	# this is somewhat complex because omegas can be specified in different ways
-	
 	mList <- 
 			lapply( omegas, 
 					.extractInformation, guessNames = guessNames, component)
 	
 	### structure the output in one single matrix                                 
 	out <- 
-			blockBind( mList, defaultPrefix=component, TRUE )
+			blockBind( mList, defaultPrefix=component, giveNames=TRUE )
 	out
 	
 }

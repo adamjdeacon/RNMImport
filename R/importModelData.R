@@ -17,8 +17,9 @@ importModelData <- function(
 {	
 	# TODO: need to handle the case where inputs are read from the previous problem's output 
 	
-	
-	fileName <- dataStatement[,"File"]	
+	fileName <- dataStatement[,"File"]
+#	Can have IGN on the line!
+	fileName <-  gsub('( IGNORE | IGN).*','', fileName)
 	stopifnot(!is.null(fileName))
 		
 	fileName <- .getFile(fileName, path = path)

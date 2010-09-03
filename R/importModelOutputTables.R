@@ -107,7 +107,7 @@ importModelOutputTables <- function(
 		return(tableList)
 	else
 	{
-		if(is.na(tableList[[1]])){
+		if(all(is.na(tableList[[1]]))){
 			return(NULL)
 			
 		} else {

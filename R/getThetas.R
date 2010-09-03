@@ -61,8 +61,9 @@ getThetas.NMBasicModel <- function( obj, what = "final", subProblemNum = 1, meth
 	{
 #		browser('sorting out NULL intial THETAS')
 		res <- matrix(ncol = ncol(thetas), nrow = 0, dimnames = list(NULL, colnames(thetas)))
+		
 		if(prod(dim(initialValues ))>0){
-			if("initial" %in% validWhat) res <- rbind(res, initialValues )
+			if("initial" %in% validWhat) res <- rbind(res, initialValues[,1:dim(res)[2], drop=FALSE] )
 		}
 		if("final" %in% validWhat) res <- rbind(res, "estimates" = finalEstimates)
 		if( "stderrors" %in% validWhat )
