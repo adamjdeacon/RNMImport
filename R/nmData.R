@@ -124,7 +124,7 @@ nmData.NMBasicModel <- function(obj, dataTypes = c("input", "output") , returnMo
 setMethod("nmData", signature(obj = "NMBasicModel"), nmData.NMBasicModel)
 setMethod("nmData", signature(obj = "NMBasicModelNM7"), nmData.NMBasicModel)
 
-nmData.NMSim<- function(obj, dataTypes = c("input", "output") , 
+nmData.NMSim <- function(obj, dataTypes = c("input", "output") , 
 		returnMode = c("singleDF", "DFList"),  
 		subset = NULL, subProblemNum = NA, stackInput = TRUE)
 {
@@ -180,7 +180,7 @@ nmData.NMSim<- function(obj, dataTypes = c("input", "output") ,
 	# the number of rows of the simulated output data set
 	
 	if(stackInput)
-		inData <- do.call(cbind.data.frame, lapply(inData, rep, length(subProblemNum)))
+		inData <- do.call(cbind.data.frame, lapply(inData, base:::rep, length(subProblemNum)))
 	if(nrow(inData) != nrow(outData))
 		RNMImportStop("Amount of simulated output data selected is not compatible with the amount of input data, cannot bind into a single data.frame\n",
 				call = match.call())
@@ -218,7 +218,9 @@ nmData.NMRun <- function(obj, dataTypes = c("input", "output") , returnMode = c(
 		subset = NULL, problemNum = 1, subProblemNum = NA)
 {
 	returnMode <- match.arg(returnMode)
-	nmData(getProblem(obj, problemNum), dataTypes,returnMode, subset = subset, subProblemNum)
+#	browser()
+	prob <- getProblem(obj, problemNum)
+	nmData(prob, dataTypes,returnMode, subset = subset, subProblemNum)
 }
 
 setMethod("nmData", signature(obj = "NMRun"), nmData.NMRun)
