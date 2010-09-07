@@ -73,4 +73,27 @@ test.importNmModData <- function()
 	dataTest9 <- .importNmModData(dataStatement9)
 	checkEquals( dataTest9, dataExpected9, msg = " | ACCEPT and REWIND are correct " )
 	
+	# check that IGNORE can be replaced with IGN
+	
+	dataStatement10 <- "$DATA data3.dat IGN=@"
+	dataTest10 <- RNMImport:::.importNmModData(dataStatement10)
+	dataExpected10 <- matrix(c( File="data3.dat", IG="@", ACCEPT="",     
+				REWIND="FALSE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
+	checkEquals( dataTest10,dataExpected10, msg = " |IGNORE=@ correct" )
+	
+	# second check (multiple ignore)
+	
+	dataStatement11 <- "$DATA data3.dat IGN=I IGN=(TIME.EQ.1)"
+	dataTest11 <- RNMImport:::.importNmModData(dataStatement11)
+	dataExpected11 <- matrix(c( File="data3.dat", IG="I;(TIME.EQ.1)", ACCEPT="",     
+					REWIND="FALSE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
+	checkEquals( dataTest11,dataExpected11, msg = " |Mutliple IGNORE= now handled" )
+	
+	# mixed IGN and IGNORE
+
+	dataStatement12 <- "$DATA data3.dat IGN=I IGNORE=(TIME.EQ.1)"
+	dataTest12 <- RNMImport:::.importNmModData(dataStatement12)
+	dataExpected12 <- matrix(c( File="data3.dat", IG="(TIME.EQ.1);I", ACCEPT="",     
+					REWIND="FALSE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES ))
+	checkEquals( dataTest12,dataExpected12, msg = " |Mutliple IGNORE= now handled" )
 }

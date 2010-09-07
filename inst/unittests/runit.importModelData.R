@@ -82,7 +82,14 @@ test.importModelData <- function()
 			TIME = c(0,0.52,1.92,3.5,5.02,9,12),
 			DV = c(NA, 7.91,8.33,6.85,6.08,4.55,3.01)), msg = " |IGNORE=(LABEL1.OP.X,LABEL2.OP.Y) works")
 	
-	
+	# check that mixed IGNORE/IGN statements are allowed
+
+	dataStatement8 <- .importNmModData("$DATA data3.dat IGN=I IGNORE=(TIME=1)")
+	testInput8 <- as.matrix(importModelData(dataStatement8, inputStatement, path = testDir))
+	rownames(testInput8) <- NULL
+	checkEquals(testInput8, cbind(AMT = c(320,NA,NA,NA,NA,NA,NA,NA), 
+					TIME = c(0,.27,0.52,1.92,3.5,5.02,9,12),
+					DV = c(NA,1.71,7.91,8.33,6.85,6.08,4.55,3.01)), msg = " |IGNORE=(LABEL=X) works")
 }
 
 # test aliasing of columns

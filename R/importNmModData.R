@@ -42,28 +42,42 @@
 		records <- equalExpressionPop( dataSec, "N?RECO?R?D?S", absent = "", sep="=",inPlace = TRUE)
 		
 		### hunt for the IGNORE declaration      
-		# this is the regular expression for detecting IGNORE statements (there may be multiple)
+		# this is the regular expression for detecting IGN[ORE] statements (there may be multiple)
 		
-		## TODO: Check with IGN(NORE)+
-		ignoreRegexp <- "[[:space:]]+IGNORE[[:space:]]*=[[:space:]]*[,\\.[:alnum:]\\(\\)\\@\\#\"=\\<\\>/']+"
+		ignoreRegexp <- "[[:space:]]+(IGN|IGNORE)[[:space:]]*=[[:space:]]*[,\\.[:alnum:]\\(\\)\\@\\#\"=\\<\\>/']+"
 		ignorePos <- gregexpr(dataSec, pattern = ignoreRegexp)
 		
 		# the call to gregexpr returns starting positions and lengths of matches, so now we must extract the actual strings
 		
 		ignoreText <- substring(dataSec, ignorePos[[1]], ignorePos[[1]] + attr(ignorePos[[1]], "match.length") - 1)
-		# ignoreText <- gsub( ignoreText, pattern = "[[:space:]]*=[[:space:]]*", replacement = ".EQ." )
-		# now extact the actual ignore tokens
+		# now extact the actual ignore tokens.  These may be delimited by "IGN" or "IGNORE", so we must capture both
 		
 		ignoreTokens <- sapply(ignoreText, function(x) equalExpressionPop(x, "IGNORE", sep = "[=[:space:]]", absent = "NONE", inPlace = FALSE)$op.out)
+		ignTokens <- sapply(ignoreText, function(x) equalExpressionPop(x, "IGN", sep = "[=[:space:]]", absent = "NONE", inPlace = FALSE)$op.out)
+		
+		ignoreTokens <- c(ignoreTokens, ignTokens)
+		
+		# NONE should only appear on its own, but the above code might generate more than one instance, so we need to clean this
+		if(any(ignoreTokens == "NONE"))
+		{
+			if(!all(ignoreTokens == "NONE"))
+				ignoreTokens <- ignoreTokens[ignoreTokens != "NONE"]
+			else
+				ignoreTokens <- "NONE"
+		}
+		
+
 		# strip out quotes and "'" 
 		ignoreTokens <- sapply(ignoreTokens, gsub, pattern = "['\"]", replacement = "")
 		allIgnore <- paste(ignoreTokens, collapse = ";")
 		
 		# now delete the IGNORE= declarations from dataSec
 		
-		dataSec <- gsub(dataSec, pattern = ignoreRegexp, replacement = "")
-		
+		dataSec <- gsub(dataSec, pattern = "[[:space:]]+IGN[[:space:]]*=[[:space:]]*[,\\.[:alnum:]\\(\\)\\@\\#\"=\\<\\>/']+", replacement = "")
+		dataSec <- gsub(dataSec, pattern = "[[:space:]]+IGNORE[[:space:]]*=[[:space:]]*[,\\.[:alnum:]\\(\\)\\@\\#\"=\\<\\>/']+", replacement = "")
+
 		### hunt for the KEEP declaration                                           
+		
 		accept <- equalExpressionPop( dataSec, "ACCEPT", sep = "[=[:space:]]" , absent = "",inPlace = TRUE)
 		
 		### TRANSLATE                                                               
