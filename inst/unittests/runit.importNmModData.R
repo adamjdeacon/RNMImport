@@ -79,7 +79,7 @@ test.importNmModData <- function()
 	dataTest10 <- RNMImport:::.importNmModData(dataStatement10)
 	dataExpected10 <- matrix(c( File="data3.dat", IG="@", ACCEPT="",     
 				REWIND="FALSE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
-	checkEquals( dataTest10,dataExpected10, msg = " |IGNORE=@ correct" )
+	checkEquals( dataTest10,dataExpected10, msg = " |IGN=@ correct" )
 	
 	# second check (multiple ignore)
 	
@@ -87,7 +87,7 @@ test.importNmModData <- function()
 	dataTest11 <- RNMImport:::.importNmModData(dataStatement11)
 	dataExpected11 <- matrix(c( File="data3.dat", IG="I;(TIME.EQ.1)", ACCEPT="",     
 					REWIND="FALSE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES )) 
-	checkEquals( dataTest11,dataExpected11, msg = " |Mutliple IGNORE= now handled" )
+	checkEquals( dataTest11,dataExpected11, msg = " |IGN= now handled" )
 	
 	# mixed IGN and IGNORE
 
@@ -95,5 +95,25 @@ test.importNmModData <- function()
 	dataTest12 <- RNMImport:::.importNmModData(dataStatement12)
 	dataExpected12 <- matrix(c( File="data3.dat", IG="(TIME.EQ.1);I", ACCEPT="",     
 					REWIND="FALSE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES ))
-	checkEquals( dataTest12,dataExpected12, msg = " |Mutliple IGNORE= now handled" )
+	checkEquals( dataTest12,dataExpected12, msg = " |Mutliple IGN= now handled" )
+
+	# now check that we can do IGNORE(code) or IGN(code)
+	
+	dataStatement13 <- "$DATA data3.dat IGN=I IGNORE(TIME.EQ.1)"
+	dataTest13 <- RNMImport:::.importNmModData(dataStatement13)
+	checkEquals( dataTest13,dataExpected12, msg = " | IGNORE(code) now handled" )
+	
+	dataStatement14 <- "$DATA data3.dat IGNORE=I IGN(TIME.EQ.1)"
+	dataTest14 <- RNMImport:::.importNmModData(dataStatement14)
+	checkEquals( dataTest14,dataExpected11, msg = " | IGN(code) also handled" )
+	
+	# check that blank no ignore statements give "NONE"
+	dataStatement15 <- "$DATA data3.dat"
+	dataTest15 <- RNMImport:::.importNmModData(dataStatement15)
+	
+	dataExpected15 <- matrix(c( File="data3.dat", IG="NONE", ACCEPT="",     
+					REWIND="FALSE", RECORDS="",TRANSLATE= "", NULL= ""  ), nrow = 1, dimnames = list(NULL,DATACOLNAMES ))
+	
+	checkEquals( dataTest15,dataExpected15, msg = " | no IGNORE returns NONE" )
+	
 }

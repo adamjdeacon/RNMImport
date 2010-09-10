@@ -43,19 +43,43 @@
 		
 		### hunt for the IGNORE declaration      
 		# this is the regular expression for detecting IGN[ORE] statements (there may be multiple)
+		#they may be as follows:
+		# IGNORE or IGN=(code)
+		# IGNORE=LABEL
+		# IGN or IGNROE(code)
+		# ignoreRegexp <- "[[:space:]]+(IGN|IGNORE)[[:space:]]*=[[:space:]]*[,\\.[:alnum:]\\(\\)\\@\\#\"=\\<\\>/']+"
 		
-		ignoreRegexp <- "[[:space:]]+(IGN|IGNORE)[[:space:]]*=[[:space:]]*[,\\.[:alnum:]\\(\\)\\@\\#\"=\\<\\>/']+"
+		ignoreRegexp <- "([[:space:]]+(IGN|IGNORE)[[:space:]]*[=]{0,1}[[:space:]]*\\([,\\.[:alnum:]\"=\\<\\>/']+\\)|[[:space:]]+(IGN|IGNORE)[[:space:]]*=[[:space:]]*[,\\.[:alnum:]\\@\\#\"=\\<\\>/']+)"
+		
+		# one can also use IGN(code) or IGNORE(code)
+				
 		ignorePos <- gregexpr(dataSec, pattern = ignoreRegexp)
 		
 		# the call to gregexpr returns starting positions and lengths of matches, so now we must extract the actual strings
 		
 		ignoreText <- substring(dataSec, ignorePos[[1]], ignorePos[[1]] + attr(ignorePos[[1]], "match.length") - 1)
-		# now extact the actual ignore tokens.  These may be delimited by "IGN" or "IGNORE", so we must capture both
+		# remove all whitespace
+		ignoreText <- sapply(ignoreText, gsub, pattern = "[[:blank:]]+", replacement = "")
+		# extract tokens with only IGN, seperate from IGNORE
 		
-		ignoreTokens <- sapply(ignoreText, function(x) equalExpressionPop(x, "IGNORE", sep = "[=[:space:]]", absent = "NONE", inPlace = FALSE)$op.out)
-		ignTokens <- sapply(ignoreText, function(x) equalExpressionPop(x, "IGN", sep = "[=[:space:]]", absent = "NONE", inPlace = FALSE)$op.out)
+		ignPos <- negGrep(ignoreText, pattern = "IGNORE", value = FALSE)
+		ignText <- ignoreText[ignPos]
+		if(length(ignPos) > 0)	
+			ignoreText <- ignoreText[-ignPos]
 		
-		ignoreTokens <- c(ignoreTokens, ignTokens)
+		# now extact the actual ignore tokens.  These may be delimited by "IGN" or "IGNORE", so we must capture both.  Also, we seperate
+		# those expressions of the form IGNOR
+		
+		# ignoreTokens <- sapply(ignoreText, function(x) equalExpressionPop(x, "IGNORE", sep = "[=]{0,1}", absent = "NONE", inPlace = FALSE)$op.out)
+		ignoreTokens <- sapply(ignoreText, function(x) gsub(x, pattern = "IGNORE[=]{0,1}", replacement = ""))
+		# delete trailing whitespace
+		# ignoreTokens <- sapply(ignoreTokens, gsub, replacement = "", pattern = "[[:blank:]]+$")
+
+		# ignTokens <- sapply(ignoreText, function(x) equalExpressionPop(x, "IGN", sep = "[=[:space:]]", absent = "NONE", inPlace = FALSE)$op.out)
+		ignTokens <- sapply(ignText, function(x) gsub(x, pattern = "IGN[=]{0,1}", replacement = "" ))
+		# ignTokens <- sapply(ignTokens, gsub, replacement = "", pattern = "[[:blank:]]+$")
+		# replace empty strings with "NONE"
+		ignoreTokens <- gsub(c(ignoreTokens, ignTokens),pattern = "^$", replacement = "NONE")
 		
 		# NONE should only appear on its own, but the above code might generate more than one instance, so we need to clean this
 		if(any(ignoreTokens == "NONE"))
@@ -73,8 +97,8 @@
 		
 		# now delete the IGNORE= declarations from dataSec
 		
-		dataSec <- gsub(dataSec, pattern = "[[:space:]]+IGN[[:space:]]*=[[:space:]]*[,\\.[:alnum:]\\(\\)\\@\\#\"=\\<\\>/']+", replacement = "")
-		dataSec <- gsub(dataSec, pattern = "[[:space:]]+IGNORE[[:space:]]*=[[:space:]]*[,\\.[:alnum:]\\(\\)\\@\\#\"=\\<\\>/']+", replacement = "")
+		dataSec <- gsub(dataSec, pattern = ignoreRegexp, replacement = "")
+		# dataSec <- gsub(dataSec, pattern = "[[:space:]]+IGNORE[[:space:]]*=[[:space:]]*[,\\.[:alnum:]\\(\\)\\@\\#\"=\\<\\>/']+", replacement = "")
 
 		### hunt for the KEEP declaration                                           
 		
