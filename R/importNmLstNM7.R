@@ -37,9 +37,28 @@
 	
 	# retrieve termination status
 	termStatusLineNum <- grep(methodTextBlock, pattern = "#TERM")[1] + 1
-
+	
 	# termStatusFinalLineNum <- grep(tail(methodTextBlock, -termStatusLineNum), pattern = "^[[:space:]]*$")[1]
 	blockResult$TermStatus <- gsub(methodTextBlock[termStatusLineNum], pattern = "^[[:space:]]+", replacement = "")
+	
+	# retrieve SIG. DIGITS
+	Sig.digsLineNum <- grep(methodTextBlock, pattern = "SIG. DIGITS")[1]
+#	browser()
+	if(!is.na(Sig.digsLineNum)){
+		Sig.digsLoc <- 
+				gregexpr(methodTextBlock[Sig.digsLineNum], pattern = "[0-9]+[.]+[0-9]*")[[1]]
+		Sig.digs <- substr(methodTextBlock[Sig.digsLineNum], 
+				start = Sig.digsLoc, 
+				stop = Sig.digsLoc + attr(Sig.digsLoc, "match.length") - 1 )
+		Cov.stat <- methodTextBlock[Sig.digsLineNum + 1]
+		if(substr(Cov.stat,1,1)!='0')
+			Cov.stat <- ' '
+	} else {
+		Sig.digs <- ' '
+		Cov.stat <- ' '
+	}
+	blockResult$Sig.digs <- Sig.digs
+	blockResult$Cov.stat <- Cov.stat
 	
 	# retrieve shrink values
 	# TODO: does this work will many ETAs, or might there be issues with the way the text is wrapped?
@@ -62,11 +81,11 @@
 	blockResult$Objective.Final <- objFinalValue
 	methodTextBlockSectioned <- sectionMethodBlock(methodTextBlock)
 	blockResult$FinalEstimates <- .importNmLstEstimates(methodTextBlockSectioned$"FINAL PARAMETER ESTIMATE")
-	blockResult$StandardError           <- .importNmLstEstimates( methodTextBlockSectioned$"STANDARD ERROR OF ESTIMATE" )
+	blockResult$StandardError <- .importNmLstEstimates( methodTextBlockSectioned$"STANDARD ERROR OF ESTIMATE" )
 	
 	blockResult$CovarianceMatrix <- .importNmLstMatrix( methodTextBlockSectioned$"COVARIANCE MATRIX OF ESTIMATE" )
-	blockResult$CorrelationMatrix       <- .importNmLstMatrix( methodTextBlockSectioned$"CORRELATION MATRIX OF ESTIMATE" )
-
+	blockResult$CorrelationMatrix <- .importNmLstMatrix( methodTextBlockSectioned$"CORRELATION MATRIX OF ESTIMATE" )
+	
 	blockResult$InverseCovarianceMatrix <- .importNmLstMatrix( methodTextBlockSectioned$"INVERSE COVARIANCE MATRIX OF ESTIMATE" )
 	
 	blockResult
@@ -86,7 +105,7 @@ importNmReport.NM7 <- function( content, textReport = FALSE )
 		RNMImportWarning("Contents of the list file were empty or read incorrectly")
 		return(NULL)
 	}
-
+	
 	result <- list(Raw = content)
 	# clean up report contents
 	content <- cleanReportContents(content)
@@ -120,7 +139,7 @@ importNmReport.NM7 <- function( content, textReport = FALSE )
 		# simulation + model
 		if(simStep & objFun)
 		{	
-		#	RNMImportStop("Simulations + fitting problems for NONMEM 7 not yet imported")
+			#	RNMImportStop("Simulations + fitting problems for NONMEM 7 not yet imported")
 			if(textReport)
 				logMessage(log = "stdReport", "Appears to be a simulation+modelling problem\n")
 			problemResults[[i]] <- importNmLstSimModel.NM7(currentProb, NA)
@@ -134,14 +153,16 @@ importNmReport.NM7 <- function( content, textReport = FALSE )
 		# no data simulation,  EST step (JJ)
 		else if(!simStep & objFun)
 		{	
-			problemResults[[i]] <- .importNmLstBasicProb.NM7(contents=currentProb)
+#			browser()
+			problemResults[[i]] <- 
+					.importNmLstBasicProb.NM7(contents=currentProb)
 		}
 		else
 		{
 			if(textReport)
 				logMessage(log = "stdReport", "Appears to be a standard model\n")
 			problemResults[[i]] <- .importNmLstBasicProb.NM7(currentProb)
-
+			
 		}
 	}
 	result$problemResults <- problemResults
@@ -166,13 +187,15 @@ importNmReport.NM7 <- function( content, textReport = FALSE )
 	methodBlocks <- partitionMethods(contents)
 	methodResults <- lapply( methodBlocks, .importMethodBlock)
 	outList$MethodResults <- methodResults
+	
 	### Find the sections of the list file
-	# lstList <- sectionLst( contents )
-	
-	
-	
+	lstList <- sectionLst( fileContents=contents )
+	searches <- which(names(lstList)=="MONITORING OF SEARCH")
 	### Extract iteration information
-	# outList$Iter <- .importNmLstIter( lstList[["MONITORING OF SEARCH"]])
+	outList$Iter <- 
+			lapply(searches, function(X, lst){
+						.importNmLstIter(iterList=lst[[X]])	
+					}, lst=lstList)
 	
 	outList
 	
@@ -208,7 +231,7 @@ importNmLstSimModel.NM7 <- function(contents, numSub = NA)
 	# extract the number of records and individuals in the data
 	outList$nRecords     <- colonPop( contents, "TOT\\. NO\\. OF OBS RECS"   , inPlace = FALSE, numeric = TRUE )$op.out
 	outList$nIndividuals <- colonPop( contents, "TOT\\. NO\\. OF INDIVIDUALS", inPlace = FALSE, numeric = TRUE )$op.out
-				
+	
 	# split off the part of the control file that has the subproblems
 	# This line will look as follows (N is any integer greater than 1):
 	#PROBLEM NO.:         N     SUBPROBLEM NO.:      1
