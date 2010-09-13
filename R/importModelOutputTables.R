@@ -60,30 +60,31 @@ importModelOutputTables <- function(
 #				# this is necessary because if APPEND is used (which it is by default), NONMEM appears to ignore the presence of DV, WRES, etc. in the
 #				# the table statement, and simply adds them to the end of the table on its own regardless of what order they appear in the TABLE statement
 		# if APPEND is true, then we need to ext
+#		browser()	
+		repeatedColumns<-integer(0)
 		if(tableStatement[i, "append"])
 		{
 			# remove all columns ,but "DV" may be repeated
-			colNames <- setdiff(colNames, APPENDEDCOLUMNS)
-			colNames <- c(colNames, APPENDEDCOLUMNS)
+			repeatedColumns <- intersect(colNames, APPENDEDCOLUMNS)
+			newColNames <- c(colNames, APPENDEDCOLUMNS)
+			if(length(repeatedColumns)>0){
+				repeatedColumnsID <- match(repeatedColumns, newColNames)
+			}
 		}
-		newColNames <- setdiff(colNames, allColNames)
 		
-		
-		if(length(newColNames))
+		if(length(repeatedColumns))
 		{
-			if(length(colNames)> length(colnames(currentTable))){
+			if(length(newColNames) > length(colnames(currentTable))){
 				currentTable <- 
 						cbind(currentTable, 
 								data.frame(matrix(NA,
 												nrow=dim(currentTable)[1],
-												ncol=(length(colNames)-length(colnames(currentTable))))))
+												ncol=(length(newColNames)-length(colnames(currentTable))))))
 			}
-			colnames(currentTable)[1:length(colNames)] <- colNames
-			
 			# use only the non-repeated columns
-			currentTable <- currentTable[,newColNames, drop = FALSE]
+			currentTable <- currentTable[,-repeatedColumnsID, drop = FALSE]
 			# assign as many names from the table statement to currentTable's columns as possible	
-			allColNames <- c(newColNames, allColNames)
+			names(currentTable) <- allColNames <- newColNames[-repeatedColumnsID]
 		}		
 		# Now handle FIRSTONLY statement if it is present.  We take unique values of the ID by default		
 		# TODO: Make this logic more robust
