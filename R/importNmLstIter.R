@@ -7,23 +7,26 @@
 #' @author fgochez
 .importNmLstIter <- function(iterList)
 {
-	
+#	browser()
 	if( is.null(iterList) ) return( NULL )
-	# determine which elements of iterList contain information about iterations, rather than
+# 	determine which elements of iterList contain information about iterations, rather than iteration information
 	iters <- sapply( iterList, function(x){
 				grep.out <- grep( "^ITERATION NO\\.", x )
 				if( !length(grep.out) ) grep.out <- 0              
 				grep.out
 			})
-		
-	# extract the elements of the list which contain minimization information, rather than iteration information
+	
+# 	extract the elements of the list which contain minimization information, rather than iteration information
 	minInfo <- unlist(iterList[sapply(iterList, function(x) any(regexMatches(x, rx = "MINIMIZATION")))])
 	# if the information was not missing, extract other elements
-	if(!is.null(minInfo))
+	
+	if(length(minInfo)>0)
 	{
 		minResult <- equalExpressionPop(  minInfo, "MINIMIZATION", sep = "[[:space:]]*", inPlace=TRUE     )
 		numEval   <- colonPop( minInfo, "NO\\. OF FUNCTION EVALUATIONS USED", inPlace = TRUE     )
 		numSigDigits <- colonPop( minInfo, "NO\\. OF SIG\\. DIGITS IN FINAL EST\\.", inPlace = TRUE )
+	} else {
+		return(NULL)
 	}
 	
 	iterInfo <- iterList[ as.logical(iters) ]
