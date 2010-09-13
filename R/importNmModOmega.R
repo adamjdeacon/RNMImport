@@ -8,12 +8,14 @@
 	comments <- commentPop( x, inPlace = TRUE )
 	comments <- stripBlanks( comments)
 	# check for the presence of "FIXED"
-	fixedOMEGAS <- fixed <- logicalPop( x, "FIXE?D?", inPlace = TRUE) 
+	fixedOMEGAS <- fixed <- sapply(x, function(X)logicalPop( X, "FIXE?D?", inPlace = TRUE)) 
+	names(fixedOMEGAS)<- names(fixed ) <- NULL
+	logicalPop( x, "FIXE?D?", inPlace = TRUE)
 	
 	if( !is.null( comments) && guessNames )
 	{
 		guess <- ogrep( rx, comments, filter = "\\1")
-#		Coomented out rule!!
+#		Commented out rule!!
 #		guess <- negGrep( "^[[:digit:]]", guess, value = TRUE ) # name should not start with a digit
 	}
 	
@@ -30,6 +32,7 @@
 	} else{ 
 		### BLOCK style, indicates a block diagonal specification                                                             
 		# retrieve the number of blocks present
+#		browser()
 		nBlocks <- equalExpressionPop( x, "BLOCK", sep = "[[:space:]]*", removeBrackets = TRUE, 
 				absent =  NULL, inPlace = TRUE)
 		sortIt <- lapply(.readValues(x),function(X)tryCatch(as.numeric(X), 
@@ -40,24 +43,44 @@
 		if(length(dropGuess)>0){
 			guess <- guess[-dropGuess]
 			sortIt <- sortIt[-dropGuess]
+			fixedOMEGAS <- fixedOMEGAS[-dropGuess]
 		}
 		surplus <- regexpr('[0-9.+-E]', x)
 		if(length(which(surplus<0))>0){
 			guess <- guess[-which(surplus<0)]
+			fixedOMEGAS <- fixedOMEGAS[-which(surplus<0)]
 		}
 		sortIt <- unlist(sortIt)
 		if(length(guess) > length(sortIt)){
 			guess <- guess[1:length(sortIt)]
+			fixedOMEGAS <- fixedOMEGAS[1:length(sortIt)]
 		}
 		if( !is.null(nBlocks)){
-			
 			if(length(guess) < length(sortIt)) {
 				guess <- c(guess, rep(' ', length(sortIt) - length(guess)))
+				fixedOMEGAS <- c(fixedOMEGAS, rep(FALSE, length(sortIt) - length(fixedOMEGAS)))
 			}
 			out <- try( .buildSymMatrix( sortIt )) 
+#			get size of OMEGAS
+			dim1 <- dim(out)[1]
+			
+			# looking for 
+			half <- dim1*(dim1 + 1)/2
+			
+#			If there is a comment however on the $OMEGA line but no OMEGAVALUE actual specified there
+			if(length(fixedOMEGAS) == half + 1 )
+				fixedOMEGAS <- fixedOMEGAS[-1]
+			
+#			Now set the FIX dimnames part
+			dimNames <- vector()
+			if(length(fixedOMEGAS) != half )
+			{
+#				Need to best guess comments against out
+				warning('irregular comment pattern')
+			}
+			
 			if( !is.null( comments) && guessNames )
 			{
-				dim1 <- dim(out)[1]
 				# looking for 
 				half <- dim1*(dim1 + 1)/2
 				# 2 possibilities: either we have counted the BLOCK as a ''	
@@ -67,7 +90,10 @@
 				{
 					dimNames <- vector()
 					for(i in 1:dim1)
-						dimNames[i]  <- paste(guess[i + 1:i -1], collapse='|')
+						dimNames[i]  <- paste(paste(guess[i + 1:i -1], collapse='|'),
+								paste(fixedOMEGAS[i + 1:i -1], collapse='|'),
+								sep= ' | ')
+					
 					dimnames(out) <- rep(list(dimNames), 2)
 					attr(out, 'comments') <- guess
 				} else {
@@ -81,10 +107,18 @@
 			equalExpressionPop( x, "DIAG", sep = "[[:space:]]*", inPlace = TRUE )                                                
 			x <- gsub( "[\\(\\)]", "", x )
 			out <- as.numeric( .readValues( x ) )
-			out <- if( length(out)==1) as.matrix(out) else diag(out)
-			if(length(guess) < length(sortIt)) {
-				guess <- c(guess, rep(' ',length(sortIt) - length(guess) ))
+			if( length(out)==1) {
+				out <- as.matrix(out)
+			} else {
+				out <- diag(out)
 			}
+#			get size of OMEGAS
+			dim1 <- dim(out)[1]
+#			changed from sortIt
+			if(length(guess) < dim(out)[1]) {
+				guess <- c(guess, rep(' ',length(dim(out)[1]) - length(guess) ))
+			}
+			
 			if( !is.null( comments) && guessNames )
 			{
 #				stretch the dimnames...
@@ -94,37 +128,15 @@
 							paste(simpleGuess[1:i], collapse='|')
 				}
 				if( length(guess) == nrow(out) ){
-					dimnames(out) <- rep(list(guess), 2)
+					dimNames <- vector()
+					for(i in 1:dim1)
+						dimNames[i]  <- paste(guess[i], paste(fixed[1:i], collapse='|'), collapse=' | ')
+					dimnames(out) <- rep(list(dimNames), 2)
 					attr(out, 'comments') <- guess
 				}
 			}
 		}
-		
 	}
-	
-#	get size of OMEGAS
-	dim1 <- dim(out)[1]
-# 	looking for this number of names etc. 
-	half <- dim1*(dim1 + 1)/2
-	
-#	If there is no mention of FIX then replicate FALSE the necessary number of times
-	if(length(fixedOMEGAS)!=half){
-		fixedOMEGAS <- rep(fixedOMEGAS, half)
-	}
-	
-#	If there is a comment however on the $OMEGA line but no OMEGAVALUE actuall specified there
-	if(length(fixedOMEGAS) == half + 1 )
-		fixedOMEGAS <- fixedOMEGAS[-1]
-	
-	dimNames <- vector()
-	if(length(fixedOMEGAS) == half )
-	{
-		for(i in 1:dim1)
-			dimNames[i]  <- paste(fixedOMEGAS[i + 1:i -1], collapse='|')
-	}
-	guess
-	dimnames(out)<- list( paste(dimnames(out)[[1]], dimNames), paste(dimnames(out)[[2]],dimNames))
-#	print(out)
 	
 	out
 }
@@ -166,6 +178,7 @@
 	}
 	### each $OMEGA is a separate block
 	# this is somewhat complex because omegas can be specified in different ways
+#	browser()
 	mList <- 
 			lapply( omegas, 
 					.extractInformation, guessNames = guessNames, component)
