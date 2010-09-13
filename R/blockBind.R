@@ -47,20 +47,79 @@ blockBind <- function(
 	
 	if( giveNames ) 
 	{
+#		browser()
 		### get the names that are already there
-		names <- unlist( 
-				lapply( mList, function(x){ 
-							if(is.null(dimnames(x)[[1]])) rep("FALSE", nrow(x)) else rownames(x)  
+		names <- 
+				unlist( 
+						lapply( mList, function(x){ 
+									if(is.null(dimnames(x)[[1]])) rep("FALSE", nrow(x)) else rownames(x)  
+								}
+						)
+				)
+		fixed <- regexpr(' TRUE| FALSE', names)
+		these <- which(fixed >0)
+#		names will have the FIXED|TRUE in them
+		if(length(these)>0){
+			names[these] <- substring(names[these], fixed[these] + 1)
+		} 
+		
+		comments <- unlist( 
+				sapply( mList, function(x){ 
+							gsub('$ *| *$','', attr(x, 'comments'))  
 						}
 				)
 		)
-#		test for those names that aren't marked at all
-		addThese <- which(nchar(gsub(' |TRUE|FALSE|[|]', '', names))==0)
-		if(length(addThese )>0){
-			names[addThese] <- paste(defaultPrefix, addThese, addThese, names[addThese], sep='')
-		}
-		### replace empty with appropriate name
-		names <- ifelse( names == "", sprintf("%s%d", defaultPrefix, 1:nrow(outMat)), names  )
+		
+		half <- unlist( 
+				sapply( mList, function(x){ 
+							dim(x)[1]  
+						}
+				)
+		)
+		
+		half <- sum(half)
+		fixed <- addThese <- character(0)
+		elementName <- matrix('', nrow=half, ncol=half)
+		if(length(comments)== half*(half+1)/2){
+#			assumes block structure
+			count <- 0
+			trimmedComments <- gsub('^ +| +$','', comments)
+			for(i in 1:half){
+				for(j in 1:i){
+					count <- count + 1
+					if(nchar(trimmedComments[count])==0)
+						trimmedComments[count] <- paste(defaultPrefix, i, j, sep='')
+					elementName[i,j]<- trimmedComments[count] 
+				}
+				addThese[i] <- paste(elementName[i,1:i], collapse='|')
+			}
+			blankNames <- which(nchar(gsub(' |TRUE|FALSE|[|]', '', names))==0)
+			if(length(blankNames)>0){
+				for(thisName in blankNames){
+					names[thisName] <- paste(addThese[thisName], names[thisName], sep=' | ')
+				}
+			}
+			### replace empty with appropriate name
+			names <- ifelse( names == "", sprintf("%s%d", defaultPrefix, 1:nrow(outMat)), names  )
+		} else {
+			if(length(comments) == half){
+#			assumes diagonal structure
+				### replace empty with appropriate name
+				comments <- 
+						ifelse( comments == "", sprintf("%s%d%d", defaultPrefix, 1:nrow(outMat), 1:nrow(outMat)), comments )
+#				This should have been already done
+#				for (i in seq(along=comments)){
+#					addThese[i] <- paste(comments[1:i],collapse='|')
+#					fixed[i] <- paste(names[1:i],collapse='|')
+#				}
+				for(thisName in seq(along=names)){
+					names[thisName] <- paste(comments[thisName], names[thisName], sep=' | ')
+				}
+			} else {
+				warning('mixed block comments')
+				browser()
+			}
+		} 
 		dimnames( outMat ) <- rep( list(names), 2)
 	}
 	outMat
