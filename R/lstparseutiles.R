@@ -116,10 +116,10 @@ sectionLst <- function( fileContents, sep,
 		### try to find star titles
 		if( sep == "1" && len.sta > 2 ) {      
 			for(i in seq(along = li) ){
-				nmt <- nmTitle( li[[i]] )
+				nmt <- nmTitle( txt=li[[i]], titleSecLength = 5, maxTitleLines = 2 )  
 				if( !is.null(nmt$title) ){
 					li[[i]] <- nmt$text
-					names(li)[i] <- nmt$title
+					names(li)[i] <- paste(nmt$title, collapse='\n')
 				}
 				if( length( idx <- grep("MONITORING OF SEARCH", li[[i]])) ){
 					names(li)[i] <- "MONITORING OF SEARCH"
@@ -219,7 +219,6 @@ sectionLst <- function( fileContents, sep,
 
 nmTitle <- function( txt, titleSecLength = 5, maxTitleLines = 2 ){
 	if( is.list(txt)  ) return( list( title = NULL ) )
-	
 	if(any(regexMatches( txt, rx = "\\*{15,}" )))
 	{
 		titleText <- grep("\\*{15,}", txt[1:titleSecLength], value = TRUE )
