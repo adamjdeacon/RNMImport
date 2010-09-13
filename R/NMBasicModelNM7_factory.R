@@ -54,13 +54,14 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 	
 	# automatically import NONMEM7-generated iterations from files if available:
 	estStatement <- controlStatements$Estimates
-	
 	paramIter <- try( importNm7Iterations( files = estStatement[,"file"], noLabels = estStatement[,"noLabel"],
 					noTitles = estStatement[,"noTitle"], methods = estStatement[,"method"], path = path) , silent = TRUE )
 	if(inherits(paramIter, "try-error")) { 
 		RNMImportWarning("Unable to import parameter iterations, proceeding anyway\n")
 		paramIter <- list()
 	}
+	
+	
 	with(reportContents,
 			{
 				# check for the covariance/correlation matrices
@@ -68,8 +69,7 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 				corMatrices <- lapply(MethodResults, "[[", "CorrelationMatrix")
 				
 				# grab parameter initial values
-#			browser()
-			thetaInitial <- 
+				thetaInitial <- 
 						if(!is.null(controlStatements$Theta)) t(controlStatements$Theta) else  matrix(0, nrow=0,ncol=0)
 				if(prod(dim(thetaInitial))>0)
 					rownames(thetaInitial) <- c("lowerBound", "initial", "upperBound")
@@ -80,7 +80,7 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 				# grab dimensions of omega final estimates
 				omegaDim <- dim(MethodResults[[1]]$FinalEstimates$OMEGA)
 				
-				# if no initial omega, fall back on a defualt set of names
+				# if no initial omega, fall back on a default set of names
 				
 				if(is.null(omegaInitial)) {
 					omegaInitial <- matrix(NA, nrow = omegaDim[1], ncol = omegaDim[2])
@@ -111,7 +111,18 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 				methodsUsed <- sapply(MethodResults, "[[", "method")
 				ETAshrinks <- lapply(MethodResults, "[[", "ETAshrink") 
 				EPSshrinks <-  lapply(MethodResults, "[[", "EPSshrink") 
-				minInfo <- sapply(MethodResults, "[[", "TermStatus")
+				
+#				browser()
+				TermStatus <- sapply(MethodResults, "[[", "TermStatus")
+				names(TermStatus) <- paste('TermStatus', 1:length(TermStatus))
+				
+				Cov.stat <- sapply(MethodResults, "[[", "Cov.stat")
+				names(Cov.stat) <- paste('Cov.stat', 1:length(Cov.stat))
+				
+				Sig.digs <- sapply(MethodResults, "[[", "Sig.digs")
+				names(Sig.digs) <- paste('Sig.digs', 1:length(Sig.digs))
+				
+				minInfo <- c(TermStatus, Cov.stat, Sig.digs)
 				# attr(objectiveFinal, "methods") <- methodsUsed
 				# create the object
 				new("NMBasicModelNM7", parameterIterations = paramIter, 
@@ -125,7 +136,8 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 						omegaInitial = omegaInitial,					
 						
 						thetaFinal = thetaFinal,
-						sigmaFinal = sigmaFinal, omegaFinal = omegaFinal,
+						sigmaFinal = sigmaFinal, 
+						omegaFinal = omegaFinal,
 						
 						sigmaStderr= sigmaStdErrors,
 						omegaStderr = omegaStdErrors,
