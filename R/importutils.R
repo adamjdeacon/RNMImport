@@ -34,7 +34,6 @@
 			outTables <- data.frame()
 		}
 	}
-	
 	outTables
 }
 

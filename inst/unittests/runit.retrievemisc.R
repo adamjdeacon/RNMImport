@@ -35,7 +35,7 @@ test.getObjective <- function()
 	checkEquals(getObjective(run3, method = 1:2), getObjective(prob3, method = 1:2), msg = " |getobjective the same on run and NMBasicModelNM7" )
 	
 	objTarget <- c(3335.250, 2339.093)
-	attr(objTarget, "minInfo") <- c("OPTIMIZATION COMPLETED", "STOCHASTIC PORTION COMPLETED")
+	attr(objTarget, "minInfo") <- c('TermStatus 1' = "OPTIMIZATION COMPLETED", 'TermStatus 2' = "STOCHASTIC PORTION COMPLETED")
 	checkEquals(getObjective(run3, method = 1:2), objTarget)
 	checkEquals(getObjective(prob3, method = 1, addMinInfo = FALSE), 3335.250 )
 	checkEquals(getObjective(prob3, method = 2, addMinInfo = FALSE), 2339.093 )

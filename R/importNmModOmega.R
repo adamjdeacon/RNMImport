@@ -32,7 +32,7 @@
 	} else{ 
 		### BLOCK style, indicates a block diagonal specification                                                             
 		# retrieve the number of blocks present
-#		browser()
+
 		nBlocks <- equalExpressionPop( x, "BLOCK", sep = "[[:space:]]*", removeBrackets = TRUE, 
 				absent =  NULL, inPlace = TRUE)
 		sortIt <- lapply(.readValues(x),function(X)tryCatch(as.numeric(X), 
@@ -103,7 +103,7 @@
 				dimnames(out)<- list(rep(' ', dim(out)[1]), rep(' ', dim(out)[2]) )
 			}
 		} else {
-			### DIAG style                                                              
+			### DIAG style
 			equalExpressionPop( x, "DIAG", sep = "[[:space:]]*", inPlace = TRUE )                                                
 			x <- gsub( "[\\(\\)]", "", x )
 			out <- as.numeric( .readValues( x ) )
@@ -115,22 +115,23 @@
 #			get size of OMEGAS
 			dim1 <- dim(out)[1]
 #			changed from sortIt
-			if(length(guess) < dim(out)[1]) {
-				guess <- c(guess, rep(' ',length(dim(out)[1]) - length(guess) ))
+			if(length(guess) < dim1) {
+				guess <- c(guess, rep(' ', dim1 - length(guess) ))
+				fixedOMEGAS <- c(fixedOMEGAS, rep(FALSE, dim1 - length(fixedOMEGAS) ))
 			}
 			
 			if( !is.null( comments) && guessNames )
 			{
 #				stretch the dimnames...
 				simpleGuess <- guess	
-				for (i in 1:dim(out)[1]){
+				for (i in 1:dim1){
 					guess[i] <- 
 							paste(simpleGuess[1:i], collapse='|')
 				}
 				if( length(guess) == nrow(out) ){
 					dimNames <- vector()
 					for(i in 1:dim1)
-						dimNames[i]  <- paste(guess[i], paste(fixed[1:i], collapse='|'), collapse=' | ')
+						dimNames[i]  <- paste(guess[i], paste(fixedOMEGAS[1:i], collapse='|'), collapse=' | ')
 					dimnames(out) <- rep(list(dimNames), 2)
 					attr(out, 'comments') <- guess
 				}

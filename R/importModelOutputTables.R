@@ -56,23 +56,32 @@ importModelOutputTables <- function(
 		currentTable <- .importDataNumeric(currentTable, missToZero = FALSE)
 		
 		colNames <- CSLtoVector(tableStatement[i,"Columns"])
-		# if APPEND is TRUE, then we need to extract the column names from "appendedColumns", and then append them back to the end.
-#				# this is necessary because if APPEND is used (which it is by default), NONMEM appears to ignore the presence of DV, WRES, etc. in the
-#				# the table statement, and simply adds them to the end of the table on its own regardless of what order they appear in the TABLE statement
-		# if APPEND is true, then we need to ext
+		
+# 		if APPEND is TRUE, then we need to extract the column names from "appendedColumns", and then append them back to the end.
+#		this is necessary because if APPEND is used (which it is by default), NONMEM appears to ignore the presence of DV, WRES, etc. in the
+#		the table statement, and simply adds them to the end of the table on its own regardless of what order they appear in the TABLE statement
+		
+#		cat(i, allColNames , '\n')
 #		browser()	
-		repeatedColumns<-integer(0)
+		
 		if(tableStatement[i, "append"])
 		{
-			# remove all columns ,but "DV" may be repeated
-			repeatedColumns <- intersect(colNames, APPENDEDCOLUMNS)
-			newColNames <- c(colNames, APPENDEDCOLUMNS)
-			if(length(repeatedColumns)>0){
-				repeatedColumnsID <- match(repeatedColumns, newColNames)
-			}
-		}
+#			remove all columns ,but "DV" may be repeated
+#			allow for renaming
+			vc <- rep('', length(colnames(currentTable)))
+			vc[(length(vc)-3):length(vc)] <- APPENDEDCOLUMNS
+			vc[1:length(colNames)] <- colNames
+			colnames(currentTable) <- vc
+		} else {
+			colnames(currentTable) <- colNames
+		} 
+		colNames <- colnames(currentTable)
+		currentTable <- currentTable[ ,colNames]
 		
-		if(length(repeatedColumns))
+#		See if there are any new columns to add
+		newColNames <- setdiff(colNames, allColNames)
+		
+		if(length(newColNames))
 		{
 			if(length(newColNames) > length(colnames(currentTable))){
 				currentTable <- 
@@ -81,20 +90,22 @@ importModelOutputTables <- function(
 												nrow=dim(currentTable)[1],
 												ncol=(length(newColNames)-length(colnames(currentTable))))))
 			}
-			# use only the non-repeated columns
-			currentTable <- currentTable[,-repeatedColumnsID, drop = FALSE]
-			# assign as many names from the table statement to currentTable's columns as possible	
-			names(currentTable) <- allColNames <- newColNames[-repeatedColumnsID]
-		}		
+			
+#			use only the non-repeated columns
+			currentTable <- 
+					currentTable[, newColNames, drop = FALSE]
+			
+# 			assign as many names from the table statement to currentTable's columns as possible	
+			allColNames <- c(allColNames, newColNames)
+		}
+		
 		# Now handle FIRSTONLY statement if it is present.  We take unique values of the ID by default		
 		# TODO: Make this logic more robust
 		if(allowFirstOnly & tableStatement[i, FIRSTONLYFIELD])
 		{
 			logMessage("Firstonly flag found, subsetting rows", "detailedReport")
 			attr(currentTable, FIRSTONLYFIELD) <- TRUE
-			
 		}
-		
 		else if(!allowFirstOnly & tableStatement[i, FIRSTONLYFIELD])
 			RNMImportStop("FIRSTONLY table detected, yet allowFirstOnly is set to FALSE", match.call() )
 		else
@@ -104,6 +115,7 @@ importModelOutputTables <- function(
 		}
 		tableList[[i]] <- currentTable
 	}
+	
 	if(returnFormat == "DFList")
 		return(tableList)
 	else

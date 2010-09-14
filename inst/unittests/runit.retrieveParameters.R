@@ -124,7 +124,7 @@ test.getOmegas <- function()
 	expOmegas <- array(c(0.164, 0, 0, 0, 0.165, 0, 0, 0, 1.3), c(3,3))
 #	dimnames(expOmegas) = list(c("ETA1", "ETA2", "ETA3"), c("ETA1", "ETA2", "ETA3"), "estimates)
 	
-	isFixed <- c("OMEGA11  FALSE",  "OMEGA22 |  FALSE|FALSE",  "OMEGA33  FALSE")
+	isFixed <- c("OMEGA11 | FALSE",  "OMEGA21|OMEGA22 | FALSE|FALSE",  "OMEGA33 | FALSE")
 	expOmegaInit <- diag(c(0.128, 0.142, 1.82))
 	dimnames(expOmegaInit) = list(isFixed , isFixed )
 	dimnames(expOmegas) = list(isFixed , isFixed )
@@ -253,10 +253,10 @@ test.getSigmas <- function()
 	testRuns <- RNMImport:::getInternalTestRuns()
 	run1 <- testRuns[["NMBasicNotab"]]
 	prob1 <- getProblem(run1)
-	
-	expSigmas <- array(0.0202, c(1,1), dimnames = list("SIGMA11  FALSE", "SIGMA11  FALSE"))
-	expSigmaStderrs <- array(0.00322, c(1,1), dimnames = list("SIGMA11  FALSE", "SIGMA11  FALSE"))
-	expSigmaInit <- matrix(0.0231, 1,dimnames = list("SIGMA11  FALSE", "SIGMA11  FALSE")) 
+	fixed <- list("SIGMA11 | FALSE", "SIGMA11 | FALSE")
+	expSigmas <- array(0.0202, c(1,1), dimnames = fixed)
+	expSigmaStderrs <- array(0.00322, c(1,1), dimnames = fixed)
+	expSigmaInit <- matrix(0.0231, 1,dimnames = fixed) 
 	
 	checkEquals(getSigmas(prob1),  expSigmas)
 	checkEquals(getSigmas(run1),  expSigmas)
@@ -280,8 +280,8 @@ test.getSigmas <- function()
 	prob2 <- getProblem(run2)
 	
 	simSigmas <- array(c(0.0241, 0.026, 0.0262, 0.0295, 0.0244), dim = c(1,1,5), 
-			dimnames = list("SIGMA11  FALSE", "SIGMA11  FALSE", c("sim1", "sim2", "sim3", "sim4", "sim5")))
-	sigmaInitial <- matrix(0.0202, 1, dimnames = list("SIGMA11  FALSE", "SIGMA11  FALSE"))
+			dimnames = c(fixed, list(c("sim1", "sim2", "sim3", "sim4", "sim5"))))
+	sigmaInitial <- matrix(0.0202, 1, dimnames = fixed)
 	
 	checkEquals(getSigmas(prob2, subProblemNum = 2:4),  simSigmas[,, 2:4, drop = FALSE ])
 	checkEquals(getSigmas(prob2, what = "initial", subProblemNum = 1:5), sigmaInitial)
@@ -315,10 +315,10 @@ test.getSigmas <- function()
 			msg = " | getSigmas correct (1)")
 	
 	sigmaTest2 <- getSigmas(prob3, what = c("stderrors", "initial"), method = 1)
-	
+	sigs <- "SIGMA11 | FALSE"
 	checkEquals(sigmaTest2, 
 			structure(list(initial.estimates = structure(0.0231, .Dim = c(1L, 
-											1L), .Dimnames = list("SIGMA11  FALSE", "SIGMA11  FALSE")), 
+											1L), .Dimnames = list(sigs, sigs)), 
 							standard.errors = structure(0.000746, .Dim = c(1L, 
 											1L), .Dimnames = list("EPS1", "EPS1"))), .Names = c("initial.estimates", 
 							"standard.errors"), methodName = "Iterative Two Stage"), 

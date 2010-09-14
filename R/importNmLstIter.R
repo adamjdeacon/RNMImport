@@ -14,19 +14,20 @@
 				grep.out <- grep( "^ITERATION NO\\.", x )
 				if( !length(grep.out) ) grep.out <- 0              
 				grep.out
-			})
+			}
+	)
 	
 # 	extract the elements of the list which contain minimization information, rather than iteration information
 	minInfo <- unlist(iterList[sapply(iterList, function(x) any(regexMatches(x, rx = "MINIMIZATION")))])
 	# if the information was not missing, extract other elements
 	
+#	TODO: I think this should return NULL if false!
+	minResult <- numEval <- numSigDigits <- NULL
 	if(length(minInfo)>0)
 	{
 		minResult <- equalExpressionPop(  minInfo, "MINIMIZATION", sep = "[[:space:]]*", inPlace=TRUE     )
 		numEval   <- colonPop( minInfo, "NO\\. OF FUNCTION EVALUATIONS USED", inPlace = TRUE     )
 		numSigDigits <- colonPop( minInfo, "NO\\. OF SIG\\. DIGITS IN FINAL EST\\.", inPlace = TRUE )
-	} else {
-		return(NULL)
 	}
 	
 	iterInfo <- iterList[ as.logical(iters) ]
@@ -57,7 +58,7 @@
 	
 	out <- lapply( iterInfo, .extractIterInfo)
 	out <- do.call( rbind, out )
-	if(!is.null(minInfo))
+	if(length(minInfo)>0)
 		attr( out, "min.info") <- list( minResult = minResult, numEval = numEval, 
 				numSigDigits = numSigDigits)
 	out

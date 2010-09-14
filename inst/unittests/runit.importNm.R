@@ -47,7 +47,7 @@ test.importNm.Basic <- function()
 	# test that omega final estimates imported as expected
 	
 	"%pst%" <- RNMImport:::"%pst%"
-	fixed <- c("OMEGA11  FALSE", "OMEGA22 |  FALSE|FALSE", "OMEGA33  FALSE")
+	fixed <- c("OMEGA11 | FALSE", "OMEGA21|OMEGA22 | FALSE|FALSE", "OMEGA33 | FALSE")
 	omegas <- getOmegas(prob1, what = "final")
 	expOmega <- array(diag(c(.164, .165, 1.3)), c(3,3), 
 			dimnames = list( fixed, fixed))
@@ -55,7 +55,7 @@ test.importNm.Basic <- function()
 	
 	# check that sigma final estimates imported as expected
 	
-	expSigma <- array(0.0202, c(1,1), dimnames = list("SIGMA11  FALSE", "SIGMA11  FALSE"))
+	expSigma <- array(0.0202, c(1,1), dimnames = list("SIGMA11 | FALSE", "SIGMA11 | FALSE"))
 	checkEquals(getSigmas(run1, what = "final"), expSigma, msg = " |sigma final estimates imported as expected")
 	
 	## check import of data
@@ -276,14 +276,13 @@ test.importNm.BasicNM7 <- function()
 	
 	# check sigmas
 	checkEquals(allSigmas, list(structure(0.0259, .Dim = c(1L, 1L), 
-							.Dimnames = list("SIGMA11  FALSE", 
-									"SIGMA11  FALSE"), methodName = "Iterative Two Stage"), structure(0.0266, .Dim = c(1L, 1L), .Dimnames = list(
-									"SIGMA11  FALSE", "SIGMA11  FALSE"), methodName = "Stochastic Approximation Expectation-Maximization")),
+							.Dimnames = list("SIGMA11 | FALSE", "SIGMA11 | FALSE"), methodName = "Iterative Two Stage"), structure(0.0266, .Dim = c(1L, 1L), .Dimnames = list(
+									"SIGMA11 | FALSE", "SIGMA11 | FALSE"), methodName = "Stochastic Approximation Expectation-Maximization")),
 			msg = " |sigmas imported correctly")
 	
 	
 	# check omegas
-	fixedInfo <- c("OMEGA11  FALSE", "OMEGA22 |  FALSE|FALSE", "OMEGA33  FALSE")
+	fixedInfo <- c("OMEGA11 | FALSE", "OMEGA21|OMEGA22 | FALSE|FALSE", "OMEGA33 | FALSE")
 	checkEquals( allOmegas, 
 			list(structure(c(0.157, 0, 0, 0, 0.162, 0, 0, 0, 0.737), .Dim = c(3L, 
 									3L), .Dimnames = list(fixedInfo , fixedInfo ),  
@@ -325,7 +324,7 @@ test.importNm.BasicNM7 <- function()
 	checkEquals(nmData(run2, dataType = "output"), data.frame(), msg = " |empty output data" )
 	
 	# spot checks that other things were imported correctly
-#	checkEquals(getSigmas(run2), getSigmas(run1), msg = " |identical sigmas ")
+	checkEquals(getSigmas(run2), getSigmas(run1), msg = " |identical sigmas ")
 	checkEquals(getThetas(run2), getThetas(run1), msg = " | identical thetas")
 	
 	checkEquals(nmData(run2, dataType = "input"), nmData(run1, dataType = "input"))

@@ -47,7 +47,6 @@ blockBind <- function(
 	
 	if( giveNames ) 
 	{
-#		browser()
 		### get the names that are already there
 		names <- 
 				unlist( 
@@ -80,6 +79,7 @@ blockBind <- function(
 		half <- sum(half)
 		fixed <- addThese <- character(0)
 		elementName <- matrix('', nrow=half, ncol=half)
+#		browser()
 		if(length(comments)== half*(half+1)/2){
 #			assumes block structure
 			count <- 0
@@ -105,19 +105,34 @@ blockBind <- function(
 			if(length(comments) == half){
 #			assumes diagonal structure
 				### replace empty with appropriate name
-				comments <- 
-						ifelse( comments == "", sprintf("%s%d%d", defaultPrefix, 1:nrow(outMat), 1:nrow(outMat)), comments )
+				dummies <- which(comments == "")
+				if(length(dummies)>0){
+					for(dummy in dummies){
+						comments[dummy] <- 
+								sprintf("%s%d%d", defaultPrefix, dummy, dummy)
+					}
+					
+				}
+				dummies <- which(comments == " |")
+				if(length(dummies)>0){
+					for(dummy in dummies){
+						comments[dummy] <- 
+								paste(defaultPrefix, dummy, 1:dummy, sep='', collapse='|')
+					}
+					
+				}
+				
 #				This should have been already done
 #				for (i in seq(along=comments)){
 #					addThese[i] <- paste(comments[1:i],collapse='|')
 #					fixed[i] <- paste(names[1:i],collapse='|')
 #				}
+		
 				for(thisName in seq(along=names)){
 					names[thisName] <- paste(comments[thisName], names[thisName], sep=' | ')
 				}
 			} else {
 				warning('mixed block comments')
-				browser()
 			}
 		} 
 		dimnames( outMat ) <- rep( list(names), 2)
