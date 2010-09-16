@@ -12,8 +12,9 @@
 {
 	rNames <- row.names(myData)
 	myData <- data.frame(myData)
+	
 	# get classes of columns
-	myClasses <- sapply(myData, class)
+	myClasses <- sapply(myData, base:::class)
 	# detect presence of any character or column factors
 	
 	isFactororChar <- myClasses == "character" | myClasses == "factor"

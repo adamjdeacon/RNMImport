@@ -32,7 +32,7 @@
 	} else{ 
 		### BLOCK style, indicates a block diagonal specification                                                             
 		# retrieve the number of blocks present
-
+		
 		nBlocks <- equalExpressionPop( x, "BLOCK", sep = "[[:space:]]*", removeBrackets = TRUE, 
 				absent =  NULL, inPlace = TRUE)
 		sortIt <- lapply(.readValues(x),function(X)tryCatch(as.numeric(X), 
@@ -179,7 +179,16 @@
 	}
 	### each $OMEGA is a separate block
 	# this is somewhat complex because omegas can be specified in different ways
-#	browser()
+#	Take out lines that begin with a comment
+	omegas <- lapply(omegas, function(X){
+				commentLines <- regexpr('^ *;+', X)
+				dropComments <- which(commentLines >0)
+				if(length(dropComments )>0)
+					X <- X[-dropComments]
+				X 	
+			}
+	)
+
 	mList <- 
 			lapply( omegas, 
 					.extractInformation, guessNames = guessNames, component)

@@ -33,6 +33,7 @@ blockBind <- function(
 				dimnames( mList[[i]] ) <- rep( list(names), 2)
 		}	
 	}
+	
 	mList <- lapply( mList, as.matrix )
 	rowList <- sapply(mList, nrow)
 	outMat <- array(0, dim = rep(sum(rowList), 2))
@@ -48,7 +49,7 @@ blockBind <- function(
 	if( giveNames ) 
 	{
 		### get the names that are already there
-		names <- 
+		blockName <- names <- 
 				unlist( 
 						lapply( mList, function(x){ 
 									if(is.null(dimnames(x)[[1]])) rep("FALSE", nrow(x)) else rownames(x)  
@@ -102,7 +103,7 @@ blockBind <- function(
 			### replace empty with appropriate name
 			names <- ifelse( names == "", sprintf("%s%d", defaultPrefix, 1:nrow(outMat)), names  )
 		} else {
-			if(length(comments) == half){
+			if(all(length(comments) == half)){
 #			assumes diagonal structure
 				### replace empty with appropriate name
 				dummies <- which(comments == "")
@@ -122,17 +123,12 @@ blockBind <- function(
 					
 				}
 				
-#				This should have been already done
-#				for (i in seq(along=comments)){
-#					addThese[i] <- paste(comments[1:i],collapse='|')
-#					fixed[i] <- paste(names[1:i],collapse='|')
-#				}
-		
 				for(thisName in seq(along=names)){
 					names[thisName] <- paste(comments[thisName], names[thisName], sep=' | ')
 				}
 			} else {
-				warning('mixed block comments')
+				dimnames( outMat ) <- rep( list(blockName ), 2)
+				return(outMat )
 			}
 		} 
 		dimnames( outMat ) <- rep( list(names), 2)
