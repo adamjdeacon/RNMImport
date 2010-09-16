@@ -39,6 +39,7 @@ importModelOutputTables <- function(
 	tableList <- vector(mode = "list", length = numStatements)
 	
 	allColNames <- character(0)
+	
 	for(i in 1:numStatements)
 	{
 		currentTable <- try(readNmData(file = .getFile(tableStatement[i, FILEFIELD], path = path)), 

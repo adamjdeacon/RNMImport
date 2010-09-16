@@ -77,7 +77,7 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 	nmVersionMinor <- as.numeric(reportContents$VersionInfo[2])
 	versionInfo <- c(nmVersionMajor,  as.character(nmVersionMinor))
 	names(versionInfo) <- c("major", "minor")
-	
+
 	# read the control file contents, using the appropriate version
 	controlContents <- importNmMod(fileName=conFile,  
 			path = path, 

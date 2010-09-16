@@ -48,12 +48,14 @@
 		# IGNORE=LABEL
 		# IGN or IGNROE(code)
 		# ignoreRegexp <- "[[:space:]]+(IGN|IGNORE)[[:space:]]*=[[:space:]]*[,\\.[:alnum:]\\(\\)\\@\\#\"=\\<\\>/']+"
+		# ignoreRegexp <- "([[:space:]]+(IGN|IGNORE)[[:space:]]*[=]{0,1}[[:space:]]*\\([,\\.[:alnum:]\"=\\<\\>/']+\\)|[[:space:]]+(IGN|IGNORE)[[:space:]]*=[[:space:]]*[,\\.[:alnum:]\\@\\#\"=\\<\\>/']+)"
 		
-		ignoreRegexp <- "([[:space:]]+(IGN|IGNORE)[[:space:]]*[=]{0,1}[[:space:]]*\\([,\\.[:alnum:]\"=\\<\\>/']+\\)|[[:space:]]+(IGN|IGNORE)[[:space:]]*=[[:space:]]*[,\\.[:alnum:]\\@\\#\"=\\<\\>/']+)"
+		ignoreRegexp <- "([[:space:]]+(IGN|IGNORE)[[:space:]]*[=]{0,1}[[:space:]]*\\([, *\\.[:alnum:]\"=\\<\\>/']+\\)|[[:space:]]+(IGN|IGNORE)[[:space:]]*=[[:space:]]*[, *\\.[:alnum:]\\@\\#\"=\\<\\>/']+)"
 		
 		# one can also use IGN(code) or IGNORE(code)
 				
-		ignorePos <- gregexpr(dataSec, pattern = ignoreRegexp)
+		ignorePos <- 
+				gregexpr(dataSec, pattern = ignoreRegexp)
 		
 		# the call to gregexpr returns starting positions and lengths of matches, so now we must extract the actual strings
 		

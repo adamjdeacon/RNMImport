@@ -16,7 +16,7 @@ importModelData <- function(
 		dataStatement, inputStatement, dropCols = TRUE, trim=FALSE,	path = NULL, duplicateAliased = TRUE)
 {	
 	# TODO: need to handle the case where inputs are read from the previous problem's output 
-	
+
 	fileName <- dataStatement[,"File"]
 #	Can have IGN on the line!
 	fileName <-  gsub('( IGNORE | IGN).*','', fileName)
