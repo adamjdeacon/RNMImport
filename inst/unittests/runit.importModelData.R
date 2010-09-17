@@ -15,7 +15,22 @@ test.importModelData <- function()
 	# first test: checks that multiple IGNORE= are handled correctly
 	testDir <- file.path(unitTestPath, "testdata")
 	# x <- readNmData(file.path(testDir, "data3"))
+
+#	dataSec1="$DATA       UTC25_1.dat IGNORE=# IGNORE=(VISI.EQ.3)"
 	
+	dataStatement <- 
+			RNMImport:::.importNmModData("$DATA       UTC25_1.dat IGNORE=# IGNORE=(VISI.EQ.3)")
+	
+	testInput=c(File = "UTC25_1.dat",
+			IG  = "#;(VISI.EQ.3)",
+			ACCEPT = '', REWIND="FALSE",  RECORDS ='', TRANSLATE ='')
+	
+	checkEquals(dataStatement[1,1],testInput[1], msg='File OK') 
+	checkEquals(dataStatement[1,2],testInput[2], msg='IG OK') 
+	checkEquals(dataStatement[1,4],testInput[4], msg='REWIND OK')
+	
+	
+#	dataSec2 <- "$DATA nm.PHI_HV_05302010sampdoses.dat IGNORE=(COM=COM, CMT=2, CMT=4, CMT=7, CMT=8, CMT=10, CMT=11, CMT=12, BQL=1, AMT=0)"
 	dataStatement <- RNMImport:::.importNmModData("$DATA nm.PHI_HV_05302010sampdoses.dat IGNORE=(COM=COM, CMT=2, CMT=4, CMT=7, CMT=8, CMT=10, CMT=11, CMT=12, BQL=1, AMT=0)")
 	
 	testInput=c(File = "nm.PHI_HV_05302010sampdoses.dat",

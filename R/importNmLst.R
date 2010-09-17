@@ -118,7 +118,7 @@ importNmLstSimModel <- function(contents, numSub = NA)
 	
 	### Extract minimum value of objective function  
 	outList$Objective.Minimum <- .nmMVOF( lstList[["MINIMUM VALUE OF OBJECTIVE FUNCTION"]] )
-	
+
 	### Extract matrices
 	outList$CovarianceMatrix        <- .importNmLstMatrix( lstList[["COVARIANCE MATRIX OF ESTIMATE"        ]] )
 	outList$CorrelationMatrix       <- .importNmLstMatrix( lstList[["CORRELATION MATRIX OF ESTIMATE"       ]] )

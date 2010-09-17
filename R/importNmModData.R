@@ -50,7 +50,9 @@
 		# ignoreRegexp <- "[[:space:]]+(IGN|IGNORE)[[:space:]]*=[[:space:]]*[,\\.[:alnum:]\\(\\)\\@\\#\"=\\<\\>/']+"
 		# ignoreRegexp <- "([[:space:]]+(IGN|IGNORE)[[:space:]]*[=]{0,1}[[:space:]]*\\([,\\.[:alnum:]\"=\\<\\>/']+\\)|[[:space:]]+(IGN|IGNORE)[[:space:]]*=[[:space:]]*[,\\.[:alnum:]\\@\\#\"=\\<\\>/']+)"
 		
-		ignoreRegexp <- "([[:space:]]+(IGN|IGNORE)[[:space:]]*[=]{0,1}[[:space:]]*\\([, *\\.[:alnum:]\"=\\<\\>/']+\\)|[[:space:]]+(IGN|IGNORE)[[:space:]]*=[[:space:]]*[, *\\.[:alnum:]\\@\\#\"=\\<\\>/']+)"
+		ignoreRegexp <- "([[:space:]]+(IGN|IGNORE)[[:space:]]*[=]{0,1}[[:space:]]*\\([, *\\.[:alnum:]\"=\\<\\>/']+\\)|[[:space:]]+(IGN|IGNORE)[[:space:]]*=[[:space:]]*[,\\.[:alnum:]\\@\\#\"=\\<\\>/']+)"
+#		gregexpr(dataSec1, pattern = ignoreRegexp)
+#		gregexpr(dataSec2, pattern = ignoreRegexp)
 		
 		# one can also use IGN(code) or IGNORE(code)
 				

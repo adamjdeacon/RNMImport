@@ -28,6 +28,16 @@
 		minResult <- equalExpressionPop(  minInfo, "MINIMIZATION", sep = "[[:space:]]*", inPlace=TRUE     )
 		numEval   <- colonPop( minInfo, "NO\\. OF FUNCTION EVALUATIONS USED", inPlace = TRUE     )
 		numSigDigits <- colonPop( minInfo, "NO\\. OF SIG\\. DIGITS IN FINAL EST\\.", inPlace = TRUE )
+		
+#		look for line between 'SIG. DIGITS' and 'ARITHMETIC' for Cov.stat output
+		Sig.digs.Line <- which(regexpr('SIG. DIGITS', minInfo)>0)
+		Arith.Line <- which(regexpr('ARITHMETIC', minInfo)>0)
+		Cov.stat <- ' '
+		if(length(Sig.digs.Line>0) & length(Arith.Line>0))
+			if(( Arith.Line - Sig.digs.Line >1)){
+				Cov.stat <- 
+						paste(minInfo[(Sig.digs.Line+1):(Arith.Line-1)], collapse='')
+			} 
 	}
 	
 	iterInfo <- iterList[ as.logical(iters) ]
