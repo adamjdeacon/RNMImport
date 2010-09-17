@@ -16,8 +16,7 @@ test.importModelData <- function()
 	testDir <- file.path(unitTestPath, "testdata")
 	# x <- readNmData(file.path(testDir, "data3"))
 	
-	dataStatement <- RNMImport:::
-	dataStatement <- .importNmModData("$DATA nm.PHI_HV_05302010sampdoses.dat IGNORE=(COM=COM, CMT=2, CMT=4, CMT=7, CMT=8, CMT=10, CMT=11, CMT=12, BQL=1, AMT=0)")
+	dataStatement <- RNMImport:::.importNmModData("$DATA nm.PHI_HV_05302010sampdoses.dat IGNORE=(COM=COM, CMT=2, CMT=4, CMT=7, CMT=8, CMT=10, CMT=11, CMT=12, BQL=1, AMT=0)")
 	
 	testInput=c(File = "nm.PHI_HV_05302010sampdoses.dat",
 			IG  = "(COM=COM,CMT=2,CMT=4,CMT=7,CMT=8,CMT=10,CMT=11,CMT=12,BQL=1,AMT=0)",
