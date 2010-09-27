@@ -121,8 +121,7 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 				
 				Sig.digs <- sapply(MethodResults, "[[", "Sig.digs")
 				names(Sig.digs) <- paste('Sig.digs', 1:length(Sig.digs))
-				
-				minInfo <- c(TermStatus, Cov.stat, Sig.digs)
+				minInfo <- c(TermStatus, unlist(Cov.stat), unlist(Sig.digs))
 				# attr(objectiveFinal, "methods") <- methodsUsed
 				# create the object
 				new("NMBasicModelNM7", parameterIterations = paramIter, 
