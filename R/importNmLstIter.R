@@ -18,26 +18,31 @@
 	)
 	
 # 	extract the elements of the list which contain minimization information, rather than iteration information
-	minInfo <- unlist(iterList[sapply(iterList, function(x) any(regexMatches(x, rx = "MINIMIZATION")))])
+	minInfoPos <- which(sapply(iterList, function(x) any(regexMatches(x, rx = "MINIMIZATION"))))
+	minInfo <- unlist(iterList[minInfoPos])
 	# if the information was not missing, extract other elements
 	
 #	TODO: I think this should return NULL if false!
 	minResult <- numEval <- numSigDigits <- NULL
 	if(length(minInfo)>0)
 	{
+#		if there are warning messages about the minimization then we must condense to one string
+		keep.minInfo <- minInfo
 		minResult <- equalExpressionPop(  minInfo, "MINIMIZATION", sep = "[[:space:]]*", inPlace=TRUE     )
+		if(length(minResult)>1){
+			minResult <- paste(keep.minInfo[grep("MINIMIZATION", keep.minInfo)], collapse='\n')
+		}
 		numEval   <- colonPop( minInfo, "NO\\. OF FUNCTION EVALUATIONS USED", inPlace = TRUE     )
 		numSigDigits <- colonPop( minInfo, "NO\\. OF SIG\\. DIGITS IN FINAL EST\\.", inPlace = TRUE )
-		
-#		look for line between 'SIG. DIGITS' and 'ARITHMETIC' for Cov.stat output
-		Sig.digs.Line <- which(regexpr('SIG. DIGITS', minInfo)>0)
-		Arith.Line <- which(regexpr('ARITHMETIC', minInfo)>0)
+
+#		look for next block in iteration list
 		Cov.stat <- ' '
-		if(length(Sig.digs.Line>0) & length(Arith.Line>0))
-			if(( Arith.Line - Sig.digs.Line >1)){
-				Cov.stat <- 
-						paste(minInfo[(Sig.digs.Line+1):(Arith.Line-1)], collapse='')
-			} 
+		if(minInfoPos < length(iterList)){
+			test <- 
+					unlist(iterList[minInfoPos + 1])[1]
+			if(any(gregexpr(' *PARA.*|EST.*', test)[[1]]>0))
+				Cov.stat <- test
+		} 
 	}
 	
 	iterInfo <- iterList[ as.logical(iters) ]
@@ -70,7 +75,7 @@
 	out <- do.call( rbind, out )
 	if(length(minInfo)>0)
 		attr( out, "min.info") <- list( minResult = minResult, numEval = numEval, 
-				numSigDigits = numSigDigits)
+				numSigDigits = numSigDigits, Cov.stat=Cov.stat)
 	out
 	
 }
