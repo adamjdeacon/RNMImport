@@ -46,9 +46,13 @@ importModelData <- function(
 	
 	# Call readNmData, which is the workhorse function that actually reads the table
 	# single IGNORE=c characters are handled here, whereas IGNORE=(list) is handled below 
+
 	myData <- readNmData(file = fileName, ignore = ignoreChars, 
 			translate = translate)
-		
+	if(inherits(myData,'try-error')){
+		return(simpleError(myData))
+	}	
+
 	# Deal with the case of additional columns in the dataset
 	if(nrow(inputStatement) == (ncol(myData) - 1) && all(is.na(myData[, ncol(myData)]))) 
 		myData <- myData[,  - length(myData), drop = F]
