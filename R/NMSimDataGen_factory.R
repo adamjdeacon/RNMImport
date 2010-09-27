@@ -31,11 +31,18 @@ NMSimDataGen <- function(controlStatements, path, reportContents = NULL,
 				
 				# now extract initial value estimates of parameters:
 				
-			new("NMSimDataGen", nmVersionMajor = versionInfo["major"],
-					nmVersionMinor = as.numeric(versionInfo["minor"]), numSimulations = as.numeric(controlStatements$Sim["nSub"]), 
-					seeds = seeds, inputData = inData, outputData = outTables, controlStatements = 
-							controlStatements, problemStatement = controlStatements$Problem,
-					thetaInitial = .Theta, omegaInitial = .Omega, sigmaInitial = .Sigma,
+			new("NMSimDataGen", 
+					nmVersionMajor = versionInfo["major"],
+					nmVersionMinor = as.numeric(versionInfo["minor"]), 
+					numSimulations = as.numeric(controlStatements$Sim["nSub"]), 
+					seeds = seeds, 
+					inputData = inData, 
+					outputData = outTables, 
+					controlStatements =  controlStatements, 
+					problemStatement = controlStatements$Problem,
+					thetaInitial = .Theta, 
+					omegaInitial = .Omega, 
+					sigmaInitial = .Sigma,
 					additionalVars = as.data.frame(matrix(ncol = 0, nrow = nDataRows)),
 					reportStatements = reportContents)
 	})
