@@ -42,8 +42,8 @@
 	blockResult$TermStatus <- gsub(methodTextBlock[termStatusLineNum], pattern = "^[[:space:]]+", replacement = "")
 	
 	# retrieve SIG. DIGITS
+	
 	Sig.digsLineNum <- grep(methodTextBlock, pattern = "SIG. DIGITS")[1]
-#	browser()
 	if(!is.na(Sig.digsLineNum)){
 		Sig.digsLoc <- 
 				gregexpr(methodTextBlock[Sig.digsLineNum], pattern = "[0-9]+[.]+[0-9]*")[[1]]
@@ -148,7 +148,8 @@ importNmReport.NM7 <- function( content, textReport = FALSE )
 		else if(simStep & !objFun)
 		{	
 			RNMImportWarning( "This is a simulation without modelling step, will only return raw contents\n", match.call() )
-			problemResults[[i]] <-list(0)
+			problemResults[[i]] <- 
+					importNmLstSimOnly.NM7(contents=currentProb, numSub=NA)
 		}
 		# no data simulation,  EST step (JJ)
 		else if(!simStep & objFun)
@@ -315,3 +316,28 @@ importNmLstSimModel.NM7 <- function(contents, numSub = NA)
 	outList
 }
 
+importNmLstSimOnly.NM7 <- function(contents, numSub = NA)
+{
+	contents <- cleanReportContents(contents)
+	if(is.na(numSub))
+	{
+		# find all lines of the form
+		#PROBLEM NO.:         1    SUBPROBLEM NO.:      N
+		subprobLines <- grep(contents, pattern = "PROBLEM NO\\.\\: [[:blank:]]*[0-9][[:blank:]]*SUBPROBLEM NO\\.\\:[[:blank:]]*[0-9]+[[:blank:]]*$")
+		# if there is only one sub-problem, then the above line will not appear, hence the need for the following
+		# logic 
+		numSub <- if(length(subprobLines) >= 1) length(subprobLines) else 1
+		
+	}
+#	if(numSub > 0)
+#	{
+	outList <- list()       
+	
+	# outList$VersionInfo  <- nmVersion( contents ) 
+	
+	# extract the number of records and individuals in the data
+	outList$nRecords     <- colonPop( contents, "TOT\\. NO\\. OF OBS RECS"   , inPlace = FALSE, numeric = TRUE )$op.out
+	outList$nIndividuals <- colonPop( contents, "TOT\\. NO\\. OF INDIVIDUALS", inPlace = FALSE, numeric = TRUE )$op.out
+	
+	outList
+}
