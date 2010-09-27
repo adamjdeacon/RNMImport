@@ -292,6 +292,7 @@ importNmReport <- function( fileName, path = NULL, controlStatements = NULL, tex
 	# now loop through the different problems
 	
 	problemResults <- vector(mode = "list", length = length(partitionedContent))	
+
 	for(i in seq_along(problemResults))
 	{
 		currentProb <- partitionedContent[[i]]
