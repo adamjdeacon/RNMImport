@@ -56,7 +56,7 @@ scanFile <- function( file, empty.rx = "^[[:space:]]*$" )
 		return(NULL)
 	}
 	contents <- scan( file, sep = "\n", what = "character", 
-			blank = TRUE, multi = FALSE, quiet = TRUE)
+			blank = TRUE, multi = FALSE, quiet = TRUE, fill=TRUE)
 	# remove whitespace in the file content and return
 	contents <- negGrep( empty.rx , contents, value = TRUE )
 	if( length(contents) > 0) contents else NULL
@@ -203,4 +203,19 @@ hasExtension <- function(fileName, extensions)
 	if(Sys.info()["sysname"] == "Windows")
 		return(tolower(fileName))
 	fileName
+}
+
+#' 
+#' @param contStates 
+#' @param pri 
+#' @returnType LOGICAL
+#' @return does the string, basically PRIOR, exist in the control file?
+#' @author jjames
+.lookFor <- function(contStates=names(obj@controlStatements), subr=NULL, pri='^ +[$](PRIOR|PRI)|PRIOR='){
+	test2 <- FALSE
+	test1 <- any(regexpr(pri, contStates, ignore=TRUE)>0)
+	if(length(subr)>0){
+		test2 <- any(regexpr(pri, subr, ignore=TRUE)>0)
+	}
+	test1 || test2
 }
