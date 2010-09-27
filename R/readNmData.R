@@ -85,11 +85,28 @@ readNmData <- function(
 	}
 	### Need to work out which rows we want to omit here
 	skipRows <- unique(c(igRows, headRows, tabRows, theHeadRow))
+	#	count the number of columns in remaining rows
+	itemsPerLine <-sapply(gregexpr('?,?', allScan[-skipRows]), function(X)sum(attr(X, 'match.length')))
+	irregular <- integer(0)
+	ul <- unique(itemsPerLine)
+	if(length(ul)>1){
+		RNMImportWarning(paste("readNmData: removing extra columns on lines in",file,'\n'), match.call())
+		mul <- min(ul)
+		irregular <- which(itemsPerLine!= mul)
+		cat('trimming rows:', irregular, '\n')
+		ir <- irregular[1]
+		for (ir in irregular){
+			line <- which(attr(gregexpr('?,?', allScan[-skipRows][ir])[[1]], 'match.length')>0)		
+			allScan[-skipRows][ir] <- substring(allScan[-skipRows][ir],1, line[mul + 1] - 1)
+		}
+	}
+	
 	dataCall <- list( na.strings = ".", header = FALSE, sep = sep, comment.char = "")
+
 	if(!length(skipRows)) {
 		dataCall$file <- file
 	} else {
-		if(all(diff(skipRows) == 1) & any(skipRows == 1) ) { # rows to skip are at the beginning
+		if( length(irregular)==0 & (all(diff(skipRows) == 1) & any(skipRows == 1)) ) { # rows to skip are at the beginning
 			dataCall$file <- file
 			dataCall$skip <- max(skipRows)
 		} else {  # Need to do something with the scanned data - write to a file and retrieve
@@ -99,7 +116,6 @@ readNmData <- function(
 		}
 	}
 	myData <- try( do.call( read.table, dataCall ), silent = TRUE )
-	
 	try( unlink( tmpFile ), silent = TRUE )     
 	
 	### apply the header as the names of the data
@@ -133,7 +149,9 @@ readNmData <- function(
 	
 	### deal with the records option
 	.readNmData.nmRecords( records, myData)
-	
+#	cat(file, '\n')
+#	print(myData[1:5,])
+#	browser()
 	return(myData)
 }
 
