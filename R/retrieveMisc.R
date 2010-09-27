@@ -19,7 +19,8 @@
 
 getEstimateCov <- function(obj, corMatrix = FALSE, invCorMatrix = FALSE, pdMatrix = FALSE, ...)
 {
-	RNMImportStop("getEstimateCov not implemented for this class yet\n", match.call())
+	RNMImportWarning(paste("getEstimateCov not implemented for  class", class(obj), "yet\n"), match.call())
+	return(NULL)
 }
 
 setGeneric("getEstimateCov")
