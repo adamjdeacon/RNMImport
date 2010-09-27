@@ -54,14 +54,16 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 					conOne && conTwo
 				}, y = conFileVector)
 		reportFile <- allListFiles[whichFile]
-		if(!length(reportFile))
-			RNMImportStop(msg = "No report file in the directory!")
+		if(!length(reportFile)){
+			RNMImportWarning(msg = "No report file in the directory!")
+			return(new('NMRun'))
+		}
 		if(length(reportFile) > 1)
 		{
-			RNMImportWarning(msg = "More than one report file. Using the first.")
+			RNMImportWarning(msg = paste("More than one report file. Using ", reportFile[1]))
 			reportFile <- reportFile[1]
 		}		
-	}else{
+	} else {
 		reportFile <- basename(reportFile)
 		path <- dirname(fullConFilePath)
 	}
@@ -77,12 +79,14 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 	nmVersionMinor <- as.numeric(reportContents$VersionInfo[2])
 	versionInfo <- c(nmVersionMajor,  as.character(nmVersionMinor))
 	names(versionInfo) <- c("major", "minor")
-
+	
 	# read the control file contents, using the appropriate version
 	controlContents <- importNmMod(fileName=conFile,  
 			path = path, 
 			version = versionInfo["major"], 
 			textReport = textReport)
+	
+#	controlContents$problemContents[[1]]$Prior
 	problems <- controlContents$problemContents
 	numProblems <- length(problems)
 	
@@ -93,7 +97,7 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 	{
 		controlStatements <- problems[[i]]
 		reportStatements <- probResults[[i]]
-
+		
 		# check if there is a simulation statement.  If so, proceed accordingly
 		if(!is.null(controlStatements$Sim))
 		{			
@@ -111,10 +115,13 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 		} # end !is.null(controlStatements$Sim)
 		else
 		{			 			
+#			browser()
 			if(nmVersionMajor == "VII"){
+#				controlStatements$Prior
 				modelList[[i]] <- NMBasicModelNM7(controlStatements, path, 
 						reportContents = reportStatements, 
 						dropInputColumns = dropInputColumns, versionInfo = versionInfo)
+#				modelList[[i]]@controlStatements$Prior 
 			} 
 			else
 				modelList[[i]] <- NMBasicModel(controlStatements, path, reportStatements, 
@@ -129,6 +136,7 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 			dataSubset(modelList[[i]]) <- defaultDataSubset()
 		}
 	} # end for(i in 1:numProblems)
+	
 	# retrieve basic information on the control and report files, e.g. date of modification, size, etc.
 	fileInfo <- file.info(fullConFilePath, fullLstFilePath)
 	# obviously these are not directories!
@@ -141,6 +149,7 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 			controlFileInfo= fileInfo[1,], 
 			nmVersionMajor = nmVersionMajor,
 			nmVersionMinor = nmVersionMinor,
-			numProblems = numProblems, problems = modelList,
+			numProblems = numProblems, 
+			problems = modelList,
 			reportText = reportContents$Raw)
 }
