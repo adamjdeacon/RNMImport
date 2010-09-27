@@ -94,7 +94,7 @@ getSigmasOrOmegas.NM7 <- function(obj, what = "final", item = c("sigma", "omega"
 		if(length(validWhat) == 0) RNMImportStop("No valid items selected for retrieval!", call = match.call())
 		
 		# single object selected, don't return a list
-		if('Prior' %in% names(obj@controlStatements)){
+		if(.lookFor(contStates=obj@controlStatements, subr=obj@controlStatements$Subroutine)){
 			useEta <- 1:length(dimNames[[1]])
 			if(item == 'omega'){
 				useEta <- 1:obj@controlStatements$Prior['nEta']
@@ -210,7 +210,6 @@ getSigmasOrOmegas.NM7 <- function(obj, what = "final", item = c("sigma", "omega"
 	} else {
 		retrievalFunc <- .getSigOrOmSingleMethod	
 	}
-	
 	if(length(method) > 1) 
 	{
 		# if more than one method selected, extract all of them
@@ -219,5 +218,5 @@ getSigmasOrOmegas.NM7 <- function(obj, what = "final", item = c("sigma", "omega"
 		x
 	}
 	else
-		retrievalFunc(method, item)
+		retrievalFunc(meth = method, item)
 }
