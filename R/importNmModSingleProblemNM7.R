@@ -24,9 +24,7 @@
 	prob <- list()	
 	# find the existent sections in the current problem
 	titles <- sectionTitles(poppedTxt)	
-#	browser()
-	
-	if("PRI" %in% titles)
+	if(.lookFor(contStates=titles, subr=poppedTxt[grep('\\$SUB.*', poppedTxt)], pri='PRI|OR'))
 	{	
 		logMessage(log = "lowLevelParse", "$PRIOR found \n")
 		prob$Prior <- .importNmModPrior( contents )
