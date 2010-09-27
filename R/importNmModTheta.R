@@ -51,9 +51,22 @@
 			extended = TRUE, perl = TRUE)
 	
 	thetaLines <- regexSplit(thetaLines, "\\)?[[:space:]]+\\(?")
+
 	# add additional spaces around "FIX"
-	
 	thetaLines <- gsub( "FIX", " FIX ", thetaLines )  
+	
+#	count the number of FIX statements
+	fixes  <- sapply(gregexpr(' FIX ',thetaLines), length)
+	if(any(length(fixes)>0)){
+		for(fixThis in which(fixes>1)){
+			pain <- 
+					gregexpr('[+-.eE0-9]+ *FIX',thetaLines[fixThis])
+			thetaLines <- c(thetaLines[-fixThis], substring(thetaLines[fixThis],pain[[1]], pain[[1]] + attr(pain[[1]], 'match.length')))
+			if(length(comments)>fixThis){
+				comments <- c(comments[1:(fixThis-1)], rep(comments[fixThis], length(pain[[1]])), comments[(fixThis+1):length(comments)])
+			}
+		}
+	}	
 	# initialize the output matrix
 	out <- matrix( NA, ncol = 3, nrow = length( thetaLines ), 
 			dimnames = list( sprintf("THETA%d", 1:length(thetaLines)), 
@@ -80,6 +93,7 @@
 		th <- gsub( "[\\(\\)]", "", th) # remove the brackets       
 		th <- gsub( "inf", "Inf", th, ignore.case = TRUE ) # tidy up Inf
 		
+		## This assumes the numbers are always comma-separated. This is not the case. See FIX fix earlier!
 		gx.out <- gregexpr( "," , th )[[1]]
 		
 		if( length(gx.out)==1 )
@@ -127,7 +141,7 @@
 				if(length(comments) > nrow(out)){
 					comments <- comments[1:nrow(out)]
 				} else {
-					comments <- comments + rep(' ', nrow(out) - length(comments) )
+					comments <- c(comments, rep(' ', nrow(out) - length(comments) ))
 				}
 				
 			}
