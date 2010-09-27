@@ -27,6 +27,7 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 	} # end if(inherits(inData, "try-error"))
 	
 	# import output tables if the $TABLE statement is present, else outdata is empty
+	
 	outTables <- .importTablesSafely(tableStatement=controlStatements$Table, path = path  )
 	
 	# need to know how many rows the data has, handle FIRSTONLY case here
@@ -37,12 +38,18 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 	if(is.null(nOutDataRows))
 		nOutDataRows <- 0
 	nInDataRows <- nrow(inData)
-	if(nInDataRows != nOutDataRows){
-		msg <- 	paste("Number of rows of output data", nOutDataRows, 
-				"\ndoes not match the number of rows of input data", nInDataRows,
-				"!\n")
-		cat(msg)
-		RNMImportWarning(msg)
+	if(is.null(nInDataRows)|is.null(nOutDataRows)){
+		msg <- 	paste("NULL rows of input or output data!\n")
+		RNMImportWarning(msg, match.call())
+		print(controlStatements$Table)
+	} else {
+		if(nInDataRows != nOutDataRows){
+			msg <- 	paste("Number of rows of output data", nOutDataRows, 
+					"\ndoes not match the number of rows of input data", nInDataRows,
+					"!\n")
+			cat(msg)
+			RNMImportWarning(msg)
+		}
 	}
 	# now create the class
 	# TODO: The following is too complex, simplify in future releases
