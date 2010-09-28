@@ -31,7 +31,8 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 	#deal with the 	"path" parameter
 	if(!is.null(path))
 		path <- processPath(path[1])
-	
+	os <- options(stringsAsFactors=FALSE)
+	on.exit(os)
 	# get the FULL paths to both files and store them
 	fullConFilePath <- tools:::file_path_as_absolute(.getFile(conFile, path))
 	conFile <- basename(conFile)
@@ -96,6 +97,19 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 	for(i in 1:numProblems)
 	{
 		controlStatements <- problems[[i]]
+#		browser()
+#		Examine to see if there is serious renaming by PsN that we have to read
+		if('Tables' %in% names(controlStatements)){
+			tableStatements <- controlStatements$Tables
+			if(any(tableStatements[,'File']=='npctab.dta')){
+				preFix <- substring(conFile, 1,3)
+				sortIt <- which(tableStatements$File=='npctab.dta')
+				tableStatements[sortIt,] <- cbind.data.frame(File=paste(preFix,'_original.npctab.dta', sep=''), tableStatements[sortIt,-1, drop=FALSE])
+				tableStatements <- rbind.data.frame(tableStatements,
+						cbind.data.frame(File=paste(preFix,'_simulation.1.npctab.dta', sep=''), tableStatements[sortIt,-1, drop=FALSE]))
+			}
+			controlStatements$Tables <- tableStatements
+		}
 		reportStatements <- probResults[[i]]
 		
 		# check if there is a simulation statement.  If so, proceed accordingly
