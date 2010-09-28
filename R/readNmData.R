@@ -86,7 +86,12 @@ readNmData <- function(
 	### Need to work out which rows we want to omit here
 	skipRows <- unique(c(igRows, headRows, tabRows, theHeadRow))
 	#	count the number of columns in remaining rows
-	itemsPerLine <-sapply(gregexpr('?,?', allScan[-skipRows]), function(X)sum(attr(X, 'match.length')))
+
+	if(length(skipRows)>0){
+		itemsPerLine <-sapply(gregexpr('?,?', allScan[-skipRows]), function(X)sum(attr(X, 'match.length')))
+	} else {
+		itemsPerLine <-sapply(gregexpr('?,?', allScan), function(X)sum(attr(X, 'match.length')))
+	}
 	irregular <- integer(0)
 	ul <- unique(itemsPerLine)
 	if(length(ul)>1){

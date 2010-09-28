@@ -138,6 +138,7 @@ getThetas.NMBasicModelNM7 <- function( obj, what = "final", subProblemNum = 1, m
 #			res <- matrix(ncol = length(thetas), nrow = 0, dimnames = list(NULL, colnames(initialValues)))
 			
 #			browser('sorting out NULL intial THETAS for 7')
+			any(regexpr('PRIOR=*', obj@controlStatements$Sub)>0)
 			if('Prior' %in% names(obj@controlStatements)){
 				res <- 
 						res <- matrix(ncol = length(thetas), nrow = 0, 

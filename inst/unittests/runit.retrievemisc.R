@@ -15,7 +15,7 @@ test.getObjective <- function()
 	obj <- getObjective(run1, addMinInfo = TRUE)
 	target <- 3228.988
 	attr(target, "minInfo") <- c("minResult" = "SUCCESSFUL", "numEval" = "143", 
-			"numSigDigits" = "3.5")
+			"numSigDigits" = "3.5", "Cov.stat" = " ")
 	checkEquals(obj, target)
 	
 	# NMSimModel
