@@ -106,13 +106,13 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 				sigmaFinal <- lapply(MethodResults, function(x) x$FinalEstimates$SIGMA)					
 				
 				#	colnames(thetaFinal) <- colnames(thetaInitial)
-				
 				objectiveFinal <- sapply(MethodResults, "[[", "Objective.Final")
+				if(is.na(objectiveFinal)) 
+					objectiveFinal <- numeric(0)
 				methodsUsed <- sapply(MethodResults, "[[", "method")
 				ETAshrinks <- lapply(MethodResults, "[[", "ETAshrink") 
 				EPSshrinks <-  lapply(MethodResults, "[[", "EPSshrink") 
 				
-#				browser()
 				TermStatus <- sapply(MethodResults, "[[", "TermStatus")
 				names(TermStatus) <- paste('TermStatus', 1:length(TermStatus))
 				

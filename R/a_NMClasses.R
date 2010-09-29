@@ -78,10 +78,11 @@ setClass(
 validity.NMBasicModelNM7 <- function(object)
 {
 	numMethods <- length( object@methodNames )
-	if(! all(numMethods == c( nrow(object@methodInfo), length(object@objectiveFinal), 
+	if(! all(numMethods == c( nrow(object@methodInfo), 
+					length(object@objectiveFinal), 
 					length(object@thetaFinal), length(object@sigmaFinal), 
 					length(object@omegaFinal)) ))
-		return("Inconsistency between number of methods used and the number of rows of method descriptors, length of theta estimates, sigma estimates, or omega estimates")
+		return("Inconsistency between number of methods used \nand the number of rows of method descriptors, \nlength of theta estimates, sigma estimates, or omega estimates")
 	if(! all(sapply(object@ETAShrinkage, function(x) is.numeric(x) | is.null(x) ) ) & all(sapply(object@EPSShrinkage, function(x) is.numeric(x) | is.null(x) ) ) )
 		return("Invalid class for shrinkage values")
 		
