@@ -56,8 +56,13 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 				}, y = conFileVector)
 		reportFile <- allListFiles[whichFile]
 		if(!length(reportFile)){
-			RNMImportWarning(msg = "No report file in the directory!")
-			return(new('NMRun'))
+			if(file.exists(file.path(path, 'psn.lst'))){
+				RNMImportWarning(msg = "Trying to use psn.lst!")
+				reportFile <- 'psn.lst'
+			} else {
+				RNMImportWarning(msg = "No report file in the directory!")
+				return(new('NMRun'))
+			}
 		}
 		if(length(reportFile) > 1)
 		{
