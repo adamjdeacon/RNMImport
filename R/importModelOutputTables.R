@@ -37,7 +37,7 @@ importModelOutputTables <- function(
 	returnFormat <- match.arg(returnFormat)
 	
 	numStatements <- nrow(tableStatement)
-	tableList <- vector(mode = "list", length = numStatements)
+	tableList <- vector(mode = "list", length = 0)
 	
 	allColNames <- character(0)
 	
@@ -100,7 +100,10 @@ importModelOutputTables <- function(
 		
 		# Now handle FIRSTONLY statement if it is present.  We take unique values of the ID by default		
 		# TODO: Make this logic more robust
-#		browser()
+		# OK. In some cases the table can exist but be NULL. 
+		# This is when we have a mixture of table types -e.g. when some of the tables
+		# don't exist (e.g. .PAR or .ETA are not in the tgz)
+		
 		if(allowFirstOnly & tableStatement[i, FIRSTONLYFIELD])
 		{
 			logMessage("Firstonly flag found, subsetting rows", "detailedReport")
@@ -113,9 +116,11 @@ importModelOutputTables <- function(
 			# set an attribute that controls whether or not the table was read via a "FIRSTONLY" statement
 			attr(currentTable, FIRSTONLYFIELD) <- FALSE
 		}
-		tableList[[i]] <- currentTable
+#		 try to get rid of issues surrounding missing tables
+		if(!inherits(currentTable, 'try-error'))
+			tableList[[i]] <- currentTable
 	}
-
+	
 	if(returnFormat == "DFList")
 		return(tableList)
 	else
@@ -124,22 +129,27 @@ importModelOutputTables <- function(
 			return(NULL)
 			
 		} else {
-			
 			# determine the "FIRSTONLY" tables, as these cannot be bound together with the other ones due to the size difference
-			tableStyles <- sapply(tableList, function(x) attr(x, FIRSTONLYFIELD))
-			normalTables <- tableList[!tableStyles]
-			firstOnlyTables <- tableList[tableStyles]
+			tableStyles <- 
+					sapply(tableList, function(x) 
+								switch(class(x),
+										data.frame=attr(x, FIRSTONLYFIELD),
+										NA)
+									
+					)
+			normalTables <- tableList[(!tableStyles) & !is.na(tableStyles)]
+			firstOnlyTables <- tableList[tableStyles & !is.na(tableStyles)]
 			
 			consolidatedTable <- do.call(cbind, normalTables)
 			if(!trim)
 				consolidatedTable <- .deriveNmColumns(consolidatedTable)
-
+			
 #			deal with reading single table simuation outputs
 			if(sim>0){
 				consolidatedTable[,'iter'] <- rep(1:sim, each=dim(consolidatedTable)[1]/sim)
 			}
 			# Check if there are both FIRSTONLY and non-FIRSTONLY tables
-			if((sum(tableStyles) * sum(!tableStyles) > 0))
+			if((sum(tableStyles& !is.na(tableStyles)) * sum((!tableStyles)& !is.na(tableStyles)) > 0))
 			{
 				RNMImportWarning("Found tables of both FIRSTONLY and NON-FIRSTONLY type, returning a list")
 				return(list("normal.tables" = consolidatedTable, "firstonly.tables" = do.call(cbind, firstOnlyTables)))

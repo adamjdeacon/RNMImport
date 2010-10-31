@@ -26,6 +26,7 @@
 					paste('cannot find', paste(tableStatement[missingFiles,lookFor], collapse=','))
 			RNMImportWarning(msg)
 		}
+
 #		Changed the behaviour of importModelOutputTables to handle missing files more informatively
 		outTables <- try(importModelOutputTables( tableStatement, path = path, sim = sim)) 
 		if( inherits( outTables, "try-error" ) | is.null(outTables)) 
