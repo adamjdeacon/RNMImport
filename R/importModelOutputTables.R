@@ -15,6 +15,7 @@
 #' Otherwise, attempts to consolidate all of the (unique) output table variables into a single data.frame, but will return
 #' a list of some of the tables had a FIRSTONLY statement, and others did not.
 #' @param path Path to the table files.  Can be a path name 
+#' @param sim flag to add 'iter' column if a simulation table, flagged by sim=[number of simulations] (i.e. >0)
 #' @return Returns: Either a list or a data.frame.  A data.frame of all unique output table columns (from all table files)
 #' is returned if returnFormat = "singleDF", UNLESS there are both FIRSTONLY tables and non-FIRSTONLY tables, in which
 #' case a list of 2 components is returned. 
@@ -23,7 +24,7 @@
 
 importModelOutputTables <- function(
 		tableStatement,	allowFirstOnly = TRUE, dvLog = FALSE, trim = FALSE,
-		returnFormat = c("singleDF", "DFlist"),	path = NULL
+		returnFormat = c("singleDF", "DFlist"),	path = NULL, sim=0
 )
 {	
 	NUMEXPECTEDCOLUMNS <- 5
@@ -62,9 +63,6 @@ importModelOutputTables <- function(
 #		this is necessary because if APPEND is used (which it is by default), NONMEM appears to ignore the presence of DV, WRES, etc. in the
 #		the table statement, and simply adds them to the end of the table on its own regardless of what order they appear in the TABLE statement
 		
-#		cat(i, allColNames , '\n')
-#		browser()	
-		
 		if(tableStatement[i, "append"])
 		{
 #			remove all columns ,but "DV" may be repeated
@@ -102,6 +100,7 @@ importModelOutputTables <- function(
 		
 		# Now handle FIRSTONLY statement if it is present.  We take unique values of the ID by default		
 		# TODO: Make this logic more robust
+#		browser()
 		if(allowFirstOnly & tableStatement[i, FIRSTONLYFIELD])
 		{
 			logMessage("Firstonly flag found, subsetting rows", "detailedReport")
@@ -116,7 +115,7 @@ importModelOutputTables <- function(
 		}
 		tableList[[i]] <- currentTable
 	}
-	
+
 	if(returnFormat == "DFList")
 		return(tableList)
 	else
@@ -134,6 +133,11 @@ importModelOutputTables <- function(
 			consolidatedTable <- do.call(cbind, normalTables)
 			if(!trim)
 				consolidatedTable <- .deriveNmColumns(consolidatedTable)
+
+#			deal with reading single table simuation outputs
+			if(sim>0){
+				consolidatedTable[,'iter'] <- rep(1:sim, each=dim(consolidatedTable)[1]/sim)
+			}
 			# Check if there are both FIRSTONLY and non-FIRSTONLY tables
 			if((sum(tableStyles) * sum(!tableStyles) > 0))
 			{

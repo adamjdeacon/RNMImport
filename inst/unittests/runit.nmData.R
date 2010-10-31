@@ -96,7 +96,7 @@ test.nmData.NMSim <- function()
 			"Extracting from run and problem directly should give same result")
 	test2 <- nmData(prob, dataType = "output")
 	checkTrue(setequal(names(test1), inputColumns), msg = "Checking presence of input data")
-	checkTrue(setequal(names(test2), c(outputColumns, "NSIM")), msg = "Checking presence of output data")
+	checkTrue(setequal(names(test2), c(outputColumns, c('iter', "NSIM"))), msg = "Checking presence of output data")
 	 
 	test3 <- nmData(prob, subProblemNum = 2:3, returnMode = "DFList") 
 	checkEquals(nrow(test3[["input"]]) * 2, nrow(test3[["output"]]), msg = "Number of rows of output is correct" )
@@ -107,7 +107,7 @@ test.nmData.NMSim <- function()
 	x <- union( inputColumns, outputColumns	)
 	y <- intersect(inputColumns, outputColumns )
 	
-	checkTrue(setequal(names(test4), c(x, "NSIM", paste(y, ".INPUT", sep = ""))), msg = "correct columns present")
+	checkTrue(setequal(names(test4), c(x, "iter", "NSIM", paste(y, ".INPUT", sep = ""))), msg = "correct columns present")
 	checkTrue(any(test4$DV != test4$"DV.INPUT"), msg = "simulated DV not equiavlent to input DV")
 	
 	# extract multiple simulations into a single DF
@@ -151,7 +151,7 @@ test.nmData.NMSim <- function()
 	test2298 <- nmData(	prob )
 	
 	checkTrue( setequal( colnames(test2298), c("IPRED", "IWRES", "PRED", "RES", "WRES", "CL", "V", "KA", "SEX", 
-							"absWRES", "SID", "AGE", "RACE", "HT", "SMOK", "HCTZ", "PROP", 
+							"absWRES", "iter", "SID", "AGE", "RACE", "HT", "SMOK", "HCTZ", "PROP", 
 							"CON", "AMT", "WT", "TIME", "SECR", "DV", "EVID", "SS", "II", 
 							"ID", "OCC", "SEX.INPUT", "NSIM")
 			), msg = "Single clashing column is now correct" )

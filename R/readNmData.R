@@ -17,6 +17,7 @@
 #' @author Mango Solutions
 
 # individual author: F. Gochez, based on code by R.Francois and R.Pugh 
+# this doesn't cope with a simgle mutilple iteration output simulation table file JJ
 
 readNmData <- function(
 		file, ignore = NULL, accept = NULL, translate = NULL,   
@@ -29,7 +30,6 @@ readNmData <- function(
 	if( is.character(translate) && translate == "" ) translate <- NULL
 	
 	### find the most appropriate separator
-	
 	if(missing(sep) || length(sep) > 1){ # then have a guess
 		possSeps <- if( missing(sep)) c("", ",") else sep # see ?read.table for how "" is used
 		countFields <- lapply(possSeps, count.fields, file = file)
@@ -37,6 +37,7 @@ readNmData <- function(
 		whichSep <- (1:length(possSeps))[maxFields == max(maxFields)][1]
 		sep <- possSeps[whichSep]
 	}
+	
 	CALL <- match.call()
 	allScan <- 
 			tryCatch(scanFile( file ), 
@@ -83,6 +84,7 @@ readNmData <- function(
 		rx <- paste(ignoreMod, collapse = "|")
 		igRows <- c(igRows, grep( rx, allScan )) 
 	}
+	
 	### Need to work out which rows we want to omit here
 	skipRows <- unique(c(igRows, headRows, tabRows, theHeadRow))
 	#	count the number of columns in remaining rows
@@ -125,7 +127,6 @@ readNmData <- function(
 	
 	### apply the header as the names of the data
 	if(length(theHeadRow) != 0 && theHeadRow != 0) {
-		
 		headLine <- allScan[theHeadRow]
 		ignoreMod <- replace(ignore, ignore == "@", "[[:alpha:]@]")
 		if(length(ignoreMod > 0)) {
@@ -133,15 +134,11 @@ readNmData <- function(
 			rx <- paste(ignoreMod, collapse = "|")
 			if(length(grep(headLine, pattern = rx)) > 0)
 				headLine <- ""
-			
 		}
 		
 		colHeaders <- .readValues( headLine, sep = sep, what = "character" )
 		if(length(colHeaders) <= length(myData))  {
-			
-#		 	browser()                             
 			names(myData)[seq_along(colHeaders)] <- colHeaders
-			
 		}
 	}
 	
@@ -149,7 +146,6 @@ readNmData <- function(
 	.readNmData.nmSubset( accept, myData, method = "accept")
 	
 	### deal with the translate delaration
-	
 	.readNmData.nmTranslate( translate, myData )
 	
 	### deal with the records option

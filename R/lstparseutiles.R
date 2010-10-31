@@ -315,7 +315,7 @@ partitionLstSubproblems <- function(contents)
 
 partitionMethods <- function(lstProblemContents)
 {
-	METHODDELIMITER <- "#METH"
+	METHODDELIMITER <- "#METH|SIMULATION STEP PERFORMED"
 	# holds the indices of the lines where each METHOD result is held
 	methodLines <- grep(lstProblemContents, pattern = METHODDELIMITER)
 
@@ -332,7 +332,6 @@ partitionMethods <- function(lstProblemContents)
 	methodBlocks <- vector(mode = "list", length = length(breakPoints) - 1 )
 	for(i in head(seq_along(breakPoints), -1 ))
 	{
-		
 		methodLine <- lstProblemContents[breakPoints[i]]
 		# assign the name of method as an attribute to the element of the list
 		# methodName <- pop( lstProblemContents[breakPoints[i]], option = "#METH", sep = ":", mode = "equal", inPlace = FALSE  )$op.out

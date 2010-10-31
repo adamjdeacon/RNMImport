@@ -102,7 +102,6 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 	for(i in 1:numProblems)
 	{
 		controlStatements <- problems[[i]]
-#		browser()
 #		Examine to see if there is serious renaming by PsN that we have to read
 		if('Tables' %in% names(controlStatements)){
 			tableStatements <- controlStatements$Tables
@@ -113,10 +112,30 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 				tableStatements <- rbind.data.frame(tableStatements,
 						cbind.data.frame(File=paste(preFix,'_simulation.1.npctab.dta', sep=''), tableStatements[sortIt,-1, drop=FALSE]))
 			}
+#			Its also possible there is a -cwres statement in the PsN command.txt for NM V or VI
+			if(file.exists(file.path(path, 'command.txt'))& nmVersionMajor%in%c('V','VI')){
+#			find the possibe cwtabNN file
+				cwtab <- list.files(file.path(path), pattern='cwtab[0-9]*$')
+				if(length(cwtab)>0){
+#					browser()
+					tableStatements <- 
+							rbind(tableStatements, 
+									data.frame(File=cwtab[1], 
+											Columns='ID, MDV, DV, IPRE, WRES, CWRES',
+											NoHeader=FALSE,
+											firstOnly=FALSE,
+											append=TRUE
+									)
+							)
+#				Now strip the first line off the cwtab file
+				con = readLines(file.path(path, cwtab[1]))
+				writeLines(con[-1],file.path(path, cwtab[1]))
+				}
+			}
 			controlStatements$Tables <- tableStatements
 		}
 		reportStatements <- probResults[[i]]
-		
+
 		# check if there is a simulation statement.  If so, proceed accordingly
 		if(!is.null(controlStatements$Sim))
 		{			
@@ -128,7 +147,7 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 						reportContents = reportStatements, 
 						versionInfo = versionInfo)
 			else if(nmVersionMajor == "VII")# this is a simulation+fitting problem
-				modelList[[i]] <- NMSimModelNM7(controlStatements, path, reportStatements, versionInfo = versionInfo)
+				modelList[[i]] <- NMSimModelNM7(controlStatements, path, reportContents=reportStatements, versionInfo = versionInfo)
 			else
 				modelList[[i]] <- NMSimModel(controlStatements, path, reportStatements, versionInfo = versionInfo)
 		} # end !is.null(controlStatements$Sim)

@@ -50,14 +50,17 @@
 		Sig.digs <- substr(methodTextBlock[Sig.digsLineNum], 
 				start = Sig.digsLoc, 
 				stop = Sig.digsLoc + attr(Sig.digsLoc, "match.length") - 1 )
-		Cov.stat <- methodTextBlock[Sig.digsLineNum + 1]
-		if(substr(Cov.stat,1,1)!='0')
-			Cov.stat <- ' '
 	} else {
 		Sig.digs <- ' '
-		Cov.stat <- ' '
 	}
 	blockResult$Sig.digs <- Sig.digs
+
+	Cov.statLineNum <- grep(methodTextBlock, pattern = " #TERE:")[1]
+	if(!is.na(Cov.statLineNum)){
+		Cov.stat <- methodTextBlock[Cov.statLineNum + 1]
+	} else {
+		Cov.stat <- ' '
+	}
 	blockResult$Cov.stat <- Cov.stat
 	
 	# retrieve shrink values
@@ -112,8 +115,10 @@ importNmReport.NM7 <- function( content, textReport = FALSE )
 	
 	# Capture the version info - this should not be repeated for each problem
 	versionInfo <- nmVersion( content )
-	# for NONMEM 7, it seems that the version info is stored in the form 7.MINOR.X.  This we must further manipulate
-	# the string to obtain major and minor versions
+	
+	# for NONMEM 7, it seems that the version info is stored in the form 7.MINOR.X.  
+	# Thus we must further manipulate the string to obtain major and minor versions
+	
 	versionInfoSplit <- strsplit(versionInfo, split = "\\.")[[1]]
 	version <- "VII"
 	level <- paste(versionInfoSplit[2], versionInfoSplit[3], sep = ".")
@@ -142,7 +147,7 @@ importNmReport.NM7 <- function( content, textReport = FALSE )
 			#	RNMImportStop("Simulations + fitting problems for NONMEM 7 not yet imported")
 			if(textReport)
 				logMessage(log = "stdReport", "Appears to be a simulation+modelling problem\n")
-			problemResults[[i]] <- importNmLstSimModel.NM7(currentProb, NA)
+			problemResults[[i]] <- importNmLstSimModel.NM7(contents=currentProb, numSub=NA)
 		}
 		# only data simulation, no fit step
 		else if(simStep & !objFun)
@@ -220,8 +225,11 @@ importNmLstSimModel.NM7 <- function(contents, numSub = NA)
 		subprobLines <- grep(contents, pattern = "PROBLEM NO\\.\\: [[:blank:]]*[0-9][[:blank:]]*SUBPROBLEM NO\\.\\:[[:blank:]]*[0-9]+[[:blank:]]*$")
 		# if there is only one sub-problem, then the above line will not appear, hence the need for the following
 		# logic 
-		numSub <- if(length(subprobLines) >= 1) length(subprobLines) else 1
-		
+		if(length(subprobLines) >= 1) {
+			numSub <- length(subprobLines)
+		} else {
+			numSub <- 1
+		}
 	}
 #	if(numSub > 0)
 #	{
@@ -293,8 +301,10 @@ importNmLstSimModel.NM7 <- function(contents, numSub = NA)
 	# thetas <- t(sapply(subprobStatements, function(x) x$THETA))
 	
 	simLabels <- paste("sim", sep = "", 1:numSub)
-	
-	dimnames(thetaArray) <- list(methodLabels, names(subprobStatements[[1]]$MethodResults[[1]]$FinalEstimates$THETA)  ,simLabels)
+
+#	Changed JJ 29 Oct 2010	
+#	dimnames(thetaArray) <- list(methodLabels, names(subprobStatements[[1]]$MethodResults[[1]]$FinalEstimates$THETA)  ,simLabels)
+	dimnames(thetaArray) <- list(names(subprobStatements[[1]]$MethodResults[[1]]$FinalEstimates$THETA), methodLabels, simLabels)
 	# give the list elements the names of the simulations from which they came
 	names(omegaList) <- simLabels
 	names(sigmaList) <- simLabels
@@ -310,7 +320,7 @@ importNmLstSimModel.NM7 <- function(contents, numSub = NA)
 .importSubProbNM7 <- function(txt)
 {
 	outList <- list() 
-	methodBlocks <- partitionMethods(txt)
+	methodBlocks <- partitionMethods(lstProblemContents=txt)
 	methodResults <- lapply( methodBlocks, .importMethodBlock)
 	outList$MethodResults <- methodResults
 	outList

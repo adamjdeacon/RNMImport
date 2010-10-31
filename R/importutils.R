@@ -12,7 +12,7 @@
 #' @return The value returned by importModelOutputTables
 #' @author fgochez
 
-.importTablesSafely <- function(tableStatement = NULL, path = "")
+.importTablesSafely <- function(tableStatement = NULL, path = "", sim=0)
 {
 	# NULL table statement should lead to empty data.frame
 	if(is.null(tableStatement))
@@ -27,8 +27,8 @@
 			RNMImportWarning(msg)
 		}
 #		Changed the behaviour of importModelOutputTables to handle missing files more informatively
-		outTables <- try(importModelOutputTables( tableStatement , path = path )) 
-		if( inherits( outTables, "try-error" ) | is.null(outTables))
+		outTables <- try(importModelOutputTables( tableStatement, path = path, sim = sim)) 
+		if( inherits( outTables, "try-error" ) | is.null(outTables)) 
 		{
 			RNMImportWarning("Unable to import table files, will use empty output data set \n")
 			outTables <- data.frame()

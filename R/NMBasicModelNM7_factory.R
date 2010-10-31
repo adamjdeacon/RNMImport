@@ -32,7 +32,7 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 	# import output tables if the $TABLE statement is present, else outdata is empty
 	
 	outTables <- 
-			.importTablesSafely(tableStatement=controlStatements$Table, path = path  )
+			.importTablesSafely(tableStatement=controlStatements$Table, path = path, sim=0)
 	
 	# need to know how many rows the data has, handle FIRSTONLY case here
 	if(inherits(outTables, "list")){

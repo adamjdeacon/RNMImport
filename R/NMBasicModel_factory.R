@@ -27,7 +27,6 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 	} # end if(inherits(inData, "try-error"))
 	
 	# import output tables if the $TABLE statement is present, else outdata is empty
-	
 	outTables <- .importTablesSafely(tableStatement=controlStatements$Table, path = path  )
 	
 	# need to know how many rows the data has, handle FIRSTONLY case here
