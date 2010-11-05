@@ -20,7 +20,7 @@
 	# retrieve objective function value
 	
 	objFinalLine <- grep(methodTextBlock, pattern = "#OBJV", value = TRUE)
-	if(length(objFinalLine)< 1){
+	if(length(objFinalLine) < 1){
 		message <- paste('No #OBJV tag found for', attr(methodTextBlock, "method.name"),
 				'in .importMethodBlock')
 		warning(message, call. = FALSE, immediate. = TRUE )
@@ -50,16 +50,17 @@
 		Sig.digs <- substr(methodTextBlock[Sig.digsLineNum], 
 				start = Sig.digsLoc, 
 				stop = Sig.digsLoc + attr(Sig.digsLoc, "match.length") - 1 )
+#		remove leading white space
 	} else {
 		Sig.digs <- ' '
 	}
 	blockResult$Sig.digs <- Sig.digs
 
 	Cov.statLineNum <- grep(methodTextBlock, pattern = " #TERE:")[1]
+	Cov.stat <- ' '
 	if(!is.na(Cov.statLineNum)){
-		Cov.stat <- methodTextBlock[Cov.statLineNum + 1]
-	} else {
-		Cov.stat <- ' '
+		if(substr(methodTextBlock[Cov.statLineNum + 1], 1, 1)=='0')
+			Cov.stat <- substr(methodTextBlock[Cov.statLineNum + 1], 2)
 	}
 	blockResult$Cov.stat <- Cov.stat
 	
