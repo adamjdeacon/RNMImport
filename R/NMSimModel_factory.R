@@ -19,10 +19,10 @@ NMSimModel <- function(controlStatements, path, reportContents, versionInfo = c(
 		RNMImportWarning(msg)
 		inData <- data.frame()
 	} # end if(inherits(inData, "try-error"))
-
+	
 	outTables <- .importTablesSafely(tableStatement=controlStatements$Table, path = path, 
 			sim=as.integer(controlStatements$Sim['nSub']))
-
+	
 	# if the output tables are a "list", then there was a FIRSTONLY statment, or for some other reason
 	# the number of rows of all of the output tables were not equivalent
 	
@@ -32,42 +32,54 @@ NMSimModel <- function(controlStatements, path, reportContents, versionInfo = c(
 					controlStatements$Sim[c("Seed1", "Seed2")]))
 	nSim <- as.numeric(controlStatements$Sim["nSub"])
 	with(reportContents, 
-		{	
-			# check how many simulations there are.  If only one, the minimum of the objective funciton is stored
-			# differently
-			
-			
-			if(nSim == 1)
-				objectiveFinal <- Objective.Minimum
-			else
-				objectiveFinal <- FinalEstimates$Objective.Minimum
-			
-			omegaFinal <- FinalEstimates$OMEGA
-			# Use parameter labels for names, if any were supplied
-			dimnames(omegaFinal)[1:2] <- dimnames(controlStatements$Omega)
-			thetaFinal <- FinalEstimates$THETA
-			colnames(thetaFinal) <- names(controlStatements$Theta[,"Est"])
-			sigmaFinal <- FinalEstimates$SIGMA
-			if(!is.null(sigmaFinal))
-			{
-				dimnames(sigmaFinal)[1:2] <- dimnames(controlStatements$Sigma)
+			{	
+				# check how many simulations there are.  If only one, the minimum of the objective funciton is stored
+				# differently
+				
+#				browser()
+				if(nSim == 1)
+					objectiveFinal <- Objective.Minimum
+				else
+					objectiveFinal <- FinalEstimates$Objective.Minimum
+				
+				omegaFinal <- FinalEstimates$OMEGA
+				# Use parameter labels for names, if any were supplied
+				if(!is.null(controlStatements$Omega))
+					dimnames(omegaFinal)[1:2] <- 
+							dimnames(controlStatements$Omega)
+				thetaFinal <- FinalEstimates$THETA
+				colnames(thetaFinal) <- names(controlStatements$Theta[,"Est"])
+				sigmaFinal <- FinalEstimates$SIGMA
+				if(!is.null(sigmaFinal))
+				{
+					if(!is.null(controlStatements$Sigma))
+						dimnames(sigmaFinal)[1:2] <- dimnames(controlStatements$Sigma)
+				}
+				else
+					sigmaFinal <- array(c(0,0, nSim))
+				thetaInitial <- controlStatements$Theta[,"Est"]
+				if(is.null(thetaInitial))
+					thetaInitial <- matrix(0)
+				omegaInitial <- controlStatements$Omega
+				if(is.null(omegaInitial))
+					omegaInitial <- matrix(0)
+				sigmaInitial <- controlStatements$Sigma
+				if(is.null(sigmaInitial))
+					sigmaInitial <- matrix(0)
+				new("NMSimModel", numSimulations = nSim, 
+						seeds = seeds, inputData = inData, outputData = outTables, controlStatements = 
+								controlStatements, problemStatement = controlStatements$Problem,
+						thetaInitial = thetaInitial,
+						omegaInitial = omegaInitial, 
+						sigmaInitial = sigmaInitial,
+						omegaFinal = omegaFinal,
+						sigmaFinal = sigmaFinal,
+						thetaFinal = thetaFinal,
+						objectiveFinal = objectiveFinal,
+						additionalVars = as.data.frame(matrix(ncol = 0, nrow = nDataRows)), 
+						nmVersionMajor = versionInfo["major"],
+						nmVersionMinor = as.numeric(versionInfo["minor"]), 
+						reportStatements = reportContents)
 			}
-			else
-				sigmaFinal <- array(c(0,0, nSim))
-			
-			new("NMSimModel", numSimulations = nSim, 
-					seeds = seeds, inputData = inData, outputData = outTables, controlStatements = 
-							controlStatements, problemStatement = controlStatements$Problem,
-					thetaInitial = controlStatements$Theta[,"Est"], 
-					omegaInitial = controlStatements$Omega, 
-					sigmaInitial = controlStatements$Sigma,
-					omegaFinal = omegaFinal,
-					sigmaFinal = sigmaFinal,
-					thetaFinal = thetaFinal,
-					objectiveFinal = objectiveFinal,
-					additionalVars = as.data.frame(matrix(ncol = 0, nrow = nDataRows)), 
-					nmVersionMajor = versionInfo["major"],
-					nmVersionMinor = as.numeric(versionInfo["minor"]), 
-					reportStatements = reportContents)
-		})
+	)
 }

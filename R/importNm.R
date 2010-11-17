@@ -51,7 +51,10 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 					#Condition 1 to test the correct file extension
 					conOne <- casefold(x[length(x)]) %in% getNmFileExtensions("report")
 					#Condition 2 to test the correct names (multiple .s allowed)
-					conTwo <- ifelse(length(x) == length(y), all(x[-length(x)] == y[-length(x)]), FALSE)
+					#Condition 3 to test the correct names with the original extensiuon (con) (multiple .s allowed)
+					conTwo <- ifelse(length(x) == length(y), 
+							all(x[-length(x)] == y[-length(x)]), 
+							ifelse(length(x) == length(y) + 1, all(x == c(y,'lst')), FALSE))
 					conOne && conTwo
 				}, y = conFileVector)
 		reportFile <- allListFiles[whichFile]
@@ -101,6 +104,7 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 	# iterate through the problems
 	for(i in 1:numProblems)
 	{
+#		browser()
 		controlStatements <- problems[[i]]
 #		Examine to see if there is serious renaming by PsN that we have to read
 		if('Tables' %in% names(controlStatements)){
@@ -128,14 +132,14 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 									)
 							)
 #				Now strip the first line off the cwtab file
-				con = readLines(file.path(path, cwtab[1]))
-				writeLines(con[-1],file.path(path, cwtab[1]))
+					con = readLines(file.path(path, cwtab[1]))
+					writeLines(con[-1],file.path(path, cwtab[1]))
 				}
 			}
 			controlStatements$Tables <- tableStatements
 		}
 		reportStatements <- probResults[[i]]
-
+		
 		# check if there is a simulation statement.  If so, proceed accordingly
 		if(!is.null(controlStatements$Sim))
 		{			
