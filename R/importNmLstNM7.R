@@ -41,9 +41,9 @@
 	# termStatusFinalLineNum <- grep(tail(methodTextBlock, -termStatusLineNum), pattern = "^[[:space:]]*$")[1]
 	blockResult$TermStatus <- gsub(methodTextBlock[termStatusLineNum], pattern = "^[[:space:]]+", replacement = "")
 	
-	# retrieve SIG. DIGITS
+	# retrieve Sig.digs
 	
-	Sig.digsLineNum <- grep(methodTextBlock, pattern = "SIG. DIGITS")[1]
+	Sig.digsLineNum <- grep(methodTextBlock, pattern = "Sig.digs")[1]
 	if(!is.na(Sig.digsLineNum)){
 		Sig.digsLoc <- 
 				gregexpr(methodTextBlock[Sig.digsLineNum], pattern = "[0-9]+[.]+[0-9]*")[[1]]

@@ -285,11 +285,11 @@ partitionLstSubproblems <- function(contents)
 
 # TODO: robustify this!
 
-.nmMVOF <- function( item ){
+.nmObjective <- function( item ){
 	if( is.null(item)) NULL else as.numeric(gsub("[\\*[:space:]]+", "", item ))
 }
 
-# .nmMVOFNM
+# .nmObjectiveNM
 
 #' Retrieves the NONMEM variable names in a set of strings
 #' @param txt vector of strings

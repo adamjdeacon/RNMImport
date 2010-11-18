@@ -113,8 +113,16 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 				preFix <- substring(conFile, 1,3)
 				sortIt <- which(tableStatements$File=='npctab.dta')
 				tableStatements[sortIt,] <- cbind.data.frame(File=paste(preFix,'_original.npctab.dta', sep=''), tableStatements[sortIt,-1, drop=FALSE])
-				tableStatements <- rbind.data.frame(tableStatements,
-						cbind.data.frame(File=paste(preFix,'_simulation.1.npctab.dta', sep=''), tableStatements[sortIt,-1, drop=FALSE]))
+#				need to find outif this is an early PsN file - without to .1. 
+				PsN2 <- paste(preFix,'_simulation.npctab.dta', sep='')
+				PsN3 <- paste(preFix,'_simulation.1.npctab.dta', sep='')
+				
+				if(file.exists(file.path(tempdir(), PsN2)))
+					tableStatements <- rbind.data.frame(tableStatements,
+							cbind.data.frame(File=PsN2, tableStatements[sortIt,-1, drop=FALSE]))
+				if(file.exists(file.path(tempdir(), PsN3)))
+					tableStatements <- rbind.data.frame(tableStatements,
+							cbind.data.frame(File=PsN3, tableStatements[sortIt,-1, drop=FALSE]))
 			}
 #			Its also possible there is a -cwres statement in the PsN command.txt for NM V or VI
 			if(file.exists(file.path(path, 'command.txt'))& nmVersionMajor%in%c('V','VI')){

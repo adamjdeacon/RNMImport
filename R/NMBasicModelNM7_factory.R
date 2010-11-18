@@ -124,6 +124,7 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 				minInfo <- c(TermStatus, unlist(Cov.stat), unlist(Sig.digs))
 				# attr(objectiveFinal, "methods") <- methodsUsed
 				# create the object
+
 				new("NMBasicModelNM7", parameterIterations = paramIter, 
 						problemStatement = controlStatements$Prob,
 						objectiveFinal = objectiveFinal, 

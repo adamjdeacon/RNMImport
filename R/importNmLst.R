@@ -4,7 +4,7 @@
 .importSubProb <- function(txt)
 {
 	secs <- sectionLst(txt)
-	objective <- .nmMVOF(secs[["MINIMUM VALUE OF OBJECTIVE FUNCTION"]])
+	objective <- .nmObjective(secs[["MINIMUM VALUE OF OBJECTIVE FUNCTION"]])
 	
 	estimates <- .importNmLstEstimates(secs[["FINAL PARAMETER ESTIMATE"]])
 	c(list("objectiveMin" = objective), estimates)
@@ -117,7 +117,7 @@ importNmLstSimModel <- function(contents, numSub = NA)
 	lstList <- sectionLst( contents )
 	
 	### Extract minimum value of objective function  
-	outList$Objective.Minimum <- .nmMVOF( lstList[["MINIMUM VALUE OF OBJECTIVE FUNCTION"]] )
+	outList$Objective.Minimum <- .nmObjective( lstList[["MINIMUM VALUE OF OBJECTIVE FUNCTION"]] )
 
 	### Extract matrices
 	outList$CovarianceMatrix        <- .importNmLstMatrix( lstList[["COVARIANCE MATRIX OF ESTIMATE"        ]] )

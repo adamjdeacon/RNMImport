@@ -52,7 +52,6 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 	}
 	# now create the class
 	# TODO: The following is too complex, simplify in future releases
-	
 	with(reportContents,
 			{
 				# check for the covariance/correlation matrices
