@@ -104,7 +104,6 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 	# iterate through the problems
 	for(i in 1:numProblems)
 	{
-#		browser()
 		controlStatements <- problems[[i]]
 #		Examine to see if there is serious renaming by PsN that we have to read
 		if('Tables' %in% names(controlStatements)){

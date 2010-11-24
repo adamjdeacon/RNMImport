@@ -12,5 +12,11 @@ assign('.patterns',
 				PRIORPATTERN='(.*)' 
 		)
 )
+
+assign('.parameters',
+		list(
+				startHandlingSims=10299544 
+		)
+)
 ##RNMImport:::.RNMImportEnv)
 

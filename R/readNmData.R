@@ -21,16 +21,141 @@
 
 readNmData <- function(
 		file, ignore = NULL, accept = NULL, translate = NULL,   
-		records = NULL, null = NA, sep = NULL
+		records = NULL, null = NA, sep = NULL, 
+		startHandlingSims=.parameters$startHandlingSims
 )
 {
 	
 	if( is.character(ignore) && ignore == "" ) ignore <- NULL
 	if( is.character(accept) && accept == "" ) accept <- NULL
 	if( is.character(translate) && translate == "" ) translate <- NULL
-	
+	CALL <- match.call()
+	### See how big is this file
+	sizeofFile <- file.info(file)[,'size']
+	actualFile <- NULL
+#	& (regexpr('sim.tab',basename(file))>0)
+	if((sizeofFile > startHandlingSims) ){
+		cat("going to make the assumption", basename(file), "is a regular file and generated in simulations\n")
+		if(length(ignore) > 1) RNMImportStop("readNmData cannot handle IGNORE tokens in files with more than 50000 rows", match.call())
+		actualFile <- file
+#		now copy 50000 rows into a new file
+		file <- tempfile()
+		on.exit(unlink(file))
+		cat(readLines(actualFile, n=50000), sep='\n', file=file)
+		if(missing(sep) || length(sep) > 1){ # then have a guess
+			# possSeps <- c("", ",") 
+			possSeps <- if( missing(sep)) c("", ",") else sep # see ?read.table for how "" is used
+			countFields <- lapply(possSeps, count.fields, file = file)
+			maxFields <- sapply(countFields, median)
+			whichSep <- (1:length(possSeps))[maxFields == max(maxFields)][1]
+			sep <- possSeps[whichSep]
+			### find the most appropriate separator
+		}
+		gc(gcinfo(TRUE))
+		someScan <- 
+				tryCatch(scanFile( file ), 
+						warning=function(e){
+							return(simpleError(e), CALL)
+						},
+						error=function(e){
+							return(simpleError(e), CALL)
+						}
+				)
+		tabRows <- grep("TABLE NO\\.", someScan)
+		# To define header row, look for proportion of letters in the row
+		gsub1 <- gsub("[^[:alpha:]]+", "", someScan)
+		gsub2 <- gsub( "[[:space:]]+", "", someScan)
+		propScan <- nchar(gsub1) / nchar(gsub2 )
+		if( length(tabRows) ) propScan[tabRows] <- 0
+		if(any(propScan > 0.5)){
+			theHeadRow  <- which.max(propScan)
+		} else theHeadRow <- NULL 
+		if(!is.null(theHeadRow)) {
+			headRows <- which( someScan == someScan[theHeadRow] )
+			headRows <- setdiff(headRows, theHeadRow)
+		}
+		###  Work out rows to skip
+		colHeaders <- NULL
+		skipRows <- sort(unique(c(headRows, tabRows, theHeadRow)))
+#		print(someScan[skipRows])
+		#	count the number of columns in remaining rows
+		if(length(skipRows)>0){
+			itemsPerLine <-sapply(gregexpr('?,?', someScan[-skipRows]), function(X)sum(attr(X, 'match.length')))
+		} else {
+			itemsPerLine <-sapply(gregexpr('?,?', someScan), function(X)sum(attr(X, 'match.length')))
+		}
+		allScan <- 
+				tryCatch(scanFile( actualFile), 
+						warning=function(e){
+							return(simpleError(e, CALL))
+						},
+						error=function(e){
+							return(simpleError(e, CALL))
+						}
+				)
+		period <- unique(diff(skipRows))
+#		special case of just one simultation
+		las <- length(allScan)
+		if(length(period)!=2){
+			if(period[1]==1){
+				period[2] <- las - 1
+			} else {
+				return(simpleError('Unable to determine periodicity of simulation table', CALL))
+			}
+		}
+		sims <- floor(las/sum(period))
+		cat('found', sims, 'simulations\n')
+		ss <- seq(from=period[1], length=sims, by=(period[2]+1))
+#		skipRows <- sort(c(ss, ss+1))
+		
+		### apply the header as the names of the data
+		if(length(theHeadRow) != 0 && theHeadRow != 0) {
+			headLine <- allScan[theHeadRow]
+			ignoreMod <- replace(ignore, ignore == "@", "[[:alpha:]@]")
+			if(length(ignoreMod) > 0) {
+				ignoreMod <- sprintf("^[[:space:]]*%s", ignoreMod)
+				rx <- paste(ignoreMod, collapse = "|")
+				if(length(grep(headLine, pattern = rx)) > 0)
+					headLine <- ""
+			}
+			
+			colHeaders <- .readValues( headLine, sep = sep, what = "character" )
+		}
+		
+		for(skip in 1:length(ss)){
+			if(floor(skip/20)*20==skip)
+				cat(skip, 'files written\n')
+			con <- file(file.path(tempdir(),paste(basename(actualFile), sprintf('%03d', skip), sep='_')),'w' )
+			writeLines(allScan[(ss[skip]+2):(ss[skip]+period[2])], con=con, use=TRUE)
+			close(con)
+		}
+		cat(skip, 'files written\n')
+		myData <- list()
+		for(skip in 1:length(ss)){
+			if(floor(skip/20)*20==skip)
+				cat(skip, 'files read\n')
+			fileName <- file.path(tempdir(),paste(basename(actualFile), sprintf('%03d', skip), sep='_'))
+			con <- file(fileName,'r' )
+			myData[[skip]] <- try(read.table(file=con, nrows=floor(period[2]*.05)), silent = TRUE )
+			close(con)
+			#'iter'
+			if(length(colHeaders) <= length(myData[[skip]]))  {
+				names(myData[[skip]])[seq_along(colHeaders)] <- colHeaders
+			}
+			attr(myData[[skip]], 'fileName') <- fileName
+		}
+		cat(skip, 'files read\n')
+		
+#		length(myData)
+#		dim(myData[[1]])
+#		attr(myData[[99]],'fileName')
+		ret <- do.call('rbind', myData)
+		attr(ret, 'fileName') <- basename(actualFile)
+		return(ret)
+	}
 	### find the most appropriate separator
 	if(missing(sep) || length(sep) > 1){ # then have a guess
+		# possSeps <- c("", ",") 
 		possSeps <- if( missing(sep)) c("", ",") else sep # see ?read.table for how "" is used
 		countFields <- lapply(possSeps, count.fields, file = file)
 		maxFields <- sapply(countFields, median)
@@ -38,7 +163,6 @@ readNmData <- function(
 		sep <- possSeps[whichSep]
 	}
 	
-	CALL <- match.call()
 	allScan <- 
 			tryCatch(scanFile( file ), 
 					warning=function(e){
@@ -48,7 +172,6 @@ readNmData <- function(
 						return(simpleError(e), CALL)
 					}
 			)
-	
 	### Initialise rows to skip:
 	#     tabRows    - Rows with "TABLE NO." string in first 10 characters
 	#     theHeadRow - The actual header row to use
@@ -61,10 +184,12 @@ readNmData <- function(
 	
 	### Look for table headers
 	# To define header row, look for proportion of letters in the row
-	propScan <- nchar(gsub("[^[:alpha:]]+", "", allScan)) / nchar( gsub( "[[:space:]]+", "", allScan ))
+	gsub1 <- gsub("[^[:alpha:]]+", "", allScan)
+	gsub2 <- gsub( "[[:space:]]+", "", allScan )
+	propScan <- nchar(gsub1) / nchar(gsub2 )
 	if( length(tabRows) ) propScan[tabRows] <- 0
 	if(any(propScan > 0.5)){
-		theHeadRow      <- which.max(propScan)
+		theHeadRow  <- which.max(propScan)
 	} else theHeadRow <- NULL 
 	
 	### If we have found a header row, look for other header rows
@@ -79,7 +204,7 @@ readNmData <- function(
 	if(any(nchar(ignore) > 1)) RNMImportStop("readNmData cannot handle IGNORE tokens with more than one character", match.call())
 	
 	ignoreMod <- replace(ignore, ignore == "@", "[[:alpha:]@]")
-	if(length(ignoreMod > 0)) {
+	if(length(ignoreMod) > 0) {
 		ignoreMod <- sprintf("^[[:space:]]*%s", ignoreMod)
 		rx <- paste(ignoreMod, collapse = "|")
 		igRows <- c(igRows, grep( rx, allScan )) 
@@ -88,7 +213,7 @@ readNmData <- function(
 	### Need to work out which rows we want to omit here
 	skipRows <- unique(c(igRows, headRows, tabRows, theHeadRow))
 	#	count the number of columns in remaining rows
-
+	
 	if(length(skipRows)>0){
 		itemsPerLine <-sapply(gregexpr('?,?', allScan[-skipRows]), function(X)sum(attr(X, 'match.length')))
 	} else {
@@ -109,7 +234,7 @@ readNmData <- function(
 	}
 	
 	dataCall <- list( na.strings = ".", header = FALSE, sep = sep, comment.char = "")
-
+	
 	if(!length(skipRows)) {
 		dataCall$file <- file
 	} else {
@@ -150,9 +275,6 @@ readNmData <- function(
 	
 	### deal with the records option
 	.readNmData.nmRecords( records, myData)
-#	cat(file, '\n')
-#	print(myData[1:5,])
-#	browser()
 	return(myData)
 }
 

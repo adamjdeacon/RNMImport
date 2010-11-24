@@ -54,6 +54,12 @@ importModelOutputTables <- function(
 			tableList[[i]] <- NA
 			next
 		} 
+		if(!is.null(attr(currentTable, 'fileName'))){
+			attr(currentTable, FIRSTONLYFIELD) <- tableStatement[i, FIRSTONLYFIELD]
+			tableList[[i]] <- currentTable
+			next;
+		}
+		
 		# force to numeric
 		currentTable <- .importDataNumeric(currentTable, missToZero = FALSE)
 		
@@ -131,12 +137,23 @@ importModelOutputTables <- function(
 		} else {
 			# determine the "FIRSTONLY" tables, as these cannot be bound together with the other ones due to the size difference
 			tableStyles <- 
-					sapply(tableList, function(x) 
+					sapply(tableList, function(x){
 								switch(class(x),
 										data.frame=attr(x, FIRSTONLYFIELD),
+										list=attr(x, FIRSTONLYFIELD),
 										NA)
-									
+							} 
+					
 					)
+#		determine the attr('fileName')
+			fileName <- 
+					unique(sapply(tableList, function(x){
+								switch(class(x),
+										attr(x, 'fileName'))
+							} 
+					
+					)
+			)
 			normalTables <- tableList[(!tableStyles) & !is.na(tableStyles)]
 			firstOnlyTables <- tableList[tableStyles & !is.na(tableStyles)]
 			
@@ -148,6 +165,9 @@ importModelOutputTables <- function(
 			if(sim>0){
 				consolidatedTable[,'iter'] <- rep(1:sim, each=dim(consolidatedTable)[1]/sim)
 			}
+			if(	class(fileName)=='character')
+				attr(consolidatedTable, 'fileName') <- fileName
+			
 			# Check if there are both FIRSTONLY and non-FIRSTONLY tables
 			if((sum(tableStyles& !is.na(tableStyles)) * sum((!tableStyles)& !is.na(tableStyles)) > 0))
 			{
