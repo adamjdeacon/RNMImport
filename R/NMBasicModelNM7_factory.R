@@ -107,7 +107,7 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 				
 				#	colnames(thetaFinal) <- colnames(thetaInitial)
 				objectiveFinal <- sapply(MethodResults, "[[", "Objective.Final")
-				if(is.na(objectiveFinal)) 
+				if(all(is.na(objectiveFinal))) 
 					objectiveFinal <- numeric(0)
 				methodsUsed <- sapply(MethodResults, "[[", "method")
 				ETAshrinks <- lapply(MethodResults, "[[", "ETAshrink") 

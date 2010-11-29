@@ -150,7 +150,8 @@ nmData.NMSim <- function(obj, dataTypes = c("input", "output") ,
 		
 	}
 	else outData <- obj@outputData
-	if(is.na(subProblemNum)) subProblemNum = 1:obj@numSimulations
+
+	if(all(is.na(subProblemNum))) subProblemNum = 1:obj@numSimulations
 	
 	if("output" %in% dataTypes)
 	{
@@ -159,7 +160,7 @@ nmData.NMSim <- function(obj, dataTypes = c("input", "output") ,
 		simNum <- gl(obj@numSimulations, nrow(outData) / obj@numSimulations , ordered = TRUE)
 		outData <- cbind(outData, "NSIM" = simNum)
 		# extract requested simulations
-		if(is.na(subProblemNum)) subProblemNum = 1:obj@numSimulations
+		if(all(is.na(subProblemNum))) subProblemNum = 1:obj@numSimulations
 		outData <- subset(outData, NSIM %in% subProblemNum)
 	}
 	# only one data.frame to return

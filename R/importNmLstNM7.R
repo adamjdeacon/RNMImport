@@ -12,7 +12,7 @@
 #' @return 
 #' @author fgochez
 #' @export
-.importMethodBlock <- function(methodTextBlock)
+.importMethodBlock <- function(methodTextBlock, SIGDIGS71=.patterns$SIGDIGS71)
 {
 	blockResult <- list(  )
 	blockResult$method <- attr(methodTextBlock, "method.name")
@@ -42,8 +42,7 @@
 	blockResult$TermStatus <- gsub(methodTextBlock[termStatusLineNum], pattern = "^[[:space:]]+", replacement = "")
 	
 	# retrieve Sig.digs
-	
-	Sig.digsLineNum <- grep(methodTextBlock, pattern = "Sig.digs")[1]
+	Sig.digsLineNum <- grep(methodTextBlock, pattern = SIGDIGS71)[1]
 	if(!is.na(Sig.digsLineNum)){
 		Sig.digsLoc <- 
 				gregexpr(methodTextBlock[Sig.digsLineNum], pattern = "[0-9]+[.]+[0-9]*")[[1]]
@@ -60,7 +59,7 @@
 	Cov.stat <- ' '
 	if(!is.na(Cov.statLineNum)){
 		if(substr(methodTextBlock[Cov.statLineNum + 1], 1, 1)=='0')
-			Cov.stat <- substr(methodTextBlock[Cov.statLineNum + 1], 2)
+			Cov.stat <- substring(methodTextBlock[Cov.statLineNum + 1], 2)
 	}
 	blockResult$Cov.stat <- Cov.stat
 	

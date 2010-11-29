@@ -94,6 +94,7 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 				
 				sigmaInitial <- controlStatements$Sigma
 				if(is.null(sigmaInitial)) sigmaInitial <- array()
+				
 				# if standard errors are available in the lst file,store them with the "XXXFinal" slots
 				# TODO: In the future, recomment changing this logic and method of storage as this is getting 
 				# quite convoluted

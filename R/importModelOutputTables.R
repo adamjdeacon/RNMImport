@@ -43,9 +43,8 @@ importModelOutputTables <- function(
 	
 	for(i in 1:numStatements)
 	{
-		currentTable <- try(readNmData(file = .getFile(tableStatement[i, FILEFIELD], path = path)), 
+		currentTable <- try(readNmData(file = .getFile(tableStatement[i, FILEFIELD], path = path), sim=sim), 
 				silent = TRUE)
-		
 		# try to read table file, emitting a warning if it fails and continuing to next
 		if(inherits(currentTable, "try-error"))
 		{
@@ -72,11 +71,19 @@ importModelOutputTables <- function(
 		if(tableStatement[i, "append"])
 		{
 #			remove all columns ,but "DV" may be repeated
-#			allow for renaming
+#			allow for renaming except the 'iter' column if it exists which must stay at the end
+			if(sim>0){
+				iterCol <- which(names(currentTable)=='iter')
+				iter <- currentTable[,iterCol]
+				currentTable <- currentTable[,-iterCol]
+			}
 			vc <- rep('', length(colnames(currentTable)))
-			vc[(length(vc)-3):length(vc)] <- APPENDEDCOLUMNS
+			vc[(length(vc) - 3):length(vc)] <- APPENDEDCOLUMNS
 			vc[1:length(colNames)] <- colNames
 			colnames(currentTable) <- vc
+			if(sim>0){
+				currentTable <- cbind(currentTable, iter=iter)
+			}
 		} else {
 			colnames(currentTable) <- colNames
 		} 
@@ -145,15 +152,25 @@ importModelOutputTables <- function(
 							} 
 					
 					)
-#		determine the attr('fileName')
+#		detirmine the attr('fileName')
 			fileName <- 
 					unique(sapply(tableList, function(x){
-								switch(class(x),
-										attr(x, 'fileName'))
-							} 
-					
+										switch(class(x),
+												attr(x, 'fileName'))
+									} 
+							
+							)
 					)
-			)
+			
+			actualSim <- 
+					unique(sapply(tableList, function(x){
+										switch(class(x),
+												attr(x, 'sim'))
+									} 
+							
+							)
+					)
+			
 			normalTables <- tableList[(!tableStyles) & !is.na(tableStyles)]
 			firstOnlyTables <- tableList[tableStyles & !is.na(tableStyles)]
 			
@@ -162,11 +179,10 @@ importModelOutputTables <- function(
 				consolidatedTable <- .deriveNmColumns(consolidatedTable)
 			
 #			deal with reading single table simuation outputs
-			if(sim>0){
-				consolidatedTable[,'iter'] <- rep(1:sim, each=dim(consolidatedTable)[1]/sim)
-			}
-			if(	class(fileName)=='character')
+			if(	class(fileName)=='character'){
 				attr(consolidatedTable, 'fileName') <- fileName
+				attr(consolidatedTable, 'actualSim') <- actualSim
+			}
 			
 			# Check if there are both FIRSTONLY and non-FIRSTONLY tables
 			if((sum(tableStyles& !is.na(tableStyles)) * sum((!tableStyles)& !is.na(tableStyles)) > 0))

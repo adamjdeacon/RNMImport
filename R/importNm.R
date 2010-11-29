@@ -77,6 +77,7 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 		path <- dirname(fullConFilePath)
 	}
 	fullLstFilePath <- tools:::file_path_as_absolute(.getFile(reportFile, path))
+	
 	# read the control file contents
 	# read in the list file contents.  Note that they should only be omitted in the case of a single SIMONLY run
 #	importNmReport(fileName, path = NULL, controlStatements = NULL, textReport = FALSE)
@@ -164,7 +165,6 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 		} # end !is.null(controlStatements$Sim)
 		else
 		{			 			
-#			browser()
 			if(nmVersionMajor == "VII"){
 #				controlStatements$Prior
 				modelList[[i]] <- NMBasicModelNM7(controlStatements, path, 
