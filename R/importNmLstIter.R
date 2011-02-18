@@ -7,42 +7,23 @@
 #' @author fgochez
 .importNmLstIter <- function(iterList)
 {
-#	browser()
+	
 	if( is.null(iterList) ) return( NULL )
-# 	determine which elements of iterList contain information about iterations, rather than iteration information
+	# determine which elements of iterList contain information about iterations, rather than
 	iters <- sapply( iterList, function(x){
 				grep.out <- grep( "^ITERATION NO\\.", x )
 				if( !length(grep.out) ) grep.out <- 0              
 				grep.out
-			}
-	)
-	
-# 	extract the elements of the list which contain minimization information, rather than iteration information
-	minInfoPos <- which(sapply(iterList, function(x) any(regexMatches(x, rx = "MINIMIZATION"))))
-	minInfo <- unlist(iterList[minInfoPos])
+			})
+		
+	# extract the elements of the list which contain minimization information, rather than iteration information
+	minInfo <- unlist(iterList[sapply(iterList, function(x) any(regexMatches(x, rx = "MINIMIZATION")))])
 	# if the information was not missing, extract other elements
-	
-#	TODO: I think this should return NULL if false!
-	minResult <- numEval <- numSigDigits <- NULL
-	if(length(minInfo)>0)
+	if(!is.null(minInfo))
 	{
-#		if there are warning messages about the minimization then we must condense to one string
-		keep.minInfo <- minInfo
 		minResult <- equalExpressionPop(  minInfo, "MINIMIZATION", sep = "[[:space:]]*", inPlace=TRUE     )
-		if(length(minResult)>1){
-			minResult <- paste(keep.minInfo[grep("MINIMIZATION", keep.minInfo)], collapse='\n')
-		}
 		numEval   <- colonPop( minInfo, "NO\\. OF FUNCTION EVALUATIONS USED", inPlace = TRUE     )
 		numSigDigits <- colonPop( minInfo, "NO\\. OF SIG\\. DIGITS IN FINAL EST\\.", inPlace = TRUE )
-
-#		look for next block in iteration list
-		Cov.stat <- ' '
-		if(minInfoPos < length(iterList)){
-			test <- 
-					unlist(iterList[minInfoPos + 1])[1]
-			if(any(gregexpr(' *PARA.*|EST.*', test)[[1]]>0))
-				Cov.stat <- test
-		} 
 	}
 	
 	iterInfo <- iterList[ as.logical(iters) ]
@@ -73,9 +54,9 @@
 	
 	out <- lapply( iterInfo, .extractIterInfo)
 	out <- do.call( rbind, out )
-	if(length(minInfo)>0)
+	if(!is.null(minInfo))
 		attr( out, "min.info") <- list( minResult = minResult, numEval = numEval, 
-				numSigDigits = numSigDigits, Cov.stat=Cov.stat)
+				numSigDigits = numSigDigits)
 	out
 	
 }

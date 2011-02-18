@@ -116,10 +116,10 @@ sectionLst <- function( fileContents, sep,
 		### try to find star titles
 		if( sep == "1" && len.sta > 2 ) {      
 			for(i in seq(along = li) ){
-				nmt <- nmTitle( txt=li[[i]], titleSecLength = 5, maxTitleLines = 2 )  
+				nmt <- nmTitle( li[[i]] )
 				if( !is.null(nmt$title) ){
 					li[[i]] <- nmt$text
-					names(li)[i] <- paste(nmt$title, collapse='\n')
+					names(li)[i] <- nmt$title
 				}
 				if( length( idx <- grep("MONITORING OF SEARCH", li[[i]])) ){
 					names(li)[i] <- "MONITORING OF SEARCH"
@@ -219,6 +219,7 @@ sectionLst <- function( fileContents, sep,
 
 nmTitle <- function( txt, titleSecLength = 5, maxTitleLines = 2 ){
 	if( is.list(txt)  ) return( list( title = NULL ) )
+	
 	if(any(regexMatches( txt, rx = "\\*{15,}" )))
 	{
 		titleText <- grep("\\*{15,}", txt[1:titleSecLength], value = TRUE )
@@ -285,11 +286,11 @@ partitionLstSubproblems <- function(contents)
 
 # TODO: robustify this!
 
-.nmObjective <- function( item ){
+.nmMVOF <- function( item ){
 	if( is.null(item)) NULL else as.numeric(gsub("[\\*[:space:]]+", "", item ))
 }
 
-# .nmObjectiveNM
+# .nmMVOFNM
 
 #' Retrieves the NONMEM variable names in a set of strings
 #' @param txt vector of strings
@@ -315,7 +316,7 @@ partitionLstSubproblems <- function(contents)
 
 partitionMethods <- function(lstProblemContents)
 {
-	METHODDELIMITER <- "#METH|SIMULATION STEP PERFORMED"
+	METHODDELIMITER <- "#METH"
 	# holds the indices of the lines where each METHOD result is held
 	methodLines <- grep(lstProblemContents, pattern = METHODDELIMITER)
 
@@ -332,6 +333,7 @@ partitionMethods <- function(lstProblemContents)
 	methodBlocks <- vector(mode = "list", length = length(breakPoints) - 1 )
 	for(i in head(seq_along(breakPoints), -1 ))
 	{
+		
 		methodLine <- lstProblemContents[breakPoints[i]]
 		# assign the name of method as an attribute to the element of the list
 		# methodName <- pop( lstProblemContents[breakPoints[i]], option = "#METH", sep = ":", mode = "equal", inPlace = FALSE  )$op.out

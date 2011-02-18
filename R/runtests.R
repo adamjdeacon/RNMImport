@@ -28,13 +28,12 @@ runRNMImportTests <- function(
 {
 	# preserve stdReport log for resetting later
 	stdReportLog <- logConnection("stdReport")
-	
 	# redirect output to a log.
 	cat("Redirecting stdout to testlog.txt\n")
 	sink("testlog.txt")
 	stopifnot(require("RUnit", quietly = TRUE))
 	results <- list()
-	
+
 	# logDir <- setTestLogs()
 	# allocated environment for use by tests
 	.innerTestEnv <<- new.env()
@@ -49,10 +48,9 @@ runRNMImportTests <- function(
 		# load the test runs that come with the package.  This will speed up the unit tests, since then the
 		# data does not have to be loaded over and over
 		# they will be stored in the global environment .innerTestEnv
-		
+	
 		internalTestRuns <- list()
-		internalTestRuns$NMBasicNM7 <- 
-				importNm(conFile= "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestDataNM7" ))
+		internalTestRuns$NMBasicNM7 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestDataNM7" ))
 		internalTestRuns$NMBasic <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestRun" ))
 		internalTestRuns$NMSimMod <- importNm( "TestData1SIM.con", path = file.path(unitTestPath, "testdata/TestSimRun" ))
 		internalTestRuns$NMBasicNotab <- importNm( "TestData1notab.ctl", path = file.path(unitTestPath, "testdata/TestRunNotab" ))
@@ -116,7 +114,7 @@ runRNMImportTests <- function(
 	# restore original stdReport log
 	setLogConnection("stdReport", stdReportLog)
 	results
-	
+
 }
 
 #' 

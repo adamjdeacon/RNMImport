@@ -32,11 +32,7 @@ importNm7Iterations <- function( files = NULL, noTitles = NULL, noLabels = NULL,
 	for(i in seq_along(files))
 	{
 		if(files[i] == "") next
-		if(!file.exists(file.path(path, files[i]))){
-			RNMImportWarning(paste(files[i], 'does not exist'))
-			next		
-		}
-		iterations[[i]] <- importNm7Tables(file=files[i], type = "ext", tableTitles = noTitles[i] == "0" , path = path)
+		iterations[[i]] <- importNm7Tables(files[i], type = "ext", tableTitles = noTitles[i] == "0" , path = path)
 		names(iterations[[i]]) <- sapply(iterations[[i]], function(x) attr(x, "method"))
 	}
 	

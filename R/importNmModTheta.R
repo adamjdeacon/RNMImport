@@ -17,7 +17,7 @@
 .importNmModTheta <- function(
 		txt = NULL,       
 		guessNames = TRUE,
-		rx = .getPattern('thetas'), 		 
+		rx = "([^~[:space:]]+)$", # TODO: This should be a changeable option 		 
 		fileName = NULL
 )
 {					
@@ -29,12 +29,7 @@
 	
 	### import the THETA declarations                                             
 	
-	if(.extract) {
-		thetaLines <- section( txt, "TH(E){0,1}TA", "", as.list = FALSE, stripout = TRUE) 
-	} else {
-		thetaLines <- txt
-	}
-	
+	thetaLines <- if(.extract) section( txt, "TH(E){0,1}TA", "", as.list = FALSE, stripout = TRUE) else txt 
 	# extract the comments
 	comments   <- stripBlanks( commentPop( thetaLines, inPlace = TRUE ) )  
 	# remove space before FIXED
@@ -44,37 +39,20 @@
 	
 	# now we must check for declarations of the form (A B C)
 	# if we find them, we will replace them with (A,B,C)
-	possibleAdditionalComments <- which(nchar(thetaLines)==0)
 	
 	thetaLines <- gsub(x = thetaLines, "\\(([-]{0,1}\\d+(?:\\.\\d+)?)\\s+([-]{0,1}\\d+(?:\\.\\d+)?)\\s+([-]{0,1}\\d+(?:\\.\\d+)?)\\)",
 			replacement = "(\\1,\\2,\\3)", 
 			extended = TRUE, perl = TRUE)
 	
 	thetaLines <- regexSplit(thetaLines, "\\)?[[:space:]]+\\(?")
-
 	# add additional spaces around "FIX"
-	thetaLines <- gsub( "FIX", " FIX ", thetaLines )  
 	
-#	count the number of FIX statements
-	fixes  <- sapply(gregexpr(' FIX ',thetaLines), length)
-	if(any(length(fixes)>0)){
-		for(fixThis in which(fixes>1)){
-			pain <- 
-					gregexpr('[+-.eE0-9]+ *FIX',thetaLines[fixThis])
-			thetaLines <- c(thetaLines[-fixThis], substring(thetaLines[fixThis],pain[[1]], pain[[1]] + attr(pain[[1]], 'match.length')))
-			if(length(comments)>fixThis){
-				comments <- c(comments[1:(fixThis-1)], rep(comments[fixThis], length(pain[[1]])), comments[(fixThis+1):length(comments)])
-			}
-		}
-	}	
+	thetaLines <- gsub( "FIX", " FIX ", thetaLines )  
 	# initialize the output matrix
 	out <- matrix( NA, ncol = 3, nrow = length( thetaLines ), 
 			dimnames = list( sprintf("THETA%d", 1:length(thetaLines)), 
 					c("Lower", "Est", "Upper")) )
 	# now iterate through all of the lines of input
-	
-	fixedTHETAS <- vector()
-	
 	for( i in seq(along=thetaLines) ){
 		th <- thetaLines[i]
 		th <- killRegex(th , "\\).*")
@@ -87,13 +65,12 @@
 		numberpoints <- equalExpressionPop( th, "NUM", shortcut = TRUE, inPlace = TRUE)
 		
 		### import the FIXED  option                                                
-		fixedTHETAS[i] <- fixed <- logicalPop( th, "FIX", inPlace = TRUE)
-		
+		fixed <- logicalPop( th, "FIX", inPlace = TRUE)
+
 		### guess the kind of theta line                                            
 		th <- gsub( "[\\(\\)]", "", th) # remove the brackets       
 		th <- gsub( "inf", "Inf", th, ignore.case = TRUE ) # tidy up Inf
 		
-		## This assumes the numbers are always comma-separated. This is not the case. See FIX fix earlier!
 		gx.out <- gregexpr( "," , th )[[1]]
 		
 		if( length(gx.out)==1 )
@@ -130,42 +107,12 @@
 			out[i,3] <- upper
 		}
 	}  
-	if(length(comments)==0){
-		comments <- paste('THETA', 1:nrow(out), sep='') 
-	} else {
-		if(length(comments) != nrow(out)){
-#		try to sort out
-			if(length(possibleAdditionalComments)+ nrow(out) == length(comments)){
-				comments <- comments[-possibleAdditionalComments]
-			} else {
-				if(length(comments) > nrow(out)){
-					comments <- comments[1:nrow(out)]
-				} else {
-					comments <- c(comments, rep(' ', nrow(out) - length(comments) ))
-				}
-				
-			}
-		}
-		
-	}
 	if( guessNames && length(comments) == nrow(out)  )
 	{
-		rx.out <- 
-				regexpr( rx, comments )
+		rx.out <- regexpr( rx, comments )
 		trythat <- ogrep( rx, comments[rx.out!=-1], filter = "\\1" ) 
-#		alright <- any( regexpr(trythat,  pattern = "[\\(\\)]" ) == -1 )
-# 		removes names with ()
-#		alright <- any( regexpr("[\\(\\)]", trythat ) == -1 )
-		alright <- rep(TRUE, dim(out)[1])
-		missingNames <- which(nchar(trythat[alright])==0)
-		if(length(missingNames)>0)
-			trythat[alright][missingNames] <-
-					paste('THETA', missingNames, sep='')
+		alright <- any( regexpr(trythat, "[\\(\\)]" ) == -1 )
 		rownames(out)[rx.out!=-1][alright] <- trythat[alright]
 	}
-	
-#	out <- cbind.data.frame(out, FIX=fixedTHETAS, stringsAsFactors=FALSE)
-	rownames(out) <- paste(rownames(out), fixedTHETAS)
-#	print(out)
 	out 	
 }

@@ -16,10 +16,9 @@ importModelData <- function(
 		dataStatement, inputStatement, dropCols = TRUE, trim=FALSE,	path = NULL, duplicateAliased = TRUE)
 {	
 	# TODO: need to handle the case where inputs are read from the previous problem's output 
-
-	fileName <- dataStatement[,"File"]
-#	Can have IGN on the line!
-	fileName <-  gsub('( IGNORE | IGN).*','', fileName)
+	
+	
+	fileName <- dataStatement[,"File"]	
 	stopifnot(!is.null(fileName))
 		
 	fileName <- .getFile(fileName, path = path)
@@ -46,13 +45,9 @@ importModelData <- function(
 	
 	# Call readNmData, which is the workhorse function that actually reads the table
 	# single IGNORE=c characters are handled here, whereas IGNORE=(list) is handled below 
-
 	myData <- readNmData(file = fileName, ignore = ignoreChars, 
 			translate = translate)
-	if(inherits(myData,'try-error')){
-		return(simpleError(myData))
-	}	
-
+		
 	# Deal with the case of additional columns in the dataset
 	if(nrow(inputStatement) == (ncol(myData) - 1) && all(is.na(myData[, ncol(myData)]))) 
 		myData <- myData[,  - length(myData), drop = F]

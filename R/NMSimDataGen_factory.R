@@ -4,7 +4,6 @@
 NMSimDataGen <- function(controlStatements, path, reportContents = NULL, 
 		versionInfo = c("major" = "VI", "minor" = 0))
 {
-
 	inData <- try(importModelData(dataStatement = controlStatements$Data,
 					inputStatement = controlStatements$Input, path = path))
 	
@@ -24,26 +23,18 @@ NMSimDataGen <- function(controlStatements, path, reportContents = NULL,
 	
 	with(controlStatements , 
 	{
-			outTables <- .importTablesSafely(tableStatement=controlStatements$Table, path = path, 
-					sim=as.integer(controlStatements$Sim['nSub']))
+			outTables <- .importTablesSafely(controlStatements$Table, path = path  )
 			if(inherits(outTables, "list")) nDataRows <- max(sapply(outTables, nrow))
 			else nDataRows <- nrow(outTables)	
 			seeds <- as.numeric(ifelse(Sim[c("Seed1", "Seed2")] == -1, NA,	Sim[c("Seed1", "Seed2")]))
 				
 				# now extract initial value estimates of parameters:
 				
-			new("NMSimDataGen", 
-					nmVersionMajor = versionInfo["major"],
-					nmVersionMinor = as.numeric(versionInfo["minor"]), 
-					numSimulations = as.numeric(controlStatements$Sim["nSub"]), 
-					seeds = seeds, 
-					inputData = inData, 
-					outputData = outTables, 
-					controlStatements =  controlStatements, 
-					problemStatement = controlStatements$Problem,
-					thetaInitial = .Theta, 
-					omegaInitial = .Omega, 
-					sigmaInitial = .Sigma,
+			new("NMSimDataGen", nmVersionMajor = versionInfo["major"],
+					nmVersionMinor = as.numeric(versionInfo["minor"]), numSimulations = as.numeric(controlStatements$Sim["nSub"]), 
+					seeds = seeds, inputData = inData, outputData = outTables, controlStatements = 
+							controlStatements, problemStatement = controlStatements$Problem,
+					thetaInitial = .Theta, omegaInitial = .Omega, sigmaInitial = .Sigma,
 					additionalVars = as.data.frame(matrix(ncol = 0, nrow = nDataRows)),
 					reportStatements = reportContents)
 	})

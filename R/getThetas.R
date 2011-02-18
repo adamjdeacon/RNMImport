@@ -36,13 +36,14 @@ getThetas.NMBasicModel <- function( obj, what = "final", subProblemNum = 1, meth
 	numRow <- nrow(thetas)
 	
 	finalEstimates <- thetas["estimates",, drop = TRUE]
-	
+
 	if("standardErrors" %in% dimnames(thetas)[[1]])
 		stdErrors <- thetas["standardErrors",, drop = TRUE]
 	else stdErrors <- NULL
 	initialValues <- obj@thetaInitial
 	
 	if(length(validWhat) == 0) RNMImportStop("No valid items selected for retrieval!", call = match.call())
+	
 	if(length(validWhat) == 1)
 	{
 		res <- switch(validWhat, 
@@ -59,12 +60,8 @@ getThetas.NMBasicModel <- function( obj, what = "final", subProblemNum = 1, meth
 	} # end if length(validWhat) == 1
 	else
 	{
-
 		res <- matrix(ncol = ncol(thetas), nrow = 0, dimnames = list(NULL, colnames(thetas)))
-		
-		if(prod(dim(initialValues ))>0){
-			if("initial" %in% validWhat) res <- rbind(res, initialValues[,1:dim(res)[2], drop=FALSE] )
-		}
+		if("initial" %in% validWhat) res <- rbind(res, initialValues )
 		if("final" %in% validWhat) res <- rbind(res, "estimates" = finalEstimates)
 		if( "stderrors" %in% validWhat )
 		{
@@ -92,14 +89,12 @@ getThetas.NMBasicModelNM7 <- function( obj, what = "final", subProblemNum = 1, m
 	invalidWhat <- setdiff(what, PARAMITEMS)
 	
 	if(length(invalidWhat)) RNMImportWarning("Invalid items chosen:" %pst% paste(invalidWhat, collapse = ","))
+	
 	.getThetasSingleMethod <- function (meth = 1) 
 	{
 		methodChosen <- .selectMethod(obj@methodNames, meth)
 		thetas <- obj@thetaFinal[[methodChosen]]
-		if(is.null(thetas)){
-			RNMImportWarning(paste('THETAS not available for method', meth))
-			return(NULL)
-		}
+		#browser()
 		finalEstimates <- thetas 
 		stdErrors <- obj@thetaStderr[[methodChosen]]
 		# the initial values depend on the method chosen
@@ -111,11 +106,7 @@ getThetas.NMBasicModelNM7 <- function( obj, what = "final", subProblemNum = 1, m
 			x <- obj@thetaFinal[[methodChosen-1]]
 			# extract this to have access to the upper and lower bounds
 			initialValues <- obj@thetaInitial
-			if('Prior' %in% names(obj@controlStatements)){
-				initialValues["initial", 1:obj@controlStatements$Prior['nTheta']] <- unname(x)
-			} else {
-				initialValues["initial", ] <- unname(x)
-			}
+			initialValues["initial", ] <- unname(x)
 		}
 		if(length(validWhat) == 0) RNMImportStop("No valid items selected for retrieval!", call = match.call())
 		
@@ -135,29 +126,8 @@ getThetas.NMBasicModelNM7 <- function( obj, what = "final", subProblemNum = 1, m
 		} # end if length(validWhat) == 1
 		else
 		{
-#			res <- matrix(ncol = length(thetas), nrow = 0, dimnames = list(NULL, colnames(initialValues)))
-			
-#			browser('sorting out NULL intial THETAS for 7')
-			any(regexpr('PRIOR=*', obj@controlStatements$Sub)>0)
-			if('Prior' %in% names(obj@controlStatements)){
-				res <- 
-						res <- matrix(ncol = length(thetas), nrow = 0, 
-								dimnames = list(NULL, dimnames(initialValues)[[2]][1:obj@controlStatements$Prior['nTheta']]))
-			} else {
-				res <- matrix(ncol = length(thetas), nrow = 0, 
-						dimnames = list(NULL, dimnames(initialValues)[[2]]))
-			}
-			if(prod(dim(initialValues ))>0){
-				if("initial" %in% validWhat) {
-					if('Prior' %in% names(obj@controlStatements)){
-						res <- 
-								rbind(res, initialValues[1:obj@controlStatements$Prior['nTheta']] )
-					} else {
-						res <- rbind(res, initialValues )
-					}
-				}
-			}
-			
+			res <- matrix(ncol = length(thetas), nrow = 0, dimnames = list(NULL, colnames(initialValues)))
+			if("initial" %in% validWhat) res <- rbind(res, initialValues )
 			if("final" %in% validWhat) res <- rbind(res, "estimates" = finalEstimates)
 			if( "stderrors" %in% validWhat )
 			{
@@ -171,7 +141,7 @@ getThetas.NMBasicModelNM7 <- function( obj, what = "final", subProblemNum = 1, m
 	if(length(method) > 1)
 		lapply(method, .getThetasSingleMethod)
 	else
-		.getThetasSingleMethod(meth=method)
+		.getThetasSingleMethod(method)
 }
 
 setMethod("getThetas", signature(obj = "NMBasicModelNM7"), getThetas.NMBasicModelNM7)

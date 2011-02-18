@@ -12,29 +12,23 @@
 #' @return The value returned by importModelOutputTables
 #' @author fgochez
 
-.importTablesSafely <- function(tableStatement = NULL, path = "", sim=0)
+.importTablesSafely <- function(tableStatement = NULL, path = "")
 {
 	# NULL table statement should lead to empty data.frame
 	if(is.null(tableStatement))
 		outTables <- data.frame()
 	else {
+		
 		# try to import, and if one can't, catch the error and return an empty data.frame
-		lookFor <- names(tableStatement)[min(grep('^File*', names(tableStatement)))]
-		missingFiles <- which(!file.exists(file.path(path, tableStatement[,lookFor])))
-		if(length(missingFiles)>0){
-			msg <- 
-					paste('cannot find', paste(tableStatement[missingFiles,lookFor], collapse=','))
-			RNMImportWarning(msg)
-		}
-
-#		Changed the behaviour of importModelOutputTables to handle missing files more informatively
-		outTables <- try(importModelOutputTables( tableStatement, path = path, sim = sim)) 
-		if( inherits( outTables, "try-error" ) | is.null(outTables)) 
+		
+		outTables <- try(importModelOutputTables( tableStatement , path = path )) 
+		if( inherits( outTables, "try-error" ) )
 		{
 			RNMImportWarning("Unable to import table files, will use empty output data set \n")
 			outTables <- data.frame()
 		}
 	}
+	
 	outTables
 }
 
@@ -57,7 +51,7 @@ scanFile <- function( file, empty.rx = "^[[:space:]]*$" )
 		return(NULL)
 	}
 	contents <- scan( file, sep = "\n", what = "character", 
-			blank = TRUE, multi = FALSE, quiet = TRUE, fill=TRUE)
+			blank = TRUE, multi = FALSE, quiet = TRUE)
 	# remove whitespace in the file content and return
 	contents <- negGrep( empty.rx , contents, value = TRUE )
 	if( length(contents) > 0) contents else NULL
@@ -204,19 +198,4 @@ hasExtension <- function(fileName, extensions)
 	if(Sys.info()["sysname"] == "Windows")
 		return(tolower(fileName))
 	fileName
-}
-
-#' 
-#' @param contStates 
-#' @param pri 
-#' @returnType LOGICAL
-#' @return does the string, basically PRIOR, exist in the control file?
-#' @author jjames
-.lookFor <- function(contStates=names(obj@controlStatements), subr=NULL, pri='^ +[$](PRIOR|PRI)|PRIOR='){
-	test2 <- FALSE
-	test1 <- any(regexpr(pri, contStates, ignore=TRUE)>0)
-	if(length(subr)>0){
-		test2 <- any(regexpr(pri, subr, ignore=TRUE)>0)
-	}
-	test1 || test2
 }

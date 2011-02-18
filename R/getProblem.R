@@ -17,8 +17,7 @@ getProblem <- function(run, problemNumber = 1)
 	if(problemNumber < 1 | problemNumber > run@numProblems)
 	{
 		msg <- problemNumber %pst% " is not a valid problem number\n"
-		RNMImportWarning(msg, call = match.call())
-		return(NULL)
+		RNMImportStop(msg, call = match.call())
 		
 	}
 	run@problems[[problemNumber]]

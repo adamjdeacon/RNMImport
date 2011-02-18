@@ -46,7 +46,7 @@ setGeneric("nmData")
 nmData.NMBasicModel <- function(obj, dataTypes = c("input", "output") , returnMode = c("singleDF", "DFList"),
 		subset = NULL, ...)
 {
-	
+
 	dataTypes <- intersect(dataTypes, c("input", "output"))
 	
 	if(length(dataTypes) == 0)
@@ -82,19 +82,7 @@ nmData.NMBasicModel <- function(obj, dataTypes = c("input", "output") , returnMo
 	inData <- allData$input
 	inColumns <- colnames(inData)
 	outColumns <- colnames(outData)
-#	JJ 20 Aug 2010	
-	if(dim(outData)[1]<dim(inData)[1]){
-		repinData <- lapply(outData[,'ID'], function(ID, inData, outData){
-					nTimes <- length(which(inData[,'ID']==ID))
-					rowIn <- outData[which(outData[,'ID']==ID),]
-					stuff <- as.data.frame(matrix(as.numeric(rowIn), nrow=nTimes, ncol=length(rowIn), byrow=TRUE), stringsAsFactors=FALSE)
-				}, inData, outData
-		)
-#		browser()
-		nod <- names(outData)
-		outData <- do.call('rbind', repinData)
-		names(outData) <- nod
-	}
+	
 	# otherwise, bind the data together, taking care to deal with repeated data.
 	allColumns <- union(inColumns, outColumns)
 	clashingColumns <- intersect(inColumns, outColumns)
@@ -115,7 +103,7 @@ nmData.NMBasicModel <- function(obj, dataTypes = c("input", "output") , returnMo
 	uniqueOut <- setdiff(outColumns, clashingColumns)
 	
 	res <- cbind(outData, inData[uniqueIn])
-	clashIn <- inData[ ,clashingColumns, drop = FALSE]
+	clashIn <- inData[,clashingColumns, drop = FALSE]
 	
 	names(clashIn) <- paste(clashingColumns, "INPUT", sep = ".")
 	applyDataSubset( cbind(res, clashIn), dataSub )
@@ -124,11 +112,11 @@ nmData.NMBasicModel <- function(obj, dataTypes = c("input", "output") , returnMo
 setMethod("nmData", signature(obj = "NMBasicModel"), nmData.NMBasicModel)
 setMethod("nmData", signature(obj = "NMBasicModelNM7"), nmData.NMBasicModel)
 
-nmData.NMSim <- function(obj, dataTypes = c("input", "output") , 
+nmData.NMSim<- function(obj, dataTypes = c("input", "output") , 
 		returnMode = c("singleDF", "DFList"),  
 		subset = NULL, subProblemNum = NA, stackInput = TRUE)
 {
-	
+
 	# if subset is supplied, handle it and store the result in dataSub
 	# check that it is logical, and obtain an appropriate subset if it is
 	
@@ -142,7 +130,7 @@ nmData.NMSim <- function(obj, dataTypes = c("input", "output") ,
 	
 	inData <- obj@inputData
 	returnMode <- match.arg(returnMode)
-	
+
 	if(class(obj@outputData) == "list") {
 		if("output" %in% dataTypes ) 
 			RNMImportWarning("FIRSTONLY output data currently ignored\n")
@@ -150,17 +138,16 @@ nmData.NMSim <- function(obj, dataTypes = c("input", "output") ,
 		
 	}
 	else outData <- obj@outputData
-
-	if(all(is.na(subProblemNum))) subProblemNum = 1:obj@numSimulations
+	if(is.na(subProblemNum)) subProblemNum = 1:obj@numSimulations
 	
 	if("output" %in% dataTypes)
 	{
-		
+	
 		# create a simulation number factor
 		simNum <- gl(obj@numSimulations, nrow(outData) / obj@numSimulations , ordered = TRUE)
 		outData <- cbind(outData, "NSIM" = simNum)
 		# extract requested simulations
-		if(all(is.na(subProblemNum))) subProblemNum = 1:obj@numSimulations
+		if(is.na(subProblemNum)) subProblemNum = 1:obj@numSimulations
 		outData <- subset(outData, NSIM %in% subProblemNum)
 	}
 	# only one data.frame to return
@@ -179,9 +166,9 @@ nmData.NMSim <- function(obj, dataTypes = c("input", "output") ,
 	}
 	# if stackInput == TRUE, replicate the input data set so that its number of rows matches
 	# the number of rows of the simulated output data set
-	
+
 	if(stackInput)
-		inData <- do.call(cbind.data.frame, lapply(inData, base:::rep, length(subProblemNum)))
+		inData <- do.call(cbind.data.frame, lapply(inData, rep, length(subProblemNum)))
 	if(nrow(inData) != nrow(outData))
 		RNMImportStop("Amount of simulated output data selected is not compatible with the amount of input data, cannot bind into a single data.frame\n",
 				call = match.call())
@@ -219,9 +206,7 @@ nmData.NMRun <- function(obj, dataTypes = c("input", "output") , returnMode = c(
 		subset = NULL, problemNum = 1, subProblemNum = NA)
 {
 	returnMode <- match.arg(returnMode)
-#	browser()
-	prob <- getProblem(obj, problemNum)
-	nmData(prob, dataTypes,returnMode, subset = subset, subProblemNum)
+	nmData(getProblem(obj, problemNum),dataTypes,returnMode, subset = subset, subProblemNum)
 }
 
 setMethod("nmData", signature(obj = "NMRun"), nmData.NMRun)

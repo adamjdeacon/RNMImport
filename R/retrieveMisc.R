@@ -19,8 +19,7 @@
 
 getEstimateCov <- function(obj, corMatrix = FALSE, invCorMatrix = FALSE, pdMatrix = FALSE, ...)
 {
-	RNMImportWarning(paste("getEstimateCov not implemented for  class", class(obj), "yet\n"), match.call())
-	return(NULL)
+	RNMImportStop("getEstimateCov not implemented for this class yet\n", match.call())
 }
 
 setGeneric("getEstimateCov")
@@ -89,15 +88,6 @@ getObjective <- function(obj, addMinInfo = TRUE, ...)
 }
 
 setGeneric("getObjective")
-
-getObjective.NMSimDataGen <- function(obj, addMinInfo = TRUE, subProblems = 1,...)
-{	
-	
-	'Not Calculated'
-}
-
-setMethod("getObjective", signature(obj="NMSimDataGen"), getObjective.NMSimDataGen)
-
 
 getObjective.NMRun <- function(obj, addMinInfo=TRUE, subProblems=1, problemNum=1, method = 1)
 {

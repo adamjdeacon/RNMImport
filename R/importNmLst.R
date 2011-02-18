@@ -4,7 +4,7 @@
 .importSubProb <- function(txt)
 {
 	secs <- sectionLst(txt)
-	objective <- .nmObjective(secs[["MINIMUM VALUE OF OBJECTIVE FUNCTION"]])
+	objective <- .nmMVOF(secs[["MINIMUM VALUE OF OBJECTIVE FUNCTION"]])
 	
 	estimates <- .importNmLstEstimates(secs[["FINAL PARAMETER ESTIMATE"]])
 	c(list("objectiveMin" = objective), estimates)
@@ -117,8 +117,8 @@ importNmLstSimModel <- function(contents, numSub = NA)
 	lstList <- sectionLst( contents )
 	
 	### Extract minimum value of objective function  
-	outList$Objective.Minimum <- .nmObjective( lstList[["MINIMUM VALUE OF OBJECTIVE FUNCTION"]] )
-
+	outList$Objective.Minimum <- .nmMVOF( lstList[["MINIMUM VALUE OF OBJECTIVE FUNCTION"]] )
+	
 	### Extract matrices
 	outList$CovarianceMatrix        <- .importNmLstMatrix( lstList[["COVARIANCE MATRIX OF ESTIMATE"        ]] )
 	outList$CorrelationMatrix       <- .importNmLstMatrix( lstList[["CORRELATION MATRIX OF ESTIMATE"       ]] )
@@ -262,7 +262,6 @@ importNmReport <- function( fileName, path = NULL, controlStatements = NULL, tex
 	
 	# use getNmPath if necessary
 	path <- processPath(path)
-#	browser()
 	
 	if(!is.null(controlStatements))
 		return(.importNmLstWithCtl(.getFile(fileName, path ), controlStatements) )
@@ -273,7 +272,7 @@ importNmReport <- function( fileName, path = NULL, controlStatements = NULL, tex
 	versionInfo <- nmVersion(content)
 	# check if the version is NONMEM 7.  If so, import with importNmReport.NM7
 	if(substr(versionInfo[1], start = 1, stop = 1) == "7")
-		return(importNmReport.NM7(content=content, textReport = textReport))
+		return(importNmReport.NM7(content, textReport = textReport))
 	
 	# if content is NULL, return NULL
 	
@@ -292,7 +291,6 @@ importNmReport <- function( fileName, path = NULL, controlStatements = NULL, tex
 	# now loop through the different problems
 	
 	problemResults <- vector(mode = "list", length = length(partitionedContent))	
-
 	for(i in seq_along(problemResults))
 	{
 		currentProb <- partitionedContent[[i]]
