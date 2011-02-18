@@ -15,31 +15,6 @@ test.importModelData <- function()
 	# first test: checks that multiple IGNORE= are handled correctly
 	testDir <- file.path(unitTestPath, "testdata")
 	# x <- readNmData(file.path(testDir, "data3"))
-
-#	dataSec1="$DATA       UTC25_1.dat IGNORE=# IGNORE=(VISI.EQ.3)"
-	
-	dataStatement <- 
-			RNMImport:::.importNmModData("$DATA       UTC25_1.dat IGNORE=# IGNORE=(VISI.EQ.3)")
-	
-	testInput=c(File = "UTC25_1.dat",
-			IG  = "#;(VISI.EQ.3)",
-			ACCEPT = '', REWIND="FALSE",  RECORDS ='', TRANSLATE ='')
-	
-	checkEquals(dataStatement[1,1],testInput[1], msg='File OK') 
-	checkEquals(dataStatement[1,2],testInput[2], msg='IG OK') 
-	checkEquals(dataStatement[1,4],testInput[4], msg='REWIND OK')
-	
-	
-#	dataSec2 <- "$DATA nm.PHI_HV_05302010sampdoses.dat IGNORE=(COM=COM, CMT=2, CMT=4, CMT=7, CMT=8, CMT=10, CMT=11, CMT=12, BQL=1, AMT=0)"
-	dataStatement <- RNMImport:::.importNmModData("$DATA nm.PHI_HV_05302010sampdoses.dat IGNORE=(COM=COM, CMT=2, CMT=4, CMT=7, CMT=8, CMT=10, CMT=11, CMT=12, BQL=1, AMT=0)")
-	
-	testInput=c(File = "nm.PHI_HV_05302010sampdoses.dat",
-			IG  = "(COM=COM,CMT=2,CMT=4,CMT=7,CMT=8,CMT=10,CMT=11,CMT=12,BQL=1,AMT=0)",
-			ACCEPT = '', REWIND="FALSE",  RECORDS ='', TRANSLATE ='')
-	
-	checkEquals(dataStatement[1,1],testInput[1], msg='File OK') 
-	checkEquals(dataStatement[1,2],testInput[2], msg='IG OK') 
-	checkEquals(dataStatement[1,4],testInput[4], msg='REWIND OK')
 	
 	dataStatement <- RNMImport:::.importNmModData("$DATA data3.dat IGNORE=I IGNORE=(TIME.EQ.1)")
 	
@@ -47,11 +22,11 @@ test.importModelData <- function()
 	
 	testInput1 <- as.matrix(RNMImport:::importModelData(dataStatement, inputStatement, path = testDir))
 	rownames(testInput1) <- NULL
-# 	checkEquals(testInput$TIME, 0, .27)
+	# checkEquals(testInput$TIME, 0, .27)
 	checkEquals(testInput1, cbind(AMT = c(320,NA,NA,NA,NA,NA,NA,NA), 
 					TIME = c(0,.27,0.52,1.92,3.5,5.02,9,12),
 					DV = c(NA,1.71,7.91,8.33,6.85,6.08,4.55,3.01)), msg = " |IGNORE=c and IGNORE=list work correctly at the same time")
-# second test: 
+	# second test: 
 	dataStatement2 <- RNMImport:::.importNmModData("$DATA data4.dat")
 	inputStatement2 <- RNMImport:::.importNmModInput("$INPUT AMT TIME DV")
 	
@@ -61,20 +36,20 @@ test.importModelData <- function()
 					TIME = c(0,.27,0.52,1,1.92,3.5,5.02,9,12),
 					DV = c(NA,1.71,7.91,8.31,8.33,6.85,6.08,4.55,3.01)), msg = " |IGNORE=# by default!" )
 	
-# third tests: IGNORE=list used alone
+	# third tests: IGNORE=list used alone
 	
 	dataStatement3 <- RNMImport:::.importNmModData("$DATA data3 IGNORE=(TIME.LT.1)")
 	inputStatement3 <- RNMImport:::.importNmModInput("$INPUT AMT TIME DV")
 	
 	testInput3 <- as.matrix( RNMImport:::importModelData(dataStatement3, inputStatement3, path = testDir) )
 	rownames(testInput3) <- NULL
-	
+
 	checkEquals( testInput3,
 			cbind(AMT = rep(NA, 8), 
 					TIME = c(1,1.92,3.5,5.02,7.03,9,12,24.3),
 					DV = c(8.31,8.33,6.85,6.08,5.40,4.55,3.01,0.9)), 
 			msg = " |IGNORE=code alone works as expected" )
-# test IGNORE = 'C'
+	# test IGNORE = 'C'
 	dataStatement4 <- RNMImport:::.importNmModData("$DATA data3.dat IGNORE='I'")
 	testInput4 <-  as.matrix( RNMImport:::importModelData(dataStatement4, inputStatement, path = testDir) )
 	rownames(testInput4) <- NULL
@@ -89,7 +64,7 @@ test.importModelData <- function()
 					TIME = c(0,.27,0.52,1,1.92,3.5,5.02,9,12),
 					DV = c(NA,1.71,7.91,8.31,8.33,6.85,6.08,4.55,3.01)), msg = " |IGNORE=\"I\" same as IGNORE=I " )
 	
-# check that LABEL=X is allowed
+	# check that LABEL=X is allowed
 	
 	dataStatement6 <- .importNmModData("$DATA data3.dat IGNORE=I IGNORE=(TIME=1)")
 	testInput6 <- as.matrix(importModelData(dataStatement6, inputStatement, path = testDir))
@@ -104,17 +79,10 @@ test.importModelData <- function()
 	rownames(testInput7) <- NULL
 	
 	checkEquals(testInput7, cbind(AMT = c(320, NA,NA,NA,NA,NA,NA), 
-					TIME = c(0,0.52,1.92,3.5,5.02,9,12),
-					DV = c(NA, 7.91,8.33,6.85,6.08,4.55,3.01)), msg = " |IGNORE=(LABEL1.OP.X,LABEL2.OP.Y) works")
+			TIME = c(0,0.52,1.92,3.5,5.02,9,12),
+			DV = c(NA, 7.91,8.33,6.85,6.08,4.55,3.01)), msg = " |IGNORE=(LABEL1.OP.X,LABEL2.OP.Y) works")
 	
-# check that mixed IGNORE/IGN statements are allowed
 	
-	dataStatement8 <- .importNmModData("$DATA data3.dat IGN=I IGNORE=(TIME=1)")
-	testInput8 <- as.matrix(importModelData(dataStatement8, inputStatement, path = testDir))
-	rownames(testInput8) <- NULL
-	checkEquals(testInput8, cbind(AMT = c(320,NA,NA,NA,NA,NA,NA,NA), 
-					TIME = c(0,.27,0.52,1.92,3.5,5.02,9,12),
-					DV = c(NA,1.71,7.91,8.33,6.85,6.08,4.55,3.01)), msg = " |IGNORE=(LABEL=X) works")
 }
 
 # test aliasing of columns
@@ -138,10 +106,10 @@ test.importModelDataAliasDrop <- function()
 	rownames(testInput1) <- NULL
 	
 	checkEquals(testInput1, cbind(AMT = c(320,NA,NA,NA,NA,NA,NA,NA,NA), 
-					TIME = c(0,.27,0.52,1,1.92,3.5,5.02,9,12),
-					DV = c(NA,1.71,7.91,8.31,8.33,6.85,6.08,4.55,3.01),
-					TIM = c(0,.27,0.52,1,1.92,3.5,5.02,9,12), FOO = c(NA,1.71,7.91,8.31,8.33,6.85,6.08,4.55,3.01) ) ,
-			" | aliasing works as expected")
+			TIME = c(0,.27,0.52,1,1.92,3.5,5.02,9,12),
+			DV = c(NA,1.71,7.91,8.31,8.33,6.85,6.08,4.55,3.01),
+			TIM = c(0,.27,0.52,1,1.92,3.5,5.02,9,12), FOO = c(NA,1.71,7.91,8.31,8.33,6.85,6.08,4.55,3.01) ) ,
+	 " | aliasing works as expected")
 	
 	inputStatement2 <- .importNmModInput( "$INPUT AMT=DROP TIME=TIM DV=FOO")
 	
@@ -174,12 +142,12 @@ test.importModelDataAliasDrop <- function()
 	checkEquals( testInput4, testInput3, msg = " |IGNORE = works for other alias of TIME"  )
 	
 	# another test: aliasing with extra columns
-	
+
 	inputStatement2 <- .importNmModInput("$INPUT MDV AMT EVID=DROP TIME CONC=DV")
 	dataStatement5 <- .importNmModData("$DATA data5.csv IGNORE=(CONC=2,AMT.GT.10)")
 	
 	testInput5 <- as.matrix(  importModelData( dataStatement5, inputStatement2, path = testDir ) )
-	
+
 	checkEquals( testInput5, structure(c(1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 10L, 0L, 0L, 0L, 
 							0L, 0L, 0L, 0L, 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 0L, 9L, 8L, 7L, 
 							6L, 5L, 4L, 3L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 10L, 0L, 0L, 
@@ -242,7 +210,7 @@ test.importModelData.records <- function()
 	
 	# first test: checks that RECORDS=n is handled correctly
 	testDir <- file.path(unitTestPath, "testdata")
-	
+
 	
 	dataStatement1 <- .importNmModData("$DATA data4.dat RECORDS=5")
 	inputStatement <- .importNmModInput("$INPUT AMT TIME=TIM DV=FOO")

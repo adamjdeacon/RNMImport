@@ -10,11 +10,9 @@ test.importModelOutputTables <- function()
 {
 	# we want to test that APPEND is handled correctly.  In this case, 
 	
-#	tableStatement <-  "$TABLE  ONEHEADER ID STUD WEEK NITE DRUG DOSE A B C D
-#			ETA(1) ETA(2) MDV WRES IWRES IPRED NOPRINT FILE=testtab.tab"
 	tableStatement <-  "$TABLE  ONEHEADER ID STUD WEEK NITE DRUG DOSE A B C D
-			ETA(1) ETA(2) MDV IWRES IPRED NOPRINT FILE=testtab.tab"
-	
+  	ETA(1) ETA(2) MDV WRES IWRES IPRED NOPRINT FILE=testtab.tab"
+  	
   	tableInfo <- RNMImport:::.importNmModTables(tableStatement)
   	tableTest <- RNMImport:::importModelOutputTables(tableInfo, path = file.path(unitTestPath, "testdata"))
   	

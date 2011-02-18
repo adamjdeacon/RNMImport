@@ -72,7 +72,7 @@ test.createCategorical <- function()
 	checkEquals(length(levels(testBas@additionalVars[["WT.CUT"]])), 6) 
 		
 	#Check NMRun
-	testRun <- addDerivedCategorical(obj=run1, varName = "SEX", binType = "unique", newVar = "FactorSEX")
+	testRun <- addDerivedCategorical(run1, varName = "SEX", binType = "unique", newVar = "FactorSEX")
 	checkException(addDerivedCategorical(run1, varName = "SEX",  binType = "unique", dataType = "Intermediate"))
 	checkEquals(nrow(testRun@additionalVars), nrow(testRun@outputData))
 	checkEquals(names(testRun@additionalVars), "FactorSEX")

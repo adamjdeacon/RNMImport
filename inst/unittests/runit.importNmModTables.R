@@ -40,30 +40,20 @@ test.importNmModTables <- function() {
 	checkEquals(vec3[["append"]], c(TRUE, FALSE) , " check 3 (append)")
   
 	vec4 <- RNMImport:::.importNmModTables(
-			c("$TABLE ID TIME DV IPRED PRED WRES IWRES IRES MDV ATIM OCC GRP ONEHEADER NOPRINT",
-					"FILE=TES3ST03a.fit ",
-					"$TABLE ID CL K30 V3 K34 K43  K12 K23 OCC GRP F1 ALAG1 ONEHEADER",
-					"NOPRINT FILE=TES3ST03p.fit ",
-					"$TABLE NOPRINT ONEHEADER ID ETA1 ETA2 ETA3 ETA4 ETA5 ETA6 ETA7 ETA8",
-					"FILE=TES3ST03e.fit "))
+    c("$TABLE ID TIME DV IPRED PRED WRES IWRES IRES MDV ATIM OCC GRP ONEHEADER NOPRINT",
+      "FILE=TES3ST03a.fit ",
+	    "$TABLE ID CL K30 V3 K34 K43  K12 K23 OCC GRP F1 ALAG1 ONEHEADER",
+      "NOPRINT FILE=TES3ST03p.fit ",
+	    "$TABLE NOPRINT ONEHEADER ID ETA1 ETA2 ETA3 ETA4 ETA5 ETA6 ETA7 ETA8",
+      "FILE=TES3ST03e.fit "))
 	checkEquals( vec4$File    , c("TES3ST03a.fit", "TES3ST03p.fit", "TES3ST03e.fit") , msg = "check 4  (file)")
-	checkEquals( vec4$Columns , c("ID, TIME, DV, IPRED, PRED, WRES, IWRES, IRES, MDV, ATIM, OCC, GRP",
-					"ID, CL, K30, V3, K34, K43, K12, K23, OCC, GRP, F1, ALAG1",
-					"ID, ETA1, ETA2, ETA3, ETA4, ETA5, ETA6, ETA7, ETA8"), msg = "check 4 (columns)")
-	checkEquals( vec4$NoHeader, rep(FALSE,3), msg = "check 4 (oneheader)")
-	
+  checkEquals( vec4$Columns , c("ID, TIME, DV, IPRED, PRED, WRES, IWRES, IRES, MDV, ATIM, OCC, GRP",
+                                "ID, CL, K30, V3, K34, K43, K12, K23, OCC, GRP, F1, ALAG1",
+                                "ID, ETA1, ETA2, ETA3, ETA4, ETA5, ETA6, ETA7, ETA8"), msg = "check 4 (columns)")
+  checkEquals( vec4$NoHeader, rep(FALSE,3), msg = "check 4 (oneheader)")
+
 	checkEquals(vec4$append, rep(TRUE, 3) , msg = " check 4 (append)")
-	
-	vec5 <- RNMImport:::.importNmModTables(
-			c("$TAB ID TAD IPRED IWRES ONEHEADER NOPRINT FILE = nm.standardout.tab",
-					"$TAB ID ETA1 ETA2 ETA3 JD DN1 DN2 DN3 ONEHEADER FIRST NOPRINT FILE = nm.jointdensity.tab"))
-	checkEquals( vec5$File    , c("nm.standardout.tab",  "nm.jointdensity.tab") , msg = "check 5  (file)")
-	checkEquals( vec5$Columns , c("ID, TAD, IPRED, IWRES",
-					"ID, ETA1, ETA2, ETA3, JD, DN1, DN2, DN3, FIRST"), msg = "check 5 (columns)")
-	checkEquals( vec5$NoHeader, rep(FALSE,2), msg = "check 4 (oneheader)")
-	
-	checkEquals(vec5$append, rep(TRUE, 2) , msg = " check 4 (append)")
-	
+
 }
 
 

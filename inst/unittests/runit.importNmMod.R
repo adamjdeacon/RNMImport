@@ -26,25 +26,23 @@ test.importNmMod <- function()
 							"PK", "Error", "Estimates", "Cov") )
 	checkEquals(x$Data[1,"REWIND"], c(REWIND = "FALSE"), msg = "Checking ")
 	dat2 <- importNmMod(file.path(testDir, "control4.con"))
-	checkEquals(rownames(dat2$problemContents[[1]]$Theta), c("A FALSE", "B FALSE", "C FALSE"), 
-			msg = "Parameter labels read correctly")
+	checkEquals(rownames(dat2$problemContents[[1]]$Theta), c("A", "B", "C"), msg = "Parameter labels read correctly")
 
 	dat3 <- importNmMod(file.path(testDir, "multiprob1.mod"))
 	
 	checkEquals(length(dat3$problemContents), 2)
 	x <- dat3$problemContents
-	checkEquals(names(x[[1]]), c("Problem","Subroutine",'PRIOR', "Input", "Data", "PRED"))
+	checkEquals(names(x[[1]]), c("Problem","Subroutine", "Input", "Data", "PRED"   ))
 	checkEquals(names(x[[2]]), c("Theta",  "Omega", "Sigma", "Problem", "Input","Data","Sim")) 
-
 	# now try an example with simulation statements
 	dat4 <- importNmMod(file.path(testDir, "subprob1.mod"))
+	
 	
 	checkEquals(sum(dat4$Comments == ""), 59)
 	checkEquals(dat4$Comments[6], " initialize" )
 	checkEquals(dat4$Comments[43], " $SUPER SCOPE=3 ITERATIONS=10")
 	
 	x <- dat4$problemContents
-#	There are 4 problems...
 	checkEquals(length(x), 4)
 	
 	checkEquals(x[[2]]$Theta[2,], c(.025,.102,.4), checkNames = FALSE )
