@@ -1,5 +1,10 @@
-# $Rev: 14658 $
-# $LastChangedDate: 2010-01-13 14:41:12 +0000 (Wed, 13 Jan 2010) $
+# SVN revision: $Rev$
+# Date of last change: $LastChangedDate$
+# Last changed by: $LastChangedBy$
+# 
+# Original author: fgochez
+# Copyright Mango Solutions, Chippenham, UK
+###############################################################################
 
 ##### 
 # SYSTEM
@@ -14,6 +19,7 @@
 test.importNm.Basic <- function()
 {
 	# start with the test run
+    unitTestPath <- RNMImport:::getUnitTestPath()
 	setNmPath("internalunit",  file.path(unitTestPath, "testdata/TestRun") )
 	
 	# import the basic test run
@@ -102,7 +108,7 @@ test.importNm.Basic <- function()
 	
 	# now try importing a run without output tables
 	
-	run3 <- importNm("TestData1notab.ctl", path = system.file(package = "RNMImport", "unittests/testdata/TestRunNoTab"))
+	run3 <- importNm("TestData1notab.ctl", path = file.path(unitTestPath, "testdata/TestRunNoTab"))
 	prob3 <- getProblem(run3)
 	
 	checkException(nmData(prob3), msg = " |Output data missing, so there is an incompatibility in data size\n")
@@ -120,7 +126,7 @@ test.importNm.Basic <- function()
 	
 	# check that importing with missing table files still works -
 
-	run4 <- importNm("TestData1_missingtab.ctl","TestData1.lst" , path = system.file(package = "RNMImport", "unittests/testdata/TestRun"))
+	run4 <- importNm("TestData1_missingtab.ctl","TestData1.lst" , path = file.path(unitTestPath, "testdata/TestRun"))
 	checkEquals(nmData(run4, dataType = "output"), data.frame(), msg = " |empty output data" )
 	
 	# spot checks that other things were imported correctly
@@ -189,7 +195,7 @@ test.importNm.SimModel <- function()
 	
 	### check that importing with no tables still works
 	
-	run4 <- importNm("TestData1SIM_missingtab.con","TestData1SIM.lst" , path = system.file(package = "RNMImport", "unittests/testdata/TestSimRun"))
+	run4 <- importNm("TestData1SIM_missingtab.con","TestData1SIM.lst" , path = file.path(unitTestPath, "testdata/TestSimRun"))
 	checkEquals(nmData(run4, dataType = "output"), structure(list(NSIM = structure(integer(0), .Label = c("1", "2", 
 											"3", "4", "5"), class = c("ordered", "factor"))), .Names = "NSIM", row.names = integer(0), class = "data.frame"), msg = " |empty output data" )
 	
@@ -317,7 +323,7 @@ test.importNm.BasicNM7 <- function()
 	checkEquals(iter[[1]], expectedIter[[1]], check.attributes = FALSE, "msg = | iterations imported correctly")
 	checkEquals(iter[[2]], expectedIter[[2]], check.attributes = FALSE, "msg = | iterations imported correctly")
 
-	run2 <- importNm("TestData1_missingtab.ctl","TestData1.lst" , path = system.file(package = "RNMImport", "unittests/testdata/TestDataNM7"))
+	run2 <- importNm("TestData1_missingtab.ctl","TestData1.lst" , path = file.path(unitTestPath, "testdata/TestDataNM7"))
 	
 	checkEquals(nmData(run2, dataType = "output"), data.frame(), msg = " |empty output data" )
 	
