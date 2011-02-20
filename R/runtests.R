@@ -1,6 +1,10 @@
-# $Rev$
-# $LastChangedDate$
-
+# SVN revision: $Rev$
+# Date of last change: $LastChangedDate$
+# Last changed by: $LastChangedBy: fgochez $
+# 
+# Original author: fgochez
+# Copyright Mango Solutions, Chippenham, UK
+###############################################################################
 
 #' Executes the package regression tests
 #' @title run package regression tests
@@ -18,7 +22,7 @@
 # Individual author: Francisco Gochez
 
 runRNMImportTests <- function(
-		internalTestDataPath = system.file(package="RNMImport", "unittests"),
+		internalTestDataPath = "testing",
 		externalTestDataPath = 	"//Mango-data1/mangowork/MangoProjects/RNONMEM2/data", 
 		testScriptPaths = c(system.file(package="RNMImport", "unittests"), "testing/externaltests"),
 		runIntern = TRUE, runExtern = FALSE,
