@@ -31,7 +31,7 @@
 #'      referenced in the $DATA statement they will be attached with the names ExtraCol[x].  Ignored data (as specified by the IGNORE= directive) will not
 #'      be available in the returned object. } 
 #' \item{Iterations (NONMEM 7 only):}{NONMEM 7-style iteration files (".ext") will be imported as the iterations for a NONMEM 7 run (if available).
-#'  The name of the iterations file will be automatically deduced from the name of the control file.  They will be retrievable with the \code{getIterations}
+#'  The name of the iterations file will be automatically deduced from the control file.  They will be retrievable with the \code{getIterations}
 #'  function. } 
 #' } 
 #' 

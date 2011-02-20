@@ -14,11 +14,12 @@ behaviours relating to various categories.
 \itemize{
 \item{Input data:}{Input data is specified by the control file $INPUT and $DATA statements. Dropped 
 columns will be managed according to the value of the dropInputColumns parameter. Aliased columns will be duplicated, once with their alias, 
-and once with their alternative name (e.g. the column SEX\=GEN would appear as a column SEX and once as GEN). If there are more columns in the input data than are 
-referenced in the $DATA statement they will be attached with the names ExtraCol[x]. } 
-\item{Iterations (NONMEM 7 only):}{NONMEM 7-style iteration files (".ext") will be imported as the iterations for a NONMEM 7 run.
-The name of the iterations file will be automatically deduced from the name of the control file.  They will be retrievable with the \code{getIterations}
-function } 
+and once with their alternative name (e.g. the column SEX=GEN would appear as a column SEX and once as GEN). If there are more columns in the input data than are 
+referenced in the $DATA statement they will be attached with the names ExtraCol[x].  Ignored data (as specified by the IGNORE= directive) will not
+be available in the returned object. } 
+\item{Iterations (NONMEM 7 only):}{NONMEM 7-style iteration files (".ext") will be imported as the iterations for a NONMEM 7 run (if available).
+The name of the iterations file will be automatically deduced from the control file.  They will be retrievable with the \code{getIterations}
+function. } 
 }}
 \author{Mango Solutions}
 \keyword{IO}
