@@ -1,6 +1,6 @@
 Package: RNMImport
 Type: Package
-Title: Tools for importing and manipulating NONMEM data (PME branch).
+Title: Tools for importing and manipulating NONMEM data.
 Version: 0.3.6
 Date: $LastChangedDate$
 Author: Mango Solutions
