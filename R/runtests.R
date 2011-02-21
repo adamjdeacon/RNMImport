@@ -6,20 +6,26 @@
 # Copyright Mango Solutions, Chippenham, UK
 ###############################################################################
 
-#' Executes the package regression tests
-#' @title run package regression tests
-#' @param testDataPaths Paths to locate the data for the suites.  Up to 4 may be specified, but the first one should
-#' be located on the user's computer  
-#' @param testScriptPath Path where the scripts are located.  By default, will use the package installation directory
+
+#' Executes the package regression tests, and optionally produces one or two html reports. The test suite is run with the RUnit package.
+#' @param internalTestDataPath Path to the "internal" test data.  In SVN, it can be found under importing/testing/testdata.  This data s used by distributed unit tests
+#' @param externalTestDataPath  Path to the "external" package test data, found on mango-data1.  This is used by "external" test scripts
+#' @param testScriptPaths Path where the scripts are located.  By default, will use the package installation directory
+#' @param runIntern Logical flag.  Should the internal tests be run?
 #' @param runExtern Logical flag.  Should the external tests be run?
 #' @param printTestProtocol Logical flag.  Should HTML reports be produced?
-#' @param cleanup Logical flag. ???
-#' @return The results of running the test suite, as run by RUnit's "runTestSuite".  This will be a list of up to 4 elements
+#' @param cleanup Should the test environments be deleted after running the tests?  Meant for development purposes.
+#' @title run package regression tests
+#' @return A list of 1 or 2 elements holding the results of executing the test suites via the function
+#'   \code{runTestSuite}, one element for the internal tests and one for the external. 
 #' @author Mango Solutions
 #' @keywords debugging
-#' @export 
-
-# Individual author: Francisco Gochez
+#' @examples
+#'  \dontrun{
+#'     x <- runRNMImportTests(runExtern = FALSE, printTestProtocol = FALSE)
+#'      summary(x[[1]])
+#'     }
+#' @export
 
 runRNMImportTests <- function(
 		internalTestDataPath = "testing",
@@ -123,9 +129,10 @@ runRNMImportTests <- function(
 
 #' 
 #' @title Store external test runs
-#' @return 
+#' @return nothing
 #' @author fgochez
-#' @keywords
+#' @nord
+
 
 externalTestRuns <- function(dataPath)
 {
