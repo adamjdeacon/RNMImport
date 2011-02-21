@@ -1,21 +1,30 @@
-# $LastChangedDate$
-# $LastChangedBy$
-# $Rev$
+# SVN revision: $Rev$
+# Date of last change: $LastChangedDate$
+# Last changed by: $LastChangedBy$
 # 
-# Author: fgochez
+# Original author: fgochez
+# Copyright Mango Solutions, Chippenham, UK
 ###############################################################################
 
 
 #' Imports one of the new files produced by NONMEM 7: .phi, .cor, .cov, etc. into a  list of data.frames.
 #' @param file Name of the file
-#' @param path Path to the file (including NONMEM path in brackets)
+#' @param path Path to the file (can be a NONMEM path in round brackets)
 #' @param type Type of the file: One of "cov", "ext", or "phi".  "cov" should be used for .cor, .cov or .coi files.
-#' @param tableTitles [L,1] Are the table titles present in the file?  Should be FALSE, if, for example, one generates an EXT
+#' @param tableTitles Single logical flag. Are the table titles present in the file?  Should be FALSE, if, for example, one generates an EXT
 #' file using the NOTITLE=1 option.  Currently this option ONLY works when type = "ext"
-#' @title Import new NONMEM 7 files
+#' @title Import new NONMEM 7 table files
 #' @return a list of data.frames holding the content of the individual sub-tables within each file.  Each
 #' table will have as an attribute "method", holding the name of the method associated to it
-#' @author fgochez
+#' @author Mango Solutions
+#' @note The "cov" type covers .cor, .cov and .coi files.
+#' @keywords IO
+#' @examples
+#' \dontrun{ 
+#'     phiTables <- importNm7Tables(type = "phi", "TestData1.phi", path = "testing/testdata/TestDataNM7")
+#'     print(phiTables[[1]])
+#'     print(attr(phiTables[[1]], "method"))
+#' }
 #' @export
 
 importNm7Tables <- function(file, path = ".", type = c("cov", "ext", "phi"), tableTitles = TRUE)
