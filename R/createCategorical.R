@@ -1,3 +1,11 @@
+# SVN revision: $Rev$
+# Date of last change: $LastChangedDate$
+# Last changed by: $LastChangedBy$
+# 
+# Original author: fgochez
+# Copyright Mango Solutions, Chippenham, UK
+###############################################################################
+
 #' This function allows the user to create new variables derived from actual input or output data stored in a NONMEM object or a data.frame.
 #' The function "bins" the data in a user-chosen manner.  The new "binned" variable will be added to the "additionalVars" data frame of the object, or as a new column if the 
 #' object is a data.frame. The methods for creating the categorical variables are:
