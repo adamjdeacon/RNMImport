@@ -54,42 +54,6 @@ addVarDescription <- function(varName, varLabel, varType, varFormat = NULL)
 	.RNMImportEnv$variables <- .RNMImportEnv$variables[order(.RNMImportEnv$variables[["Variable"]]), ]
 }
 
-#' Gets the conventional file name extensions used by NONMEM.
-#' @title Get file extensions
-#' @param parameter The name of the file type, e.g. "control" for a control file
-#' @return A vector of allowed file type extensions
-#' @author rweeks
-#' @export
-getNmFileExtensions <- function(parameter)
-{
-	switch(parameter,
-		   	"control" = .RNMImportEnv$fileExtensions[["control"]], 
-			"report" = .RNMImportEnv$fileExtensions[["report"]], 
-			"table" = .RNMImportEnv$fileExtensions[["outputTable"]], 
-			"input" = .RNMImportEnv$fileExtensions[["inputData"]],
-			RNMImportStop(msg = "Name of file type not recognised.\n"))
-}
-
-#' Sets the allowed file extensions to be used.
-#' @title Set file extensions
-#' @param parameter The name of the file type, e.g. "list" for a list file
-#' @param extension A character vector of new file type extensions
-#' @return None
-#' @author rweeks
-#' @export
-setNmFileExtensions <- function(parameter, extension)
-{
-	if(!(parameter %in% c("control", "report", "table", "input")))
-		RNMImportStop(msg = "Name of file type not recognised.\n")
-	if(parameter == "control")
-		.RNMImportEnv$fileExtensions[["control"]] <- extension
-	if(parameter == "report")
-		.RNMImportEnv$fileExtensions[["report"]] <- extension
-	if(parameter == "table")
-		.RNMImportEnv$fileExtensions[["outputTable"]] <- extension
-	if(parameter == "input")	
-		.RNMImportEnv$fileExtensions[["inputData"]] <- extension
-}
 
 #' Gets a path stored globally by the user.
 #' @title Get user path
@@ -97,6 +61,7 @@ setNmFileExtensions <- function(parameter, extension)
 #' @return The path
 #' @author rweeks
 #' @export
+
 getNmPath <- function(pathName)
 {
 	if(!(pathName %in% names(.RNMImportEnv$dataPath)))
