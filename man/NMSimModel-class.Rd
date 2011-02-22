@@ -54,8 +54,6 @@ Class \code{"\linkS4class{NMProblem}"}, directly.
 \author{Mango Solutions}
 
 \examples{
-	x <- importNm("TestData1SIM.con", path = system.file(package = "RNMImport", "unittests/testdata/TestSimRun"))
-	y <- getProblem(x)
-	show(y)
+	showClass("NMSimModel")
 }
 \keyword{classes}
