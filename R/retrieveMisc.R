@@ -1,8 +1,12 @@
-# $LastChangedDate$
-# $Rev$
+# SVN revision: $Rev$
+# Date of last change: $LastChangedDate$
+# Last changed by: $LastChangedBy: fgochez $
+# 
+# Original author: fgochez
+# Copyright Mango Solutions, Chippenham, UK
+###############################################################################
 
-
-#' Retrieved the variance-covariance matrix of the estimators and optionally
+#' Retrieves the variance-covariance matrix of the estimators and optionally
 #'  the correlation and inverse correlation matrices of the selected NONMEM run
 #' @title Returns variance-covariance matrix, if available, from a NONMEM object 
 #' @param obj An object of class NMRun or NMBasicModel
@@ -13,7 +17,7 @@
 #' @param ... 
 #' @return A matrix if just the covariance matrix is required, a list of matrices otherwise
 #' @author Mango Solutions
-#' @keywords
+#' @nord
 
 #  Author: F Gochez
 
@@ -72,15 +76,25 @@ getEstimateCov.NMBasicModelNM7 <- function(obj, corMatrix = FALSE, invCorMatrix 
 setMethod("getEstimateCov", signature(obj = "NMBasicModelNM7"), getEstimateCov.NMBasicModelNM7)
 
 
-#' Retrieves the final value of the objective function together with the minimization 
-#' info for a NONMEM problem
+#' getObjective will access the final value(s) of the objective function. It is a generic function, with inputs/outputs on different classes described below:  
 #' @param obj NMRun, or problem inheriting from NMProblem 
 #' @param addMinInfo Logical flag.  Should the minimization info be added if it's available?
-#' @param ... Additional parameters passed to other methods, such as problemNum and subProblems
+#' @param ... Additional parameters passed to other methods. \code{problemNum} for NMRun objects 
+#' \code{subProblems} for NMSim* objects, and \code{method} (numeric vector) for NM7 objects  
 #' @title Retrieve objective function value
-#' @return A numeric with the value, with the minimization info as a vector added as an attribute "minInfo"
-#' @author fgochez
-#' @keywords utils
+#' @return For x of class \code{NMBasicModel}, a numeric vector with minimization information attached as an attribute.
+#' If x is of class \code{NMBasicModelNM7}, a vector with one entry for each method requested, For x of class \code{NMSimModel}, 
+#' a numeric vector with one element for each subproblem chosen. If x is of class \code{NMSimModelNM7}, a vector with each 
+#' selected subproblem number when only a single method is chosen, or a matrix with a column for each method and row for 
+#' each sub-problem if multiple methods are selected. If x is of class \code{NMRun}, the output will vary according to the problem selected (as above). 
+#' @author Mango Solutions
+#' @note The parameters \code{method} and \code{subProblem} will be restricted to valid ranges suitable for the given object 
+#' @keywords methods
+#' @examples
+#' \dontrun{
+#'      x <- importNm("theoph.con", path  = "examples/theoph")
+#'      getObjective(x)
+#' }
 
 getObjective <- function(obj, addMinInfo = TRUE, ...)
 {
@@ -162,14 +176,13 @@ getObjective.NMSimModelNM7 <- function(obj, addMinInfo = TRUE, subProblems = 1, 
 setMethod("getObjective", signature(obj="NMSimModelNM7"), getObjective.NMSimModelNM7)
 
 
-
-
 #' Retrieves information about a run's control and report files as a data.frame
 #' @param run Object of class NMRun
 #' @title Retrieve file information 
 #' @return A data.frame with 2 rows, 1 describing the report file and the other the control file
 #' @author fgochez
 #' @keywords utility
+#' @nord
 
 getFileinfo <- function(run)
 {
@@ -188,7 +201,7 @@ getControltext <- function(run) run@controlText
 #' @return A list with the parsed control statements (e.g. an actual matrix for the Thetas, etc.,
 #' @author fgochez
 #' @export
-#' @keywords
+#' @nord
 
 getControlStatements <- function(obj, ...)
 {
@@ -218,6 +231,7 @@ setMethod("getControlStatements", signature(obj = "NMProblem"), getControlStatem
 #' version
 #' @author fgochez
 #' @export
+#' @nord
 
 getNmVersion <- function(obj)
 {
@@ -247,6 +261,7 @@ setMethod("getNmVersion", signature(obj = "NMProblem"), getNmVersion.NMRunProb)
 #' @author fgochez
 #' @keywords classes, manip, utilities
 #' @export
+#' @nord
 
 getSimInfo <- function(obj, problemNum = 1, addRawInfo = TRUE)
 {
