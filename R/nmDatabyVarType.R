@@ -11,10 +11,18 @@
 #' "Lab covariate", "Covariate" and "Eta"
 #' @param returnMode A string, either "singleDF" or "DFList".  If "singleDF", all of the data
 #' is returned in a consolidated data.frame, otherwise as a list returned by type
-#' @param ... 
+#' @param ... Additional parameters: problemNum to select the problem if obj is of class NMRun, subProblemNum to select a 
+#' set of subproblems for simulation problems
 #' @return A data.frame, or list, with the data
 #' @author Mango Solutions
-#' @keywords datagen, utils
+#' @seealso \code{\link{nmData}}, \code{\link{getVarDescription}} 
+#' @keywords datagen utils
+#' @examples
+#' \dontrun{
+#'      x <- importNm("TestData1.ctl", "TestData1.lst", path  = "testing/testdata/TestRun"))
+#'      x.covariates <- nmDatabyVarType(x, varTypes = "Covariate")
+#'      print(head(x.covariates))
+#' }
 
 # Inidividual author: F.Gochez
 
