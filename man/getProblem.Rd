@@ -1,31 +1,15 @@
 \name{getProblem}
 \alias{getProblem}
-\title{Retrieve NONMEM problem}
-\description{
-  Extracts a specific problem from a NONMEM run.  Problems are chunks of NONMEM modelling code that begin with
-  \code{$PROB}.
+\title{Extract an individual NONMEM problem}
+\usage{getProblem(run, problemNumber=1)
 }
-\usage{
-	getProblem(run, problemNumber = 1)
+\description{Retrieves a desired problem from a full NONMEM run object.}
+\value{The given problem number (NMBasicModel, NMSimDataGen, or NMSimModel)}
+\author{Mango Solutions}
+\note{If \code{problemNum} is out of the acceptable range of problems, an exception will be generated.  The same
+applies if \code{run} is not an NMRun object}
+\keyword{manip}
+\arguments{\item{run}{An NMRun class object}
+\item{problemNumber}{Number of the problem to retrieve}
 }
-
-\arguments{
-  \item{run}{NMRun class object}
-  \item{problemNumber}{Integer with the number of the object requested.  }
-}
-
-\value{
- 	An object of a class that extends NMProblem
-}
-\note{
-	At the moment, only one problem can be imported for each run.  Multi-problem runs cannot yet be handled, but will
-	in the near future.
-}
-\author{Mango Solutions <support@mango-solutions.com>}
-\examples{
-	x <- importNm("TestData1.ctl", "TestData1.lst", path  = system.file(package = "RNMImport", "unittests/testdata/TestRun"))
-	x.prob <- getProblem(x, 1)
-	print(x.prob)
-}
-\keyword{ utilities }
 
