@@ -1,4 +1,10 @@
-
+# SVN revision: $Rev: 25278 $
+# Date of last change: $LastChangedDate: 2011-02-21 14:51:08 +0000 (Mon, 21 Feb 2011) $
+# Last changed by: $LastChangedBy: fgochez $
+# 
+# Original author: fgochez
+# Copyright Mango Solutions, Chippenham, UK
+###############################################################################
 
 # internal function meant to be used internally by importNmLstSimModel ONLY
 .importSubProb <- function(txt)
@@ -15,8 +21,9 @@
 #' @param contents Contents of the report file for a single problem
 #' @param numSub Number of sub-problems in the problem 
 #' @title Import simulation+fit report 
-#' @return 
+#' @return A list with parsed elements
 #' @author fgochez
+#' @nord
 
 importNmLstSimModel <- function(contents, numSub = NA)
 {
@@ -104,7 +111,6 @@ importNmLstSimModel <- function(contents, numSub = NA)
 #' @title Import basic problem report results 
 #' @return a list containing final estimates, number of individuals, etc. for the problem 
 #' @author fgochez
-#' @keywords
 
 .importNmLstBasicProb <- function(contents)
 {
@@ -141,6 +147,7 @@ importNmLstSimModel <- function(contents, numSub = NA)
 #' @return A list with 2 elements: nRecords and nIndividuals, holding the number of individuals and number of
 #' records in the problem respectively
 #' @author fgochez
+#' @nord
 
 importNmLstSimDataGen <- function(contents)
 {
@@ -151,12 +158,7 @@ importNmLstSimDataGen <- function(contents)
 }
 
 
-#' Takes the content of a report file and splits into a list of problems
-#' @name
-#' @title
-#' @return 
-#' @author fgochez
-#' @keywords
+# Takes the content of a report file and splits into a list of problems
 
 .reportPartitionedByProblems <- function(reportContents, numProblems = NA)
 {
@@ -185,7 +187,7 @@ importNmLstSimDataGen <- function(contents)
 #' @title Import report file based on control statements
 #' @return List of parsed report file statements
 #' @author fgochez
-#' @keywords
+#' @nord
 
 # TODO: suppress this?  It should be possible to fully import a list file without a control file, and then there
 # would be no sense in maintaining this function
@@ -242,17 +244,22 @@ importNmLstSimDataGen <- function(contents)
 }
 
 #' This routine imports the contents in a NONMEM output report file, and then parses different sections of it
-#' while ignoring some.
+#' while ignoring some. A structured list object is returned
 #' @title Import the information in an output report file
-#' @param fileName [C,1] Name of the report file
-#' @param path [C,1] (optional) Can be a path stored by setNmPath if it is in round brackets. 
-#' @param controlStatements [L,1](optional) Control statements from the run associated with this output.  Using it 
-#' allows cleaner parsing of the report file  
-#' @param version [C,1] NONMEM version that the report file is extracted from
-#' @param textReport [L,1] Logical.  Should statements be logged to "stdReport" log?
-#' @return A named report with elements holding parsed statements in the report file
-#' @author fgochez
+#' @param fileName Name of the report file
+#' @param path The path where the report file is held. Can be a path stored by setNmPath if it is in round brackets. 
+#' @param controlStatements (optional) Obh Control statements from the run associated with this output.  Using it 
+#' allows cleaner parsing of the report file.  This will likely be deprecated in the future.  
+#' @param textReport Single logical.  Should statements be logged to "stdReport" log?
+#' @return A named report with elements holding parsed statements in the report file.
+#' This object will be of class \code{nmRunReport}
+#' @author Mango Solutions
 #' @keywords IO
+#' @examples 
+#' \dontrun{
+#'      x <- importNmReport("theoph.lst", path = "examples/theoph")
+#'      print(x)
+#' }
 
 importNmReport <- function( fileName, path = NULL, controlStatements = NULL, textReport = FALSE)
 {          
@@ -327,7 +334,7 @@ importNmReport <- function( fileName, path = NULL, controlStatements = NULL, tex
 #' @title Clean report file
 #' @return character vector of strings without extraneous content
 #' @author fgochez
-#' @keywords
+#' @nord
 
 cleanReportContents <- function(content)
 {
