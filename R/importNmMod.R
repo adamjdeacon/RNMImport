@@ -1,7 +1,10 @@
-# $LastChangedDate$
-# $LastChangedBy$
-# $Rev$
-
+# SVN revision: $Rev$
+# Date of last change: $LastChangedDate$
+# Last changed by: $LastChangedBy$
+# 
+# Original author: fgochez
+# Copyright Mango Solutions, Chippenham, UK
+###############################################################################
 
 #### FUNCTIONS in this file:
 ## importNmMod
@@ -12,12 +15,21 @@
 #' will correspond to the actual control statements, e.g. $PK, $THETA, $PROBLEM, etc.  Some of the elements
 #' are kept as pure text.
 #' @title Parse a NONMEM control file
-#' @param fileName Name of the control file
+#' @param fileName File name name of the control file
 #' @param path (optional) path to the control file, can be a stored path enclosed in round brackets
-#' @param version of NONMEM which the control file requires 
+#' @param version NONMEM version that the control file targets.  Currently, "VII" or "7" denotes NONMEM 7, and
+#' other values are not differentiated 
+#' @param textReport Logical flag.  If TRUE, a message regarding which file is being imported will be logged.
 #' @title Import a control file
-#' @return A list describing the control file contents
-#' @author Francisco Gochez <fgochez@mango-solutions.com>
+#' @return A list with parsed components of the control file.  This will be of class \code{nmModel}.
+#' @author Mango Solutions
+#' @examples
+#' \dontrun{
+#'  conContents <- importNmMod(file = "theoph.con", path = "examples/theoph") 
+#'  print(conContents)
+#' }
+#' @note An execption will be generated if $PRIOR NWPRI is found in a control file and NONMEM version VII was used. If the control file is empty, 
+#' an exception will also be generated. 
 #' @keywords IO
 
 importNmMod <- function(
@@ -96,8 +108,7 @@ importNmMod <- function(
 #' @param fileName Name of the control file from which the problem originates
 #' @return named list with the various sections split up
 #' @author fgochez
-#' @export
-#' @keywords
+#' @nord
 
 .importNmModSingleProblem <- function(contents, fileName)
 {
@@ -158,15 +169,6 @@ importNmMod <- function(
 
 #TODO: comment
 # TODO: handle additional missing elements
-
-#' 
-#' @name
-#' @title
-#' @param currentProblem 
-#' @param previousProblem 
-#' @return 
-#' @author fgochez
-#' @keywords
 
 .mergeMissing <- function(currentProblem, previousProblem)
 {
