@@ -33,7 +33,7 @@
 
 \examples{
 	\dontrun{
-		x <- importNm("TestData1.ctl", "TestData1.lst", path  = system.file(package = "RNMImport", "unittests/testdata/TestRun"))
+		x <- importNm("TestData1.ctl", "TestData1.lst", path  = "testing/testdata/TestRun")
 		prob <- getProblem(x)
 		print(dataSubset(prob))
 		z <- nmData(prob, subset = c(dataSubset(prob), "ID < 20"))
