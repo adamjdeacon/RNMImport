@@ -1,12 +1,23 @@
+# SVN revision: $Rev: 25278 $
+# Date of last change: $LastChangedDate: 2011-02-21 14:51:08 +0000 (Mon, 21 Feb 2011) $
+# Last changed by: $LastChangedBy: fgochez $
+# 
+# Original author: fgochez
+# Copyright Mango Solutions, Chippenham, UK
+###############################################################################
+
 #' Forces the data in a NONMEM object to conform to the variable formats specified in the metadata. Users will be allowed to choose a subset of 
 #' variables which should be formatted.  Variables that are formatted should be coerced to factors, with the levels set as described by the comma 
 #' separated string stored within the metadata.  
-#' @param obj An object of class NMBasicModel, NMRun, NMSimModel, NMSimDataGen or data.frame
+#' @param obj An object of class NMRun, NMBasicModel or data.frame
 #' @param varSubset The variables to be converted to factors. It can be a vector of variable names or a comma separated string
-#' @param ... Additional arguments that apply to different classes. These are problemNum which specifies the required run 
+#' @param ... Additional arguments that apply to different classes. These are \code{problemNum} which specifies the required run 
 #'   		  for a NMRun object
-#' @return A new object with the required data coerced to factors
-#' @author Mango Solutions <rweeks@mango-solutions.com>
+#' @return A new object with the required data coerced to factors of the correct form
+#' @examples
+#' x <- data.frame(SMOK = sample(0:1, 10, replace = TRUE), SEX = sample(1:2, 10, replace = TRUE))
+#' print(imposeCategoryFormat(x)) 
+#' @author Mango Solutions
 
 imposeCategoryFormat <- function(obj, varSubset, ...)
 {
