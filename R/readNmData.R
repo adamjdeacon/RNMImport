@@ -1,12 +1,18 @@
-# $Rev$
-# $LastChangedDate$
+# SVN revision: $Rev$
+# Date of last change: $LastChangedDate$
+# Last changed by: $LastChangedBy: fgochez $
+# 
+# Original author: fgochez
+# Copyright Mango Solutions, Chippenham, UK
+###############################################################################
 
+# individual author: F. Gochez, based on code by R.Francois and R.Pugh 
 
 #' Read NONMEM dataset removing any "IGNORE" rows and dealing with (possibly repeated) headers 
 #' This function is designed to import either output table or raw input data
 #' The ignore string can optionally be added to remove rows from the data
 #' Any table file headers found are removed from the data - repeated headers are also removed
-#' @param file [C,1] - Name of the file
+#' @param file Name of the file
 #' @param ignore [C,1] - ignore option, see NM?$DATA[IGNORE]
 #' @param accept [C,1] - accept option, see NM?$DATA[ACCEPT]
 #' @param translate [C,1] - translate option, see NM?$DATA[TRANSLATE]
@@ -14,9 +20,18 @@
 #' @param null [C,1] - value to replace NA, see NM?$DATA[NULL]
 #' @param sep character that seperates fields
 #' @return A data.frame of the contents of the tables in the file
+#' @note At the moment, there is an issue with the "ignore" field, in that it does not handle multiple ignore
+#' characters.  This will be dealt with in future releases.
+#' @examples 
+#'  \dontrun{ 
+#'      inData <- readNmData(file =  "examples/theoph/data.csv") 
+#'      print(head(inData))
+#'      outData <- readNmData(file = "examples/theoph/Outtable" )
+#'      print(head(outData))
+#'  }
+#' @keywords IO
 #' @author Mango Solutions
 
-# individual author: F. Gochez, based on code by R.Francois and R.Pugh 
 
 readNmData <- function(
 		file, ignore = NULL, accept = NULL, translate = NULL,   
@@ -135,7 +150,9 @@ readNmData <- function(
 #' @param na.keep Logical flag.  Keep data that is has NAs?
 #' @param link Token that joins statements together 
 #' @return Subsetted data as a data.frame
+#' @nord
 #' @author fgochez
+
 
 # Based on code by R. Francois
 
