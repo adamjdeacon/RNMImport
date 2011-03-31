@@ -42,7 +42,7 @@
 	
 	thetaLines <- gsub(x = thetaLines, "\\(([-]{0,1}\\d+(?:\\.\\d+)?)\\s+([-]{0,1}\\d+(?:\\.\\d+)?)\\s+([-]{0,1}\\d+(?:\\.\\d+)?)\\)",
 			replacement = "(\\1,\\2,\\3)", 
-			extended = TRUE, perl = TRUE)
+			perl = TRUE)
 	
 	thetaLines <- regexSplit(thetaLines, "\\)?[[:space:]]+\\(?")
 	# add additional spaces around "FIX"

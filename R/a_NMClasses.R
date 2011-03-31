@@ -43,10 +43,10 @@ validity.NMBasicModel <- function(object)
 	if(!test1) return("Output data is not a data.frame or list\n")
 	if(length(object@objectiveFinal) < 1)
 		return("Objective function final value not present!")
-	if(length(object@thetaFinal) < 1)
-		return("No THETA estimates found!")
-	if(all(dim(object@omegaFinal) == 0))
-		return("No OMEGA estimates found!")
+#	if(length(object@thetaFinal) < 1)
+#		return("No THETA estimates found!")
+#	if(all(dim(object@omegaFinal) == 0))
+#		return("No OMEGA estimates found!")
 	
 	TRUE
 }
