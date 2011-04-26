@@ -44,7 +44,7 @@ getEstimateCov.NMBasicModel <- function(obj, corMatrix = FALSE, invCorMatrix = F
 	# check for missing variance-covariance matrix
 	if(all(dim(parameterCovMatrix)) == 0)
 	{
-		RNMImportWarning( "Covariance matrix not available, returning NULL\n" )
+#		RNMImportWarning( "Covariance matrix not available, returning NULL\n" )
 		return(NULL)
 		
 	}
@@ -63,7 +63,7 @@ getEstimateCov.NMBasicModelNM7 <- function(obj, corMatrix = FALSE, invCorMatrix 
 	# check for missing variance-covariance matrix
 	if(is.null(parameterCovMatrix))
 	{
-		RNMImportWarning( "Covariance matrix not available, returning NULL\n" )
+#		RNMImportWarning( "Covariance matrix not available, returning NULL\n" )
 		return(NULL)
 		
 	}
