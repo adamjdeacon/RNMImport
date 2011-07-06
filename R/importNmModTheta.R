@@ -11,13 +11,14 @@
 #' @return A matrix with one row for each "theta" and 3 columns : 1 for the lower value bounds.
 #' one for the initial estimate, and one for the upper bound
 #' @author fgochez
+#' @nord
 
 # note: Based on code by R Francois, J James and R Pugh
 
 .importNmModTheta <- function(
 		txt = NULL,       
 		guessNames = TRUE,
-		rx = "([^~[:space:]]+)$", # TODO: This should be a changeable option 		 
+		rx = "([^~[:space:]]+)$",  		 
 		fileName = NULL
 )
 {					
@@ -40,10 +41,20 @@
 	# now we must check for declarations of the form (A B C)
 	# if we find them, we will replace them with (A,B,C)
 	
-	thetaLines <- gsub(x = thetaLines, "\\(([-]{0,1}\\d+(?:\\.\\d+)?)\\s+([-]{0,1}\\d+(?:\\.\\d+)?)\\s+([-]{0,1}\\d+(?:\\.\\d+)?)\\)",
-			replacement = "(\\1,\\2,\\3)", 
-			perl = TRUE)
+	# note that the "extended" parameter was deprecated as of R 2.12.x, so we check the version of R being used to control for this	
+	# RVersion: list storing information about version of R in use
+	RVersion <- R.Version()
 	
+	if(as.numeric(RVersion$minor) >= 12 & as.numeric(RVersion$major) == 2)
+	{
+		thetaLines <- gsub(x = thetaLines, "\\(([-]{0,1}\\d+(?:\\.\\d+)?)\\s+([-]{0,1}\\d+(?:\\.\\d+)?)\\s+([-]{0,1}\\d+(?:\\.\\d+)?)\\)",
+				replacement = "(\\1,\\2,\\3)", perl = TRUE)
+	}
+	else
+	{
+		thetaLines <- gsub(x = thetaLines, "\\(([-]{0,1}\\d+(?:\\.\\d+)?)\\s+([-]{0,1}\\d+(?:\\.\\d+)?)\\s+([-]{0,1}\\d+(?:\\.\\d+)?)\\)",
+				replacement = "(\\1,\\2,\\3)", perl = TRUE, extended = TRUE)
+	}
 	thetaLines <- regexSplit(thetaLines, "\\)?[[:space:]]+\\(?")
 	# add additional spaces around "FIX"
 	
