@@ -1,0 +1,30 @@
+$PROB Analysis of one compartment model for theophyline data
+
+$INPUT ID DOSE WT TIME DV MDV SMOK
+
+$DATA ./data.csv IGNORE=@
+
+$PRED
+  KA = THETA(1) + ETA(1)
+  KE = THETA(2) + ETA(2)
+  CL = THETA(3) + ETA(3)
+  F = (DOSE*KE*KA*WT) /(CL * (KA-KE)) * (EXP(-KE*TIME) - EXP(-KA*TIME))
+  Y = F + EPS(1)
+  IPRED = F
+  IRES = (F - DV)
+
+$THETA
+  (0.0,1.491825,50.0)
+  (0.0,1.0,50.0)
+  (0.0,2.773195,50.0)
+
+$OMEGA 0.4 0.4 0.4
+
+$SIGMA 0.4
+
+$EST MET = 0 POSTHOC MAXEVAL=6000 PRINT=5
+
+$TABLE
+  ID TIME DV IPRED DOSE WT IRES ETA1 ETA2
+  NOPRINT NOAPPEND ONEHEADER FILE=theoph.out
+
