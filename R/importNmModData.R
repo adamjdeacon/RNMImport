@@ -14,6 +14,7 @@
 #' @return A matrix of descriptor information
 #' @author fgochez
 #' @note: Original code by R Francois and others
+#' @nord
 
 .importNmModData <- function(txt, modFile, 
         .extract = length(grep("^\\$DAT", txt)) > 0 ){
@@ -46,10 +47,10 @@
         #they may be as follows:
         # IGNORE or IGN=(code)
         # IGNORE=LABEL
-        # IGN or IGNROE(code)
+        # IGN or IGNORE(code)
         # ignoreRegexp <- "[[:space:]]+(IGN|IGNORE)[[:space:]]*=[[:space:]]*[,\\.[:alnum:]\\(\\)\\@\\#\"=\\<\\>/']+"
         
-        ignoreRegexp <- "([[:space:]]+(IGN|IGNORE)[[:space:]]*[=]{0,1}[[:space:]]*\\([,\\.[:alnum:]\"=\\<\\>/']+\\)|[[:space:]]+(IGN|IGNORE)[[:space:]]*=[[:space:]]*[,\\.[:alnum:]\\@\\#\"=\\<\\>/']+)"
+        ignoreRegexp <- "([[:space:]]+(IGN|IGNORE)[[:space:]]*[=]{0,1}[[:space:]]*\\([,\\.[:alnum:]\"=\\<\\>/'[:space:]]+\\)|[[:space:]]+(IGN|IGNORE)[[:space:]]*=[[:space:]]*[,\\.[:alnum:]\\@\\#\"=\\<\\>/']+)"
         
         # one can also use IGN(code) or IGNORE(code)
         
@@ -70,14 +71,12 @@
         # now extact the actual ignore tokens.  These may be delimited by "IGN" or "IGNORE", so we must capture both.  Also, we seperate
         # those expressions of the form IGNOR
         
-        # ignoreTokens <- sapply(ignoreText, function(x) equalExpressionPop(x, "IGNORE", sep = "[=]{0,1}", absent = "NONE", inPlace = FALSE)$op.out)
         ignoreTokens <- sapply(ignoreText, function(x) gsub(x, pattern = "IGNORE[=]{0,1}", replacement = ""))
-        # delete trailing whitespace
-        # ignoreTokens <- sapply(ignoreTokens, gsub, replacement = "", pattern = "[[:blank:]]+$")
         
-        # ignTokens <- sapply(ignoreText, function(x) equalExpressionPop(x, "IGN", sep = "[=[:space:]]", absent = "NONE", inPlace = FALSE)$op.out)
-        ignTokens <- sapply(ignText, function(x) gsub(x, pattern = "IGN[=]{0,1}", replacement = "" ))
-        # ignTokens <- sapply(ignTokens, gsub, replacement = "", pattern = "[[:blank:]]+$")
+		# delete trailing whitespace        
+        
+		ignTokens <- sapply(ignText, function(x) gsub(x, pattern = "IGN[=]{0,1}", replacement = "" ))
+      
         # replace empty strings with "NONE"
         ignoreTokens <- gsub(c(ignoreTokens, ignTokens),pattern = "^$", replacement = "NONE")
         
@@ -93,7 +92,9 @@
         
         # strip out quotes and "'" 
         ignoreTokens <- sapply(ignoreTokens, gsub, pattern = "['\"]", replacement = "")
-        allIgnore <- paste(ignoreTokens, collapse = ";")
+        # now strip out whitespace (issue 4691)
+		ignoreToekens <- sapply(ignoreTokens, stripBlanks)
+		allIgnore <- paste(ignoreTokens, collapse = ";")
         
         # now delete the IGNORE= declarations from dataSec
         
