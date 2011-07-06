@@ -162,7 +162,8 @@ then forces variables to take a particular format.
 <<echo=TRUE, print=FALSE>>=
 print(getVarDescription(c("SEX", "SMOK")))
 setVarDescription("SMOK", "Smokes", varFormat = "0=NO, 1 = YES", varType = "Covariate")
-prob <- imposeCategoryFormat(prob, varSubset = "SMOK")
-nmData(prob)[,"SMOK"]
+dat <- nmData(prob)
+dat <- imposeCategoryFormat(dat, varSubset = "SMOK")
+print(head(data))
 @
 \end{document}
