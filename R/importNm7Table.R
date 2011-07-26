@@ -15,7 +15,8 @@
 #' file using the NOTITLE=1 option.  Currently this option ONLY works when type = "ext"
 #' @title Import new NONMEM 7 table files
 #' @return a list of data.frames holding the content of the individual sub-tables within each file.  Each
-#' table will have as an attribute "method", holding the name of the method associated to it
+#' table will have as an attribute "method", holding the name of the method associated to it, if it was available (e.g. not if
+#' tableTitles = FALSE)
 #' @author Mango Solutions
 #' @note The "cov" type covers .cor, .cov and .coi files.
 #' @keywords IO

@@ -10,7 +10,7 @@
 
 test.importNm7Tables <- function()
 {
-	testDataPath <- file.path(unitTestPath, "testdata/TestDataNM7")
+	testDataPath <- file.path(RNMImport:::getUnitTestPath(), "testdata/TestDataNM7")
 	
 	# correlation matrix
 	corFile <- importNm7Tables("TestData1.cor", path = testDataPath, type = "cov")
@@ -145,4 +145,14 @@ test.importNm7Tables <- function()
 	checkEquals(x, extFile, msg = " |EXT file succesfully loaded with default path")
 	
 	setwd(currentPath)
+	
+	# issue 2312 : check NOTITLES works correctly
+	extNoTitle1Test <- importNm7Tables("TestData1_2.EXT", path = testDataPath, type = "ext", tableTitles = FALSE) 
+	extNoTitle2Test <- importNm7Tables("extfile2_2.EXT", path = testDataPath, type = "ext", tableTitles = TRUE)
+	
+	checkEquals(attr(extNoTitle2Test[[1]], "method"), "Stochastic Approximation Expectation-Maximization", msg = " |table title present")
+	checkTrue(is.null(attr(extNoTitle1Test[[1]], "method")), msg = " |table title not present")
+	
+	checkEquals(extNoTitle1Test[[1]], extFile[[1]], check.attributes = FALSE )
+	checkEquals(extNoTitle2Test[[1]], extFile[[2]], check.attributes = FALSE )
 }

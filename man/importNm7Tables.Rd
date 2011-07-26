@@ -2,16 +2,13 @@
 \alias{importNm7Tables}
 \title{Import new NONMEM 7 table files}
 \usage{importNm7Tables(file, path=".", type=c("cov", "ext", "phi"), tableTitles=TRUE)
-importNm7Tables(file, path=".", type=c("cov", "ext", "phi"), tableTitles=TRUE)
 }
 \description{Imports one of the new files produced by NONMEM 7: .phi, .cor, .cov, etc. into a  list of data.frames.}
 \value{a list of data.frames holding the content of the individual sub-tables within each file.  Each
-table will have as an attribute "method", holding the name of the method associated to it\code{importNm7Tables}: a list of data.frames holding the content of the individual sub-tables within each file.  Each
-table will have as an attribute "method", holding the name of the method associated to it
-
-
-}
+table will have as an attribute "method", holding the name of the method associated to it, if it was available (e.g. not if
+tableTitles = FALSE)}
 \author{Mango Solutions}
+\note{The "cov" type covers .cor, .cov and .coi files.}
 \keyword{IO}
 \arguments{\item{file}{Name of the file}
 \item{path}{Path to the file (can be a NONMEM path in round brackets)}
@@ -23,13 +20,5 @@ file using the NOTITLE=1 option.  Currently this option ONLY works when type = "
 phiTables <- importNm7Tables(type = "phi", "TestData1.phi", path = "testing/testdata/TestDataNM7")
 print(phiTables[[1]])
 print(attr(phiTables[[1]], "method"))
-}\dontrun{ 
-phiTables <- importNm7Tables(type = "phi", "TestData1.phi", path = "testing/testdata/TestDataNM7")
-print(phiTables[[1]])
-print(attr(phiTables[[1]], "method"))
 }}
-
-\alias{importNm7Tables}
-\note{The "cov" type covers .cor, .cov and .coi files.}
-\keyword{IO}
 
