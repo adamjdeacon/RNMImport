@@ -162,6 +162,6 @@ print(getVarDescription(c("SEX", "SMOK")))
 setVarDescription("SMOK", "Smokes", varFormat = "0=NO, 1 = YES", varType = "Covariate")
 dat <- nmData(prob)
 dat <- imposeCategoryFormat(dat, varSubset = "SMOK")
-print(head(data))
+print(head(dat))
 @
 \end{document}
