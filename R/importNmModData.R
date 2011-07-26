@@ -91,15 +91,12 @@
         
         
         # strip out quotes and "'" 
-        ignoreTokens <- sapply(ignoreTokens, gsub, pattern = "['\"]", replacement = "")
-        # now strip out whitespace (issue 4691)
-		ignoreToekens <- sapply(ignoreTokens, stripBlanks)
+        ignoreTokens <- sapply(ignoreTokens, gsub, pattern = "['\"]", replacement = "")        
 		allIgnore <- paste(ignoreTokens, collapse = ";")
         
         # now delete the IGNORE= declarations from dataSec
         
         dataSec <- gsub(dataSec, pattern = ignoreRegexp, replacement = "")
-        # dataSec <- gsub(dataSec, pattern = "[[:space:]]+IGNORE[[:space:]]*=[[:space:]]*[,\\.[:alnum:]\\(\\)\\@\\#\"=\\<\\>/']+", replacement = "")
         
         ### hunt for the KEEP declaration                                           
         
