@@ -1,11 +1,11 @@
 
 # store a path.  This step is optional
 
-setNmPath("runPath", system.file(package = "RNMImport", "unittests/testdata/TestRun"))
+setNmPath("runPath", system.file(package = "RNMImport", "examples/theoph"))
 
 # Import the run by specifying control and list files.  Note the way that the path parameter is specified in order to 
 # use the stored path
-testRun <- importNm(conFile = "TestData1.ctl", reportFile = "TestData1.lst", path = "(runPath)")
+testRun <- importNm(conFile = "theoph.con", reportFile = "theoph.lst", path = "(runPath)")
 
 # show the basic information
 show(testRun)
