@@ -83,9 +83,9 @@ available.
 <<echo=TRUE, print=FALSE>>=
 print(getThetas(prob))
 print(getOmegas(prob))
+@
 % # print(getThetas(simProblem))
 % # print(getOmegas(simProblem))
-@
 
 Additional extraction functions include \code{getObjective}, \code{getEstimateCov} (extract estimator covariance and correlation matrices),
  \code{getControlStatements} (extract an object holding the parsed statements of an object's control file), and others.  See the online
@@ -122,10 +122,10 @@ print(head(probData))
 Note that the \code{.INPUT} postfix is used to handle data that is repeated in the output and input tables.  Precedence is given to output
 data, which has no postfix.  For simulation problems, one can select a vector of subproblems from which to extract the data.
 
-<<echo=FALSE,print=FALSE>>=
-# simOutData <- nmData(simRun, dataTypes = "output", subProblemNum = 2:3, problemNum = 1)
-# print(dim(simOutData))
-@
+% <<echo=FALSE,print=FALSE>>=
+% # simOutData <- nmData(simRun, dataTypes = "output", subProblemNum = 2:3, problemNum = 1)
+% # print(dim(simOutData))
+% @
 
 Data may also be extracted by type via the \code{nmDatabyType} function. This extracts columns according to the type of data they hold, 
 and type mappings are defined in the metadata.  See the next section for details.
