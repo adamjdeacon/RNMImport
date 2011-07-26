@@ -44,8 +44,7 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 				covMatrix <- if(!is.null(reportContents$CovarianceMatrix)) CovarianceMatrix else matrix(ncol = 0, nrow = 0)
 				corMatrix <- if(!is.null(reportContents$CorrelationMatrix)) CorrelationMatrix else matrix(ncol = 0, nrow = 0)
 				# grab parameter initial values
-				thetaInitial <- if(!is.null(controlStatements$Theta)) t(controlStatements$Theta) else matrix(ncol = 0, nrow = 3)
-
+				thetaInitial <- t(controlStatements$Theta)
 				# these may be missing in the control statements, so try to extract them from the reportContents
 				omegaInitial <- if(!is.null(controlStatements$Omega)) controlStatements$Omega  else  reportContents$initialEstimates$OMEGA
 				# grab dimensions of omega final estimates
@@ -94,24 +93,14 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 				}
 				else
 				{
-					if (is.null(FinalEstimates$THETA)){
-						thetaFinal <- matrix(nrow=1, ncol=0, dimnames = list( "estimates" , NULL ))
-					} else {
-						thetaFinal <- matrix(FinalEstimates$THETA, nrow = 1, dimnames = list( "estimates" , NULL ))
-					}
-					
-					if (is.null(FinalEstimates$OMEGA) || 
-						length(FinalEstimates$OMEGA) == 0){
-						omegaFinal <- array(dim = c(0,0,1), dimnames = list(NULL, NULL, "estimates"))
-					} else {
-						omegaFinal <- array(FinalEstimates$OMEGA, dim = c(omegaDim, 1),
-							dimnames = c(dimnames(omegaInitial), list("estimates")))
-					}
+					thetaFinal <- matrix(FinalEstimates$THETA, nrow = 1, dimnames = list( "estimates" , NULL ))
+										
+					omegaFinal <- array(FinalEstimates$OMEGA, dim = c(omegaDim, 1),
+						dimnames = c(dimnames(omegaInitial), list("estimates")))
 					
 					sigmaDim <- dim(FinalEstimates$SIGMA)					
 					# if missing sigmas, fill in an "empty" sigma array anyway
-					if(is.null(sigmaDim) || 
-						length(FinalEstimates$SIGMA) == 0)
+					if(is.null(sigmaDim))
 						sigmaFinal <- array(dim = c(0,0,1), dimnames = list(NULL, NULL, "estimates"))
 					else
 						sigmaFinal <- array(FinalEstimates$SIGMA, dim = c(dim(FinalEstimates$SIGMA), 1),
