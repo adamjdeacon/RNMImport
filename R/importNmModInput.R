@@ -1,3 +1,12 @@
+# SVN revision: $Rev$
+# Date of last change: $LastChangedDate$
+# Last changed by: $LastChangedBy$
+# 
+# Original author: fgochez
+# Copyright Mango Solutions, Chippenham, UK
+###############################################################################
+
+
 #' Parses the $INPUT section of a NONMEM control file
 #' @param txt Character vector of text containing an $INPUT statement, typically the 
 #' contents of a control file
@@ -9,6 +18,7 @@
 #' aliases, e.g. ID=SUBJ in the $INPUT statement.  Also some may be dropped
 #' @note Based on code by R Francois and others
 #' @author fgochez
+#' @nord
 
 
 .importNmModInput <- function(txt, .extract = length(grep("\\$INPUT", txt)) > 0)
