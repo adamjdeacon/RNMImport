@@ -10,6 +10,12 @@
 #' addDerivedCategorical
 #' @author Mango Solutions
 #' @keywords utils
+#' @examples
+#' x <- importNm("theoph.con", path = system.file("examples/theoph", package = "RNMImport") ) 
+#' 	y <- getProblem(x)
+#' 	y <- addDerivedCategorical(y, "DV", breaks = 3, labels = c("low", "medium", "high"))
+#' 	y <- addDerivedCategorical(y, "TIME", breaks = 6)
+#' 	print(addedData(y))
 #' @export 
 
 # Individual author: F. Gochez
