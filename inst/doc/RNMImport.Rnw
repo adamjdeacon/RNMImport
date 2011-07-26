@@ -21,13 +21,11 @@
 \section{Introduction}
 \paragraph{} This set of notes is a brief overview of the RNMImport package.  At the moment (version \packVersion), these are quite terse,
 but will be expanded upon in later releases.  This is meant to give only a basic idea of how the package works.
-
-\section{Importing runs}
-\SweaveOpts{keep.source=TRUE}
 <<echo=FALSE,print=FALSE>>=
 require(RNMImport)
-
 @
+\section{Importing runs}
+\SweaveOpts{keep.source=TRUE}
 \paragraph{} The main command for importing a NONMEM run is \rfun{importNm}, which works with a control file and a path.  List files
 names are automatically deduced from allowable file extensions (see meta data section below), but can be passed explicitly.
 <<echo=TRUE,print=FALSE>>=
@@ -85,8 +83,8 @@ available.
 <<echo=TRUE, print=FALSE>>=
 print(getThetas(prob))
 print(getOmegas(prob))
-# print(getThetas(simProblem))
-# print(getOmegas(simProblem))
+% # print(getThetas(simProblem))
+% # print(getOmegas(simProblem))
 @
 
 Additional extraction functions include \code{getObjective}, \code{getEstimateCov} (extract estimator covariance and correlation matrices),
@@ -121,10 +119,10 @@ probData <- nmData(prob)
 print(head(probData))
 @
 
-Note that the \code{|INPUT} postfix is used to handle data that is repeated in the output and input tables.  Precedence is given to output
-data, which has no postfix.  For simulation problems, one can select a vector of subproblems from which to extract the data.  Note that at the moment if more than one subproblem is selected yet the user requests output and input data as a single \code{data.frame}, and error will be generated due to the mismatch in data size.  In future releases, we plan to allow this by repeating the input data as necessary.
+Note that the \code{.INPUT} postfix is used to handle data that is repeated in the output and input tables.  Precedence is given to output
+data, which has no postfix.  For simulation problems, one can select a vector of subproblems from which to extract the data.
 
-<<echo=TRUE,print=FALSE>>=
+<<echo=FALSE,print=FALSE>>=
 # simOutData <- nmData(simRun, dataTypes = "output", subProblemNum = 2:3, problemNum = 1)
 # print(dim(simOutData))
 @
