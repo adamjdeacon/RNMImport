@@ -45,7 +45,7 @@
 	# RVersion: list storing information about version of R in use (It is prior to 2.11.0)
 	RVersion <- R.Version()
 	
-	if(as.numeric(RVersion$minor) >= 11 & as.numeric(RVersion$major) == 0)
+	if(as.numeric(RVersion$minor) >= 11 & as.numeric(RVersion$major) == 2)
 	{
 		thetaLines <- gsub(x = thetaLines, "\\(([-]{0,1}\\d+(?:\\.\\d+)?)\\s+([-]{0,1}\\d+(?:\\.\\d+)?)\\s+([-]{0,1}\\d+(?:\\.\\d+)?)\\)",
 				replacement = "(\\1,\\2,\\3)", perl = TRUE)
