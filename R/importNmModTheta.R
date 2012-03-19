@@ -42,10 +42,10 @@
 	# if we find them, we will replace them with (A,B,C)
 	
 	# note that the "extended" parameter was deprecated as of R 2.12.x, so we check the version of R being used to control for this	
-	# RVersion: list storing information about version of R in use
+	# RVersion: list storing information about version of R in use (It is prior to 2.11.0)
 	RVersion <- R.Version()
 	
-	if(as.numeric(RVersion$minor) >= 12 & as.numeric(RVersion$major) == 2)
+	if(as.numeric(RVersion$minor) >= 11 & as.numeric(RVersion$major) == 0)
 	{
 		thetaLines <- gsub(x = thetaLines, "\\(([-]{0,1}\\d+(?:\\.\\d+)?)\\s+([-]{0,1}\\d+(?:\\.\\d+)?)\\s+([-]{0,1}\\d+(?:\\.\\d+)?)\\)",
 				replacement = "(\\1,\\2,\\3)", perl = TRUE)
