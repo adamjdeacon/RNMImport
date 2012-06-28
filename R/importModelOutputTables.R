@@ -62,9 +62,10 @@ importModelOutputTables <- function(
 		# if APPEND is true, then we need to ext
 		if(tableStatement[i, "append"])
 		{
-			# remove all columns ,but "DV" may be repeated
+			
 			colNames <- setdiff(colNames, APPENDEDCOLUMNS)
 			colNames <- c(colNames, APPENDEDCOLUMNS)
+			colnames(currentTable) <- colNames
 		}
 		newColNames <- setdiff(colNames, allColNames)
 				
