@@ -17,7 +17,7 @@
 #' @nord
 
 .importNmModData <- function(txt, modFile, 
-        .extract = length(grep("^\\$DAT", txt)) > 0 ){
+        .extract = length(grep("^\\$DAT", toupper(txt))) > 0 ){
     
     ### import the $DATA section of the control file                              
     x <- if(.extract) section( txt, "DAT", "", strip = TRUE, 
@@ -54,7 +54,7 @@
         
         # one can also use IGN(code) or IGNORE(code)
         
-        ignorePos <- gregexpr(dataSec, pattern = ignoreRegexp)
+        ignorePos <- gregexpr(dataSec, pattern = ignoreRegexp, ignore.case = TRUE)
         
         # the call to gregexpr returns starting positions and lengths of matches, so now we must extract the actual strings
         
@@ -63,7 +63,7 @@
         ignoreText <- sapply(ignoreText, gsub, pattern = "[[:blank:]]+", replacement = "")
         # extract tokens with only IGN, seperate from IGNORE
         
-        ignPos <- negGrep(ignoreText, pattern = "IGNORE", value = FALSE)
+        ignPos <- negGrep(ignoreText, pattern = "IGNORE", value = FALSE, ignore.case = TRUE)
         ignText <- ignoreText[ignPos]
         if(length(ignPos) > 0)  
             ignoreText <- ignoreText[-ignPos]
@@ -71,11 +71,11 @@
         # now extact the actual ignore tokens.  These may be delimited by "IGN" or "IGNORE", so we must capture both.  Also, we seperate
         # those expressions of the form IGNOR
         
-        ignoreTokens <- sapply(ignoreText, function(x) gsub(x, pattern = "IGNORE[=]{0,1}", replacement = ""))
+        ignoreTokens <- sapply(ignoreText, function(x) gsub(x, pattern = "IGNORE[=]{0,1}", replacement = "", ignore.case = TRUE))
         
 		# delete trailing whitespace        
         
-		ignTokens <- sapply(ignText, function(x) gsub(x, pattern = "IGN[=]{0,1}", replacement = "" ))
+		ignTokens <- sapply(ignText, function(x) gsub(x, pattern = "IGN[=]{0,1}", replacement = "" , ignore.case = TRUE))
       
         # replace empty strings with "NONE"
         ignoreTokens <- gsub(c(ignoreTokens, ignTokens),pattern = "^$", replacement = "NONE")
@@ -96,7 +96,7 @@
         
         # now delete the IGNORE= declarations from dataSec
         
-        dataSec <- gsub(dataSec, pattern = ignoreRegexp, replacement = "")
+        dataSec <- gsub(dataSec, pattern = ignoreRegexp, replacement = "", ignore.case = TRUE)
         
         ### hunt for the KEEP declaration                                           
         

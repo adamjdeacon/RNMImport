@@ -22,7 +22,7 @@ sectionStart <- function(
 		sep= "\\$", 
 		... 
 ){
-	grep( pattern , text, ... )
+	grep( pattern , text, ... , ignore.case = TRUE)
 }
 
 #' Used to split control file into sections.  Sections are determined
@@ -65,7 +65,7 @@ section <- function(
 {
 	# TODO: More comments
  
-	startPos <- if(is.null(start)) 1 else sectionStart( text = text, pattern = startpattern )
+	startPos <- if(is.null(start)) 1 else sectionStart( text = toupper(text), pattern = startpattern )
 	
 	out <- list( )
 	l.text <- length(text)
@@ -88,7 +88,7 @@ section <- function(
 			out.index <- paste(  out.index, collapse = " ")
 		}
 		if(stripout) {
-			out.index <- gsub( sprintf("%s[[:alpha:]]*[[:space:]]*", startpattern), "", out.index)
+			out.index <- gsub( sprintf("%s[[:alpha:]]*[[:space:]]*", startpattern), "", out.index, ignore.case = TRUE)
 			out.index <- negGrep( "^[[:space:]]*$", out.index, value =  TRUE )
 		}
 		if( remove.comments){

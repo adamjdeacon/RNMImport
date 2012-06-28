@@ -19,6 +19,7 @@ importModelData <- function(
 	
 	
 	fileName <- dataStatement[,"File"]	
+	fileName <-  gsub('( IGNORE | IGN).*','', fileName, ignore.case = TRUE)
 	stopifnot(!is.null(fileName))
 		
 	fileName <- .getFile(fileName, path = path)
@@ -54,7 +55,7 @@ importModelData <- function(
 	
 	# determine aliased columns
 
-	aliasedColumns <- (inputStatement[,1] != "DROP" & inputStatement[,2] != "DROP") & (inputStatement[,1] != inputStatement[,2])
+	aliasedColumns <- (toupper(inputStatement[,1]) != "DROP" & toupper(inputStatement[,2]) != "DROP") & (toupper(inputStatement[,1]) != toupper(inputStatement[,2]))
 
 	# if there are aliased columns, we will repeat them with their aliased name
 	if(any(aliasedColumns))
@@ -70,7 +71,7 @@ importModelData <- function(
 	# now determine which columns should be dropped in case dropCols = TRUE
 	if(dropCols) 
 	{
-		colsToKeep <- inputStatement[, 1] != "DROP" & inputStatement[, 2] != "DROP"
+		colsToKeep <- toupper(inputStatement[,1]) != "DROP" & toupper(inputStatement[, 2]) != "DROP"
 		# if there are extra columns, need to extend the columns to keep
 		colsToKeepSel <- colsToKeep
 		if(length(colsToKeepSel) < ncol(myData))
@@ -89,7 +90,7 @@ importModelData <- function(
 	
 	# Calculate columns names
 	
-	cNames <- ifelse(inputStatement[, 1] == "DROP", inputStatement[, 2], inputStatement[, 1])[colsToKeep]
+	cNames <- ifelse(toupper(inputStatement[, 1]) == "DROP", inputStatement[, 2], inputStatement[, 1])[colsToKeep]
 
 	nDiff <- numInDataColumns - length(cNames)
 	# handle columns not present in the $INPUT statement but present in the data file

@@ -26,7 +26,7 @@
 		txt <- scanFile(fileName)
 	# check if THETA is present in the text, otherwise assume that we are dealing with the text after $THETA
 	# The section may also be specified as $THTA, hence the regular expression used below
-	.extract <- length(grep("\\$TH(E){0,1}TA", txt)) > 0
+	.extract <- length(grep("\\$TH(E){0,1}TA", txt, ignore.case = TRUE)) > 0
 	
 	### import the THETA declarations                                             
 	
@@ -34,7 +34,7 @@
 	# extract the comments
 	comments   <- stripBlanks( commentPop( thetaLines, inPlace = TRUE ) )  
 	# remove space before FIXED
-	thetaLines <- gsub( "[[:space:]]*(FIXE?D?)[[:space:]]*", "FIX", thetaLines ) 
+	thetaLines <- gsub( "[[:space:]]*(FIXE?D?)[[:space:]]*", "FIX", thetaLines, ignore.case = TRUE ) 
 	thetaLines <- .rmSpaceInBrackets( thetaLines )                   # remove spaces inside brackets
 	thetaLines <- stripBlanks( thetaLines )
 	
@@ -58,7 +58,7 @@
 	thetaLines <- regexSplit(thetaLines, "\\)?[[:space:]]+\\(?")
 	# add additional spaces around "FIX"
 	
-	thetaLines <- gsub( "FIX", " FIX ", thetaLines )  
+	thetaLines <- gsub( "FIX", " FIX ", thetaLines , ignore.case = TRUE)  
 	# initialize the output matrix
 	out <- matrix( NA, ncol = 3, nrow = length( thetaLines ), 
 			dimnames = list( sprintf("THETA%d", 1:length(thetaLines)), 

@@ -21,7 +21,7 @@
 #' @nord
 
 
-.importNmModInput <- function(txt, .extract = length(grep("\\$INPUT", txt)) > 0)
+.importNmModInput <- function(txt, .extract = length(grep("\\$INPUT", toupper(txt))) > 0)
 {
 	
 	
