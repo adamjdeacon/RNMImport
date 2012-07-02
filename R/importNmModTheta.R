@@ -26,7 +26,7 @@
 		txt <- scanFile(fileName)
 	# check if THETA is present in the text, otherwise assume that we are dealing with the text after $THETA
 	# The section may also be specified as $THTA, hence the regular expression used below
-	.extract <- length(grep("\\$TH(E){0,1}TA", txt, ignore.case = TRUE)) > 0
+	.extract <- length(grep("\\$TH(E){0,1}TA", txt)) > 0
 	
 	### import the THETA declarations                                             
 	
@@ -34,7 +34,7 @@
 	# extract the comments
 	comments   <- stripBlanks( commentPop( thetaLines, inPlace = TRUE ) )  
 	# remove space before FIXED
-	thetaLines <- gsub( "[[:space:]]*(FIXE?D?)[[:space:]]*", "FIX", thetaLines, ignore.case = TRUE ) 
+	thetaLines <- gsub( "[[:space:]]*(FIXE?D?)[[:space:]]*", "FIX", thetaLines ) 
 	thetaLines <- .rmSpaceInBrackets( thetaLines )                   # remove spaces inside brackets
 	thetaLines <- stripBlanks( thetaLines )
 	
@@ -42,10 +42,10 @@
 	# if we find them, we will replace them with (A,B,C)
 	
 	# note that the "extended" parameter was deprecated as of R 2.12.x, so we check the version of R being used to control for this	
-	# RVersion: list storing information about version of R in use (It is prior to 2.11.0)
+	# RVersion: list storing information about version of R in use
 	RVersion <- R.Version()
 	
-	if(as.numeric(RVersion$minor) >= 11 & as.numeric(RVersion$major) == 2)
+	if(as.numeric(RVersion$minor) >= 12 & as.numeric(RVersion$major) == 2)
 	{
 		thetaLines <- gsub(x = thetaLines, "\\(([-]{0,1}\\d+(?:\\.\\d+)?)\\s+([-]{0,1}\\d+(?:\\.\\d+)?)\\s+([-]{0,1}\\d+(?:\\.\\d+)?)\\)",
 				replacement = "(\\1,\\2,\\3)", perl = TRUE)
@@ -58,7 +58,7 @@
 	thetaLines <- regexSplit(thetaLines, "\\)?[[:space:]]+\\(?")
 	# add additional spaces around "FIX"
 	
-	thetaLines <- gsub( "FIX", " FIX ", thetaLines , ignore.case = TRUE)  
+	thetaLines <- gsub( "FIX", " FIX ", thetaLines )  
 	# initialize the output matrix
 	out <- matrix( NA, ncol = 3, nrow = length( thetaLines ), 
 			dimnames = list( sprintf("THETA%d", 1:length(thetaLines)), 

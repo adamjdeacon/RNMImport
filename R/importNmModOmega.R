@@ -65,7 +65,7 @@
 	if(!is.null(file))
 		txt <- scanFile(file)
 	component <- match.arg(component)
-	.extract <- length(grep( sprintf("\\$", component, ignore.case = TRUE), txt))
+	.extract <- length(grep( sprintf("\\$", component), txt))
 	if( is.null( txt)) return(NULL)
 	
 	### import the OMEGA declarations                                             

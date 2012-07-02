@@ -9,13 +9,7 @@
 % Command for R functions
 \newcommand{\rfun}[1]{\texttt{#1}}
 \newcommand{\packVersion} {3.7.x}
-
-\setlength{\parskip}{0.5\baselineskip}
-\definecolor{NavyBlue}{rgb}{0,0,0.5}   
-\definecolor{lightgray}{rgb}{.75,.75,.75}  
-\fvset{frame=leftline,numbers=left,rulecolor=\color{lightgray},framerule=4pt,numbersep=3pt}
-\RecustomVerbatimEnvironment{Sinput}{Verbatim}{formatcom=\color{red}}
-\RecustomVerbatimEnvironment{Soutput}{Verbatim}{formatcom=\color{NavyBlue}}
+\DefineVerbatimEnvironment{Code}{Verbatim}{commandchars=¬\{\}, frame = single, samepage = TRUE}
 
 \begin{document}
 \title{Notes on RNMImport}

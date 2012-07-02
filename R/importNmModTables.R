@@ -14,7 +14,7 @@
 .importNmModTables <- function
 (
 		txt = NULL,
-		.extract = !is.null(txt) && length(grep("\\$TAB", toupper(txt))) > 0,
+		.extract = !is.null(txt) && length(grep("\\$TAB", txt)) > 0,
 		file = NULL
 )
 {
