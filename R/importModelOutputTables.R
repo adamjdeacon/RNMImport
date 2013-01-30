@@ -26,6 +26,7 @@ importModelOutputTables <- function(
 		returnFormat = c("singleDF", "DFlist"),	path = NULL
 )
 {	
+    tableStatement = normalize.table.statements(tableStatement)
 	NUMEXPECTEDCOLUMNS <- 5
 	FILEFIELD <- "File"
 	FIRSTONLYFIELD <- "firstOnly"
@@ -62,9 +63,10 @@ importModelOutputTables <- function(
 		# if APPEND is true, then we need to ext
 		if(tableStatement[i, "append"])
 		{
-			# remove all columns ,but "DV" may be repeated
+			
 			colNames <- setdiff(colNames, APPENDEDCOLUMNS)
 			colNames <- c(colNames, APPENDEDCOLUMNS)
+			colnames(currentTable) <- colNames
 		}
 		newColNames <- setdiff(colNames, allColNames)
 				
@@ -95,7 +97,13 @@ importModelOutputTables <- function(
 		}
 		tableList[[i]] <- currentTable
 	}
-	if(returnFormat == "DFList")
+    if (!is.null(need.remove.files<-attr(tableStatement,'need.remove')) && length(need.remove.files)>0) {
+        if(is(try(file.remove(need.remove.files),silent=T),'try-error')) {
+            warning(sprintf('Not able to remove temporary files[%s], you can remove it yourself.', 
+                paste(need.remove.files,collapse=',')))
+        }
+    }
+	if(returnFormat == "DFlist")
 		return(tableList)
 	else
 	{

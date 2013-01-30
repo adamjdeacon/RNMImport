@@ -9,7 +9,6 @@
 % Command for R functions
 \newcommand{\rfun}[1]{\texttt{#1}}
 \newcommand{\packVersion} {3.7.x}
-\DefineVerbatimEnvironment{Code}{Verbatim}{commandchars=¬\{\}, frame = single, samepage = TRUE}
 
 \begin{document}
 \title{Notes on RNMImport}
