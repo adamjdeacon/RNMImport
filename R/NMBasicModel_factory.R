@@ -27,14 +27,28 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 	} # end if(inherits(inData, "try-error"))
 	
 	# import output tables if the $TABLE statement is present, else outdata is empty
-	outTables <- .importTablesSafely(controlStatements$Table, path = path  )
+	outTables <- .importTablesSafely(tableStatement=controlStatements$Table, path = path  )
 	
 	# need to know how many rows the data has, handle FIRSTONLY case here
-	if(inherits(outTables, "list")) nOutDataRows <- max(sapply(outTables, nrow))
-	else nOutDataRows <- nrow(outTables)
+	if(inherits(outTables, "list")) {
+        nOutDataRows <- max(sapply(outTables, nrow))
+    } else {
+        nOutDataRows <- nrow(outTables)
+    }
 	nInDataRows <- nrow(inData)
-	if(nInDataRows != nOutDataRows)
-		RNMImportWarning("Number of rows of output data does not match the number of rows of input data!!\n", match.call())
+	if(is.null(nInDataRows)|is.null(nOutDataRows)){
+		msg <- 	paste("NULL rows of input or output data!\n")
+		RNMImportWarning(msg, match.call())
+		print(controlStatements$Table)
+	} else {
+        if(nInDataRows != nOutDataRows) {
+			msg <- 	paste("Number of rows of output data", nOutDataRows, 
+					"\ndoes not match the number of rows of input data", nInDataRows,
+					"!\n")
+			cat(msg)
+			RNMImportWarning(msg)
+		}
+    }
 	# now create the class
 	# TODO: The following is too complex, simplify in future releases
 	with(reportContents,
@@ -112,7 +126,8 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 				# that the slot type is correct
 				minInfo <- unlist(attr(reportContents$Iter, "min.info"))
 				if(is.null(minInfo)) minInfo <- character(0)
-
+				if(is.null(outTables))
+					outTables<- data.frame()
 				# create the object
 				new("NMBasicModel", parameterIterations = reportContents$Iter, 
 						problemStatement = controlStatements$Prob,

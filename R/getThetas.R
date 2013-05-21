@@ -72,7 +72,10 @@ getThetas.NMBasicModel <- function( obj, what = "final", subProblemNum = 1, meth
 	else
 	{
 		res <- matrix(ncol = ncol(thetas), nrow = 0, dimnames = list(NULL, colnames(thetas)))
-		if("initial" %in% validWhat) res <- rbind(res, initialValues )
+
+		if(prod(dim(initialValues ))>0){
+			if("initial" %in% validWhat) res <- rbind(res, initialValues[,1:dim(res)[2], drop=FALSE] )
+		}
 		if("final" %in% validWhat) res <- rbind(res, "estimates" = finalEstimates)
 		if( "stderrors" %in% validWhat )
 		{
@@ -105,7 +108,10 @@ getThetas.NMBasicModelNM7 <- function( obj, what = "final", subProblemNum = 1, m
 	{
 		methodChosen <- .selectMethod(obj@methodNames, meth)
 		thetas <- obj@thetaFinal[[methodChosen]]
-		#browser()
+		if(is.null(thetas)){
+			RNMImportWarning(paste('THETAS not available for method', meth))
+			return(NULL)
+		}
 		finalEstimates <- thetas 
 		stdErrors <- obj@thetaStderr[[methodChosen]]
 		# the initial values depend on the method chosen
@@ -117,7 +123,11 @@ getThetas.NMBasicModelNM7 <- function( obj, what = "final", subProblemNum = 1, m
 			x <- obj@thetaFinal[[methodChosen-1]]
 			# extract this to have access to the upper and lower bounds
 			initialValues <- obj@thetaInitial
-			initialValues["initial", ] <- unname(x)
+			if('Prior' %in% names(obj@controlStatements)){
+				initialValues["initial", 1:obj@controlStatements$Prior['nTheta']] <- unname(x)
+			} else {
+				initialValues["initial", ] <- unname(x)
+			}
 		}
 		if(length(validWhat) == 0) RNMImportStop("No valid items selected for retrieval!", call = match.call())
 		
@@ -137,8 +147,25 @@ getThetas.NMBasicModelNM7 <- function( obj, what = "final", subProblemNum = 1, m
 		} # end if length(validWhat) == 1
 		else
 		{
-			res <- matrix(ncol = length(thetas), nrow = 0, dimnames = list(NULL, colnames(initialValues)))
-			if("initial" %in% validWhat) res <- rbind(res, initialValues )
+			any(regexpr('PRIOR=*', obj@controlStatements$Sub)>0)
+			if('Prior' %in% names(obj@controlStatements)){
+                res <- matrix(ncol = length(thetas), nrow = 0, 
+                        dimnames = list(NULL, dimnames(initialValues)[[2]][1:obj@controlStatements$Prior['nTheta']]))
+			} else {
+				res <- matrix(ncol = length(thetas), nrow = 0, 
+						dimnames = list(NULL, dimnames(initialValues)[[2]]))
+			}
+			if(prod(dim(initialValues ))>0){
+				if("initial" %in% validWhat) {
+					if('Prior' %in% names(obj@controlStatements)){
+						res <- 
+								rbind(res, initialValues[1:obj@controlStatements$Prior['nTheta']] )
+					} else {
+						res <- rbind(res, initialValues )
+					}
+				}
+			}
+			
 			if("final" %in% validWhat) res <- rbind(res, "estimates" = finalEstimates)
 			if( "stderrors" %in% validWhat )
 			{

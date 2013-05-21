@@ -11,10 +11,10 @@
 {
 	dfNames <- names(df)
 
-	names(df) <- replace(dfNames, which(dfNames == "IPRE"), "IPRED")
-	names(df) <- replace(dfNames, which(dfNames == "IWRE"), "IWRES")
+	dfNames <- replace(dfNames, which(dfNames == "IPRE"), "IPRED")
+	dfNames <- replace(dfNames, which(dfNames == "IWRE"), "IWRES")
+    names(df) <- dfNames
 	if("WRES" %in% dfNames)
 		df$absWRES <- abs(df$WRES)
 	df
 }
-

@@ -119,7 +119,7 @@ sectionLst <- function( fileContents, sep,
 				nmt <- nmTitle( li[[i]] )
 				if( !is.null(nmt$title) ){
 					li[[i]] <- nmt$text
-					names(li)[i] <- nmt$title
+					names(li)[i] <- paste(nmt$title, collapse='\n')
 				}
 				if( length( idx <- grep("MONITORING OF SEARCH", li[[i]])) ){
 					names(li)[i] <- "MONITORING OF SEARCH"

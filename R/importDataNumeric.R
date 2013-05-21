@@ -13,7 +13,7 @@
 	rNames <- row.names(myData)
 	myData <- data.frame(myData)
 	# get classes of columns
-	myClasses <- sapply(myData, class)
+	myClasses <- sapply(myData, base:::class)
 	# detect presence of any character or column factors
 	
 	isFactororChar <- myClasses == "character" | myClasses == "factor"
@@ -29,15 +29,16 @@
 			
 			### s/dots/NA/
 			# replace periods with "NA"
-			myData[ myData[[myVar]] == "." , myVar] <- NA
+            anyDot = which(myData[[myVar]] == ".") 
+            if (length(anyDot)>0)	myData[ anyDot, myVar] <- NA
 			
 			### Find character or date/time data
 			isDate <- length( grep( "^[0-9]{1,4}[\\/-]", myData[[myVar]]) ) > 0
 			if(!isDate) 
 			{  # Not a date column but could be general character column
 				# check for the presence of numeric data in this column, coercing the entire column to numeric if any is detected
-				notNum <- setdiff( 1:nrow(myData), grep( "[[:alpha:]:/\\_]"   ,   myData[, myVar ] )  )
-				if(length(notNum)){
+				notNum <- setdiff( which(complete.cases(myData[[myVar]])) , grep( "[[:alpha:]:/\\_]"   ,   myData[, myVar ] )  )
+				if(length(notNum)>0){
 					myData[[myVar]] <- switch( class(myData[[myVar]]), 
 							"character" = as.numeric( myData[[myVar]] ), 
 							"factor"    = as.numeric( as.character( myData[[myVar]])) )

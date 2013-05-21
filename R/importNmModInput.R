@@ -21,7 +21,7 @@
 #' @nord
 
 
-.importNmModInput <- function(txt, .extract = length(grep("\\$INPUT", txt)) > 0)
+.importNmModInput <- function(txt, .extract = length(grep("\\$INPUT", toupper(txt))) > 0)
 {
 	
 	
@@ -30,7 +30,7 @@
 						remove.comments = TRUE, as.list = FALSE, glue = TRUE ) else txt
 	
 	### split by spaces                                                           
-	inputSec.split <- strsplit(inputSec, "[[:space:]]+" )[[1]]
+	inputSec.split <- strsplit(inputSec, "[[:space:],]+" )[[1]]
 	
 	### deal with the labels                                                      
 	# if the label is already there, ie: X=DROP, then don't do anything

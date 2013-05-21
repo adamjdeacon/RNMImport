@@ -13,6 +13,8 @@
 	
 	if( is.null(txt)) return (NULL)
 	
+    # remove possible data time
+	txt <- gsub('[A-Z][a-z]{2} +[A-Z][a-z]{2} +\\d+ +\\d+:\\d+:\\d+ +[A-Z]{3} +\\d+','',txt)
 	### titles of subsections look like:
 	#   THETA - VECTOR OF FIXED EFFECTS PARAMETERS   *********
 	#   OMEGA - COV MATRIX FOR RANDOM EFFECTS - ETAS  ********

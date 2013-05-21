@@ -52,7 +52,8 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 	#deal with the 	"path" parameter
 	if(!is.null(path))
 		path <- processPath(path[1])
-	
+        os <- options(stringsAsFactors=FALSE)
+        on.exit(options(os))
 	# get the FULL paths to both files and store them
 	fullConFilePath <- tools:::file_path_as_absolute(.getFile(conFile, path))
 	conFile <- basename(conFile)
@@ -67,23 +68,32 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 		conFileVector <- strsplit(conFile, split = "\\.")[[1]]
 		allListFiles <- list.files(path)
 		whichFile <- sapply(strsplit(allListFiles, split = "\\."), function(x, y)
-							{
-								#Condition 1 to test the correct file extension
-								conOne <- casefold(x[length(x)]) %in% getNmFileExtensions("report")
-								#Condition 2 to test the correct names (multiple .s allowed)
-								conTwo <- ifelse(length(x) == length(y), all(x[-length(x)] == y[-length(x)]), FALSE)
-								conOne && conTwo
- 							}, y = conFileVector)
+                {
+                    #Condition 1 to test the correct file extension
+                    conOne <- casefold(x[length(x)]) %in% getNmFileExtensions("report")
+                    #Condition 2 to test the correct names (multiple .s allowed)
+					#Condition 3 to test the correct names with the original extensiuon (con) (multiple .s allowed)
+					conTwo <- ifelse(length(x) == length(y), 
+							all(x[-length(x)] == y[-length(x)]), 
+							ifelse(length(x) == length(y) + 1, all(x == c(y,'lst')), FALSE))
+                    conOne && conTwo
+                }, y = conFileVector)
 		reportFile <- allListFiles[whichFile]
-		if(!length(reportFile))
-			RNMImportStop(msg = "No report file in the directory!")
+		if(!length(reportFile)){
+			if(file.exists(file.path(path, 'psn.lst'))){
+				RNMImportWarning(msg = "Trying to use psn.lst!")
+				reportFile <- 'psn.lst'
+			} else {
+				RNMImportWarning(msg = "No report file in the directory!")
+				return(new('NMRun'))
+			}
+		}
 		if(length(reportFile) > 1)
 		{
-			RNMImportWarning(msg = "More than one report file. Using the first.")
+			RNMImportWarning(msg = paste("More than one report file. Using the first.", reportFile[1]))
 			reportFile <- reportFile[1]
 		}		
-	}else{
-		
+	} else {
 		reportFile <- basename(reportFile)
 		path <- dirname(fullConFilePath)
 	}
@@ -91,7 +101,8 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 	# read the control file contents
 	
 	# read in the list file contents.  Note that they should only be omitted in the case of a single SIMONLY run
-	reportContents <- importNmReport(reportFile, path = path, textReport = textReport)
+#	reportContents <- importNmReport(reportFile, path = path, textReport = textReport)
+	reportContents <- importNmReport(fileName=reportFile, path = path, controlStatements = NULL, textReport = textReport)
 	
 	probResults <- reportContents$problemResults
 	
@@ -114,6 +125,43 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 	for(i in 1:numProblems)
 	{
 		controlStatements <- problems[[i]]
+		if('Tables' %in% names(controlStatements)){
+			tableStatements <- controlStatements$Tables
+			if(any(tableStatements[,'File']=='npctab.dta')){
+                real.dta.name = list.files(path=path, pattern=sprintf('^%s(\\.[1-9])?\\.%s$', sub('\\.[^.]+$','',conFile), 'npctab.dta'))
+				sortIt <- which(tableStatements$File=='npctab.dta')
+                if (length(real.dta.name)>0) {
+                    tableStatements[sortIt,'File'] = real.dta.name[1]
+                    if (length(real.dta.name)>1) {
+                        tmp0 = tableStatements[sortIt,,drop=FALSE]
+                        tmp0$File = NULL
+                        tableStatements <- rbind(tableStatements, cbind(File=real.dta.name[-1], tmp0))
+                    }
+                }
+			}
+#			Its also possible there is a -cwres statement in the PsN command.txt for NM V or VI
+			if(file.exists(file.path(path, 'command.txt'))& nmVersionMajor%in%c('V','VI')){
+#			find the possibe cwtabNN file
+				cwtab <- list.files(file.path(path), pattern='cwtab[0-9]*$')
+				if(length(cwtab)>0){
+					tableStatements <- 
+							rbind(tableStatements, 
+									data.frame(File=cwtab[1], 
+											Columns='ID, MDV, DV, IPRE, WRES, CWRES',
+											NoHeader=FALSE,
+											firstOnly=FALSE,
+#           This seems incorrect here, most case the cwtab should not be APPEND
+#           However, we handle this in importModelOutputTables
+											append=TRUE
+									)
+							)
+#				Now strip the first line off the cwtab file
+					con = readLines(file.path(path, cwtab[1]))
+					writeLines(con[-1],file.path(path, cwtab[1]))
+				}
+			}
+			controlStatements$Tables <- tableStatements
+		}
 		reportStatements <- probResults[[i]]
 		# check if there is a simulation statement.  If so, proceed accordingly
 		if(!is.null(controlStatements$Sim))
@@ -131,7 +179,7 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 		{			 			
 			if(nmVersionMajor == "VII")
 				modelList[[i]] <- NMBasicModelNM7(controlStatements, path, reportStatements, 
-						dropInputColumns = dropInputColumns, versionInfo = versionInfo)
+						dropInputColumns = dropInputColumns, versionInfo = versionInfo, conFile=conFile)
 			else
 				modelList[[i]] <- NMBasicModel(controlStatements, path, reportStatements, 
 					dropInputColumns = dropInputColumns, versionInfo = versionInfo)

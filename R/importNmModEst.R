@@ -30,6 +30,7 @@
 		
 		x <- equalExpressionPop(estElement, "METHOD", shortcut = TRUE, inPlace = FALSE)
 		meth <- x$op.out
+        if(is.null(meth)) meth='0'
 		x <- x$txt
 		
 		x <- equalExpressionPop(x, "FILE", shortcut = TRUE, inPlace = FALSE)
@@ -55,6 +56,7 @@
 		
 		remainingText <- x$txt
 		
+        if(is.null(remainingText) || length(remainingText)<1) remainingText=''
 		c("method" = meth, "file" = fileName, "noTitle" = noTitle, "noLabel" = noLabel,
 				"remainingText" = remainingText)
 

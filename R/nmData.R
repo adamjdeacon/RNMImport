@@ -177,7 +177,7 @@ nmData.NMSim<- function(obj, dataTypes = c("input", "output") ,
 		simNum <- gl(obj@numSimulations, nrow(outData) / obj@numSimulations , ordered = TRUE)
 		outData <- cbind(outData, "NSIM" = simNum)
 		# extract requested simulations
-		if(is.na(subProblemNum)) subProblemNum = 1:obj@numSimulations
+		if(all(is.na(subProblemNum))) subProblemNum = 1:obj@numSimulations
 		outData <- subset(outData, NSIM %in% subProblemNum)
 	}
 	# only one data.frame to return
@@ -198,7 +198,7 @@ nmData.NMSim<- function(obj, dataTypes = c("input", "output") ,
 	# the number of rows of the simulated output data set
 
 	if(stackInput)
-		inData <- do.call(cbind.data.frame, lapply(inData, rep, length(subProblemNum)))
+		inData <- do.call(cbind.data.frame, lapply(inData, base:::rep, length(subProblemNum)))
 	if(nrow(inData) != nrow(outData))
 		RNMImportStop("Amount of simulated output data selected is not compatible with the amount of input data, cannot bind into a single data.frame\n",
 				call = match.call())

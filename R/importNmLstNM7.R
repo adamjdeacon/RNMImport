@@ -12,14 +12,22 @@
 #' @return 
 #' @author fgochez
 #' @export
-.importMethodBlock <- function(methodTextBlock)
+.importMethodBlock <- function(methodTextBlock, SIGDIGS71='Sig.digs|SIG. DIGITS')
 {
 	blockResult <- list(  )
 	blockResult$method <- attr(methodTextBlock, "method.name")
-	
+
 	# retrieve objective function value
 	
 	objFinalLine <- grep(methodTextBlock, pattern = "#OBJV", value = TRUE)
+	if(length(objFinalLine) < 1){
+		message <- paste('No #OBJV tag found for', attr(methodTextBlock, "method.name"),
+				'in .importMethodBlock')
+		warning(message, call. = FALSE, immediate. = TRUE )
+		blockResult$TermStatus <- message
+		blockResult$Objective.Final <- NA
+		return(blockResult)
+	}
 	objFinalValueLoc <- gregexpr(objFinalLine, pattern = "-{0,1}[0-9\\.]+")
 	
 	objFinalValue <- as.numeric( substr(objFinalLine, 
@@ -28,9 +36,31 @@
 	
 	# retrieve termination status
 	termStatusLineNum <- grep(methodTextBlock, pattern = "#TERM")[1] + 1
-	# browser()
+
 	# termStatusFinalLineNum <- grep(tail(methodTextBlock, -termStatusLineNum), pattern = "^[[:space:]]*$")[1]
 	blockResult$TermStatus <- gsub(methodTextBlock[termStatusLineNum], pattern = "^[[:space:]]+", replacement = "")
+	
+	# retrieve Sig.digs
+	Sig.digsLineNum <- grep(methodTextBlock, pattern = SIGDIGS71)[1]
+	if(!is.na(Sig.digsLineNum)){
+		Sig.digsLoc <- 
+				gregexpr(methodTextBlock[Sig.digsLineNum], pattern = "[0-9]+[.]+[0-9]*")[[1]]
+		Sig.digs <- substr(methodTextBlock[Sig.digsLineNum], 
+				start = Sig.digsLoc, 
+				stop = Sig.digsLoc + attr(Sig.digsLoc, "match.length") - 1 )
+#		remove leading white space
+	} else {
+		Sig.digs <- ' '
+	}
+	blockResult$Sig.digs <- Sig.digs
+
+	Cov.statLineNum <- grep(methodTextBlock, pattern = " #TERE:")[1]
+	Cov.stat <- ' '
+	if(!is.na(Cov.statLineNum)){
+		if(substr(methodTextBlock[Cov.statLineNum + 1], 1, 1)=='0')
+			Cov.stat <- substring(methodTextBlock[Cov.statLineNum + 1], 2)
+	}
+	blockResult$Cov.stat <- Cov.stat
 	
 	# retrieve shrink values
 	# TODO: does this work will many ETAs, or might there be issues with the way the text is wrapped?
@@ -53,10 +83,10 @@
 	blockResult$Objective.Final <- objFinalValue
 	methodTextBlockSectioned <- sectionMethodBlock(methodTextBlock)
 	blockResult$FinalEstimates <- .importNmLstEstimates(methodTextBlockSectioned$"FINAL PARAMETER ESTIMATE")
-	blockResult$StandardError           <- .importNmLstEstimates( methodTextBlockSectioned$"STANDARD ERROR OF ESTIMATE" )
+	blockResult$StandardError <- .importNmLstEstimates( methodTextBlockSectioned$"STANDARD ERROR OF ESTIMATE" )
 	
 	blockResult$CovarianceMatrix <- .importNmLstMatrix( methodTextBlockSectioned$"COVARIANCE MATRIX OF ESTIMATE" )
-	blockResult$CorrelationMatrix       <- .importNmLstMatrix( methodTextBlockSectioned$"CORRELATION MATRIX OF ESTIMATE" )
+	blockResult$CorrelationMatrix <- .importNmLstMatrix( methodTextBlockSectioned$"CORRELATION MATRIX OF ESTIMATE" )
 
 	blockResult$InverseCovarianceMatrix <- .importNmLstMatrix( methodTextBlockSectioned$"INVERSE COVARIANCE MATRIX OF ESTIMATE" )
 	
@@ -99,7 +129,6 @@ importNmReport.NM7 <- function( content, textReport = FALSE )
 	for(i in seq_along(problemResults))
 	{
 		currentProb <- partitionedContent[[i]]
-		
 		# we force the final line to be a "1", otherwise the  method block WILL NOT be parsed correctly. 
 		# TODO: Find a more elegant way of handling this
 		if(tail(currentProb, 1) != "1")
@@ -108,27 +137,33 @@ importNmReport.NM7 <- function( content, textReport = FALSE )
 		# check for the presence of  SIMULATION STEP PERFORMED
 		simStep <- any(regexMatches("SIMULATION STEP PERFORMED", txt= currentProb))
 		# check for value of objective function
-		objFun <- any(regexMatches("MINIMUM VALUE OF OBJECTIVE FUNCTION", txt = currentProb))
+		objFun <- any(regexMatches("OBJECTIVE FUNCTION EVALUATION|MINIMUM VALUE OF OBJECTIVE FUNCTION", txt = currentProb))
 		# simulation + model
 		if(simStep & objFun)
 		{	
 		#	RNMImportStop("Simulations + fitting problems for NONMEM 7 not yet imported")
 			if(textReport)
 				logMessage(log = "stdReport", "Appears to be a simulation+modelling problem\n")
-			problemResults[[i]] <- importNmLstSimModel.NM7(currentProb, NA)
+			problemResults[[i]] <- importNmLstSimModel.NM7(contents=currentProb, numSub=NA)
 		}
 		# only data simulation, no fit step
 		else if(simStep & !objFun)
 		{	
 			RNMImportWarning( "This is a simulation without modelling step, will only return raw contents\n", match.call() )
-			problemResults[[i]] <- character(0)
+            problemResults[[i]] <- importNmLstSimOnly.NM7(contents=currentProb, numSub=NA)
+		}
+		# no data simulation,  EST step (JJ)
+		else if(!simStep & objFun)
+		{	
+#			browser()
+			problemResults[[i]] <- 
+					.importNmLstBasicProb.NM7(contents=currentProb)
 		}
 		else
 		{
 			if(textReport)
 				logMessage(log = "stdReport", "Appears to be a standard model\n")
 			problemResults[[i]] <- .importNmLstBasicProb.NM7(currentProb)
-
 		}
 	}
 	result$problemResults <- problemResults
@@ -153,13 +188,15 @@ importNmReport.NM7 <- function( content, textReport = FALSE )
 	methodBlocks <- partitionMethods(contents)
 	methodResults <- lapply( methodBlocks, .importMethodBlock)
 	outList$MethodResults <- methodResults
+	
 	### Find the sections of the list file
-	# lstList <- sectionLst( contents )
-	
-	
-	
+	lstList <- sectionLst( fileContents=contents )
+	searches <- which(names(lstList)=="MONITORING OF SEARCH")
 	### Extract iteration information
-	# outList$Iter <- .importNmLstIter( lstList[["MONITORING OF SEARCH"]])
+	outList$Iter <- 
+			lapply(searches, function(X, lst){
+						.importNmLstIter(iterList=lst[[X]])	
+					}, lst=lstList)
 	
 	outList
 	
@@ -195,7 +232,7 @@ importNmLstSimModel.NM7 <- function(contents, numSub = NA)
 	# extract the number of records and individuals in the data
 	outList$nRecords     <- colonPop( contents, "TOT\\. NO\\. OF OBS RECS"   , inPlace = FALSE, numeric = TRUE )$op.out
 	outList$nIndividuals <- colonPop( contents, "TOT\\. NO\\. OF INDIVIDUALS", inPlace = FALSE, numeric = TRUE )$op.out
-				
+	
 	# split off the part of the control file that has the subproblems
 	# This line will look as follows (N is any integer greater than 1):
 	#PROBLEM NO.:         N     SUBPROBLEM NO.:      1
@@ -237,8 +274,7 @@ importNmLstSimModel.NM7 <- function(contents, numSub = NA)
 	{
 		objectiveFinals <- sapply(subprobStatements[[i]]$MethodResults, "[[", "Objective.Final" )
 		objectiveMatrix[i,] <- objectiveFinals
-		thetaFinals <- t(sapply(subprobStatements[[i]]$MethodResults, 
-						function(x) x$FinalEstimates$THETA))
+		thetaFinals <- sapply(subprobStatements[[i]]$MethodResults, function(x) x$FinalEstimates$THETA)
 		thetaArray[,,i] <- thetaFinals
 		
 		omegaFinals <- lapply(subprobStatements[[i]]$MethodResults, function(x) x$FinalEstimates$OMEGA)
@@ -257,7 +293,8 @@ importNmLstSimModel.NM7 <- function(contents, numSub = NA)
 	
 	simLabels <- paste("sim", sep = "", 1:numSub)
 	
-	dimnames(thetaArray) <- list(methodLabels, names(subprobStatements[[1]]$MethodResults[[1]]$FinalEstimates$THETA)  ,simLabels)
+	#dimnames(thetaArray) <- list(methodLabels, names(subprobStatements[[1]]$MethodResults[[1]]$FinalEstimates$THETA)  ,simLabels)
+	dimnames(thetaArray) <- list(names(subprobStatements[[1]]$MethodResults[[1]]$FinalEstimates$THETA), methodLabels, simLabels)
 	# give the list elements the names of the simulations from which they came
 	names(omegaList) <- simLabels
 	names(sigmaList) <- simLabels
@@ -273,9 +310,44 @@ importNmLstSimModel.NM7 <- function(contents, numSub = NA)
 .importSubProbNM7 <- function(txt)
 {
 	outList <- list() 
-	methodBlocks <- partitionMethods(txt)
-	methodResults <- lapply( methodBlocks, .importMethodBlock)
+    if (length(grep('#METH', txt)) > 0) {
+        methodBlocks <- partitionMethods(lstProblemContents=txt)
+        methodResults <- lapply( methodBlocks, .importMethodBlock)
+    } else {
+        res <- block.parser(txt)
+        if (length(res) == 1 && res[[1]]$type=='method.name') {
+            attr(txt, 'method.name')  <- res[[1]]$val
+            methodResults = list(.importMethodBlock( txt ))
+        } else {
+            RNMImportStop(msg = sprintf("Don't understand this text: \n\t %s \n", paste(txt,collapse='\n\t')))
+        }
+    }
 	outList$MethodResults <- methodResults
 	outList
 }
 
+importNmLstSimOnly.NM7 <- function(contents, numSub = NA)
+{
+	contents <- cleanReportContents(contents)
+	if(is.na(numSub))
+	{
+		# find all lines of the form
+		#PROBLEM NO.:         1    SUBPROBLEM NO.:      N
+		subprobLines <- grep(contents, pattern = "PROBLEM NO\\.\\: [[:blank:]]*[0-9][[:blank:]]*SUBPROBLEM NO\\.\\:[[:blank:]]*[0-9]+[[:blank:]]*$")
+		# if there is only one sub-problem, then the above line will not appear, hence the need for the following
+		# logic 
+		numSub <- if(length(subprobLines) >= 1) length(subprobLines) else 1
+		
+	}
+#	if(numSub > 0)
+#	{
+	outList <- list()       
+	
+	# outList$VersionInfo  <- nmVersion( contents ) 
+	
+	# extract the number of records and individuals in the data
+	outList$nRecords     <- colonPop( contents, "TOT\\. NO\\. OF OBS RECS"   , inPlace = FALSE, numeric = TRUE )$op.out
+	outList$nIndividuals <- colonPop( contents, "TOT\\. NO\\. OF INDIVIDUALS", inPlace = FALSE, numeric = TRUE )$op.out
+	
+	outList
+}

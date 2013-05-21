@@ -14,7 +14,7 @@
 .importNmModTables <- function
 (
 		txt = NULL,
-		.extract = !is.null(txt) && length(grep("\\$TAB", txt)) > 0,
+		.extract = !is.null(txt) && length(grep("\\$TAB", toupper(txt))) > 0,
 		file = NULL
 )
 {
@@ -38,6 +38,10 @@
 		# TODO: If FILE is missing, need to handle this gracefully, since this might be allowed
 		fileName <- equalExpressionPop(x, "FILE", inPlace = TRUE,sep="=")
 		RNMImportStopifnot(!is.null(fileName), match.call())
+
+        ### handle the FORMAT=,1PE11.4 like statements
+        format.of.table = equalExpressionPop(x, "FORMAT", inPlace=TRUE, sep = '=' )
+
 		### handle the HEADER
 		noHeader <- !ynPop( x, "HEADER", yes.prefix = "ONE", default = TRUE , inPlace = TRUE)
 		
@@ -50,7 +54,8 @@
 		
 		# Now check for the presence of a "FIRSTONLY" statement
 		
-		firstOnly <- length(grep(x, pattern = paste("[[:space:]]","FIRSTONLY","[[:space:]]", sep =""))) > 0
+#		firstOnly <- length(grep(x, pattern = paste("[[:space:]]","FIRSTONLY","[[:space:]]", sep =""))) > 0
+		firstOnly <- length(grep(x, pattern = paste("[[:space:]]?","FIRST|FIRSTONLY|FIRSTRECORDONLY|FIRSTRECONLY","[[:space:]]?", sep =""))) > 0
 		
 		nmKey <- c("noprint", "noprin", "nopri", "print", "firstonly",
 				"unconditional", "conditional", "omitted")
@@ -63,8 +68,11 @@
 		columns <- .readValues( x , what = "character")
 		
 		columns <- paste( columns, collapse = ", ")
-		data.frame( File = fileName, Columns = columns, NoHeader = noHeader,
+
+		re = data.frame( File = fileName, Columns = columns, NoHeader = noHeader,
 				stringsAsFactors = FALSE, firstOnly = firstOnly, append = append)
+        if (!is.null(format.of.table)) attr(re,'table.format') = format.of.table
+        re
 	}
 	
 	# extract the releveant information for each tab section

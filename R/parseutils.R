@@ -377,7 +377,7 @@ regexSplit <- function(txt, rx)
 killRegex <- function(txt, rx, ignore.case = TRUE, rmBlanks = FALSE, ...)
 {
 	for(rxToKill in rx)
-		txt <- gsub(rxToKill, '', txt, ignore.case = ignore.case, ...)
+		txt <- gsub(rxToKill, '', txt, ignore.case = ignore.case,...)
 	if(rmBlanks)
 		stripBlanks(txt)
 	else
@@ -501,4 +501,97 @@ splitVector <- function(x, indices, includeStart = FALSE, includeEnd = FALSE)
 	
 	splitList	
 	
+}
+
+extractBalanced <- function(stream, leadingChar='ACCEPT\\s*=\\s*'){
+    orig = stream
+    # Assume comments only happend at the end of stream, and remove all possible comments
+    # if we assume comments can happen interior of streams, it will be terrificly hard to deal with
+
+    # to process the following case:
+    #   ACCEPT = ( A .NE. 'abc;def')
+    # before we remove ;.*$, we have to first clear our strings in ""
+    # and we also use this to deal with ")" or "("
+
+    i = 1
+    lstream = nchar(stream)
+    quote.sym = NULL
+    while (i <= lstream){
+        if (is.null(quote.sym)){
+        # not in quote
+            if (substring(stream,i,i)=='"' || substring(stream,i,i)=="'" ) {
+                quote.sym = substring(stream,i,i) 
+                substring(stream,i,i)=' ' # replace string in quotes by ' '
+            }
+        } else {
+            if (substring(stream,i,i)==quote.sym) { 
+                # if in quote state and met a pairing one, exit the quote state
+                quote.sym = NULL
+            }
+            substring(stream,i,i)=' ' # replace string in quotes by ' '
+        }
+        i = i+1
+    }
+
+    # comment position
+    pos.comment = regexpr(';.*$','', stream)
+
+    # extract the first appearence of leadingChar=(....) in the stream, 
+    # we already protect it from "" or ''
+    startpos.tag = regexpr(leadingChar, stream)
+    if (startpos.tag <= 0 || (pos.comment>0 && startpos.tag >= pos.comment)) {
+        # the leading tag is not found in string, keep the original stream untouched
+        return( c('', orig) )
+    }
+
+    # Just before '('
+    i = startpos.tag + attr(startpos.tag, 'match.length') - 1 
+    if (pos.comment > 0) {
+        lstream = pos.comment - 1
+    } else {
+        lstream = nchar(stream)
+    }
+    nextchar = function(){
+        if (i > lstream) return(NULL)
+        substring(stream,i+1,i+1)
+    }
+    consumeone = function(){
+        re = nextchar()
+        if (!is.null(re)){
+            i <<- i+1
+            return(re)
+        }
+        re
+    }
+    contents = ''
+    par.bal = 0
+    balanced = TRUE
+    # according to NONMEM manual, the contents must be surrounded in () pairs
+    while(par.bal==0 && !is.null(nextchar())){
+        if (nextchar()=='(') 
+            par.bal = par.bal + 1
+        consumeone()
+    }
+    if (!is.null(nextchar())){
+        # if we do find the starting '('
+        startpos.parenthess = i
+        while(par.bal>0 && !is.null(nextchar())){
+            if (nextchar()=='(') {
+                par.bal = par.bal + 1
+            } else {
+                if (nextchar()==')') {
+                    par.bal = par.bal - 1
+                }
+            }
+            consumeone()
+        }
+        if (substring(stream,i,i) !=')') {
+            balanced = FALSE
+            warning(sprintf('Unbalanced parenthess found in %s .', orig))
+        }
+        contents = substring(orig,startpos.parenthess,i)
+        orig = paste( substring(orig,1,startpos.tag-1),
+                      substring(orig,i+balanced) , sep='')
+    }
+    c(contents,orig)
 }

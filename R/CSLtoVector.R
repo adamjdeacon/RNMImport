@@ -14,6 +14,7 @@
 
 CSLtoVector <- function(txt, sep =",", removeBlank = TRUE) 
 {
+    txt <- as.character(txt)
 	sep <- if(removeBlank) sprintf("[[:space:]]*(%s)[[:space:]]*", sep ) else sep 
 	outTxt <- unlist(strsplit(txt, split = sep))
 	outTxt <- outTxt[outTxt != ""]

@@ -17,7 +17,7 @@
 #' @author fgochez
 
 NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputColumns = FALSE, 
-		versionInfo = c("major" = "VII", "minor" = 1))
+		versionInfo = c("major" = "VII", "minor" = 1), conFile=NULL)
 {
 	inData <- try(importModelData(dataStatement = controlStatements$Data,inputStatement = controlStatements$Input, path = path,
 					dropCols = dropInputColumns), silent = TRUE)
@@ -37,21 +37,43 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 	if(inherits(outTables, "list")) nOutDataRows <- max(sapply(outTables, nrow))
 	else nOutDataRows <- nrow(outTables)
 	nInDataRows <- nrow(inData)
-	if(nInDataRows != nOutDataRows)
-		RNMImportWarning("Number of rows of output data does not match the number of rows of input data!!\n", match.call())
-	
+	if(nInDataRows != nOutDataRows){
+		msg <- paste("Number of rows of output data", nOutDataRows, 
+				"\ndoes not match the number of rows of input data", nInDataRows,
+				"!\n")
+		cat(msg)
+		RNMImportWarning(msg)
+    }
 	# automatically import NONMEM7-generated iterations from files if available:
-	estStatement <- controlStatements$Estimates
+	estStatement <- as.data.frame(controlStatements$Estimates)
+    if (is.null(estStatement$method)) {
+        RNMImportWarning('no METHOD found in EST statement, inferring FO!')
+        estStatement$method <- 'FO'
+    }
+    if (all(nchar(estStatement$file)==0)) {
+        if (is.null(conFile)) {
+            conFile <- '.*'
+        }else{
+            conFile <- sub('\\.[^\\.]+$', '' , conFile)
+        }
+        extFn <- grep(sprintf('%s\\.ext$',conFile), list.files(path=path), ignore.case=TRUE, value=TRUE)
+        if (length(extFn) < 1) {
+            RNMImportWarning('no FILE specified in EST and no ext file found')
+        } else {
+            RNMImportWarning(sprintf('no FILE statement in EST, inferring [%s]!', extFn[1]))
+        }
+        estStatement$file <- extFn[1]
+    }
+
+    paramIter <- try( importNm7Iterations( files = estStatement[,"file"], noLabels = estStatement[,"noLabel"],
+                    noTitles = estStatement[,"noTitle"], methods = estStatement[,"method"], path = path) , silent = TRUE )
+    if(inherits(paramIter, "try-error")) { 
+        RNMImportWarning("Unable to import parameter iterations, proceeding anyway\n")
+        paramIter <- list()
+    }
 	
-	paramIter <- try( importNm7Iterations( files = estStatement[,"file"], noLabels = estStatement[,"noLabel"],
-					noTitles = estStatement[,"noTitle"], methods = estStatement[,"method"], path = path) , silent = TRUE )
-	if(inherits(paramIter, "try-error")) { 
-		RNMImportWarning("Unable to import parameter iterations, proceeding anyway\n")
-		paramIter <- list()
-	}
 	with(reportContents,
 			{
-
 				# check for the covariance/correlation matrices
 				covMatrices <- lapply(MethodResults, "[[", "CovarianceMatrix")
 				corMatrices <- lapply(MethodResults, "[[", "CorrelationMatrix")

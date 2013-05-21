@@ -18,9 +18,16 @@
 	if(is.null(tableStatement))
 		outTables <- data.frame()
 	else {
-		
+                # try to import, and if one can't, catch the error and return an empty data.frame
+                lookFor <- names(tableStatement)[min(grep('^File*', names(tableStatement)))]
+                missingFiles <- which(!file.exists(file.path(path, tableStatement[,lookFor])))
+                if(length(missingFiles)>0){
+                    msg <- 
+                            paste('cannot find', paste(tableStatement[missingFiles,lookFor], collapse=','))
+                    RNMImportWarning(msg)
+                }
+
 		# try to import, and if one can't, catch the error and return an empty data.frame
-		
 		outTables <- try(importModelOutputTables( tableStatement , path = path )) 
 		if( inherits( outTables, "try-error" ) )
 		{
@@ -28,7 +35,6 @@
 			outTables <- data.frame()
 		}
 	}
-	
 	outTables
 }
 
@@ -198,4 +204,18 @@ hasExtension <- function(fileName, extensions)
 	if(Sys.info()["sysname"] == "Windows")
 		return(tolower(fileName))
 	fileName
+}
+
+#' @param contStates 
+#' @param pri 
+#' @returnType LOGICAL
+#' @return does the string, basically PRIOR, exist in the control file?
+#' @author jjames
+.lookFor <- function(contStates=names(obj@controlStatements), subr=NULL, pri='^ +[$](PRIOR|PRI)|PRIOR='){
+	test2 <- FALSE
+	test1 <- any(regexpr(pri, contStates, ignore=TRUE)>0)
+	if(length(subr)>0){
+		test2 <- any(regexpr(pri, subr, ignore=TRUE)>0)
+	}
+	test1 || test2
 }
