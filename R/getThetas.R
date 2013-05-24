@@ -239,7 +239,7 @@ getThetas.NMSimModelNM7 <- function(obj, what = "final", subProblemNum = 1, meth
 			initial <- obj@thetaInitial
 		else
 			# this has the estimates only, not the upper and lower bounds
-			initial <- obj@thetaFinal[subProblemNum,, methodChosen - 1]
+			initial <- obj@thetaFinal[subProblemNum,,methodChosen - 1]
 		if(length(validWhat) == 1)
 		{
 			res <- switch(validWhat, 

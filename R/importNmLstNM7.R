@@ -293,8 +293,8 @@ importNmLstSimModel.NM7 <- function(contents, numSub = NA)
 	
 	simLabels <- paste("sim", sep = "", 1:numSub)
 	
-	#dimnames(thetaArray) <- list(methodLabels, names(subprobStatements[[1]]$MethodResults[[1]]$FinalEstimates$THETA)  ,simLabels)
-	dimnames(thetaArray) <- list(names(subprobStatements[[1]]$MethodResults[[1]]$FinalEstimates$THETA), methodLabels, simLabels)
+    thetaArray <- aperm(thetaArray, c(2,1,3))
+	dimnames(thetaArray) <- list(methodLabels, names(subprobStatements[[1]]$MethodResults[[1]]$FinalEstimates$THETA)  ,simLabels)
 	# give the list elements the names of the simulations from which they came
 	names(omegaList) <- simLabels
 	names(sigmaList) <- simLabels
