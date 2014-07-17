@@ -145,6 +145,8 @@ dirname.abs <- function(x){
 	# if file has commas, take it to be a comma-seperated list
 	if(any(regexMatches(file, ",")))
 		file <- CSLtoVector(file)
+	# RNM-206: If the file(s) are enclosed in double quotes (e.g. to allow a $DATA file to have a space in its name) then strip these off
+	file <- gsub("^\"(.*)\"$", "\\1", file)
 	
 	## rx to identify if this is a full path file
 	if( !is.null(path) ) {
