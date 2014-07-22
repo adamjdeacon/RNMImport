@@ -1,8 +1,6 @@
 test.imposeCategoryFormat <- function()
 {
 	
-	testRuns <- RNMImport:::getInternalTestRuns()
-	
 	#Test data frame 
 	testDF <- data.frame(SEX = factor(c("male", "female", "female", "male", "female")), 
 						 SMOK = factor(c("no", "yes", "yes", "no", "no")),
@@ -19,8 +17,9 @@ test.imposeCategoryFormat <- function()
 	checkEquals(test4, testDF)
 	
 	#Test NMBasic
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
 	setNmPath("internalunit",  file.path(unitTestPath, "testdata/TestRun"))
-	run1 <- testRuns$NMBasic
+	run1 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestRun" ))
 	prob1 <- getProblem(run1)
 	testB1 <- imposeCategoryFormat(prob1)
 	checkEquals(levels(testB1@inputData[["SEX"]]), c("female", "male"))
@@ -59,7 +58,7 @@ test.imposeCategoryFormat <- function()
 	checkEquals(levels(testR4@outputData[["SMOK"]]), NULL)
 	
 	#Test NMSim
-	run2 <- testRuns$NMSimMod
+	run2 <- importNm( "TestData1SIM.con", path = file.path(unitTestPath, "testdata/TestSimRun" ))
 	prob2 <- getProblem(run2)
 	testS1 <- imposeCategoryFormat(prob2)
 	checkEquals(levels(testS1@inputData[["SEX"]]), c("female", "male"))
@@ -79,7 +78,7 @@ test.imposeCategoryFormat <- function()
 	checkEquals(levels(testS4@outputData[["SMOK"]]), NULL)
 	
 	# NMBasicNM7
-	run3 <- testRuns$NMBasic
+	run3 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestRun" ))
 	prob3 <- getProblem(run3)
 	testB1 <- imposeCategoryFormat(prob3)
 	checkEquals(levels(testB1@inputData[["SEX"]]), c("female", "male"))

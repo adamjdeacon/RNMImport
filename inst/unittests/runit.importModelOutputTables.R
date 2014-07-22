@@ -13,6 +13,7 @@ test.importModelOutputTables <- function()
 	tableStatement <-  "$TABLE  ONEHEADER ID STUD WEEK NITE DRUG DOSE A B C D
   	ETA(1) ETA(2) MDV WRES IWRES IPRED NOPRINT FILE=testtab.tab"
   	
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
   	tableInfo <- RNMImport:::.importNmModTables(tableStatement)
   	tableTest <- RNMImport:::importModelOutputTables(tableInfo, path = file.path(unitTestPath, "testdata"))
   	

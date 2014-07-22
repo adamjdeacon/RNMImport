@@ -57,11 +57,10 @@ test.createCategorical <- function()
 		checkEquals(as.character(testSix[,i]), as.character(testDF[,i]))
 	}
 	
-	testRuns <- RNMImport:::getInternalTestRuns()
-
 	#Perform some simple tests on NMRun, NMBasicModel and NMSimModel
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
 	setNmPath("internalunit",  file.path(unitTestPath, "testdata/TestRun"))
-	run1 <- testRuns$NMBasic
+	run1 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestRun" ))
 	prob1 <- getProblem(run1)
 	
 	#Check NMBasic
@@ -84,7 +83,8 @@ test.createCategorical <- function()
 
 test.createCategorical.NMBasicNM7 <- function()
 {
-	testRun <- RNMImport:::getInternalTestRuns()$NMBasicNM7
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
+	testRun <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestDataNM7" ))
 	testProb <- getProblem(testRun)
 	testProb2 <- addDerivedCategorical(testProb, "DV")
 	
@@ -115,9 +115,9 @@ test.createCategorical.NMSim <- function()
 
 test.addedData <- function()
 {
-	testRuns <- RNMImport:::getInternalTestRuns()
 
-	run1 <- testRuns$NMBasic
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
+	run1 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestRun" ))
 	prob1 <- getProblem(run1)
 	
 	# check NMBasicModel

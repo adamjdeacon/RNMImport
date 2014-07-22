@@ -2,6 +2,7 @@
 
 test.readNmData <- function()
 {
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
 	testDir <- file.path(unitTestPath, "testdata")
 	x <- readNmData(file.path(testDir, "data3"))
 	checkEquals(dim(x), c(11, 3))

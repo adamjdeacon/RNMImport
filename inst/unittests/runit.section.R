@@ -2,6 +2,7 @@ test.partitionByProblem <- function()
 {
 	scanFile <- RNMImport:::scanFile
 	partitionByProblem <- RNMImport:::partitionByProblem
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
 	testText <- scanFile(file.path(unitTestPath, "testdata/multiprob1.mod"))
 	x <- partitionByProblem(testText)
 	checkEquals(length(x), 2)

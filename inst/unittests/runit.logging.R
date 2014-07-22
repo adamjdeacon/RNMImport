@@ -22,7 +22,8 @@ test.logging <- function()
 	# TODO: the following looks like it should work, but does not for some reason.  Fix it.
 	# checkEquals(names(last.warning)[1],  "Unable to close the connection warnings , but proceeding anyway \n" )
 	
-	# try to direct a log to a file, output to it, then check		
+	# try to direct a log to a file, output to it, then check	
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
 	setLogFile("stdReport", file.path(unitTestPath, "testdata/testlog.txt"))
 	logMessage("test", "stdReport")
 	checkEquals("test", scan(file.path(unitTestPath, "testdata/testlog.txt"), what = ""))

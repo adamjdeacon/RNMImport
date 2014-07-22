@@ -17,12 +17,12 @@ test.getThetas <- function()
 {
 	#Check NMBasicModel and NMRun
 	
-	testRuns <- RNMImport:::getInternalTestRuns()
-	run1 <- testRuns[["NMBasic"]]
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
+	run1 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestRun" ))
 	
 	prob1 <- getProblem(run1)
 	
-	run3 <- testRuns[["NMBasicNotab"]]
+	run3 <- importNm( "TestData1notab.ctl", path = file.path(unitTestPath, "testdata/TestRunNotab" ))
 	# expThetas <- matrix(c(19.6, 84.6, 1.66), 1, 3, dimnames = list(c("estimates"), c("THETA1", "THETA2", "THETA3")))
 	expThetas <- c("THETA1" = 19.6, "THETA2" = 84.6, "THETA3" = 1.66)
 	expThetaInitial <- matrix(c(-Inf, 18.7, Inf, -Inf, 87.3, Inf, -Inf, 2.13, Inf), 3,
@@ -46,9 +46,10 @@ test.getThetas <- function()
 	
 	############ Check NMSimModel
 	
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
 	testDir2 <- file.path(unitTestPath, "testdata/TestSimRun")
 	
-	run2 <- testRuns[["NMSimMod"]]
+	run2 <- importNm( "TestData1SIM.con", path = file.path(unitTestPath, "testdata/TestSimRun" ))
 	
 	prob2 <- getProblem(run2)
 	
@@ -74,7 +75,7 @@ test.getThetas <- function()
 	
 	######## NONMEM 7 run
 	
-	run3 <- testRuns[["NMBasicNM7"]]
+	run3 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestDataNM7" ))
 	prob3 <- getProblem(run3)
 	
 	checkEquals( getThetas(prob3, what = c("initial", "final"), method = 2), 
@@ -111,10 +112,10 @@ test.getThetas <- function()
 test.getOmegas <- function()
 {
 	########### Check NMBasicModel and NMRun
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
 	testDir1 <- file.path(unitTestPath, "testdata/TestRun")
 	
-	testRuns <- RNMImport:::getInternalTestRuns()
-	run1 <- testRuns[["NMBasic"]]
+	run1 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestRun" ))
 	
 	prob1 <- getProblem(run1)
 	
@@ -134,7 +135,7 @@ test.getOmegas <- function()
 	checkEquals(omegaTest1,  expOmegaInit)
 	checkEquals(omegaTest2,  expOmegaInit)	
 	
-	run3 <- testRuns$NMBasicNotab
+	run3 <- importNm( "TestData1notab.ctl", path = file.path(unitTestPath, "testdata/TestRunNotab" ))
 	omegaTest3 <- getOmegas(run3, what = c("final", "stderrors"))
 	omegaStderrs <- structure(c(0.0239, 0, 0, 0, 0.022, 0, 0, 0, 0.345), .Dim = c(3L, 
 					3L), .Dimnames = list(c("OMEGA1", "OMEGA2", "OMEGA3"), c("OMEGA1", 
@@ -160,7 +161,7 @@ test.getOmegas <- function()
 	# run2 <- importNm(conFile = "testdata1sim.con", reportFile = "testdata1sim.lst", 
 	#		path = testDir2)
 	
-	run2 <- testRuns[["NMSimMod"]]
+	run2 <- importNm( "TestData1SIM.con", path = file.path(unitTestPath, "testdata/TestSimRun" ))
 	prob2 <- getProblem(run2)
 	
 	simOmegas <- array(dim = c(3,3,5), dimnames = list(paste("OMEGA", 1:3, sep = ""), 
@@ -191,7 +192,7 @@ test.getOmegas <- function()
 	#
 	##################################
 	
-	run3 <- testRuns[["NMBasicNM7"]]
+	run3 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestDataNM7" ))
 	prob3 <- getProblem(run3)
 	
 	omegaTest1 <- getOmegas(prob3, what = c("initial", "final"), method = 2)
@@ -244,9 +245,8 @@ test.getOmegas <- function()
 
 test.getSigmas <- function()
 {
-	
-	testRuns <- RNMImport:::getInternalTestRuns()
-	run1 <- testRuns[["NMBasicNotab"]]
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
+	run1 <- importNm( "TestData1notab.ctl", path = file.path(unitTestPath, "testdata/TestRunNotab" ))
 	prob1 <- getProblem(run1)
 	
 	expSigmas <- array(0.0202, c(1,1), dimnames = list("SIGMA1", "SIGMA1"))
@@ -262,7 +262,7 @@ test.getSigmas <- function()
 	checkEquals(getSigmas(prob1, what = c("initial", "stderrors")), list("initial.estimates" = expSigmaInit, 
 					"standard.errors" = expSigmaStderrs) )
 	
-	run3 <- testRuns[["NMBasic"]]
+	run3 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestRun" ))
 	
 	# try to get standard errors that aren't there, check for correct error message
 	
@@ -271,7 +271,7 @@ test.getSigmas <- function()
 	checkTrue(length(grep( trySigmas2, pattern = "Standard errors not available" )) > 0)
 	
 	#Check NMSimModel
-	run2 <- testRuns[["NMSimMod"]]
+	run2 <- importNm( "TestData1SIM.con", path = file.path(unitTestPath, "testdata/TestSimRun" ))
 	
 	prob2 <- getProblem(run2)
 	
@@ -296,7 +296,7 @@ test.getSigmas <- function()
 	#
 	################################
 
-	run3 <- testRuns[["NMBasicNM7"]]
+	run3 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestDataNM7" ))
 	prob3 <- getProblem(run3)
 	
 	sigmaTest1 <- getSigmas(prob3, what = c("initial", "final"), method = 2)
@@ -339,6 +339,7 @@ test.getSigmas <- function()
 	
 	# check nmModel
 	
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
 	testDir <- file.path(unitTestPath, "testdata/TestRun")	
 	mod1 <- importNmMod("TestData1.ctl",  path = testDir)
 	checkEquals(getSigmas(mod1), mod1$problemContents[[1]]$Sigma)

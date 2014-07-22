@@ -11,6 +11,7 @@
 
 test.importNmMod <- function()
 {
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
 	testDir <- file.path(unitTestPath, "testdata")
 	dat1 <- importNmMod(file.path(testDir, "control3.con"))
 	

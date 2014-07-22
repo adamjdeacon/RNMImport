@@ -9,7 +9,7 @@ test.getVarDescription <- function()
 	varDescription <- RNMImport:::getVarDescription
 	testFrameOne <- data.frame(Variable = c("ID", "SEX"), Label = c("Subject Number", "Gender"),
 						Format = c("", "0=male, 1=female"),	VarType = c("Undefined", "Covariate"), stringsAsFactors = FALSE)
-	testFrameTwo <- data.frame(Variable = "BILT", Label = "Total Bilirubin (µmol/L)", Format = "", VarType = "Lab Covariate", stringsAsFactors = FALSE)
+	testFrameTwo <- data.frame(Variable = "BILT", Label = paste0("Total Bilirubin (", intToUtf8(181), "mol/L)"), Format = "", VarType = "Lab Covariate", stringsAsFactors = FALSE)
 	
 	x <- varDescription(c("ID", "SEX"))
 	rownames(x) <- NULL
@@ -149,6 +149,7 @@ test.configSubsets <- function()
 	# check that when loaded, subset is attached to object
 	# set internal unit path from runRNMImportTests?
 	
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
 	testRun <- importNm(conFile = "testdata1notab.ctl", reportFile = "testdata1notab.lst", 
 			path =  file.path(unitTestPath, "testdata/TestRunNoTab"))
 	

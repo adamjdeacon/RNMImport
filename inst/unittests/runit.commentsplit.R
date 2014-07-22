@@ -2,6 +2,7 @@ test.commentSplit <- function()
 {
 	commentSplit <- RNMImport:::commentSplit
 	scanFile <- RNMImport:::scanFile
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
 	
 	testText <- scanFile(file.path(unitTestPath, "testdata/control3.con"))
 	x <- commentSplit(testText)

@@ -5,6 +5,7 @@
 
 test.importNmReport.Basic <- function()
 {
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
 	report1 <- importNmReport("TestData1notab.lst", path = file.path(unitTestPath, "testdata/TestRunNoTab"))
 	
 	report1Class <- class(report1)
@@ -60,7 +61,7 @@ test.importNmReport.Basic <- function()
 
 test.importNmReport.SimModel <- function()
 {
-	
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
 	report2 <- importNmReport("TestData1SIM.lst", path = file.path(unitTestPath, "testdata/TestSimRun"))
 	conStatements <- importNmMod("TestData1SIM.con", path = file.path(unitTestPath, "testdata/TestSimRun"))
 	report2.withCtl <- importNmReport("TestData1SIM.lst", controlStatements = conStatements, path = file.path(unitTestPath, "testdata/TestSimRun"))
@@ -92,6 +93,7 @@ test.importNmReport.SimModel <- function()
 
 test.importNmReport.BasicNM7 <- function()
 {
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
 	report3 <- importNmReport("TestData1.lst", path = file.path(unitTestPath, "testdata/TestDataNM7"))
 	
 	probResults <- report3$problemResults[[1]]

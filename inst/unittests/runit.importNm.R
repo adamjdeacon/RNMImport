@@ -19,7 +19,7 @@
 test.importNm.Basic <- function()
 {
 	# start with the test run
-    unitTestPath <- RNMImport:::getUnitTestPath()
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
 	setNmPath("internalunit",  file.path(unitTestPath, "testdata/TestRun") )
 	
 	# import the basic test run
@@ -137,8 +137,7 @@ test.importNm.Basic <- function()
 	
 	#### check that a run with MAXEVAL=0 and no sigma declaration was imported correctly
 	
-	testRuns <- RNMImport:::getInternalTestRuns()
-	run5 <- testRuns$NMBasicNoSigMaxeval0
+	run5 <-  importNm("Test.ctl",path = file.path(unitTestPath, "testdata/TestNoSigMaxeval0" ))
 	objective <- getObjective(run5)
 	checkTrue(is.na(objective), msg = " |objective function not present!")
 	checkEquals(attr(objective, "minInfo"), character(0), msg = " | missing objective minimization info")
@@ -195,6 +194,7 @@ test.importNm.SimModel <- function()
 	
 	### check that importing with no tables still works
 	
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
 	run4 <- importNm("TestData1SIM_missingtab.con","TestData1SIM.lst" , path = file.path(unitTestPath, "testdata/TestSimRun"))
 	checkEquals(nmData(run4, dataType = "output"), structure(list(NSIM = structure(integer(0), .Label = c("1", "2", 
 											"3", "4", "5"), class = c("ordered", "factor"))), .Names = "NSIM", row.names = integer(0), class = "data.frame"), msg = " |empty output data" )
@@ -254,9 +254,8 @@ test.importNm.SimModel <- function()
 test.importNm.BasicNM7 <- function()
 {
 	# use pre-loaded run 
-	
-	runs <- RNMImport:::getInternalTestRuns()
-	run1 <- runs[["NMBasicNM7"]]
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
+	run1 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestDataNM7" ))
 	
 	allThetas <- sapply(as.numeric(1:2), function(i) getThetas(run1, method = i, what = "final"))
 	allOmegas <- lapply(as.numeric(1:2), function(i) getOmegas(run1, method = i, what = "final"))
@@ -319,7 +318,8 @@ test.importNm.BasicNM7 <- function()
 	# iterations
 	
 	iter <- getIterations(run1)
-	expectedIter <- importNm7Tables("TestData1.EXT", path = file.path(RNMImport:::getUnitTestPath(), "testdata/TestDataNM7"), type = "ext")
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
+	expectedIter <- importNm7Tables("TestData1.EXT", path = file.path(unitTestPath, "testdata/TestDataNM7"), type = "ext")
 	checkEquals(iter[[1]], expectedIter[[1]], check.attributes = FALSE, "msg = | iterations imported correctly")
 	checkEquals(iter[[2]], expectedIter[[2]], check.attributes = FALSE, "msg = | iterations imported correctly")
 

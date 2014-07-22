@@ -18,11 +18,7 @@
 .test.show.NMRun <- function()
 {
 	
-	
-	testRuns <- RNMImport:::getInternalTestRuns()
-	
-	
-	run1 <- testRuns[["NMBasic"]]
+	run1 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestRun" ))
 	
 	# TODO: check the initial chunk of text!
 	
@@ -38,9 +34,8 @@
 
 .test.show.NMBasicModel <- function()
 {
-	testRuns <- RNMImport:::getInternalTestRuns()
-	
-	run1 <- testRuns[["NMBasic"]]
+
+	run1 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestRun" ))
 	
 	prob1 <- getProblem(run1)
 	test1 <- capture.output(show(prob1))
@@ -65,9 +60,8 @@
 
 .test.show.NMSimModel <- function()
 {
-	testRuns <- RNMImport:::getInternalTestRuns()
-	
-	run1 <- testRuns[["NMSimMod"]]
+
+	run1 <- importNm( "TestData1SIM.con", path = file.path(unitTestPath, "testdata/TestSimRun" ))
 	
 	prob1 <- getProblem(run1)
 	test1 <- capture.output(show(prob1))
@@ -105,9 +99,7 @@
 
 .test.show.NMBasicNM7 <- function()
 {
-	testRuns <- RNMImport:::getInternalTestRuns()
-	
-	run1 <- testRuns[["NMBasicNM7"]]
+	run1 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestDataNM7" ))
 	
 	prob1 <- getProblem(run1)
 	test1 <- capture.output(show(prob1))

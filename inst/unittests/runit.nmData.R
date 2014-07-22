@@ -4,8 +4,9 @@
 
 test.nmData.NMBasic <- function()
 {
-	testRuns <- RNMImport:::getInternalTestRuns()
-	run1 <- testRuns[["NMBasic"]]
+
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
+	run1 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestRun" ))
 	
 	prob <- getProblem(run1)
 	test1 <- nmData(run1)
@@ -79,8 +80,9 @@ test.nmData.NMBasic <- function()
 test.nmData.NMSim <- function()
 {
 	# run1 <- importNm("TestData1SIM.con", "TestData1SIM.lst", path = file.path(unitTestPath, "testdata/TestSimRun"))
-	testRuns <- RNMImport:::getInternalTestRuns() 
-	run2 <- testRuns[["NMSimMod"]]
+	
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
+	run2 <- importNm( "TestData1SIM.con", path = file.path(unitTestPath, "testdata/TestSimRun" ))
 	prob <- getProblem(run2)
 
 	dataSubset(prob) <- NULL
@@ -156,6 +158,7 @@ test.nmData.NMSim <- function()
 
 test.nmDatabyVarType <- function()
 {
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
 	run1 <- importNm("TestData1.ctl", "TestData1.lst", path = file.path(unitTestPath, "testdata/TestRun"))
 	test1 <- nmDatabyVarType(run1, varTypes = "Covariate")
 	checkEquals(dim(test1), c(1061, 4), "dimensions of the data are correct")

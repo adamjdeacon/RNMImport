@@ -13,6 +13,7 @@ test.importModelData <- function()
     importModelData <- RNMImport:::importModelData
     
     # first test: checks that multiple IGNORE= are handled correctly
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
     testDir <- file.path(unitTestPath, "testdata")
     # x <- readNmData(file.path(testDir, "data3"))
     
@@ -103,6 +104,7 @@ test.importModelDataAliasDrop <- function()
     .importNmModInput <- RNMImport:::.importNmModInput
     
     # first test: checks that multiple IGNORE= are handled correctly
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
     testDir <- file.path(unitTestPath, "testdata")
     # x <- readNmData(file.path(testDir, "data3"))
     
@@ -172,6 +174,7 @@ test.importModelDataAliasDrop <- function()
 
 test.importModelData.accept <- function()
 {
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
     testDir <- file.path(unitTestPath, "testdata")
     
     .importNmModData <- RNMImport:::.importNmModData
@@ -217,6 +220,7 @@ test.importModelData.records <- function()
     .importNmModInput <- RNMImport:::.importNmModInput
     
     # first test: checks that RECORDS=n is handled correctly
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
     testDir <- file.path(unitTestPath, "testdata")
     
     

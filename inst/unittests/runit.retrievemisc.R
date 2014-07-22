@@ -4,10 +4,10 @@
 
 test.getObjective <- function()
 {
-	testRuns <- RNMImport:::getInternalTestRuns()
-	
+
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
 	setNmPath("internalunit",  file.path(unitTestPath, "testdata/TestRun") )
-	run1 <- testRuns$NMBasic
+	run1 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestRun" ))
 	# NMBasicModel
 
 	checkEquals(getObjective(getProblem(run1), addMinInfo = FALSE), 3228.988 ) 
@@ -20,7 +20,7 @@ test.getObjective <- function()
 	
 	# NMSimModel
 	
-	run2 <- testRuns$NMSimMod
+	run2 <- importNm( "TestData1SIM.con", path = file.path(unitTestPath, "testdata/TestSimRun" ))
 	prob2 <- getProblem(run2)
 	checkEquals(getObjective(run2, subProblems = 1:5), getObjective(prob2, subProblems = 1:5))
 	checkEquals(getObjective(prob2, subProblems = c(2, 4)), 
@@ -29,7 +29,7 @@ test.getObjective <- function()
 	
 	# NMBasicModelNM7
 	
-	run3 <- testRuns$NMBasicNM7 
+	run3 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestDataNM7" ))
 	prob3 <- getProblem(run3)
 	
 	checkEquals(getObjective(run3, method = 1:2), getObjective(prob3, method = 1:2), msg = " |getobjective the same on run and NMBasicModelNM7" )
@@ -49,9 +49,9 @@ test.getObjective <- function()
 
 test.getEstimateCov <- function()
 {
-	testRuns <- RNMImport:::getInternalTestRuns()
-	
-	run1 <- testRuns$NMBasicNotab
+
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
+	run1 <- importNm( "TestData1notab.ctl", path = file.path(unitTestPath, "testdata/TestRunNotab" ))
 	prob1 <- getProblem(run1)
 	
 	checkEquals(getEstimateCov(run1, corMatrix = TRUE) ,getEstimateCov(run1, corMatrix = TRUE))
@@ -90,12 +90,12 @@ test.getEstimateCov <- function()
 
 	# check for appropriate error handling
 	
-	run2 <- testRuns$NMBasic
+	run2 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestRun" ))
 	
 	checkTrue(is.null(getEstimateCov(run2)), msg = " |NULL returned when no parameter covariance matrix found" )
 	
 	############## # now NONMEM 7 run
-	run3 <- testRuns$NMBasicNM7
+	run3 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestDataNM7" ))
 	prob3 <- getProblem(run3)
 	
 	# for method 2, should be NULL
@@ -143,10 +143,10 @@ test.getEstimateCov <- function()
 
 test.getNmVersion <- function()
 {
-	testRuns <- RNMImport:::getInternalTestRuns()
-	
-	run1 <- testRuns$NMBasicNotab 
-	run2 <- testRuns$NMSimMod	
+
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
+	run1 <- importNm( "TestData1notab.ctl", path = file.path(unitTestPath, "testdata/TestRunNotab" ))
+	run2 <- importNm( "TestData1SIM.con", path = file.path(unitTestPath, "testdata/TestSimRun" ))
 	
 	checkEquals( getNmVersion(run1), c(major = "VI", "minor" = "2" ) , " version of run1 is correct")
 	checkEquals( getNmVersion(run2), c(major = "VI", "minor" = "1" ) , " version of run2 is correct")
@@ -162,8 +162,8 @@ test.getNmVersion <- function()
 
 test.getMethodNames <- function()
 {
-	testRuns <- RNMImport:::getInternalTestRuns()
-	run1 <- testRuns$NMBasicNM7
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
+	run1 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestDataNM7" ))
 	prob1 <- getProblem(run1)
 	
 	# check that getMethodNames works in the same way for runs as for problems
@@ -182,8 +182,8 @@ test.getMethodNames <- function()
 
 test.getFileinfo <- function()
 {
-	testRuns <- RNMImport:::getInternalTestRuns()
-	run1 <- testRuns$NMBasic
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
+	run1 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestRun" ))
 	
 	fInfoTest <- getFileinfo(run1) 
 	checkEquals(colnames(fInfoTest), c("size", "mode", "mtime", "ctime", "atime", "exe", "fileName"), 
@@ -202,8 +202,8 @@ test.getFileinfo <- function()
 
 test.getSimInfo <- function()
 {
-	testRuns <- RNMImport:::getInternalTestRuns()
-	run <- testRuns$NMSimMod
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
+	run <- importNm( "TestData1SIM.con", path = file.path(unitTestPath, "testdata/TestSimRun" ))
 	simInfo <- getSimInfo(run)
 	rawInfo <- attr(simInfo, "rawStatement")
 	attr(simInfo, "rawStatement") <- NULL

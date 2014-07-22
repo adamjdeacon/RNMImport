@@ -10,7 +10,8 @@
 
 test.importNM7Iterations <- function()
 {
-	testDataPath <- file.path(RNMImport:::getUnitTestPath(), "testdata/TestDataNM7" )
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
+	testDataPath <- file.path(unitTestPath, "testdata/TestDataNM7" )
 	
 	# test case 1
 	

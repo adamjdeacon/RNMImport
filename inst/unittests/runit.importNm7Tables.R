@@ -10,7 +10,8 @@
 
 test.importNm7Tables <- function()
 {
-	testDataPath <- file.path(RNMImport:::getUnitTestPath(), "testdata/TestDataNM7")
+	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
+	testDataPath <- file.path(unitTestPath, "testdata/TestDataNM7")
 	
 	# correlation matrix
 	corFile <- importNm7Tables("TestData1.cor", path = testDataPath, type = "cov")
