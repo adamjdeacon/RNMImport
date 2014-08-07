@@ -16,16 +16,18 @@
 #'
 
 runRNMImportTests <- function(TestPath = system.file(package="RNMImport", "unittests"), 
-		TestResult = NULL, ResultsType = c("html", "text"))
+		InternalDataPath = TestPath, ExternalDataPath = NULL,
+		ExcludeFolders = NULL, TestResult = NULL, ResultsType = c("html", "text"))
 {
 	if(!require("RUnit", quietly = TRUE)) stop("There is no 'RUnit' package!")
 	TestPath <- normalizePath(TestPath, winslash = "/", mustWork = TRUE)
 	ResultsType <- match.arg(ResultsType)
 	if (!exists(".RNMImportTestEnv", envir = .GlobalEnv)) assign(".RNMImportTestEnv", new.env(), envir = .GlobalEnv)
-	assign("TestPath", TestPath, envir = .RNMImportTestEnv)
+	assign("InternalDataPath", InternalDataPath, envir = .RNMImportTestEnv)
+	assign("ExternalDataPath", ExternalDataPath, envir = .RNMImportTestEnv)
 	
 	TestFolders <- list.dirs(TestPath, full.names = TRUE, recursive = FALSE)
-	TestFolders <- TestFolders[which(basename(TestFolders) != "testdata")]
+	TestFolders <- TestFolders[!basename(TestFolders) %in% ExcludeFolders]
 	if (length(TestFolders) > 0) {
 		TestSuite <- list()
 		for (i in seq_along(TestFolders)) {
