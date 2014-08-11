@@ -1,6 +1,7 @@
 
-# store a path.  This step is optional
+require(RNMImport)
 
+# store a path.  This step is optional
 setNmPath("runPath", system.file(package = "RNMImport", "examples/theoph"))
 
 # Import the run by specifying control and list files.  Note the way that the path parameter is specified in order to 
@@ -46,3 +47,4 @@ print(addedData(testModel))
 
 
 removeNmPath("runPath")
+
