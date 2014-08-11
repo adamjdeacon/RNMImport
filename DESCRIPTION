@@ -3,10 +3,9 @@ Type: Package
 Title: Tools for importing and manipulating NONMEM data.
 Version: 0.3.6
 Date: $LastChangedDate$
-Author: Mango Solutions
-Maintainer: <support@mango-solutions.com>
+Author: Mango Solutions <support@mango-solutions.com>
+Maintainer: Mango Solutions <support@mango-solutions.com>
 Suggests: RUnit (>= 0.4.22)
 Depends: R (>= 2.8.0), utils, stats, methods, tools
-Description: Imports NONMEM data, and provides utilities for manipulation reporting on it. 
- SVN revision: $Rev$.
-License: Copyright Mango Solutions, Chippenham SN14 0SQ 2008-2010
+Description: Imports NONMEM data, and provides utilities for manipulation reporting on it.
+License: GPL-3
