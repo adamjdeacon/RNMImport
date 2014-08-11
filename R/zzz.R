@@ -41,7 +41,7 @@ initializeVariables <- function(libName = file.path(system.file(), "../"))
 {
 	
 	fileName <- file.path(libName, "RNMImport", "configdata/NONMEM2_Variables.csv" )
-	cat("Full path to configuration file: ", fileName, "\n")
+	cat("Full path to configuration file: \n", fileName, "\n")
 	defaultConfig <- try(read.table(file = fileName, header = TRUE, sep = ",", stringsAsFactors = FALSE), silent = TRUE)
 	if(inherits(defaultConfig, "try-error"))
 	{
