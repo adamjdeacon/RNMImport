@@ -20,7 +20,7 @@
         .extract = length(grep("^\\$DAT", toupper(txt))) > 0 ){
     
     ### import the $DATA section of the control file                              
-    x <- if(.extract) section( txt, "DAT", "", strip = TRUE, 
+    x <- if(.extract) section( txt, "DAT", "", stripout = TRUE, 
                         as.list = TRUE, glue = TRUE) else list( txt )
     
     # internal function, meant to be used within sapply only.  Parses a single line of the $DATA section

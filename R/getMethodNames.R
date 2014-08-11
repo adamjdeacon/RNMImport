@@ -35,7 +35,7 @@ setGeneric("getMethodNames")
 getMethodNames.NMRun <- function(obj, what = c("report", "control" ), problemNum = 1)
 {
     what <- match.arg(what)
-    getMethodNames( getProblem(obj, problemNum = problemNum), what = what )
+    getMethodNames( getProblem(obj, problemNumber = problemNum), what = what )
 }
 
 setMethod("getMethodNames", signature(obj = "NMRun"), getMethodNames.NMRun )

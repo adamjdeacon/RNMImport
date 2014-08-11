@@ -29,7 +29,7 @@ setGeneric("addedData")
 
 addedData.NMRun <-function(obj, problemNum = 1)
 {
-	addedData(getProblem(obj, problemNum = 1))
+	addedData(getProblem(obj, problemNumber = 1))
 }
 
 setMethod("addedData", signature(obj = "NMRun"), addedData.NMRun)

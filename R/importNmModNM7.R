@@ -19,7 +19,7 @@
 	
 	if("PRI" %in% titles)
 	{	
-		logMessage(log = "lowLevelParse", "$PRIOR found \n")
+		logMessage(logName = "lowLevelParse", "$PRIOR found \n")
 		prob$Prior <- .importNmModPrior( contents )
 		if(attr(prob$Prior, "NWPRI") == TRUE)
 			RNMImportStop("$PRIOR NWPRI statement detected.  Importing of this is not supported, so will halt.\n", match.call())
@@ -51,20 +51,20 @@
 	# From now on, simply extract raw text for the other sections
 	
 	### extract the PK model                                                      
-	prob$PK <- section( poppedTxt, "PK", "", as.list = FALSE, strip = TRUE)
+	prob$PK <- section( poppedTxt, "PK", "", as.list = FALSE, stripout = TRUE)
 	
 	### extract the PRED model                                                    
-	prob$PRED <- section(poppedTxt, "PRED", "", as.list = FALSE, strip = TRUE)
+	prob$PRED <- section(poppedTxt, "PRED", "", as.list = FALSE, stripout = TRUE)
 	
 	### extract the Model                                                         
-	prob$Model <- section( poppedTxt, "MOD", "", as.list = FALSE, strip = TRUE)
+	prob$Model <- section( poppedTxt, "MOD", "", as.list = FALSE, stripout = TRUE)
 	
 	### extract the Error statements                                              
-	prob$Error <- section( poppedTxt, "ERR", "", as.list = FALSE, strip = TRUE)
+	prob$Error <- section( poppedTxt, "ERR", "", as.list = FALSE, stripout = TRUE)
 	
 	### extract the Mix statements                                                
 	prob$Mix <- section( poppedTxt, "MIX", "", as.list = FALSE,
-			strip = TRUE, clean = TRUE)
+			stripout = TRUE, clean = TRUE)
 	
 	### extract the EST statements                                                
 	
@@ -72,6 +72,6 @@
 	
 	### extract the COV statements                                                
 	prob$Cov <- section( poppedTxt, "COV", "", glue = TRUE,  
-			as.list = FALSE, strip = TRUE, clean = TRUE)
+			as.list = FALSE, stripout = TRUE, clean = TRUE)
 	prob
 }

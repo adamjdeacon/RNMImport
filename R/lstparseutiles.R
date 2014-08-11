@@ -224,7 +224,7 @@ nmTitle <- function( txt, titleSecLength = 5, maxTitleLines = 2 ){
 	{
 		titleText <- grep("\\*{15,}", txt[1:titleSecLength], value = TRUE )
 		titleText <- gsub( "\\*+", "", titleText )
-		titleText <- stripBlanks( titleText, remove = TRUE)
+		titleText <- stripBlanks( titleText, remove.empty = TRUE)
 		txt <- txt[-(1:titleSecLength)]
 	} 
 	else 
@@ -270,7 +270,7 @@ partitionLstSubproblems <- function(contents)
 	# look for lines of the form PROBLEM NO.:         1     SUBPROBLEM NO.:      1
 	subprobStarts <- grep(contents,	pattern = "PROBLEM NO\\.\\: [[:blank:]]*[0-9][[:blank:]]*SUBPROBLEM NO\\.\\:[[:blank:]]*[0-9]" )
 	msg <- length(subprobStarts) %pst% " subproblems found\n"
-	logMessage(log = "lowLevelParse", msg)
+	logMessage(logName = "lowLevelParse", msg)
 	
 	# now cut along the subproblem starts
 	if(length(subprobStarts) == 1)

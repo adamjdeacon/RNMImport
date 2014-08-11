@@ -9,7 +9,7 @@
 
 .importNmModSub <- function(txt, .extract = length(grep("\\$SUB",txt)) > 0)
 {
-	out <- if(.extract) section( txt, "SUB", "", strip = TRUE, glue = TRUE, as.list = FALSE ) else txt
+	out <- if(.extract) section( txt, "SUB", "", stripout = TRUE, glue = TRUE, as.list = FALSE ) else txt
 	# extract "TOL= X"
 	tol <- equalExpressionPop( out, "TOL", inPlace = TRUE )
 	subroutines <- equalExpressionPop( out, "SUB", shortcut = TRUE, inPlace = TRUE)

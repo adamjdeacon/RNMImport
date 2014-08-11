@@ -272,7 +272,7 @@ setGeneric("getSimInfo")
 
 getSimInfo.NMRun <- function(obj, problemNum = 1, addRawInfo = TRUE)
 {
-	getSimInfo(getProblem(obj, problemNum = problemNum), addRawInfo = addRawInfo)
+	getSimInfo(getProblem(obj, problemNumber = problemNum), addRawInfo = addRawInfo)
 }
 
 setMethod("getSimInfo", signature(obj = "NMRun"), getSimInfo.NMRun)

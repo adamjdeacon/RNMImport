@@ -33,10 +33,10 @@
 	prob$Script <- fortranPop(poppedTxt, inPlace = TRUE)
 	
 	# now extract the $PROB statement   
-    probstat <- section(poppedTxt, "PRO", "", strip = TRUE, as.list = FALSE, glue = TRUE, clean = TRUE)
+    probstat <- section(poppedTxt, "PRO", "", stripout = TRUE, as.list = FALSE, glue = TRUE, clean = TRUE)
     if (length(probstat)<1) {
         # maybe $PROBLEM ; XXXXX
-        probstat = section(contents, "PRO", "", strip = TRUE, as.list = FALSE, glue = TRUE, clean = TRUE)
+        probstat = section(contents, "PRO", "", stripout = TRUE, as.list = FALSE, glue = TRUE, clean = TRUE)
     }
     if (length(probstat)<1) {
         # if probstat is character(0), the dmpSummary will fail
@@ -57,28 +57,28 @@
 	# From now on, simply extract raw text for the other sections
 	
 	### extract the PK model                                                      
-	prob$PK <- section( poppedTxt, "PK", "", as.list = FALSE, strip = TRUE)
+	prob$PK <- section( poppedTxt, "PK", "", as.list = FALSE, stripout = TRUE)
 	
 	### extract the PRED model                                                    
-	prob$PRED <- section(poppedTxt, "PRED", "", as.list = FALSE, strip = TRUE)
+	prob$PRED <- section(poppedTxt, "PRED", "", as.list = FALSE, stripout = TRUE)
 	
 	### extract the Model                                                         
-	prob$Model <- section( poppedTxt, "MOD", "", as.list = FALSE, strip = TRUE)
+	prob$Model <- section( poppedTxt, "MOD", "", as.list = FALSE, stripout = TRUE)
 	
 	### extract the Error statements                                              
-	prob$Error <- section( poppedTxt, "ERR", "", as.list = FALSE, strip = TRUE)
+	prob$Error <- section( poppedTxt, "ERR", "", as.list = FALSE, stripout = TRUE)
 	
 	### extract the Mix statements                                                
 	prob$Mix <- section( poppedTxt, "MIX", "", as.list = FALSE,
-			strip = TRUE, clean = TRUE)
+			stripout = TRUE, clean = TRUE)
 	
 	### extract the EST statements                                                
 	prob$Estimates <- section( poppedTxt, "EST", "", glue = TRUE, 
-			as.list = FALSE, strip = TRUE, clean = TRUE)
+			as.list = FALSE, stripout = TRUE, clean = TRUE)
 	
 	### extract the COV statements                                                
 	prob$Cov <- section( poppedTxt, "COV", "", glue = TRUE,  
-			as.list = FALSE, strip = TRUE, clean = TRUE)
+			as.list = FALSE, stripout = TRUE, clean = TRUE)
 	prob
 }
 

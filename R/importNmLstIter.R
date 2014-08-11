@@ -46,7 +46,7 @@
 		cumev  <- colonPop( x, "CUMULATIVE NO. OF FUNC. EVALS.", numeric = TRUE, inPlace = TRUE)
 		evals  <- colonPop( x, "NO\\. OF FUNC\\. EVALS\\."     , numeric = TRUE, inPlace = TRUE)    
 		
-		x <- stripBlanks( x , remove = TRUE)
+		x <- stripBlanks( x , remove.empty = TRUE)
 		parStart <- grep( "^PARAMETER:", x )
 		graStart <- grep( "^GRADIENT:"  ,x )
 		# obtain number of parameter values

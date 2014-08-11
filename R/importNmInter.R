@@ -32,7 +32,7 @@ importNmInter <- function( fileName, path = NULL)
 	# read the file
 	fileName <- .getFile(fileName, processPath(path))
 	txt <- scanFile(fileName)
-	logMessage(log = "detailedReport", paste("Attempting to read ITER file:", fileName, "\n"))
+	logMessage(logName = "detailedReport", paste("Attempting to read ITER file:", fileName, "\n"))
 	if(is.null(txt))
 	{
 		RNMImportWarning(paste("Unable to import the inter file:", fileName, "\n"), call = match.call())

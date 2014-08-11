@@ -69,7 +69,7 @@
 	if( is.null( txt)) return(NULL)
 	
 	### import the OMEGA declarations                                             
-	omegas <- if(.extract) section( txt, component, "", strip = TRUE ) else txt
+	omegas <- if(.extract) section( txt, component, "", stripout = TRUE ) else txt
 	
 	### each $OMEGA is a separate block
 	# this is somewhat complex because omegas can be specified in different ways

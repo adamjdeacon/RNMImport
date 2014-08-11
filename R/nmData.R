@@ -198,7 +198,7 @@ nmData.NMSim<- function(obj, dataTypes = c("input", "output") ,
 	# the number of rows of the simulated output data set
 
 	if(stackInput)
-		inData <- do.call(cbind.data.frame, lapply(inData, base:::rep, length(subProblemNum)))
+		inData <- do.call(cbind.data.frame, lapply(inData, base::rep, length(subProblemNum)))
 	if(nrow(inData) != nrow(outData))
 		RNMImportStop("Amount of simulated output data selected is not compatible with the amount of input data, cannot bind into a single data.frame\n",
 				call = match.call())

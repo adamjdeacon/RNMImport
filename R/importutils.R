@@ -57,7 +57,7 @@ scanFile <- function( file, empty.rx = "^[[:space:]]*$" )
 		return(NULL)
 	}
 	contents <- scan( file, sep = "\n", what = "character", 
-			blank = TRUE, multi = FALSE, quiet = TRUE)
+			blank.lines.skip = TRUE, multi.line = FALSE, quiet = TRUE)
 	# remove whitespace in the file content and return
 	contents <- negGrep( empty.rx , contents, value = TRUE )
 	if( length(contents) > 0) contents else NULL
@@ -95,7 +95,7 @@ scanFile <- function( file, empty.rx = "^[[:space:]]*$" )
 #' @author fgochez
 
 dirname.abs <- function(x){
-	dirname( tools:::file_path_as_absolute(x) )
+	dirname( tools::file_path_as_absolute(x) )
 }
 
 #' Checks whether or not a string is a full path name
@@ -215,9 +215,9 @@ hasExtension <- function(fileName, extensions)
 #' @author jjames
 .lookFor <- function(contStates=names(obj@controlStatements), subr=NULL, pri='^ +[$](PRIOR|PRI)|PRIOR='){
 	test2 <- FALSE
-	test1 <- any(regexpr(pri, contStates, ignore=TRUE)>0)
+	test1 <- any(regexpr(pri, contStates, ignore.case=TRUE)>0)
 	if(length(subr)>0){
-		test2 <- any(regexpr(pri, subr, ignore=TRUE)>0)
+		test2 <- any(regexpr(pri, subr, ignore.case=TRUE)>0)
 	}
 	test1 || test2
 }

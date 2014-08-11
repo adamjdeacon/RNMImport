@@ -143,7 +143,7 @@ importNmReport.NM7 <- function( content, textReport = FALSE )
 		{	
 		#	RNMImportStop("Simulations + fitting problems for NONMEM 7 not yet imported")
 			if(textReport)
-				logMessage(log = "stdReport", "Appears to be a simulation+modelling problem\n")
+				logMessage(logName = "stdReport", "Appears to be a simulation+modelling problem\n")
 			problemResults[[i]] <- importNmLstSimModel.NM7(contents=currentProb, numSub=NA)
 		}
 		# only data simulation, no fit step
@@ -162,7 +162,7 @@ importNmReport.NM7 <- function( content, textReport = FALSE )
 		else
 		{
 			if(textReport)
-				logMessage(log = "stdReport", "Appears to be a standard model\n")
+				logMessage(logName = "stdReport", "Appears to be a standard model\n")
 			problemResults[[i]] <- .importNmLstBasicProb.NM7(currentProb)
 		}
 	}

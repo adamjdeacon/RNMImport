@@ -26,7 +26,7 @@
 	
 	
 	### import the $INPUT section and collapse it into one line                   
-	inputSec <- if( .extract ) section( txt, "INP", "", strip = TRUE, 
+	inputSec <- if( .extract ) section( txt, "INP", "", stripout = TRUE, 
 						remove.comments = TRUE, as.list = FALSE, glue = TRUE ) else txt
 	
 	### split by spaces                                                           

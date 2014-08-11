@@ -226,7 +226,7 @@ importNmLstSimDataGen <- function(contents)
 			# check if it is SIMONLY, if so, we're not interested in the list file
 			if(probContent$Sim["simOnly"] == "TRUE")
 			{
-				logMessage(log = "detailedReport", "Sim only report file, contents will be disregarded\n")
+				logMessage(logName = "detailedReport", "Sim only report file, contents will be disregarded\n")
 				problems[[i]] <- character(0)
 			}
 			else
@@ -273,7 +273,7 @@ importNmReport <- function( fileName, path = NULL, controlStatements = NULL, tex
 	if(!is.null(controlStatements))
 		return(.importNmLstWithCtl(.getFile(fileName, path ), controlStatements) )
 	
-	logMessage(log = "highLevelParse", "importNmReport: No control statements found...\n")
+	logMessage(logName = "highLevelParse", "importNmReport: No control statements found...\n")
 	content <- scanFile(.getFile(fileName, path) )	
 	
 	versionInfo <- nmVersion(content)
@@ -309,7 +309,7 @@ importNmReport <- function( fileName, path = NULL, controlStatements = NULL, tex
 		if(simStep & objFun)
 		{	
 			if(textReport)
-				logMessage(log = "stdReport", "Appears to be a simulation+modelling problem\n")
+				logMessage(logName = "stdReport", "Appears to be a simulation+modelling problem\n")
 			problemResults[[i]] <- importNmLstSimModel(currentProb, NA)
 		}
 		# only data simulation, no fit step
@@ -320,7 +320,7 @@ importNmReport <- function( fileName, path = NULL, controlStatements = NULL, tex
 		else
 		{
 			if(textReport)
-				logMessage(log = "stdReport", "Appears to be a standard model\n")
+				logMessage(logName = "stdReport", "Appears to be a standard model\n")
 			problemResults[[i]] <- .importNmLstBasicProb(currentProb)
 			
 		}
@@ -347,7 +347,7 @@ cleanReportContents <- function(content)
 	startLine <- grep("1NONLINEAR MIXED EFFECTS MODEL", content)
 	if(length(startLine))
 	{
-		logMessage(log = "lowLevelParse", 
+		logMessage(logName = "lowLevelParse", 
 				paste("Discarding report file lines up until line:", min(startLine) - 1,"\n"))
 		if(min(startLine) > 1)
 			content <- tail(content, -(min(startLine) - 1))
@@ -358,7 +358,7 @@ cleanReportContents <- function(content)
 	
 	if (length(grepFinal)) 
 	{
-		logMessage(log = "lowLevelParse", "Stripping out the final lines from " %pst% (min(grepFinal) - 1))
+		logMessage(logName = "lowLevelParse", "Stripping out the final lines from " %pst% (min(grepFinal) - 1))
 		content <- content[1:(min(grepFinal)-1)]
 	}
 	

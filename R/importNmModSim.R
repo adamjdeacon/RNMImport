@@ -19,7 +19,7 @@
 	if(!is.null(file))
 		txt <- scanFile(file)
 	### extract the SIM section                                                   
-	txt <- if(.extract) section( txt, "SIM", "", strip = TRUE, as.list = FALSE) else txt
+	txt <- if(.extract) section( txt, "SIM", "", stripout = TRUE, as.list = FALSE) else txt
 	
 	# we wish to store this raw statement for later use
 	

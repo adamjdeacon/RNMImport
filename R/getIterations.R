@@ -29,7 +29,7 @@ setGeneric("getIterations")
 
 getIterations.NMRun <- function(obj, problemNum = 1)
 {
-	return(getIterations(getProblem(obj, problemNum = problemNum)))
+	return(getIterations(getProblem(obj, problemNumber = problemNum)))
 }
 
 setMethod("getIterations", signature(obj = "NMRun"), getIterations.NMRun)

@@ -20,7 +20,7 @@
 {
 	logMessage(logName = "highLevelParse", "Entering .importNmModTables\n")
 	### extract the TAB sections from the character vector
-	tabSec <- if( .extract ) section( txt , "TAB", "", strip = TRUE, glue = TRUE ) else txt
+	tabSec <- if( .extract ) section( txt , "TAB", "", stripout = TRUE, glue = TRUE ) else txt
 	if( is.null(tabSec) || length(tabSec) == 0 ) return( NULL )
 	
 	path <- if( !is.null(file) ) dirname.abs(file)

@@ -55,7 +55,7 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
         os <- options(stringsAsFactors=FALSE)
         on.exit(options(os))
 	# get the FULL paths to both files and store them
-	fullConFilePath <- tools:::file_path_as_absolute(.getFile(conFile, path))
+	fullConFilePath <- tools::file_path_as_absolute(.getFile(conFile, path))
 	conFile <- basename(conFile)
 	
 	if(!hasExtension(conFile, getNmFileExtensions("control")))
@@ -97,7 +97,7 @@ importNm <- function(conFile, reportFile = NULL, path = NULL, dropInputColumns =
 		reportFile <- basename(reportFile)
 		path <- dirname(fullConFilePath)
 	}
-	fullLstFilePath <- tools:::file_path_as_absolute(.getFile(reportFile, path))
+	fullLstFilePath <- tools::file_path_as_absolute(.getFile(reportFile, path))
 	# read the control file contents
 	
 	# read in the list file contents.  Note that they should only be omitted in the case of a single SIMONLY run
