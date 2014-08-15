@@ -6,7 +6,7 @@
 #' @param onlyDiag [L,1] Logical flag. If TRUE, will only obtain the diagonal of the matrix
 #' @return A matrix with the contents of the matrix described by txt 
 #' @note Based on code by R. Francois
-#' @author fgochez
+#' @author Mango Solutions
 #' @export
 .importNmLstMatrix <- function( 
 		txt,                  #@ [C+] text in which to read the matrices

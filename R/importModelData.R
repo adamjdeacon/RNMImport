@@ -1,5 +1,3 @@
-# $Rev$
-# $LastChangedDate$
 
 #' Imports the input data used in an individual basic NONMEM model based on its $INPUT
 #' and $DATA statements
@@ -10,7 +8,7 @@
 #' @param trim Currently unused
 #' @param path path where the data files are located
 #' @return  A data.frame with the data inside the file
-#' @author fgochez
+#' @author Mango Solutions
 
 importModelData <- function(
 		dataStatement, inputStatement, dropCols = TRUE, trim=FALSE,	path = NULL, duplicateAliased = TRUE)

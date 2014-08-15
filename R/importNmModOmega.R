@@ -38,22 +38,7 @@
 	out
 }
 
-##################################################################
-# .importNmModOmega
-# Reads the "omegas" or "sigmas" from the control file 
-# Author: J James, R Francois, F. Gochez
-# Added: Jan 5 2009
-# Last modified: Jan 8 2009
-# parameters :
-# @ txt [C,+] - A character vector holding the text to pase
-# @ guessNames [L,1] - Logical flag.  If TRUE, will return substrings of the full title names found
-# @ component [C,1] - Which bit to extract, OMEGAs or SIGMAs
-# @ file [C,1] - File from which to scan txt, if desired
-# Matrix of OMEGA initial values  
-# See the NONMEM documentation, parts IV and VIII for a description of some of the ways that $OMEGA can be
-# specified
-##################################################################
-	
+
 .importNmModOmega <- function(
 		txt = NULL, 
 		guessNames = TRUE, 

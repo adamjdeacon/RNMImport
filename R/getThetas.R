@@ -1,14 +1,4 @@
-# SVN revision: $Rev$
-# Date of last change: $LastChangedDate$
-# Last changed by: $LastChangedBy$
-# 
-# Original author: fgochez
-# Copyright Mango Solutions, Chippenham, UK
-###############################################################################
 
-# TODO: reduce amount of copy-paste code through refactoring
-
-# parameter-related items that can be extracted
 
 PARAMITEMS <- c("final", "initial", "stderrors")
 

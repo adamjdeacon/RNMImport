@@ -4,7 +4,7 @@
 #' @param call 
 #' @title Generate a warning
 #' @return None
-#' @author fgochez
+#' @author Mango Solutions
 #' @keywords error
 #' @export
 
@@ -22,7 +22,7 @@ RNMImportWarning <- function(msg = "Warning!\n", call = NULL)
 #' @param msg Message 
 #' @param call (optional).  Call information for function that generated exception (i.e. from match.call)
 #' @return None
-#' @author fgochez
+#' @author Mango Solutions
 #' @keywords error
 #' @export
 
@@ -44,16 +44,6 @@ RNMImportStopifnot <-function(condition, msg = NULL, call = NULL)
 	RNMImportStop(msg, call = call)
 }
 
-##################################################################
-# assertClass
-# Checks that an object inherits from some class, generates an error if it does not
-# Author: F. Gochez
-# Added: Dec 25 2008
-# Last modified: Dec 25 2008
-# parameters :
-# @ object - The object whose class you wish to check
-# returns - nothing
-##################################################################
 
 assertClass <- function(object, targetClass)
 {

@@ -1,5 +1,3 @@
-# $Rev$
-# $LastChangedDate$
 
 #' Obtain the derived/user-added variables from a NONMEM problem object
 #' @title Get added data
@@ -17,8 +15,6 @@
 #' 	y <- addDerivedCategorical(y, "TIME", breaks = 6)
 #' 	print(addedData(y))
 #' @export 
-
-# Individual author: F. Gochez
 
 addedData <- function(obj, ...)
 {

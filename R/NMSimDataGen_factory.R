@@ -1,5 +1,3 @@
-# $Rev$
-# $LastChangedDate$
 
 NMSimDataGen <- function(controlStatements, path, reportContents = NULL, 
 		versionInfo = c("major" = "VI", "minor" = 0))

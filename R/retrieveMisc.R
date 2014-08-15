@@ -1,10 +1,3 @@
-# SVN revision: $Rev$
-# Date of last change: $LastChangedDate$
-# Last changed by: $LastChangedBy: fgochez $
-# 
-# Original author: fgochez
-# Copyright Mango Solutions, Chippenham, UK
-###############################################################################
 
 #' Retrieves the variance-covariance matrix of the estimators and optionally
 #'  the correlation and inverse correlation matrices of the selected NONMEM run
@@ -17,9 +10,7 @@
 #' @param ... 
 #' @return A matrix if just the covariance matrix is required, a list of matrices otherwise
 #' @author Mango Solutions
-#' @nord
-
-#  Author: F Gochez
+#'
 
 getEstimateCov <- function(obj, corMatrix = FALSE, invCorMatrix = FALSE, pdMatrix = FALSE, ...)
 {
@@ -88,7 +79,6 @@ setMethod("getEstimateCov", signature(obj = "NMBasicModelNM7"), getEstimateCov.N
 #' selected subproblem number when only a single method is chosen, or a matrix with a column for each method and row for 
 #' each sub-problem if multiple methods are selected. If x is of class \code{NMRun}, the output will vary according to the problem selected (as above). 
 #' @author Mango Solutions
-#' @note The parameters \code{method} and \code{subProblem} will be restricted to valid ranges suitable for the given object 
 #' @keywords methods
 #' @examples
 #' \dontrun{
@@ -180,9 +170,9 @@ setMethod("getObjective", signature(obj="NMSimModelNM7"), getObjective.NMSimMode
 #' @param run Object of class NMRun
 #' @title Retrieve file information 
 #' @return A data.frame with 2 rows, 1 describing the report file and the other the control file
-#' @author fgochez
+#' @author Mango Solutions
 #' @keywords utility
-#' @nord
+#'
 
 getFileinfo <- function(run)
 {
@@ -199,9 +189,9 @@ getControltext <- function(run) run@controlText
 #' @param ... Various arguments specific to methods
 #' @title Extract list of parsed control statement
 #' @return A list with the parsed control statements (e.g. an actual matrix for the Thetas, etc.,
-#' @author fgochez
+#' @author Mango Solutions
 #' @export
-#' @nord
+#' 
 
 getControlStatements <- function(obj, ...)
 {
@@ -229,9 +219,9 @@ setMethod("getControlStatements", signature(obj = "NMProblem"), getControlStatem
 #' @param obj NMProblem or NMRun
 #' @return A named character vector with entries "major" and "minor", corresponding to the major and minor NONMEM 
 #' version
-#' @author fgochez
+#' @author Mango Solutions
 #' @export
-#' @nord
+#'
 
 getNmVersion <- function(obj)
 {
@@ -258,10 +248,10 @@ setMethod("getNmVersion", signature(obj = "NMProblem"), getNmVersion.NMRunProb)
 #' @return A numeric vector with 3 entries : numSimulations, seed1, and seed2.  These are self-explanatory.
 #' If addRawInfo is TRUE, the returned result will have an attribute named "rawStatement" that will have the text
 #' of the control stream $SIM field.
-#' @author fgochez
+#' @author Mango Solutions
 #' @keywords classes, manip, utilities
 #' @export
-#' @nord
+#'
 
 getSimInfo <- function(obj, problemNum = 1, addRawInfo = TRUE)
 {

@@ -1,9 +1,4 @@
-# $LastChangedDate$
-# $LastChangedBy$
-# $Rev$
-# 
-# Author: fgochez
-###############################################################################
+
 
 #' Imports a set of NONMEM 7 iterations based on NONMEM 7 control file directives.
 #' These directives can be found next to each $EST specification (e.g. FILE=...).  A list of data.frames of iterations
@@ -18,8 +13,8 @@
 #' @title Import NONMEM7 parameter iterations from .EXT files
 #' @return A list of data.frames of iteration information.  Each data.frame
 #' will have been loaded via \code{importNmTable}
-#' @author fgochez
-#' @nord
+#' @author Mango Solutions
+#' 
 
 importNm7Iterations <- function( files = NULL, noTitles = NULL, noLabels = NULL, methods = NULL, path = "." )
 {

@@ -1,5 +1,3 @@
-# $Rev$
-# $LastChangedDate$ 
 
 
 #' Retrieves data stored in a NONMEM object by category of data type, e.g. covariates, 
@@ -23,8 +21,6 @@
 #'      x.covariates <- nmDatabyVarType(x, varTypes = "Covariate")
 #'      print(head(x.covariates))
 #' }
-
-# Inidividual author: F.Gochez
 
 nmDatabyVarType <- function(obj, varTypes, returnMode = c("singleDF", "DFList"), ... )
 {

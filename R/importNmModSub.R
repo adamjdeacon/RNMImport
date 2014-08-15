@@ -4,7 +4,7 @@
 #' @param .extract 
 #' @title Parse $SUBROUTINE statement
 #' @return A character vector with the names of the subroutines used (ADVAN1, etc.)
-#' @author fgochez
+#' @author Mango Solutions
 #' @note Based on code originally by R Francois
 
 .importNmModSub <- function(txt, .extract = length(grep("\\$SUB",txt)) > 0)

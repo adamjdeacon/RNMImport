@@ -1,10 +1,3 @@
-# SVN revision: $Rev$
-# Date of last change: $LastChangedDate$
-# Last changed by: $LastChangedBy$
-# 
-# Original author: fgochez
-# Copyright Mango Solutions, Chippenham, UK
-###############################################################################
 
 
 #' Parses the $INPUT section of a NONMEM control file
@@ -16,9 +9,8 @@
 #' @return a 2 column matrix mapping the variables in the input
 #' statement with the variables used by NONMEM, which can be different by setting
 #' aliases, e.g. ID=SUBJ in the $INPUT statement.  Also some may be dropped
-#' @note Based on code by R Francois and others
-#' @author fgochez
-#' @nord
+#' @author Mango Solutions
+#' 
 
 
 .importNmModInput <- function(txt, .extract = length(grep("\\$INPUT", toupper(txt))) > 0)

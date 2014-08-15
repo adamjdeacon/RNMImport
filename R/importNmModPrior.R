@@ -1,8 +1,4 @@
-###################################################################
-# $Rev$
-# $LastChangedDate$
-# $LastChangedBy: $
-###############################################################################
+
 
 #' Parses the $PRIOR statement of NONMEM 7 control files.  The parsed statement is turned into a named vector
 #' @title Parse PRIOR statement
@@ -11,7 +7,7 @@
 #' @param fileName  
 #' @return A named vector with entries for the prior : nEta, nThp, nEtp, npExp, nTheta.  There will also be an
 #' NWPRI attribute which will be true or false depending on whether or not NWPRI is present
-#' @author fgochez
+#' @author Mango Solutions
 #' @export
 
 .importNmModPrior <- function(

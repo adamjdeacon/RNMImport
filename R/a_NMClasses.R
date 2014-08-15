@@ -1,9 +1,3 @@
-# $LastChangedDate$
-# $LastChangedBy$
-# $Rev$
-# 
-# Author: fgochez
-###############################################################################
 
 
 validity.NMProblem <- function(object)
@@ -11,13 +5,15 @@ validity.NMProblem <- function(object)
 	TRUE
 }
 
+#' An S4 class of NMProblem
+#'
 #' @slot problemStatement The contents of the $PROB statement
 #' @slot controlStatements A list of parsed sections of the control file
 #' @slot reportStatements A list of parsed sections of the output report file 
 #' @slot inputData A data.frame of the input data, if available (otherwise an empty data.frame) 
 #' @slot outputData Aggregation of the output data
 #' @slot additionalVars A data.frame of additional variables created by the user
-#' @author fgochez 
+#'  
 
 setClass("NMProblem", representation("VIRTUAL", 
 				problemStatement = "character",
@@ -52,6 +48,7 @@ validity.NMBasicModel <- function(object)
 }
 
 #' This class holds the information for a standard single NONMEM problem  
+#' 
 #' @slot parameterIterations A data.frame of the iteration of each parameter estimate, if available
 #' @slot objectiveFinal The numeric value of the objective function minimum
 #' @slot thetaFinal Final estimates of the "thetas", together with the standard errors, if available (as a matrix with 1 or 2 rows)
@@ -59,7 +56,7 @@ validity.NMBasicModel <- function(object)
 #' @slot omegaFinal Final estimates of the "omegas", together with the standard errors, if available (as an array  with 1 or 2 matrices) 
 #' @slot parameterCovMatrix The variance-covariance of the parameter estimators, if available
 #' @slot minInfo A string describing the status of the objective function-minimization
-#' @author fgochez
+#' 
 
 setClass(
 		"NMBasicModel", 
@@ -123,13 +120,14 @@ validity.NMSimDataGen <- function(object)
 
 #' This class handles NONMEM models that have a $SIM statement but only simulate
 #' data without fitting a model
+#' 
 #' @slot numSimulations Number of simulations/subproblems 
 #' @slot seeds Seeds used for the random number generator
 #' @slot problemStatement $PROBLEM statement 
 #' @slot thetaInitial Fixed/initial theta values used to generate data
 #' @slot omegaInitial Fixed/initial omega values used to generate data
 #' @slot sigmaInitial Fixed/initial sigma values used to generate data
-#' @author fgochez
+#' 
 
 setClass(
 		"NMSimDataGen", 
@@ -151,6 +149,7 @@ validity.NMSimModel <- function(object)
 
 #' This class holds the results of NONMEM problems that both simulate data and fit the model during each simulation
 #' (that is, models with a $SIM statement in the control file but no "ONLY" keyword).
+#' 
 #' @slot numSimulations Number of simulations generated
 #' @slot objectiveFinal Vector of final values of the objective functions
 #' @slot thetaFinal Final estimates of the "thetas", stored as a matrix with one row for each simulation
@@ -160,8 +159,7 @@ validity.NMSimModel <- function(object)
 #' @slot omegaInitial Initial values of omegas
 #' @slot sigmaInitial Initial values of sigmas
 #' @slot seeds Values of seeds used for random-number generation
-#' @author fgochez
-#' @export
+#' 
 
 setClass("NMSimModel", representation("NMProblem", numSimulations = "numeric" ,
 				thetaFinal = "matrix", objectiveFinal = "numeric",
@@ -199,6 +197,7 @@ setOldClass("Date")
 #' This is the basic class for handling a standard NONMEM run.  In essence, it holds
 #' several inidividual problems which may be of type NMBasicModel, NMSimModel, and NMSimDataGen.
 #' It also holds the control file and list output file text
+#' 
 #' @slot controlText [C,+] Text of the control file, without comments
 #' @slot controlComments [C,1] Comments of each line of the control file
 #' @slot controlFileInfo [data.frame] Information about the control file 
@@ -206,7 +205,7 @@ setOldClass("Date")
 #' @slot numProblems [N,1] - Number of problems in the run
 #' @slot problems [list] - List of the actual problem results 
 #' @slot reportText Text of the lst output file
-#' @author fgochez
+#' 
 
 setClass(
 		"NMRun", 
@@ -238,6 +237,7 @@ validity.NMSimModelNM7 <- function(object)
 
 #' This class holds the results of NONMEM problems that both simulate data and fit the model during each simulation
 #' (that is, models with a $SIM statement in the control file but no "ONLY" keyword).
+#' 
 #' @slot numSimulations Number of simulations generated
 #' @slot objectiveFinal Vector of final values of the objective functions
 #' @slot thetaFinal Final estimates of the "thetas", stored as a matrix with one row for each simulation
@@ -247,8 +247,7 @@ validity.NMSimModelNM7 <- function(object)
 #' @slot omegaInitial Initial values of omegas
 #' @slot sigmaInitial Initial values of sigmas
 #' @slot seeds Values of seeds used for random-number generation
-#' @author fgochez
-#' @export
+#' 
 
 setClass("NMSimModelNM7", representation("NMProblem", numSimulations = "numeric" ,
 				thetaFinal = "array", objectiveFinal = "matrix",

@@ -1,12 +1,10 @@
-# Description: A collection of functions for manipulating logs
-###############################################################################
 
 #' Writes a character vector to some given log, if that log is open
 #' @param text Character vector to output
 #' @param logName Name of the log.  Should be one of the available logs
 #' @title Message logging
 #' @return None
-#' @author fgochez
+#' @author Mango Solutions
 #' @keywords IO, debugging, utilies
 
 logMessage <- function(text, logName)
@@ -20,7 +18,7 @@ logMessage <- function(text, logName)
 #' @param conn Connection
 #' @title Set log connection
 #' @return Nothing
-#' @author fgochez
+#' @author Mango Solutions
 #' @keywords IO, debugging, utilies
 
 setLogConnection <- function(logName, conn)
@@ -37,7 +35,7 @@ setLogConnection <- function(logName, conn)
 #' but will still disassociate the log with that connection. This is meant to be used with unclosable connections such as stdout
 #' @title Close log connection
 #' @return Nothing
-#' @author fgochez
+#' @author Mango Solutions
 #' @keywords IO
 
 closeLogConnection <- function(logName, allowFail = TRUE)
@@ -62,7 +60,7 @@ closeLogConnection <- function(logName, allowFail = TRUE)
 #' @param fileName Name of the file (need not exist)
 #' @title Set log connection to a file
 #' @return None
-#' @author fgochez
+#' @author Mango Solutions
 #' @keywords IO
 
 setLogFile <- function(logName, fileName)
@@ -75,7 +73,7 @@ setLogFile <- function(logName, fileName)
 #' @param logName The name of the log
 #' @title Get log's connection
 #' @return Connection associated to a log
-#' @author fgochez
+#' @author Mango Solutions
 #' @keywords utilities
 
 logConnection <- function(logName)
@@ -88,7 +86,7 @@ logConnection <- function(logName)
 #' Retrieves the names of all available logs
 #' @title Get all available logs
 #' @return Character vector of all available logs
-#' @author fgochez
+#' @author Mango Solutions
 #' @keywords utilities, programming
 
 availableLogs <- function()

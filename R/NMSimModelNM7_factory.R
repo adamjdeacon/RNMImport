@@ -1,5 +1,3 @@
-# $Rev$
-# $LastChangedDate$
 
 #' Constructor for the NMSimModelNM7 class
 #' @title create NONMEM 7 simulation+fitting class
@@ -7,7 +5,7 @@
 #' @param path Path where the run is located
 #' @param reportContents Parsed contents of the report file
 #' @return Newly constructed object of class NMSimModelNM7
-#' @author fgochez
+#' @author Mango Solutions
 
 NMSimModelNM7 <- function(controlStatements, path, reportContents, versionInfo = c("major" = "VII", "minor" = 1))
 {

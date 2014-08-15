@@ -1,15 +1,14 @@
-# $Rev$
-# $LastChangedDate$
+
 
 #' Parses/ Imports the "TABLE" statement information from a NONMEM control file
 #' @param txt [C,1] - Contents of a control file OR the contents of the $TABLE statement itself
 #' @param .extract Logical flag.  Is this an actual
 #' @param file Optional.  File from where txt originates
-#' @title 
+#' @title importNmModTables
 #' @return A data.frame of descriptor information about each line in the $TABLE statement, including
 #' which columns are to be written, whether there is a header or not, etc.
-#' @author fgochez
-#' @notes Based on code by R Francois
+#' @author Mango Solutions
+#' 
 
 .importNmModTables <- function
 (

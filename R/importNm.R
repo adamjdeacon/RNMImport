@@ -1,10 +1,4 @@
-# SVN revision: $Rev$
-# Date of last change: $LastChangedDate$
-# Last changed by: $LastChangedBy: fgochez $
-# 
-# Original author: fgochez
-# Copyright Mango Solutions, Chippenham, UK
-###############################################################################
+
 
 #' Imports a NONMEM run based on a control file and an output list file.  This function assumes that 
 #' all of the input and output data tables are in the same directory as the control file, though the input and output

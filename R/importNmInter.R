@@ -1,8 +1,8 @@
 
 #' purely internal function for reading the various "sections" of the iter file 
 #' @param iterSec An element of the list returned by sectionLst  
-#' @return ??
-#' @author fgochez
+#' @return Vector
+#' @author Mango Solutions
 
 .readIterSection <- function(x)
 {
@@ -23,7 +23,7 @@
 #' @param path [C,1] Path that holds the file 
 #' @return A data.frame with the iteration information
 #' @note Based on code by R. Pugh,J.James, and R.Francois
-#' @author fgochez
+#' @author Mango Solutions
 #' @export
 
 importNmInter <- function( fileName, path = NULL)

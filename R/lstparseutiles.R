@@ -1,13 +1,10 @@
-# $LastChangedDate$
-# $LastChangedBy$
-# $Rev$
 
 #' Splits a single block of #METH statements into "sections".  This is similar to sectionLst, but only for a
 #' single block delimeted by #METH in NONMEM 7
 #' @title Split method text block into sections
 #' @param [C,+] methodContents Line of text in a #METH statement (includes the #METH line)
 #' @return [L, +] a named list of split text, with names corresponding to section names
-#' @author fgochez
+#' @author Mango Solutions
 
 sectionMethodBlock <- function(methodContents)
 {
@@ -74,7 +71,7 @@ sectionMethodBlock <- function(methodContents)
 #' @param recurse Should the function be called recursively?  
 #' @note Based on code by R. Francois
 #' @return A (partially) named list with relevant sections of the lst file.
-#' @author fgochez
+#' @author Mango Solutions
 
 sectionLst <- function( fileContents, sep, 
 		keep.all = FALSE, recurse = TRUE )
@@ -175,7 +172,7 @@ sectionLst <- function( fileContents, sep,
 #' @param maxTitleLines [N,1]   
 #' @return a list with two elements: "text" and "title".  The latter is the title of the section 
 #' (e.g. "FINAL PARAMETER ESTIMATE"), the former is the text content without the titles
-#' @author fgochez
+#' @author Mango Solutions
 
 # Example section text:
 #
@@ -241,7 +238,7 @@ nmTitle <- function( txt, titleSecLength = 5, maxTitleLines = 2 ){
 #' Obtains the NONMEM version information from a list file
 #' @param lstContents [C,+] Contents of the lst file
 #' @return A list with two elements: the version and the level
-#' @author fgochez
+#' @author Mango Solutions
 
 nmVersion <- function(lstContents)
 {
@@ -259,10 +256,10 @@ nmVersion <- function(lstContents)
 
 #' 
 #' @param contents A character vector of strings holding the lines of subproblem information (ONLY!) for one simulation problem
-#' @title 
-#' @return 
-#' @author fgochez
-#' @keywords
+#' @title partitionLstSubproblems
+#' @return list
+#' @author Mango Solutions
+#'
 
 partitionLstSubproblems <- function(contents)
 {
@@ -282,7 +279,7 @@ partitionLstSubproblems <- function(contents)
 #' Obtain the minimum value of the the objective function from the correct element of the list returned by sectionLst
 #' @param item An element of the list returned by sectionLst
 #' @return NULL if item is NULL, minimum value of the objective function otherwise
-#' @author fgochez
+#' @author Mango Solutions
 
 # TODO: robustify this!
 
@@ -295,7 +292,7 @@ partitionLstSubproblems <- function(contents)
 #' Retrieves the NONMEM variable names in a set of strings
 #' @param txt vector of strings
 #' @return A character vector of the NONMEM variable names
-#' @author fgochez
+#' @author Mango Solutions
 
 .nmVariableNames <- function( txt )
 {
@@ -312,7 +309,7 @@ partitionLstSubproblems <- function(contents)
 #' @param lstProblemContents A character vector of lines of text from a NONMEM 7 report file  
 #' @return A list of character vectors of split text.  Each element of the list will also have an attribute
 #' called "method.name".  This will denote the actual name of the method used for that chunk. 
-#' @author fgochez
+#' @author Mango Solutions
 
 partitionMethods <- function(lstProblemContents)
 {

@@ -1,10 +1,4 @@
-# SVN revision: $Rev$
-# Date of last change: $LastChangedDate$
-# Last changed by: $LastChangedBy$
-# 
-# Original author: fgochez
-# Copyright Mango Solutions, Chippenham, UK
-###############################################################################
+
 
 
 #' This generic routine extracts the parameter estimate iteration information of a NONMEM problem, 

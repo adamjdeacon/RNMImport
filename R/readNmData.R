@@ -1,12 +1,3 @@
-# SVN revision: $Rev$
-# Date of last change: $LastChangedDate$
-# Last changed by: $LastChangedBy: fgochez $
-# 
-# Original author: fgochez
-# Copyright Mango Solutions, Chippenham, UK
-###############################################################################
-
-# individual author: F. Gochez, based on code by R.Francois and R.Pugh 
 
 #' Read NONMEM dataset removing any "IGNORE" rows and dealing with (possibly repeated) headers 
 #' This function is designed to import either output table or raw input data
@@ -20,8 +11,6 @@
 #' @param null [C,1] - value to replace NA, see NM?$DATA[NULL]
 #' @param sep character that seperates fields
 #' @return A data.frame of the contents of the tables in the file
-#' @note At the moment, there is an issue with the "ignore" field, in that it does not handle multiple ignore
-#' characters.  This will be dealt with in future releases.
 #' @examples 
 #'  \dontrun{ 
 #'      inData <- readNmData(file =  "examples/theoph/data.csv") 
@@ -150,8 +139,7 @@ readNmData <- function(
 #' @param na.keep Logical flag.  Keep data that is has NAs?
 #' @param link Token that joins statements together 
 #' @return Subsetted data as a data.frame
-#' @nord
-#' @author fgochez
+#' @author Mango Solutions
 
 
 # Based on code by R. Francois

@@ -9,13 +9,6 @@ DEFAULTLOGS <- c("stdReport", "detailedReport", "warnings", "highLevelParse", "l
 FILEEXTENSIONS <- list(control = c("mod", "ctl", "con"), report = c("lst", "out", "sep"), 
 					outputTable = c("fit", "tab"), inputData = c("", "txt", "dat"))
 
-##################################################################
-# initializeLogs
-# initializes the log connections in the package environment to certain default values
-# Author: F. Gochez
-# Added: Dec 25 2008
-# Last modified: Dec 25 2008
-##################################################################
 
 
 initializeLogs <- function()
@@ -29,13 +22,6 @@ initializeLogs <- function()
 	.RNMImportEnv$logConnections[["stdReport"]] <- stdout()
 }
 
-##################################################################
-# initializeVariables
-# initializes the default configuration for all NONMEM2 variables in the package environment 
-# Author: R. Weeks
-# Added: Jan 20 2009
-# Last modified: Jan 20 2009
-##################################################################
 
 initializeVariables <- function(libName = file.path(system.file(), "../"))
 {
@@ -52,26 +38,11 @@ initializeVariables <- function(libName = file.path(system.file(), "../"))
 	}
 }
 
-##################################################################
-# initializeFileNameExtensions
-# initializes the default file extensions for NONMEM
-# Author: R. Weeks
-# Added: Jan 20 2009
-# Last modified: Jan 20 2009
-##################################################################
 
 initializeFileNameExtensions <- function()
 {
 	.RNMImportEnv$fileExtensions <- FILEEXTENSIONS
 }
-
-##################################################################
-# initializeDataPath
-# initializes a vector to store user data paths
-# Author: R. Weeks
-# Added: Jan 20 2009
-# Last modified: Jan 20 2009
-##################################################################
 
 initializeDataPath <- function()
 {
@@ -96,14 +67,6 @@ initializeMiscOptions <- function(libName = file.path(system.file(), "../"))
 	initializeDataPath()
 	initializeSubsets()
 	initializeMiscOptions()
-#	cat("------------------------------------------------------\n")
-#	cat("|\n")
-#	cat("|\n") 
-#	cat("|To execute unit tests, type runRNMImportTests().\n")
-#	cat("|Report will be written to RNMImport_internalunit.html\n")
-#	cat("|\n")
-#	cat("|\n")
-#	cat("------------------------------------------------------\n")
-	
+
 }
 

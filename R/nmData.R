@@ -1,10 +1,3 @@
-# SVN revision: $Rev$
-# Date of last change: $LastChangedDate$
-# Last changed by: $LastChangedBy: fgochez $
-# 
-# Original author: fgochez
-# Copyright Mango Solutions, Chippenham, UK
-###############################################################################
 
 #' A generic function that extracts input and output data tables from a NONMEM object into either a single consolidated
 #' data.frame or a list.  
@@ -40,8 +33,7 @@
 #'  print(summary(y.outputData))
 #' }
 #' @keywords utilities datagen
-#' @note
-#' Invalid types in \code{dataTypes} will be discarded. If no valid types were chosen, an exception should be generated. 
+#' 
  
 
 # TODO: add option to extract from derived data
@@ -59,7 +51,7 @@ setGeneric("nmData")
 #' @param obj 
 #' @param subset The subset parameter passed to nmData - a logical, NULL, or a character vector
 #' @return NULL or a character vector
-#' @author fgochez
+#' @author Mango Solutions
 
 .getSubset <- function(obj, subset)
 {

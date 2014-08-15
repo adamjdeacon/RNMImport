@@ -2,10 +2,8 @@
 #' @title Get a variable
 #' @param varName A vector of variable names
 #' @return A data frame with the label, format and type of each variable name
-#' @author rweeks, fgochez
+#' @author Mango Solutions
 #' @export
-
-# Modification by fgochez, feb 9 2009: Corrected to bring into conformity with design spec
 
 getVarDescription <- function(varName)
 {
@@ -22,7 +20,7 @@ getVarDescription <- function(varName)
 #' @param varFormat A new format for the variable. Default is NULL
 #' @param varType A new type for the variable. Default is NULL
 #' @return None
-#' @author rweeks
+#' @author Mango Solutions
 #' @export
 setVarDescription <- function(varName, varLabel = NULL, varFormat = NULL, varType = NULL)
 {
@@ -43,7 +41,7 @@ setVarDescription <- function(varName, varLabel = NULL, varFormat = NULL, varTyp
 #' @param varType The variable type	
 #' @param varFormat The variable format. Default is NULL
 #' @return None
-#' @author rweeks
+#' @author Mango Solutions
 #' @export
 addVarDescription <- function(varName, varLabel, varType, varFormat = NULL)
 {
@@ -59,7 +57,7 @@ addVarDescription <- function(varName, varLabel, varType, varFormat = NULL)
 #' @title Get user path
 #' @param pathName The path name
 #' @return The path
-#' @author rweeks
+#' @author Mango Solutions
 #' @export
 
 getNmPath <- function(pathName)
@@ -74,7 +72,7 @@ getNmPath <- function(pathName)
 #' @param pathName The path name
 #' @param path The path
 #' @return None
-#' @author rweeks
+#' @author Mango Solutions
 #' @export
 setNmPath <- function(pathName, path)
 {
@@ -85,7 +83,7 @@ setNmPath <- function(pathName, path)
 #' @title Remove user path
 #' @param pathName The path name
 #' @return None
-#' @author rweeks
+#' @author Mango Solutions
 #' @export
 removeNmPath <- function(pathName)
 {
@@ -99,7 +97,7 @@ removeNmPath <- function(pathName)
 
 #' Retrieves the global default subset which is assigned to objects upon loading
 #' @return Character vector of the default subset expressions
-#' @author fgochez
+#' @author Mango Solutions
 #' @export
 
 defaultDataSubset <- function()
@@ -111,7 +109,7 @@ defaultDataSubset <- function()
 #' @param sub character vector of strings of subset expressions
 #' @param applyOnLoad Logical flag.  Should the subset actually be applied on loading automatically?
 #' @return None
-#' @author fgochez
+#' @author Mango Solutions
 #' @export
 
 setDefaultDataSubset <- function(sub, applyOnLoad)
@@ -126,8 +124,8 @@ setDefaultDataSubset <- function(sub, applyOnLoad)
 
 #' Augments the global default subset by appending the "sub" parameter to the existing subset
 #' @param sub  
-#' @return 
-#' @author fgochez
+#' @return None
+#' @author Mango Solutions
 #' @export
 
 augmentDefaultDataSubset <- function(sub)
@@ -142,7 +140,7 @@ augmentDefaultDataSubset <- function(sub)
 #' or can actually be used to toggle the setting
 #' @param applyOnLoad If supplied, used to toggle the setting
 #' @return Setting if argument is not supplied
-#' @author fgochez
+#' @author Mango Solutions
 
 applySubsetOnLoad <- function(applyOnLoad)
 {

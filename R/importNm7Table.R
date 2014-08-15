@@ -1,11 +1,3 @@
-# SVN revision: $Rev$
-# Date of last change: $LastChangedDate$
-# Last changed by: $LastChangedBy$
-# 
-# Original author: fgochez
-# Copyright Mango Solutions, Chippenham, UK
-###############################################################################
-
 
 #' Imports one of the new files produced by NONMEM 7: .phi, .cor, .cov, etc. into a  list of data.frames.
 #' @param file Name of the file

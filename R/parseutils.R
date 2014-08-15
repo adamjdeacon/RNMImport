@@ -1,30 +1,4 @@
-# 
-# File created: December 23, 2008
-# Author: fgochez
-# Description: A collection of utilities for parsing text, used mainly for importing control
-# and lst files
-###############################################################################
 
-################################################################
-# GREP functions:
-# a collection of small wrappers for "grep", written by
-# Romain Francois, cleaned and augmented by F. Gochez
-################################################################
-
-################################################################
-# negGrep
-# same as grep but gives back indexes, or text that **don't** match the pattern
-# "negative" grep, can also return indices or values
-# Author: R. Francois (original), added by F. Gochez
-# Added: Dec 22 2008
-# Last modified: Dec 22 2008
-#parameters:
-# @pattern - regular expression to search for
-# @text - vector of strings in which to search
-# @value - (??)
-# returns: A vector of indices of elements of text NOT
-# matched by "pattern"
-#################################################################
 
 negGrep <- function( pattern ,text, value = FALSE, ...)
 {
@@ -43,8 +17,8 @@ negGrep <- function( pattern ,text, value = FALSE, ...)
 #' @param perl logical flag - use perl conventions for string matching? 
 #' @title "grep -o"
 #' @return A vector of segments of texts that match "pattern" 
-#' @author fgochez
-#' @keywords
+#' @author Mango Solutions
+#' 
 
 # Original code by R Francois
 
@@ -74,7 +48,7 @@ ogrep <- function( pattern, text, filter = NULL, ignore.case = TRUE, perl = FALS
 # searches for a pre-specified text pattern in a set of strings and then either returns those strings without 
 # the text, together with a certain return value (controlled by "mode"), or directly remove the text pattern "in place"
 # (if inPlace = TRUE)
-# Author: R. Francois, with modifications by F. Gochez
+# Author: Mango Solutions
 # Added: Dec 22 2008
 # Last modified: Dec 22 2008
 # parameters -
@@ -162,7 +136,7 @@ pop <- function(
 ## logicalPop - Performs a "pop", but coerces the result to a logical
 ## commentPop - looks for comments, extracts semicolon and everything after it
 ## fortranPop - strips out raw Fortran code in NONMEM control files
-#  Author: R. Francois, with modifications by F. Gochez
+#  Author: Mango Solutions
 # Added: Dec 25 2008
 # Last modified: Dec 25 2008
 # parameters -
@@ -199,7 +173,7 @@ fortranPop  <- function(..., .depth = 2) pop( ..., mode = "comments" , .depth = 
 # one such as NOPRINT.  However, other options are disabled by merely excluding the keyword, or for example REWIND and NOREWIND, 
 # if it does not find any, returns the default value
 
-# Author: R. Francois, with modifications by F. Gochez
+# Author: Mango Solutions
 # Added: Dec 25 2008
 # Last modified: Dec 25 2008
 # parameters -
@@ -263,7 +237,7 @@ ynPop <- function(
 ##################################################################
 # commentSplit
 # Splits a set of strings along comment delimeter.
-# Author: R. Francois, modifications by F. Gochez
+# Author: Mango Solutions
 # Added: Jan 2 2009
 # Last modified: Jan 2 2009
 # parameters :
@@ -309,7 +283,7 @@ commentSplit <- function(
 ##################################################################
 # stripBlanks
 # 
-# Author: R. Francois, modifications by F. Gochez
+# Author: Mango Solutions
 # Added: Jan 2 2009
 # Last modified: Jan 2 2009
 # parameters :
@@ -344,7 +318,7 @@ stripBlanks <- function(
 ##################################################################
 # regexSplit
 # Splits a string along a regular expression
-# Author: R. Francois, modifications by F. Gochez
+# Author: Mango Solutions
 # Added: Jan 5 2009
 # Last modified: Jan 5 2009
 # parameters :
@@ -363,7 +337,7 @@ regexSplit <- function(txt, rx)
 ##################################################################
 # killRegex
 # Removes a regular expression from a set of strings
-# Author: R. Francois, modifications by F. Gochez
+# Author: Mango Solutions
 # Added: Jan 5 2009
 # Last modified: Jan 5 2009
 # parameters :
@@ -387,7 +361,7 @@ killRegex <- function(txt, rx, ignore.case = TRUE, rmBlanks = FALSE, ...)
 ##################################################################
 # .rmSpaceInBrackets
 # removes space from an expression inside a pair of ROUND brackets
-# Author: R. Francois, modifications by F. Gochez
+# Author: Mango Solutions
 # Added: Jan 5 2009
 # Last modified: Jan 5 2009
 # parameters :
@@ -410,8 +384,8 @@ killRegex <- function(txt, rx, ignore.case = TRUE, rmBlanks = FALSE, ...)
 #' @param quiet Passed to the "try" function 
 #' @param what Passed to "scan"
 #' @param ... additional parameters passed to "scan"
-#' @return 
-#' @author fgochez
+#' @return vector
+#' @author Mango Solutions
 
 .readValues <- function( txt, quiet = TRUE, what = "character",  ... )
 {
@@ -430,7 +404,7 @@ killRegex <- function(txt, rx, ignore.case = TRUE, rmBlanks = FALSE, ...)
 ##################################################################
 # regexMatches
 # removes space from an expression inside a pair of ROUND brackets
-# Author: F. Gochez
+# Author: Mango Solutions
 # Added: Jan 8 2009
 # Last modified: Jan 8 2009
 # parameters :
@@ -458,7 +432,7 @@ nullIfBlank <- function(x)
 #' @param x integer vector
 #' @param txt 
 #' @return List of sequences, as described above
-#' @author fgochez
+#' @author Mango Solutions
 
 lseq <- function( x, txt = NULL ){
 	out <- mapply( seq, length.out = diff(x), from = head(x, -1) )
@@ -476,7 +450,7 @@ lseq <- function( x, txt = NULL ){
 #' @param includeStart should the first element of the vector be included automatically? 
 #' @param includeEnd should the last element of the vector be included automatically?
 #' @return A list of split elements of x.  These will be of the form x[index_n:(index_n - 1)] for each index
-#' @author fgochez
+#' @author Mango Solutions
 
 splitVector <- function(x, indices, includeStart = FALSE, includeEnd = FALSE)
 {

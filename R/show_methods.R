@@ -1,13 +1,10 @@
-# $LastChangedDate$
-# $LastChangedBy$
-# $Rev$
 
 
 #' Displays information about output data.  Utility function for use with show methods
 #' @param object NMProblem object 
 #' @title Show output table info
 #' @return none
-#' @author fgochez
+#' @author Mango Solutions
 
 showOutput <- function(object)
 {

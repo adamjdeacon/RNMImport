@@ -1,10 +1,4 @@
-# SVN revision: $Rev: 25278 $
-# Date of last change: $LastChangedDate: 2011-02-21 14:51:08 +0000 (Mon, 21 Feb 2011) $
-# Last changed by: $LastChangedBy: fgochez $
-# 
-# Original author: fgochez
-# Copyright Mango Solutions, Chippenham, UK
-###############################################################################
+
 
 # internal function meant to be used internally by importNmLstSimModel ONLY
 .importSubProb <- function(txt)
@@ -22,8 +16,8 @@
 #' @param numSub Number of sub-problems in the problem 
 #' @title Import simulation+fit report 
 #' @return A list with parsed elements
-#' @author fgochez
-#' @nord
+#' @author Mango Solutions
+#' 
 
 importNmLstSimModel <- function(contents, numSub = NA)
 {
@@ -110,7 +104,7 @@ importNmLstSimModel <- function(contents, numSub = NA)
 #' @param contents character vector of text for a single problem statement.
 #' @title Import basic problem report results 
 #' @return a list containing final estimates, number of individuals, etc. for the problem 
-#' @author fgochez
+#' @author Mango Solutions
 
 .importNmLstBasicProb <- function(contents)
 {
@@ -146,8 +140,8 @@ importNmLstSimModel <- function(contents, numSub = NA)
 #' @title Import report file contents of a simulation data generation problem ( without model fitting step )
 #' @return A list with 2 elements: nRecords and nIndividuals, holding the number of individuals and number of
 #' records in the problem respectively
-#' @author fgochez
-#' @nord
+#' @author Mango Solutions
+#' 
 
 importNmLstSimDataGen <- function(contents)
 {
@@ -186,8 +180,8 @@ importNmLstSimDataGen <- function(contents)
 #' @param controlStatements 
 #' @title Import report file based on control statements
 #' @return List of parsed report file statements
-#' @author fgochez
-#' @nord
+#' @author Mango Solutions
+#' 
 
 # TODO: suppress this?  It should be possible to fully import a list file without a control file, and then there
 # would be no sense in maintaining this function
@@ -333,8 +327,8 @@ importNmReport <- function( fileName, path = NULL, controlStatements = NULL, tex
 #' @param contents Lines of the report file
 #' @title Clean report file
 #' @return character vector of strings without extraneous content
-#' @author fgochez
-#' @nord
+#' @author Mango Solutions
+#' 
 
 cleanReportContents <- function(content)
 {

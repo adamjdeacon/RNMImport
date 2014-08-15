@@ -1,9 +1,4 @@
-# $LastChangedDate$
-# $LastChangedBy$
-# $Rev$
-# 
-# Author: fgochez
-#############################################################################
+
 
 #' Retrieve the omega or sigma - related items from a NONMEM 7 object.  This is an internal utility routine that was
 #' created to refactor getSigmas and getOmegas to avoid code repetition
@@ -13,7 +8,7 @@
 #' @param method [N,+] Vector of methods to extract
 #' @title Get sigmas or omegas
 #' @return A list or a matrix, depending on whether multiple methods and items are are selected.  
-#' @author fgochez
+#' @author Mango Solutions
 
 getSigmasOrOmegas.NM7 <- function(obj, what = "final", item = c("sigma", "omega"), method = 1, probType = c("basic", "sim"), subProblemNum = 1)
 {

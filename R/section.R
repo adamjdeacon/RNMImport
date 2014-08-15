@@ -1,20 +1,4 @@
 
-
-
-##################################################################
-# sectionStart
-# finds where a given section starts in a NONMEM control file
-# Author: R. Francois, modifications by F. Gochez
-# Added: Jan 1 2009
-# Last modified: Jan 1 2009
-# parameters :
-# @ section - [C,1] A string demarcating the section (e.g. "PROBLEM", "INPUT")
-# @ text - [C, +] A character vector holding the text to check for sections
-# @ pattern - A regular expression that fully describes the section markets, such as $PROBLEM
-# @ sep - The prefix for a section seperator
-# returns - Indices where the sections begin
-##################################################################
-
 sectionStart <- function( 
 		section = "PRO", 
 		text, 
@@ -41,9 +25,9 @@ sectionStart <- function(
 #' @param sectionSep [C, 1] token that precedes section breaks
 #' @param clean 
 #' @param ... 
-#' @title
+#' @title section
 #' @return A list of character vectors, where each element of the list is a section of the control file
-#' @author fgochez
+#' @author Mango Solutions
 
 # Originally by R. Francois
 
@@ -103,16 +87,6 @@ section <- function(
 }
 
 
-##################################################################
-# partitionByProblem
-# Splits a block of text (vector of strings) of a NONMEM control file into a list of multiple problems 
-# Author: F. Gochez
-# Added: Jan 2 2009
-# Last modified: Jan 2 2009
-# parameters :
-# @ text - [C,+] A character vector holding the text to partition
-# A list of character vectors, each of which holds a different problem in a NONMEM control file.  
-##################################################################
 
 partitionByProblem <- function(txt, allowSuperProb = FALSE)
 {	
@@ -136,19 +110,6 @@ partitionByProblem <- function(txt, allowSuperProb = FALSE)
 	# lapply(head(problemStarts, -1), )	
 }
 
-##################################################################
-# sectionTitles
-# Detects which control file "titles" (i.e. $XXXX strings) are present in some text 
-# Author: R. Francois
-# Added: Jan 5 2009
-# Last modified: Jan 5 2009
-# parameters :
-# @ x [C,+] - A character vector holding the text to pase
-# @ substring [L,1] - Logical flag.  If TRUE, will return substrings of the full title names found
-# @ start [N, 1] - Starting position of the title substrings returned (only used if substring is TRUE)
-# @ length [N,1] - Length of strings returned
-# Returns: Character vector of titles present  
-##################################################################
 
 sectionTitles <- function(x, substring = TRUE, start = 1, length = 3){
 	titles <- unique( ogrep( "^[[:blank:]]*\\$([[:alpha:]]+)", x, filter = "\\1" ) )

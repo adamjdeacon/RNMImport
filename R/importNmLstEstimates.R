@@ -5,7 +5,7 @@
 #' @param onlyDiag Should only the diagonal of the omegas and sigmas be retrieved?  
 #' @return a list with elements "THETA", "OMEGA" and "SIGMA", holding vectors and matrices
 #' 
-#' @author fgochez
+#' @author Mango Solutions
 
 .importNmLstEstimates <- function( txt, onlyDiag = FALSE  )
 {

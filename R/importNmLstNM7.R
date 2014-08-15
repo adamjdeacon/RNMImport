@@ -1,16 +1,10 @@
-# $LastChangedDate$
-# $LastChangedBy$
-# $Rev$
-# 
-# Author: fgochez
-###############################################################################
 
 
 #' This function parses
 #' @param methodTextBlock 
 #' @title Parse report file #METH text block
-#' @return 
-#' @author fgochez
+#' @return block result
+#' @author Mango Solutions
 #' @export
 .importMethodBlock <- function(methodTextBlock, SIGDIGS71='Sig.digs|SIG. DIGITS')
 {
@@ -99,7 +93,7 @@
 #' @param textReport [L,1] Should standard text messages be logged to the stdReport log?
 #' @title Import NONMEM 7 report file
 #' @return A list with various parsed components of the report file.
-#' @author fgochez
+#' @author Mango Solutions
 
 importNmReport.NM7 <- function( content, textReport = FALSE )
 {
@@ -174,8 +168,8 @@ importNmReport.NM7 <- function( content, textReport = FALSE )
 #' @param contents character vector of text for a single problem statement.
 #' @title Import basic problem report results 
 #' @return a list containing final estimates, number of individuals, etc. for the problem 
-#' @author fgochez
-#' @keywords
+#' @author Mango Solutions
+#' 
 
 .importNmLstBasicProb.NM7 <- function(contents)
 {
@@ -206,9 +200,9 @@ importNmReport.NM7 <- function( content, textReport = FALSE )
 #' @param [C,+] contents Contents of the report file for a single problem
 #' @param [N, 1] numSub Number of sub-problems in the problem 
 #' @title import NONMEM7 simulation+model fit problem report contents
-#' @return 
-#' @author fgochez
-#' @keywords
+#' @return out list
+#' @author Mango Solutions
+#' 
 
 importNmLstSimModel.NM7 <- function(contents, numSub = NA)
 {

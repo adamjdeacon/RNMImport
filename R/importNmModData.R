@@ -1,10 +1,4 @@
-# SVN revision: $Rev: 25207 $
-# Date of last change: $LastChangedDate: 2011-02-20 18:38:29 +0000 (Sun, 20 Feb 2011) $
-# Last changed by: $LastChangedBy: fgochez $
-# 
-# Original author: fgochez
-# Copyright Mango Solutions, Chippenham, UK
-###############################################################################
+
 
 #' Parses the $DATA statement of a control file from some text 
 #' @title Parse $DATA statement
@@ -12,9 +6,8 @@
 #' @param modFile The name of the control file from which the text comes
 #' @param .extract Logical flag.  If TRUE, assumes
 #' @return A matrix of descriptor information
-#' @author fgochez
-#' @note: Original code by R Francois and others
-#' @nord
+#' @author Mango Solutions
+#' 
 
 .importNmModData <- function(txt, modFile, 
         .extract = length(grep("^\\$DAT", toupper(txt))) > 0 ){

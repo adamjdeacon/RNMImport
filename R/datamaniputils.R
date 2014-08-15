@@ -1,9 +1,3 @@
-# $LastChangedDate$
-# $LastChangedBy$
-# $Rev$
-# 
-# Author: fgochez
-###############################################################################
 
 
 #' Creates a 3d-array from a list of matrices of the same dimension
@@ -11,7 +5,7 @@
 #' @param matrixNames The names of the matrices, to be used as the 3rd dimension names of the array
 #' @title Convert list of matrices to 3d array
 #' @return An 3d array whose submatrices come from "matrixList"
-#' @author fgochez
+#' @author Mango Solutions
 
 arrayFromMatrixList <- function(matrixList, matrixNames = names(matrixList))
 {

@@ -1,9 +1,4 @@
 
-### mainly used for testing, not exported
-### removes names of an object
-# Originally written by R. Francois
-# Added: Jan 7 2009
-
 
 nonames <- function(x){
   UseMethod("nonames")

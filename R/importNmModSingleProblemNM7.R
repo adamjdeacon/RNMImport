@@ -1,10 +1,3 @@
-#
-# $LastChangedDate: 2010-09-02 20:06:19 +0100 (Thu, 02 Sep 2010) $
-# $LastChangedBy: jjames $
-# $Rev: 21081 $
-#
-# Author: fgochez
-###############################################################################
 
 #' Imports a single NONMEM problem into a list structure
 #' @name .importNmModSingleProblem
@@ -12,9 +5,9 @@
 #' @param contents Text of the contents of a SINGLE problem statement
 #' @param fileName Name of the control file from which the problem originates
 #' @return named list with the various sections split up
-#' @author fgochez
+#' @author Mango Solutions
 #' @export
-#' @keywords
+#' 
 
 .importNmModSingleProblemNM7 <- function(contents, fileName)
 {

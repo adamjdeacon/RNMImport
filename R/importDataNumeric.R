@@ -4,7 +4,7 @@
 #' @param missToZero replaces numerics
 #' @title Force columns that should be numeric to numeric
 #' @return The data.frame with all columns that should be numeric, as numeric
-#' @author fgochez
+#' @author Mango Solutions
 #' @note Based on RNONMEM 1 code by R Pugh, J James, and R Francois
 
 

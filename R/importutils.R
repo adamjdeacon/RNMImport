@@ -1,6 +1,3 @@
-# $LastChangedDate: $
-# $LastChangedBy: $
-# $Rev: $
 
  
 #' Import table files "safely".  This routine attempts to import the Table element of a control file, but does
@@ -10,7 +7,7 @@
 #' @param path Path to the table files
 #' @title Import table files safely
 #' @return The value returned by importModelOutputTables
-#' @author fgochez
+#' @author Mango Solutions
 
 .importTablesSafely <- function(tableStatement = NULL, path = "")
 {
@@ -43,7 +40,7 @@
 #' @param empty.rx regular expression to eliminate from strings read in 
 #' @title Read file contents and strip whitespace
 #' @return Character vectors of lines of file contents
-#' @author fgochez
+#' @author Mango Solutions
 #' @keywords IO
 
 # Original author: R. Francois
@@ -68,7 +65,7 @@ scanFile <- function( file, empty.rx = "^[[:space:]]*$" )
 #' @title Check if file can be opened
 #' @return logical 
 #' @note Originally by John James
-#' @author fgochez
+#' @author Mango Solutions
 #' @keywords IO
 
 .canOpen <- function(path.to.file)
@@ -92,7 +89,7 @@ scanFile <- function( file, empty.rx = "^[[:space:]]*$" )
 #' path. Simply wraps file_path_as_absolute
 #' @param x Path to the file 
 #' @return String containing absolute path
-#' @author fgochez
+#' @author Mango Solutions
 
 dirname.abs <- function(x){
 	dirname( tools::file_path_as_absolute(x) )
@@ -102,7 +99,7 @@ dirname.abs <- function(x){
 #' @param x String to check
 #' @title Check if string is full path
 #' @return logical, TRUE if x is a path
-#' @author fgochez
+#' @author Mango Solutions
 #' @keywords utils
 
 .isfullpath <- function( x ){
@@ -113,10 +110,10 @@ dirname.abs <- function(x){
 # ??
 #' @param file 
 #' @param path 
-#' @title
-#' @return 
-#' @author fgochez
-#' @keywords
+#' @title isinpath
+#' @return logic
+#' @author Mango Solutions
+#' 
 
 .isinpath <- function( file, path){
 	nchar( file ) > nchar( path ) && substring( file, 1, nchar(path) ) == path
@@ -130,9 +127,9 @@ dirname.abs <- function(x){
 #' @param stop (?)
 #' @param remove (?)
 #' @return A full relative path containing the file name
-#' @author fgochez
+#' @author Mango Solutions
 
-# Original author: R. Francois
+
 .getFile <- function( 
 		file, 
 		path = NULL,
@@ -168,7 +165,7 @@ dirname.abs <- function(x){
 #' to be retrieved by "getNmPath".  Otherwise, just returns the path
 #' @param path the path to process.
 #' @return Either path unmodified, or path retrieved via getNmPath
-#' @author fgochez
+#' @author Mango Solutions
 
 processPath <- function(path)
 {
@@ -185,7 +182,7 @@ processPath <- function(path)
 #' @param fileName Name of the file to check
 #' @param extension Extension of the file to check.  Can have more than one
 #' @return whether or not the filename has the given extension 
-#' @author fgochez
+#' @author Mango Solutions
 
 hasExtension <- function(fileName, extensions)
 {
@@ -198,7 +195,7 @@ hasExtension <- function(fileName, extensions)
 #' Changes a filename to lower case if the current system is Windows, otherwise leaves it unchanged.
 #' @param fileName  
 #' @return fileName in lower case, 
-#' @author fgochez
+#' @author Mango Solutions
 
 
 .windowsToLower <- function(fileName)
@@ -210,9 +207,8 @@ hasExtension <- function(fileName, extensions)
 
 #' @param contStates 
 #' @param pri 
-#' @returnType LOGICAL
 #' @return does the string, basically PRIOR, exist in the control file?
-#' @author jjames
+#' @author Mango Solutions
 .lookFor <- function(contStates=names(obj@controlStatements), subr=NULL, pri='^ +[$](PRIOR|PRI)|PRIOR='){
 	test2 <- FALSE
 	test1 <- any(regexpr(pri, contStates, ignore.case=TRUE)>0)

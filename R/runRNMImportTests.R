@@ -4,6 +4,7 @@
 #' Run the unit tests by RUnit package, and generate a html or text report. 
 #' @title Run unit tests.
 #' @param TestPath Path of the folder which contains the test scripts.
+#' @param ExcludeFolders The folders are not tested.
 #' @param TestResult Name of the report file.
 #' @param ResultsType 'html' or 'text'.
 #' @return The results of function \code{\link{[RUnit]runTestSuite}}. 

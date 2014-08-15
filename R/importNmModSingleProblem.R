@@ -1,7 +1,3 @@
-# TODO: Add comment
-# 
-# Author: jjames
-###############################################################################
 
 
 
@@ -12,9 +8,9 @@
 #' @param contents Text of the contents of a SINGLE problem statement
 #' @param fileName Name of the control file from which the problem originates
 #' @return named list with the various sections split up
-#' @author fgochez
+#' @author Mango Solutions
 #' @export
-#' @keywords
+#' 
 
 .importNmModSingleProblem <- function(contents, fileName)
 {
@@ -86,13 +82,12 @@
 # TODO: handle additional missing elements
 
 #' 
-#' @name
-#' @title
+#' @title merge Missing
 #' @param currentProblem 
 #' @param previousProblem 
-#' @return 
-#' @author fgochez
-#' @keywords
+#' @return vector
+#' @author Mango Solutions
+#' 
 
 .mergeMissing <- function(currentProblem, previousProblem)
 {

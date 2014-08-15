@@ -4,10 +4,9 @@
 #' @param txt [C,1] - Contents of a control file possibly holding a $SIM statement 
 #' @param .extract 
 #' @param file [C,1] - Optional filename where contents are to be extracted (deprecated) 
-#' @title
 #' @return A character vector holding the number of simulation subproblems, the 2 seed values, and
 #'  whether or not SIMONLY is TRUE or FALSE
-#' @author fgochez
+#' @author Mango Solutions
 
 
 .importNmModSim <- function(

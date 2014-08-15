@@ -4,7 +4,7 @@
 #' @param iterList {LIST] A list of iteration text chunks, typically obtained from calling sectionLst 
 #' @return A 3 column data.frame with the iterations for each parameter estimate
 #' @note Based on code by R. Francois, R. Pugh and J. James
-#' @author fgochez
+#' @author Mango Solutions
 .importNmLstIter <- function(iterList)
 {
 	

@@ -1,17 +1,6 @@
 
 
-##################################################################
-# blockBind
-# Builds a matrix from a set of NONMEM-style matrix specifications
-# Author: R. Francois, modifications by F. Gochez
-# Added: Jan 6 2009
-# Last modified: Jan 6 2009
-# parameters :
-# @ mList [list,+] - A list of character vectors holding NONMEM matrix specs
-# @ defaultPrefix [C,1] - Default prefix for the names of the matrix rows and colunmns (e.g. OMEGAX)
-# @ givenNames [N, 1] - Starting position of the title substrings returned (only used if substring is TRUE)
-# Returns:  A matrix
-##################################################################
+
 
 blockBind <- function(
 		mList, 

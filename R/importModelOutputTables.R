@@ -1,9 +1,3 @@
-# $Rev$
-# $LastChangedDate$
-
-# TODO: Implement dvLog
-# TODO: handle situation where there are more columns in the table file than in the $TABLE statement
-###############################################################################
 
 #' Imports the output data used in an individual NONMEM model based on its $TABLE statements 
 #' @title Import model tables
@@ -18,8 +12,8 @@
 #' @return Returns: Either a list or a data.frame.  A data.frame of all unique output table columns (from all table files)
 #' is returned if returnFormat = "singleDF", UNLESS there are both FIRSTONLY tables and non-FIRSTONLY tables, in which
 #' case a list of 2 components is returned. 
-#' @author fgochez
-#' @keywords
+#' @author Mango Solutions
+
 
 importModelOutputTables <- function( tableStatement, allowFirstOnly = TRUE, 
         dvLog = FALSE, trim = FALSE, returnFormat = c("singleDF", "DFlist"),

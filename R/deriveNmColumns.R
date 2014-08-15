@@ -3,9 +3,9 @@
 #' Renames IPRE to IPRED, IWRE to IWRES and adds absWRES to a NONMEM data table
 #' @param df data.frame of NONMEM input or output table data
 #' @title Rename certain NONMEM columns
-#' @return 
-#' @author fgochez
-#' @keywords
+#' @return data.frame
+#' @author Mango Solutions
+
 
 .deriveNmColumns <- function(df)
 {

@@ -1,7 +1,3 @@
-# $Rev$
-# $LastChangedDate$
-#
-###############################################################################
 
 
 # TODO: make this a generic function later
@@ -10,7 +6,7 @@
 #' @param x Object whose subset should be modified.
 #' @param value The subset to attach
 #' @return None
-#' @author fgochez
+#' @author Mango Solutions
 #' @export
 
 "dataSubset<-" <- function(x, value)
@@ -27,7 +23,7 @@
 #' @param x Object whose subset should be modified.
 #' @param value The subset to attach
 #' @return None
-#' @author fgochez
+#' @author Mango Solutions
 #' @export
 
 "augmentDataSubset<-" <- function(x, value)
@@ -52,7 +48,7 @@
 #' Retrieves the data subset associated with a particular object
 #' @param x Object (data.frame or NMProblem)
 #' @return Character vector of expressions
-#' @author fgochez
+#' @author Mango Solutions
 #' @export
 
 dataSubset <- function(x)
@@ -65,7 +61,7 @@ dataSubset <- function(x)
 #' @param sub Character vector of subsets to apply
 #' @param verboseWarnings [L, 1] Logical flag.  If TRUE, will emit a warning whenever a subset statement fails
 #' @return subsetted data.frame, with subsets in sub applied
-#' @author fgochez
+#' @author Mango Solutions
 #' @export
 
 applyDataSubset <- function(obj, sub = NULL, verboseWarnings = FALSE)

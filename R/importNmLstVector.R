@@ -3,7 +3,7 @@
 #' Reads a "vector" stored in the text of a list file
 #' @param text Vector of strings of text of a list file
 #' @return A named numeric vector
-#' @author fgochez
+#' @author Mango Solutions
 #' @export
 .importNmLstVector <- function(text)
 {

@@ -1,4 +1,3 @@
-# for duplicated using of same file, we split it physically
 
 #' For a table statement, if user put multiple un-mergeble tables into one text output file
 #' We split it into multiple table files as [origianlname]__1, [origianlname]__2 , e.t.c

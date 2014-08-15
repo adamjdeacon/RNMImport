@@ -1,11 +1,3 @@
-# SVN revision: $Rev$
-# Date of last change: $LastChangedDate$
-# Last changed by: $LastChangedBy$
-# 
-# Original author: fgochez
-# Copyright Mango Solutions, Chippenham, UK
-###############################################################################
-
 
 
 #' Sets the allowed file extensions for various NONMEM file types.  These are control, report, output tables, and 
