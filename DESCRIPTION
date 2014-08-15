@@ -8,4 +8,4 @@ Maintainer: Mango Solutions <support@mango-solutions.com>
 Suggests: RUnit (>= 0.4.22)
 Depends: R (>= 2.8.0), utils, stats, methods, tools
 Description: Imports NONMEM data, and provides utilities for manipulation reporting on it.
-License: GPL-3
+License: Clear BSD + file LICENSE
