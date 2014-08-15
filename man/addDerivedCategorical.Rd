@@ -1,8 +1,8 @@
 \name{addDerivedCategorical}
 \alias{addDerivedCategorical}
 \title{Add binned variable to NONMEM object}
-\usage{addDerivedCategorical(obj, varName, newVar=paste(varName, ".CUT", sep = ""), breaks=5, binType="range", labels, ...)
-}
+\usage{addDerivedCategorical(obj, varName, newVar=paste(varName, ".CUT", sep = ""), 
+breaks=5, binType="range", labels, ...)}
 \description{This function allows the user to create new variables derived from actual input or output data stored in a NONMEM object or a data.frame.
 The function "bins" the data in a user-chosen manner.  The new "binned" variable will be added to the "additionalVars" data frame of the object, or as a new column if the 
 object is a data.frame. The methods for creating the categorical variables are:

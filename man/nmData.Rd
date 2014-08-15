@@ -1,8 +1,8 @@
 \name{nmData}
 \alias{nmData}
 \title{Extract input and / or output data tables from a NONMEM object}
-\usage{nmData(obj, dataTypes=c("input", "output"), returnMode=c("singleDF", "DFList"), subset, ...)
-}
+\usage{nmData(obj, dataTypes=c("input", "output"), 
+returnMode=c("singleDF", "DFList"), subset, ...)}
 \description{A generic function that extracts input and output data tables from a NONMEM object into either a single consolidated
 data.frame or a list.}
 \value{A data.frame or a list of data.frames of data, depending on the value of 
@@ -29,12 +29,14 @@ Otherwise, it should be a character vector of subsetting expressions (such as "M
 it may be \code{TRUE}, in which case the associated data subset of the object (retrieved by \code{\link{dataSubset}}) will be applied.}
 }
 \examples{\dontrun{
-x <- importNm("TestData1.ctl", "TestData1.lst", path  = system.file(package = "RNMImport", "testing/testdata/TestRun")
+x <- importNm("TestData1.ctl", "TestData1.lst", 
+  path = system.file(package = "RNMImport", "testing/testdata/TestRun")
 x.data <- nmData(x)
 print(head(x.data))
 x.data <- nmData(x, returnMode = "DFList" )
 print(lapply(x.data, head))
-y <- importNm("TestData1SIM.con", "TestData1SIM.lst", path = "testing/testdata/TestSimRun")
+y <- importNm("TestData1SIM.con", "TestData1SIM.lst", 
+  path = "testing/testdata/TestSimRun")
 y.outputData <- nmData(y, subProblemNum = 2:4, dataTypes = "output")
 print(summary(y.outputData))
 }}

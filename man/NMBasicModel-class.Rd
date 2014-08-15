@@ -24,17 +24,15 @@ has no $SIM step.}
 	 \describe{
     \item{\code{parameterIterations}:}{A data.frame of the iteration of each parameter estimate, if available }
     \item{\code{objectiveFinal}:}{The numeric value of the objective function minimum}
-    \item{\code{thetaFinal}:}{Final estimates of the "thetas", together with the standard errors, if available (as a 2-row matrix))}
+    \item{\code{thetaInitial}:}{Initial value of the "thetas"}
+    \item{\code{sigmaInitial}:}{Initial value of the "sigmas"}
+    \item{\code{omegaInitial}:}{Initial value of the "omegas"}
+    \item{\code{thetaFinal}:}{Final estimates of the "thetas", together with the standard errors, if available (as a 2-row matrix)}
     \item{\code{sigmaFinal}:}{Final estimates of the "sigmas", together with the standard errors, if available (as an array  with 1 or 2 matrices)}
     \item{\code{omegaFinal}:}{Final estimates of the "omegas", together with the standard errors, if available (as an array  with 1 or 2 matrices)}
     \item{\code{parameterCovMatrix}:}{The variance-covariance of the parameter estimators, if available}
+    \item{\code{parameterCorMatrix}:}{The correlation matrix of the parameter estimators, if available}
     \item{\code{minInfo}:}{A string describing the status of the objective function-minimization }
-    \item{\code{problemStatement}:}{A string holding the $PROBLEM statement}
-    \item{\code{controlStatements}:}{List of parsed sections from the control file}
-    \item{\code{lstStatements}:}{List of parsed sections from the list file}
-    \item{\code{inputData}:}{A data.frame holding the run's input data.  If it could not be read for some reason, it will be empty }
-    \item{\code{outputData}:}{A data.frame holding the run's aggregated output data, (from the files in the $TABLE statement)}
-    \item{\code{additionalVars}:}{A data.frame of user-created variables (usually categorical variables created through \code{addDerivedCategorical}}
   }
 }
 \section{Extends}{

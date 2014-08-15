@@ -10,6 +10,7 @@
 \alias{getThetas,NMSimModel-method}
 \alias{getSigmas,NMSimModel-method}
 \alias{getOmegas,NMSimModel-method}
+\alias{getSimInfo,NMSimModel-method}
 \alias{addDerivedCategorical,NMSimModel-method}
 \alias{imposeCategoryFormat,NMSimModel-method}
 
@@ -48,6 +49,7 @@ Class \code{"\linkS4class{NMProblem}"}, directly.
     \item{nmData}{\code{signature(obj = "NMSimModel")}: Extracts NONMEM data.  A parameter stackInput is also available.  
     	If TRUE, will cause input to be "stacked" enough times that it matches the size of the output.}
     \item{show}{\code{signature(object = "NMSimModel")}: ... }
+    \item{getSimInfo}{\code{signature(obj = "NMSimModel")}: Get Simulation Information}
 	 }
 }
 

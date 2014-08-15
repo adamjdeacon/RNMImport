@@ -8,6 +8,7 @@
 \alias{getOmegas,NMSimDataGen-method}
 \alias{getSigmas,NMSimDataGen-method}
 \alias{getThetas,NMSimDataGen-method}
+\alias{getSimInfo,NMSimDataGen-method}
 
 \title{Class for holding simulation problems that don't fit models}
 \description{This class handles NONMEM models that have a $SIM statement but only simulate data without fitting a mode
@@ -23,12 +24,6 @@
     \item{\code{thetaInitial}:}{thetaInitial Fixed/initial theta values used to generate data (numeric vector)}
     \item{\code{omegaInitial}:}{Fixed/initial omega values used to generate data (numeric matrix)}
     \item{\code{sigmaInitial}:}{Fixed/initial sigma values used to generate data (numeric matrix)}
-    \item{\code{problemStatement}:}{The contents of the $PROB statement}
-    \item{\code{controlStatements}:}{A list of parsed sections of the control file}
-    \item{\code{lstStatements}:}{A list of parsed sections of the output "list" file}
-    \item{\code{inputData}:}{A data.frame of the input data, if available (otherwise an empty data.frame)}
-    \item{\code{outputData}:}{Aggregation of the output data}
-    \item{\code{additionalVars}:}{A data.frame of additional variables created by the user}
   }
 }
 \section{Extends}{
@@ -44,6 +39,7 @@ Virtual class \code{"\linkS4class{NMProblem}"}, directly.
     \item{nmData}{\code{signature(object = "NMSimDataGen")}: Retrieves the input/output data, where the output can come from 1 or more subproblems. 
      A parameter stackInput is also available. If TRUE, will cause input to be "stacked" enough times that it matches the size of the output.}
     \item{show}{\code{signature(object = "NMSimDataGen")}: Prints basic data about the problem }
+    \item{getSimInfo}{\code{signature(obj = "NMSimDataGen")}: Get Simulation Information}
 	 }
 }
 

@@ -1,10 +1,14 @@
 \name{NMSimModelNM7-class}
 \docType{class}
 \alias{NMSimModelNM7-class}
+\alias{addDerivedCategorical,NMSimModelNM7-method}
 \alias{getObjective,NMSimModelNM7-method}
 \alias{getOmegas,NMSimModelNM7-method}
 \alias{getSigmas,NMSimModelNM7-method}
 \alias{getThetas,NMSimModelNM7-method}
+\alias{getMethodNames,NMSimModelNM7-method}
+\alias{getSimInfo,NMSimModelNM7-method}
+\alias{imposeCategoryFormat,NMSimModelNM7-method}
 \alias{nmData,NMSimModelNM7-method}
 \alias{show,NMSimModelNM7-method}
 
@@ -39,12 +43,15 @@ Class \code{"\linkS4class{NMProblem}"}, directly.
 }
 \section{Methods}{
   \describe{
+    \item{addDerivedCategorical}{\code{signature(obj = "NMSimModelNM7")}: Create user-defined categorical variables}
+    \item{getMethodNames}{\code{signature(obj = "NMSimModelNM7")}: Retrieves the estimation method names}
     \item{getObjective}{\code{signature(obj = "NMSimModelNM7")}: Retrieves a set of objective function values for given methods (method) and simulation (subProblem) }
     \item{getOmegas}{\code{signature(obj = "NMSimModelNM7")}: Retrieves an array of omegas for a given method (method) and simulations (subProblemNum)}
     \item{getSigmas}{\code{signature(obj = "NMSimModelNM7")}: Retrieves an array of sigmas for a given method (method) and simulations (subProblemNum)}
     \item{getThetas}{\code{signature(obj = "NMSimModelNM7")}: Retrieves a matrix of thetas for a given method (method) and simulations (subProblemNum) }
     \item{nmData}{\code{signature(obj = "NMSimModelNM7")}: Extracts NONMEM data.  A parameter stackInput is also available.  
     	If TRUE, will cause input to be "stacked" enough times that it matches the size of the output.}
+    \item{imposeCategoryFormat}{\code{signature(obj = "NMSimModelNM7")}: Coerces variables to categories}
     \item{show}{\code{signature(object = "NMSimModelNM7")}: ... }
 	 }
 }

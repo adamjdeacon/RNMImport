@@ -16,6 +16,8 @@
     $PROB statement.}
     \item{\code{controlStatements}:}{Object of class \code{"list"}. List of parsed control file contents.}
     \item{\code{reportStatements}:}{Object of class \code{"list"}. List of parsed report file contents.}
+    \item{\code{nmVersionMajor}:}{Object of class \code{"character"}. The major version.}
+    \item{\code{nmVersionMinor}:}{Object of class \code{"character"}. The minor version.}
     \item{\code{inputData}:}{Object of class \code{"data.frame"}. Table of input data, if available.}
     \item{\code{outputData}:}{Object of class \code{"ANY"}. Consolidated table of output data, if available.}
     \item{\code{additionalVars}:}{Object of class \code{"data.frame"}. Additional user-created variables.}

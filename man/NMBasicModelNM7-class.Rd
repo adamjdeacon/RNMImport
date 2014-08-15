@@ -1,11 +1,14 @@
 \name{NMBasicModelNM7-class}
 \docType{class}
 \alias{NMBasicModelNM7-class}
+\alias{addDerivedCategorical,NMBasicModelNM7-method}
 \alias{getEstimateCov,NMBasicModelNM7-method}
 \alias{getObjective,NMBasicModelNM7-method}
 \alias{getOmegas,NMBasicModelNM7-method}
 \alias{getSigmas,NMBasicModelNM7-method}
 \alias{getThetas,NMBasicModelNM7-method}
+\alias{getMethodNames,NMBasicModelNM7-method}
+\alias{imposeCategoryFormat,NMBasicModelNM7-method}
 \alias{nmData,NMBasicModelNM7-method}
 \alias{show,NMBasicModelNM7-method}
 
@@ -22,6 +25,9 @@ has no $SIM step.)}
     \item{\code{objectiveFinal}:}{Vector of objective function final values (one for each method)}
     \item{\code{methodInfo}:}{$EST statement contents partially parsed into a matrix }
     \item{\code{methodNames}:}{character vector of full method names (from report file)}
+    \item{\code{thetaInitial}:}{List of theta initial value vectors, one element for each method used}
+    \item{\code{sigmaInitial}:}{List of sigma initial value vectors, one element for each method used}
+    \item{\code{omegaInitial}:}{List of omega initial value vectors, one element for each method used}
     \item{\code{thetaFinal}:}{List of theta final estimate vectors, one element for each method used}
     \item{\code{sigmaFinal}:}{List of sigma final estimate vectors, one element for each method used}
     \item{\code{omegaFinal}:}{List of omega final estimate vectors, one element for each method used}
@@ -33,9 +39,6 @@ has no $SIM step.)}
     \item{\code{parameterCovMatrices}:}{ List of parameter covariance matrices, one for each method }
     \item{\code{parameterCorMatrices}:}{ List of parameter correlation matrices, one for each method  }
     \item{\code{minInfo}:}{Character vector holding the first line of the termination status for each method}
-    \item{\code{inputData}:}{A data.frame holding the run's input data.  If it could not be read for some reason, it will be empty }
-    \item{\code{outputData}:}{A data.frame holding the run's aggregated output data, (from the files in the $TABLE statement)}
-    \item{\code{additionalVars}:}{A data.frame of user-created variables (usually categorical variables created through \code{addDerivedCategorical}}
   }
 }
 \section{Extends}{
@@ -43,12 +46,15 @@ Class \code{"\linkS4class{NMProblem}"}, directly.
 }
 \section{Methods}{
   \describe{
+    \item{addDerivedCategorical}{\code{signature(obj = "NMBasicModelNM7")}: Create user-defined categorical variables}
+    \item{getMethodNames}{\code{signature(obj = "NMBasicModelNM7")}: Retrieves the estimation method names}
     \item{getObjective}{\code{signature(obj = "NMBasicModelNM7")} Extracts objective function value. }
     \item{getEstimateCov}{\code{signature(obj = "NMBasicModelNM7")}: Extracts the covariance matrix and optionally the correlation matrix of 
     the estimators for this problem.}
 	\item{getOmegas}{\code{signature(obj = "NMBasicModelNM7")}: Retrieves the omega estimates from the problem and chosen method number }
     \item{getSigmas}{\code{signature(obj = "NMBasicModelNM7")}: Retrieves the sigma estimates from the problem and chosen method number}
     \item{getThetas}{\code{signature(obj = "NMBasicModelNM7")}: Retrieves the theta estimates from the problem and chosen method number }
+    \item{imposeCategoryFormat}{\code{signature(obj = "NMBasicModelNM7")}: Coerces variables to categories}
     \item{nmData}{\code{signature(obj = "NMBasicModelNM7")}: Extracts the input and output data from the problem }
     \item{show}{\code{signature(object = "NMBasicModelNM7")}: ... }
 	 }

@@ -11,10 +11,12 @@
 \alias{getThetas,NMRun-method}
 \alias{getSigmas,NMRun-method}
 \alias{getOmegas,NMRun-method}
+\alias{getMethodNames,NMRun-method}
 \alias{addDerivedCategorical,NMRun-method}
 \alias{imposeCategoryFormat,NMRun-method}
 \alias{getControlStatements,NMRun-method}
 \alias{getNmVersion,NMRun-method}
+\alias{getSimInfo,NMRun-method}
 
 \title{NONMEM run container class}
 \description{This is the basic class for handling a standard NONMEM run.  In essence, it holds
@@ -28,10 +30,12 @@ imports a NONMEM run on the basis of its control file.
 \section{Slots}{
 	 \describe{
     \item{\code{controlText}:}{Text of the control file, without comments}
-    \item{\code{lstText}:}{Text of the output "list" file}
+    \item{\code{reportText}:}{Text of the report file}
+    \item{\code{nmVersionMajor}:}{Major version of NONMEM}
+    \item{\code{nmVersionMinor}:}{Minor version of NONMEM}
     \item{\code{controlComments}:}{Comments of each line of the control file}
     \item{\code{controlFileInfo}:}{Information about the control file}
-    \item{\code{listFileInfo}:}{Information about the list file}
+    \item{\code{reportFileInfo}:}{Information about the list file}
     \item{\code{numProblems}:}{Number of problems in the run}
     \item{\code{problems}:}{List of the actual problem results  }
   }
@@ -39,6 +43,7 @@ imports a NONMEM run on the basis of its control file.
 
 \section{Methods}{
   \describe{
+    \item{getMethodNames}{\code{signature(obj = "NMRun")}: Retrieves the estimation method names}
     \item{getOmegas}{\code{signature(obj = "NMRun")}: Retrieves the omega estimates from a particular problem}
     \item{getSigmas}{\code{signature(obj = "NMRun")}: Retrieves the sigma estimates from a particular problem}
     \item{getThetas}{\code{signature(obj = "NMRun")}: Retrieves the theta estimates from a particular problem}
@@ -54,6 +59,7 @@ imports a NONMEM run on the basis of its control file.
 	\item{getControlStatements}{\code{signature(obj = "NMRun")}: Extract an object with parsed statements control file
 	corresponding to a particular problem}
 	\item{getNmVersion}{\code{signature(obj = "NMRun")}: Extract information about NONMEM version used for compiling problem}
+	\item{getSimInfo}{\code{signature(obj = "NMRun")}: Get Simulation Information}
 	}
 }
 
