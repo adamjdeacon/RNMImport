@@ -81,7 +81,7 @@ NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputCo
 				# grab dimensions of omega final estimates
 				omegaDim <- dim(MethodResults[[1]]$FinalEstimates$OMEGA)
 				
-				# if no initial omega, fall back on a defualt set of names
+				# if no initial omega, fall back on a default set of names
 				
 				if(is.null(omegaInitial)) {
 					omegaInitial <- matrix(NA, nrow = omegaDim[1], ncol = omegaDim[2])

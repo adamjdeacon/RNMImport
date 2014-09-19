@@ -61,7 +61,7 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 				omegaInitial <- if(!is.null(controlStatements$Omega)) controlStatements$Omega  else  reportContents$initialEstimates$OMEGA
 				# grab dimensions of omega final estimates
 				omegaDim <- dim(FinalEstimates$OMEGA)
-				# if no initial omega, fall back on a defualt set of names
+				# if no initial omega, fall back on a default set of names
 				if(is.null(omegaInitial)) {
 					omegaInitial <- matrix(NA, nrow = omegaDim[1], ncol = omegaDim[2])
 					omegaDimNames <- list(paste( "OMEGA", 1:omegaDim[1], sep = "" ), paste( "OMEGA", 1:omegaDim[2], sep = "" ))
