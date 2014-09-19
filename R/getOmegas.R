@@ -1,5 +1,5 @@
 
-PARAMITEMS <- c("final", "initial", "stderrors")
+# This : PARAMITEMS <- c("final", "initial", "stderrors") is defined in getThetas.R
 
 #' A generic function that extracts omega estimates (and initial estimates and standard errors if specified) from a NONMEM object.
 #' For NONMEM 7 objects, shrinkage values will also be available
