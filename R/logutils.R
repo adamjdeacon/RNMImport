@@ -5,7 +5,7 @@
 #' @title Message logging
 #' @return None
 #' @author Mango Solutions
-#' @keywords IO, debugging, utilies
+#' @keywords IO, debugging, utilities
 
 logMessage <- function(text, logName)
 {
@@ -19,7 +19,7 @@ logMessage <- function(text, logName)
 #' @title Set log connection
 #' @return Nothing
 #' @author Mango Solutions
-#' @keywords IO, debugging, utilies
+#' @keywords IO, debugging, utilities
 
 setLogConnection <- function(logName, conn)
 {

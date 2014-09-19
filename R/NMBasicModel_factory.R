@@ -74,7 +74,7 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 				rownames(thetaInitial) <- c("lowerBound", "initial", "upperBound")
 				
 				# if standard errors are available in the lst file,store them with the "XXXFinal" slots
-				# TODO: In the future, recomment changing this logic and method of storage as this is getting 
+				# TODO: In the future, recommend changing this logic and method of storage as this is getting 
 				# quite convoluted
 				if(!is.null(reportContents$StandardError))
 				{

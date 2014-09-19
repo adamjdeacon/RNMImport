@@ -60,7 +60,7 @@ ogrep <- function( pattern, text, filter = NULL, ignore.case = TRUE, perl = FALS
 # list
 # @ absent - What to return if the string is missing
 # @ ignore.case - If TRUE, ignores case
-# @ sep - [C,1] character to use a a separator between key and value
+# @ sep - [C,1] character to use a separator between key and value
 # @ removeBrackets - [L,1] 
 # @ numeric - [L, 1] Logical flag.  If TRUE, will return as numeric
 ##################################################################
@@ -81,7 +81,7 @@ pop <- function(
 	### need spaces after closing brackets
 	txt <- gsub( "\\)[[:space:]]*", ") ", txt )
 	
-	### expand the regex if dealing with a shorcut
+	### expand the regex if dealing with a shortcut
 	#   FIX instead of FIXED, etc, ....
 	mode <- match.arg( mode )
 	if( shortcut && mode == "equal" )
@@ -236,14 +236,14 @@ ynPop <- function(
 
 ##################################################################
 # commentSplit
-# Splits a set of strings along comment delimeter.
+# Splits a set of strings along comment delimiter.
 # Author: Mango Solutions
 # Added: Jan 2 2009
 # Last modified: Jan 2 2009
 # parameters :
 # @ txt [C,+] - A character vector holding the text to split
 # @ pattern - A regular expression that fully describes the section markets, such as $PROBLEM
-# @ sep - The prefix for a section seperator
+# @ sep - The prefix for a section separator
 # returns - Indices where the sections begin
 ##################################################################
 
@@ -290,7 +290,7 @@ commentSplit <- function(
 # @ section - [C,1] A string demarcating the section (e.g. "PROBLEM", "INPUT")
 # @ text - [C, +] A character vector holding the text to check for sections
 # @ pattern - A regular expression that fully describes the section markets, such as $PROBLEM
-# @ sep - The prefix for a section seperator
+# @ sep - The prefix for a section separator
 # returns - Indices where the sections begin
 ##################################################################
 
@@ -300,7 +300,7 @@ stripBlanks <- function(
 		trim = TRUE,                    #@ [L,1] doing any trimming (replace multi space with single space)
 		leading = TRUE,                 #@ [L,1] remove leading spaces
 		trailing = TRUE,                #@ [L,1] remove trailing spaces
-		shrink = TRUE,                  #@ [L,1] shrink spaces aroung = signs
+		shrink = TRUE,                  #@ [L,1] shrink spaces around = signs
 		trimRx = "[[:space:]]+", 
 		trailingRx = "[[:space:]]*$", 
 		leadingRx  = "^[[:space:]]*", 
@@ -479,7 +479,7 @@ splitVector <- function(x, indices, includeStart = FALSE, includeEnd = FALSE)
 
 extractBalanced <- function(stream, leadingChar='ACCEPT\\s*=\\s*'){
     orig = stream
-    # Assume comments only happend at the end of stream, and remove all possible comments
+    # Assume comments only happened at the end of stream, and remove all possible comments
     # if we assume comments can happen interior of streams, it will be terrificly hard to deal with
 
     # to process the following case:
@@ -510,7 +510,7 @@ extractBalanced <- function(stream, leadingChar='ACCEPT\\s*=\\s*'){
     # comment position
     pos.comment = regexpr(';.*$','', stream)
 
-    # extract the first appearence of leadingChar=(....) in the stream, 
+    # extract the first appearance of leadingChar=(....) in the stream, 
     # we already protect it from "" or ''
     startpos.tag = regexpr(leadingChar, stream)
     if (startpos.tag <= 0 || (pos.comment>0 && startpos.tag >= pos.comment)) {

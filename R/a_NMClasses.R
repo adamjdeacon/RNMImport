@@ -172,7 +172,7 @@ validity.NMRun <- function(object)
 {
 	if(length(object@problems) < 1)
 		return("Run has no problem results!")
-	# check that all problelms extend the "NMProblem" class
+	# check that all problems extend the "NMProblem" class
 	
 	extendsProbClass <- sapply(object@problems, function(x) extends(class(x), "NMProblem"))
 	if(!all(extendsProbClass))
@@ -195,7 +195,7 @@ validity.NMRun <- function(object)
 setOldClass("Date")
 
 #' This is the basic class for handling a standard NONMEM run.  In essence, it holds
-#' several inidividual problems which may be of type NMBasicModel, NMSimModel, and NMSimDataGen.
+#' several individual problems which may be of type NMBasicModel, NMSimModel, and NMSimDataGen.
 #' It also holds the control file and list output file text
 #' 
 #' @slot controlText [C,+] Text of the control file, without comments
@@ -231,7 +231,7 @@ validity.NMSimModelNM7 <- function(object)
 #	test1 <- test1 & dim(object@omegaFinal)[3] == dim(object@sigmaFinal)[3] 
 #	test1 <- test1 & length(object@objectiveFinal)  
 #	if(!test1)
-#		return("Incompability between number of simulations and dimension of one of the parameter estimates")
+#		return("Incompatibility between number of simulations and dimension of one of the parameter estimates")
 	TRUE
 }
 
@@ -258,7 +258,7 @@ setClass("NMSimModelNM7", representation("NMProblem", numSimulations = "numeric"
 				omegaInitial = "matrix", sigmaInitial = "matrix", seeds = "numeric"
 		), validity = validity.NMSimModelNM7)
 
-# auxilliary classes for representing report file statements and control file statements
+# auxiliary classes for representing report file statements and control file statements
 
 setClass("nmRunReport", representation("list"))
 

@@ -1,4 +1,4 @@
-#' Converts NONMEM modelling code to executable R code, reurning either a list or vector of R commands
+#' Converts NONMEM modelling code to executable R code, returning either a list or vector of R commands
 #' @title Convert NONMEM code to R 
 #' @param model NONMEM "code" to convert.  May be a full PRED statement
 #' @param idCol identifier column

@@ -65,7 +65,7 @@ sectionMethodBlock <- function(methodContents)
 # TODO: this function is overly-complex; clean it so that it no longer recurses
 
 #' Partitions the contents of a list file into sections that can then be parsed individually
-#' @param fileContents [C,+] Lines of text from a list ifle
+#' @param fileContents [C,+] Lines of text from a list file
 #' @param sep (?) passed to .cleanRx
 #' @param keep.all (?)
 #' @param recurse Should the function be called recursively?  
@@ -276,7 +276,7 @@ partitionLstSubproblems <- function(contents)
 	lapply(seq_along(subprobStarts), function(i) contents[subprobStarts[i]:subprobEnds[i]])
 }
 
-#' Obtain the minimum value of the the objective function from the correct element of the list returned by sectionLst
+#' Obtain the minimum value of the objective function from the correct element of the list returned by sectionLst
 #' @param item An element of the list returned by sectionLst
 #' @return NULL if item is NULL, minimum value of the objective function otherwise
 #' @author Mango Solutions
@@ -304,7 +304,7 @@ partitionLstSubproblems <- function(contents)
 }
 
 #' Partitions the text of a report file into chunks of text for each "method" used.  This applies to
-#' NONMEM 7 reports only, as they will now have seperate parameter estimates, objective function values etc.
+#' NONMEM 7 reports only, as they will now have separate parameter estimates, objective function values etc.
 #' for different $EST methods employed.
 #' @param lstProblemContents A character vector of lines of text from a NONMEM 7 report file  
 #' @return A list of character vectors of split text.  Each element of the list will also have an attribute

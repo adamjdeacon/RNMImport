@@ -63,7 +63,7 @@ importModelOutputTables <- function( tableStatement, allowFirstOnly = TRUE,
 		# force to numeric
 		currentTable <- .importDataNumeric(currentTable, missToZero = FALSE)
 		
-        # compute the correct pre.colNames, colNames ; convert maybe facters into characters
+        # compute the correct pre.colNames, colNames ; convert maybe factors into characters
         colNames <- CSLtoVector(as.character(tableStatement[i,"Columns"]))
         pre.colNames <- colNames
         # pre.colNames : the colNames read from tableStatement and modified according to append attribute
@@ -75,7 +75,7 @@ importModelOutputTables <- function( tableStatement, allowFirstOnly = TRUE,
             # NONMEM appears to ignore the presence of PRED, RES and WRES in the table statement, 
             # and simply adds them to the end of the table on its own 
             # regardless of what order they appear in the TABLE statement
-            # However, "DV" won't be ignored except it's happend to be the last one in the statement
+            # However, "DV" won't be ignored except it's happened to be the last one in the statement
             # "DV" appear in other place will remain
             if (pre.colNames[length(pre.colNames)]=='DV') {
                 pre.colNames <- pre.colNames[-length(pre.colNames)]

@@ -13,7 +13,7 @@
 #' $INPUT statement will not be imported with the run
 #' @param textReport Logical flag.  If TRUE, various standard text outputs will be logged to stdReport
 #' @return An NMRun object that holds the information of the NONMEM run. If input data tables cannot be imported, 
-#' a warninjg will ne emitted and the input data will be ignored.  The same is true if any output table files 
+#' a warning will be emitted and the input data will be ignored.  The same is true if any output table files 
 #' cannot be found.
 #' @note 
 #' The behaviour of this function is fairly complex, due to the intricacies of NONMEM itself. Below we list key

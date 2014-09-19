@@ -26,7 +26,7 @@ validity.NMRun <- function(object)
 setOldClass("Date")
 
 #' This is the basic class for handling a standard NONMEM run.  In essence, it holds
-#' several inidividual problems which may be of type NMBasicModel, NMSimModel, and NMSimDataGen.
+#' several individual problems which may be of type NMBasicModel, NMSimModel, and NMSimDataGen.
 #' It also holds the control file and list output file text
 #' @slot controlText [C,+] Text of the control file, without comments
 #' @slot controlComments [C,1] Comments of each line of the control file

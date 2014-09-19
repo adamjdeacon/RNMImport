@@ -33,7 +33,7 @@ importModelData <- function(
 	translate <- dataStatement[,"TRANSLATE"]
 	records <- dataStatement[,"RECORDS"]
 	
-	# split out the ignore statement, as individuals tokens (or chunks of code) are seperated by ";"
+	# split out the ignore statement, as individuals tokens (or chunks of code) are separated by ";"
 	ignoreTokens <- unlist(strsplit(ignore, split = ";"))
 	# replace "NONE" with "#"
 	ignoreTokens <- ifelse(ignoreTokens == "NONE", "#", ignoreTokens)
@@ -84,7 +84,7 @@ importModelData <- function(
 	}
 	myData <- myData[, colsToKeepSel, drop = FALSE]
 	
-	# save the number of input columns before any alias duplication is perfomed
+	# save the number of input columns before any alias duplication is performed
 	
 	numInDataColumns <- ncol(myData)
 	

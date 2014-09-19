@@ -273,7 +273,7 @@ getSimInfo.NMSim <- function(obj, problemNum = 1, addRawInfo = TRUE)
 	
 	controlStatements <- obj@controlStatements
 	
-	# the raw $SIM statemnet is an attribute of the Sim element
+	# the raw $SIM statement is an attribute of the Sim element
 	
 	rawSim <- attr(controlStatements$Sim, "rawStatement")
 	simInfo <- c(obj@numSimulations, obj@seeds)

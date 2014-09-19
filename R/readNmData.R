@@ -9,7 +9,7 @@
 #' @param translate [C,1] - translate option, see NM?$DATA[TRANSLATE]
 #' @param records [CN,1] - number of records, see NM?$DATA[RECORDS]
 #' @param null [C,1] - value to replace NA, see NM?$DATA[NULL]
-#' @param sep character that seperates fields
+#' @param sep character that separates fields
 #' @return A data.frame of the contents of the tables in the file
 #' @examples 
 #'  \dontrun{ 

@@ -63,7 +63,7 @@ NMSimModelNM7 <- function(controlStatements, path, reportContents, versionInfo =
 		})
 }
 
-#' Utility function which reararranges the SIGMA and OMEGA parameter estimates retrieved by importNmReport
+#' Utility function which rearranges the SIGMA and OMEGA parameter estimates retrieved by importNmReport
 #' @param matrixList List of matrices of SIGMAs or OMEGAs as imported from a NONMEM 7 list file by importNmReport
 #' @param nSim Number of simulations performed
 #' @param numMethods Number of methods used
