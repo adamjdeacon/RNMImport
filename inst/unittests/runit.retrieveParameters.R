@@ -22,7 +22,7 @@ test.getThetas <- function()
 	
 	prob1 <- getProblem(run1)
 	
-	run3 <- importNm( "TestData1notab.ctl", path = file.path(unitTestPath, "testdata/TestRunNotab" ))
+	run3 <- importNm( "TestData1notab.ctl", path = file.path(unitTestPath, "testdata/TestRunNoTab" ))
 	# expThetas <- matrix(c(19.6, 84.6, 1.66), 1, 3, dimnames = list(c("estimates"), c("THETA1", "THETA2", "THETA3")))
 	expThetas <- c("THETA1" = 19.6, "THETA2" = 84.6, "THETA3" = 1.66)
 	expThetaInitial <- matrix(c(-Inf, 18.7, Inf, -Inf, 87.3, Inf, -Inf, 2.13, Inf), 3,
@@ -135,7 +135,7 @@ test.getOmegas <- function()
 	checkEquals(omegaTest1,  expOmegaInit)
 	checkEquals(omegaTest2,  expOmegaInit)	
 	
-	run3 <- importNm( "TestData1notab.ctl", path = file.path(unitTestPath, "testdata/TestRunNotab" ))
+	run3 <- importNm( "TestData1notab.ctl", path = file.path(unitTestPath, "testdata/TestRunNoTab" ))
 	omegaTest3 <- getOmegas(run3, what = c("final", "stderrors"))
 	omegaStderrs <- structure(c(0.0239, 0, 0, 0, 0.022, 0, 0, 0, 0.345), .Dim = c(3L, 
 					3L), .Dimnames = list(c("OMEGA1", "OMEGA2", "OMEGA3"), c("OMEGA1", 
@@ -246,7 +246,7 @@ test.getOmegas <- function()
 test.getSigmas <- function()
 {
 	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
-	run1 <- importNm( "TestData1notab.ctl", path = file.path(unitTestPath, "testdata/TestRunNotab" ))
+	run1 <- importNm( "TestData1notab.ctl", path = file.path(unitTestPath, "testdata/TestRunNoTab" ))
 	prob1 <- getProblem(run1)
 	
 	expSigmas <- array(0.0202, c(1,1), dimnames = list("SIGMA1", "SIGMA1"))

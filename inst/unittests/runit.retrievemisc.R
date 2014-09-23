@@ -51,7 +51,7 @@ test.getEstimateCov <- function()
 {
 
 	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
-	run1 <- importNm( "TestData1notab.ctl", path = file.path(unitTestPath, "testdata/TestRunNotab" ))
+	run1 <- importNm( "TestData1notab.ctl", path = file.path(unitTestPath, "testdata/TestRunNoTab" ))
 	prob1 <- getProblem(run1)
 	
 	checkEquals(getEstimateCov(run1, corMatrix = TRUE) ,getEstimateCov(run1, corMatrix = TRUE))
@@ -145,7 +145,7 @@ test.getNmVersion <- function()
 {
 
 	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
-	run1 <- importNm( "TestData1notab.ctl", path = file.path(unitTestPath, "testdata/TestRunNotab" ))
+	run1 <- importNm( "TestData1notab.ctl", path = file.path(unitTestPath, "testdata/TestRunNoTab" ))
 	run2 <- importNm( "TestData1SIM.con", path = file.path(unitTestPath, "testdata/TestSimRun" ))
 	
 	checkEquals( getNmVersion(run1), c(major = "VI", "minor" = "2" ) , " version of run1 is correct")
@@ -186,8 +186,12 @@ test.getFileinfo <- function()
 	run1 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestRun" ))
 	
 	fInfoTest <- getFileinfo(run1) 
-	checkEquals(colnames(fInfoTest), c("size", "mode", "mtime", "ctime", "atime", "exe", "fileName"), 
-			msg = " |correct columns present")
+	if (.Platform$OS.type == "windows") {
+		colnametest <- c("size", "mode", "mtime", "ctime", "atime", "exe", "fileName")
+	} else {
+		colnametest <- c("size", "mode", "mtime", "ctime", "atime", "uid", "gid", "uname", "grname", "fileName")
+	}
+	checkEquals(colnames(fInfoTest), colnametest, msg = " |correct columns present")
 	checkEquals(rownames(fInfoTest), c("controlFile", "reportFile" ))
 	
 	checkEquals(fInfoTest$size, c(941, 7820))

@@ -39,7 +39,7 @@ test.changeDataSubset <- function()
 	STANDARDSUBSET <- c("MDV != 1", "EVID == 0", "AMT <= 0")
 	# import a test run
 	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
-	testRun <- importNm(conFile = "testdata1notab.ctl", reportFile = "testdata1notab.lst", 
+	testRun <- importNm(conFile = "TestData1notab.ctl", reportFile = "TestData1notab.lst", 
 			path =  file.path(unitTestPath, "testdata/TestRunNoTab"))
 	testProblem <- getProblem(testRun)
 	

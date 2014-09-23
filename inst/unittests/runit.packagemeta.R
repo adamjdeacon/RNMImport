@@ -9,15 +9,15 @@ test.getVarDescription <- function()
 	varDescription <- RNMImport:::getVarDescription
 	testFrameOne <- data.frame(Variable = c("ID", "SEX"), Label = c("Subject Number", "Gender"),
 						Format = c("", "0=male, 1=female"),	VarType = c("Undefined", "Covariate"), stringsAsFactors = FALSE)
-	testFrameTwo <- data.frame(Variable = "BILT", Label = paste0("Total Bilirubin (", intToUtf8(181), "mol/L)"), Format = "", VarType = "Lab Covariate", stringsAsFactors = FALSE)
+	testFrameTwo <- data.frame(Variable = "CLCR", Label = "Creatinine Clearance (mL/min)", Format = "", VarType = "Lab Covariate", stringsAsFactors = FALSE)
 	
 	x <- varDescription(c("ID", "SEX"))
 	rownames(x) <- NULL
 	
 	checkEquals(x, testFrameOne, check.attributes = FALSE)	
 	checkEquals(names(varDescription(c("ID", "SEX"))), names(testFrameOne))
-	checkEquals(varDescription("BILT"), testFrameTwo, check.attributes = FALSE)
-	checkEquals(names(varDescription(c("BILT"))), names(testFrameTwo))
+	checkEquals(varDescription("CLCR"), testFrameTwo, check.attributes = FALSE)
+	checkEquals(names(varDescription(c("CLCR"))), names(testFrameTwo))
 	# TODO: add test for when there are missing variable descriptions
 }
 
@@ -150,7 +150,7 @@ test.configSubsets <- function()
 	# set internal unit path from runRNMImportTests?
 	
 	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
-	testRun <- importNm(conFile = "testdata1notab.ctl", reportFile = "testdata1notab.lst", 
+	testRun <- importNm(conFile = "TestData1notab.ctl", reportFile = "TestData1notab.lst", 
 			path =  file.path(unitTestPath, "testdata/TestRunNoTab"))
 	
 	checkEquals(dataSubset(getProblem(testRun)), c("MDV != 1", "EVID == 0"), " |Subset loaded correctly|")
@@ -161,7 +161,7 @@ test.configSubsets <- function()
 	# TODO: remove use of the global unitTestPath!!
 	
 	
-	testRun <- importNm(conFile = "testdata1notab.ctl", reportFile = "testdata1notab.lst", 
+	testRun <- importNm(conFile = "TestData1notab.ctl", reportFile = "TestData1notab.lst", 
 			path = file.path(unitTestPath, "testdata/TestRunNoTab"))
 	
 	checkTrue(is.null(dataSubset(testRun)),  " |No default data subset attached|")
