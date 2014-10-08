@@ -37,6 +37,7 @@
 	dataTxt <- negGrep( varRx, txt, value = TRUE)            # only the lines with data
 	dataTxt <- gsub( "^\\+", "", dataTxt )    # remove beginning of line plus
 	dataTxt <- gsub( "\\.{2,}", "0", dataTxt) # replace ....... by 0  
+  dataTxt <- dataTxt[1:length(vars)] # remove the last line, which is a string and not part of the matrix
 	dataVal <- as.numeric( .readValues( dataTxt ) )
 	
 	### stucture the output into a matrix
