@@ -21,3 +21,9 @@ exportClasses("NMRun", "NMProblem", "NMBasicModel", "NMBasicModelNM7", "NMSimDat
 exportMethods(nmData, getThetas, show, getOmegas, getSigmas, addDerivedCategorical, imposeCategoryFormat)
 exportMethods(getObjective, nmDatabyVarType, getEstimateCov, getControlStatements, addedData)
 exportMethods(getNmVersion, getMethodNames, getSimInfo, getIterations)
+
+importFrom("methods", "extends", "is", "new", "show")
+importFrom("stats", "complete.cases", "end", "median", "na.omit",
+           "quantile", "start")
+importFrom("utils", "count.fields", "dump.frames", "head",
+           "read.table", "tail")
