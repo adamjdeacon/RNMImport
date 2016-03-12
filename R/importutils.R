@@ -209,7 +209,7 @@ hasExtension <- function(fileName, extensions)
 #' @param pri 
 #' @return does the string, basically PRIOR, exist in the control file?
 #' @author Mango Solutions
-.lookFor <- function(contStates=names(obj@controlStatements), subr=NULL, pri='^ +[$](PRIOR|PRI)|PRIOR='){
+.lookFor <- function(contStates, subr=NULL, pri='^ +[$](PRIOR|PRI)|PRIOR='){
 	test2 <- FALSE
 	test1 <- any(regexpr(pri, contStates, ignore.case=TRUE)>0)
 	if(length(subr)>0){
