@@ -20,6 +20,8 @@
 #'  }
 #' @keywords IO
 #' @author Mango Solutions
+#' @importFrom stats median
+#' @importFrom utils count.fields
 
 
 readNmData <- function(

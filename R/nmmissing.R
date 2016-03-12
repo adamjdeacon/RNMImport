@@ -1,3 +1,6 @@
+
+#' @importFrom stats na.omit
+
 na.omit.NMProblem <- function(prob, dataTypes = c("input", "output", "added"))
 {
 	dataTypes <- intersect(dataTypes, c("input", "output", "added"))

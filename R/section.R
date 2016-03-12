@@ -49,7 +49,7 @@ section <- function(
 {
 	# TODO: More comments
  
-	startPos <- if(is.null(start)) 1 else sectionStart( text = toupper(text), pattern = startpattern )
+	startPos <- if(is.null(startSection)) 1 else sectionStart( text = toupper(text), pattern = startpattern )
 	
 	out <- list( )
 	l.text <- length(text)

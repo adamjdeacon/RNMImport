@@ -36,6 +36,8 @@ addDerivedCategorical <- function(obj, varName, newVar = paste(varName, ".CUT", 
 setGeneric("addDerivedCategorical")
 
 
+#' @importFrom stats quantile
+
 addDerivedCategorical.NMBasicModel <- function(obj, varName, newVar = paste(varName, ".CUT", sep = ""), breaks = 5, binType = "range", labels = NULL, dataType = "output")
 {
 	#Get input or output dataframe
@@ -84,6 +86,9 @@ addDerivedCategorical.NMRun <- function(obj, varName, newVar = paste(varName, ".
 setMethod("addDerivedCategorical", signature(obj = "NMRun"), addDerivedCategorical.NMRun)
 
 setOldClass("data.frame")
+
+#' @importFrom stats quantile
+
 addDerivedCategorical.data.frame <- function(obj, varName, newVar = paste(varName, ".CUT", sep = ""), breaks = 5, binType = "range", labels = NULL)
 {
 	#Various logical conditions that must pass
@@ -114,6 +119,7 @@ addDerivedCategorical.data.frame <- function(obj, varName, newVar = paste(varNam
 }
 setMethod("addDerivedCategorical", signature(obj = "data.frame"), addDerivedCategorical.data.frame)
 
+#' @importFrom stats quantile
 addDerivedCategorical.NMSimModel <- function(obj, varName, newVar = paste(varName, ".CUT", sep = ""), breaks = 5, binType = "range", labels = NULL, dataType = "output")
 {
 	#Get input or output dataframe
@@ -149,6 +155,8 @@ addDerivedCategorical.NMSimModel <- function(obj, varName, newVar = paste(varNam
 }
 setMethod("addDerivedCategorical", signature(obj = "NMSimModel"), addDerivedCategorical.NMSimModel)
 setMethod("addDerivedCategorical", signature(obj = "NMSimModelNM7"), addDerivedCategorical.NMSimModel)
+
+#' @importFrom stats quantile
 
 addDerivedCategorical.NMSimDataGen <- function(obj, varName, newVar = paste(varName, ".CUT", sep = ""), breaks = 5, binType = "range", labels = NULL, dataType = "output")
 {

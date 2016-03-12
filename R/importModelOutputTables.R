@@ -13,7 +13,7 @@
 #' is returned if returnFormat = "singleDF", UNLESS there are both FIRSTONLY tables and non-FIRSTONLY tables, in which
 #' case a list of 2 components is returned. 
 #' @author Mango Solutions
-
+#' @importFrom methods is
 
 importModelOutputTables <- function( tableStatement, allowFirstOnly = TRUE, 
         dvLog = FALSE, trim = FALSE, returnFormat = c("singleDF", "DFlist"),

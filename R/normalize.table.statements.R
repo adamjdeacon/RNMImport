@@ -44,6 +44,7 @@ normalize.table.statements = function(tableStatement, force.change=FALSE) {
 #' @param fn the filename of multiple table text file
 #' @param num how many tables need to be splitted into
 #' @return logical value indicating if splitting is successfully
+#' @importFrom methods is
 split.file.into = function(fn, num) {
     lines = try(readLines(fn), silent=TRUE)
     if (is(lines,'try-error')) return(FALSE)

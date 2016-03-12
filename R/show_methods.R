@@ -169,6 +169,7 @@ show.NMBasicModelNM7 <- function(object)
 
 setMethod("show", signature(object = "NMBasicModelNM7"), show.NMBasicModelNM7)
 
+#' @importFrom stats na.omit
 
 show.NMSimDataGen <- function(object)
 {
@@ -202,6 +203,8 @@ show.NMSimDataGen <- function(object)
 }
 
 setMethod("show", signature(object = "NMSimDataGen"), show.NMSimDataGen)
+
+#' @importFrom stats na.omit
 
 show.NMSimModel <- function(object)
 {
@@ -252,6 +255,7 @@ show.NMSimModel <- function(object)
 
 setMethod("show", signature(object = "NMSimModel"), show.NMSimModel)
 
+#' @importFrom stats na.omit
 
 show.NMSimModelNM7 <- function(object)
 {

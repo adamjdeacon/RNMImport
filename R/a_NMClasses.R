@@ -168,6 +168,9 @@ setClass("NMSimModel", representation("NMProblem", numSimulations = "numeric" ,
 				thetaInitial = "vector", 
 				omegaInitial = "matrix", sigmaInitial = "matrix", seeds = "numeric"
 		))
+
+#' @importFrom methods extends
+
 validity.NMRun <- function(object)
 {
 	if(length(object@problems) < 1)

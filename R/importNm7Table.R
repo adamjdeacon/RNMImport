@@ -19,6 +19,7 @@
 #'     print(attr(phiTables[[1]], "method"))
 #' }
 #' @export
+#' @importFrom utils tail read.table
 
 importNm7Tables <- function(file, path = ".", type = c("cov", "ext", "phi"), tableTitles = TRUE)
 {

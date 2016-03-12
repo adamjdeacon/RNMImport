@@ -25,6 +25,7 @@ RNMImportWarning <- function(msg = "Warning!\n", call = NULL)
 #' @author Mango Solutions
 #' @keywords error
 #' @export
+#' @importFrom utils dump.frames head
 
 RNMImportStop <- function(msg = "Error!\n",  call = NULL)
 {
