@@ -28,11 +28,15 @@ addedData.NMRun <-function(obj, problemNum = 1)
 	addedData(getProblem(obj, problemNumber = 1))
 }
 
+#' @rdname addedData
+
 setMethod("addedData", signature(obj = "NMRun"), addedData.NMRun)
 
 addedData.NMProblem <- function(obj)
 {
 	obj@additionalVars
 }
+
+#' @rdname addedData
 
 setMethod("addedData", signature(obj = "NMProblem"), addedData.NMProblem)

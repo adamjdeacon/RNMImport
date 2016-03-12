@@ -1,4 +1,6 @@
 
+.RNMImportTestEnv <- new.env()
+
 #' Run unit tests.
 #'
 #' Run the unit tests by RUnit package, and generate a html or text report. 
@@ -14,7 +16,7 @@
 #' x <- runRNMImportTests(TestResult = "runRNMImportTests_tests")
 #' summary(x)
 #' }
-#'
+#' @noRd
 
 runRNMImportTests <- function(TestPath = system.file(package="RNMImport", "unittests"), 
 		ExcludeFolders = NULL, TestResult = NULL, ResultsType = c("html", "text"))
@@ -22,7 +24,6 @@ runRNMImportTests <- function(TestPath = system.file(package="RNMImport", "unitt
 	if(!requireNamespace("RUnit", quietly = TRUE)) stop("There is no 'RUnit' package!")
 	TestPath <- normalizePath(TestPath, winslash = "/", mustWork = TRUE)
 	ResultsType <- match.arg(ResultsType)
-	if (!exists(".RNMImportTestEnv", envir = .GlobalEnv)) assign(".RNMImportTestEnv", new.env(), envir = .GlobalEnv)
 	assign("InternalDataPath", TestPath, envir = .RNMImportTestEnv)
 	
 	TestFolders <- list.dirs(TestPath, full.names = TRUE, recursive = FALSE)
@@ -44,7 +45,6 @@ runRNMImportTests <- function(TestPath = system.file(package="RNMImport", "unitt
 		if (ResultsType == "html") RUnit::printHTMLProtocol(OUT, fileName = TestResult)
 		if (ResultsType == "text") RUnit::printTextProtocol(OUT, fileName = TestResult)
 	} 
-	if (exists(".RNMImportTestEnv", envir = .GlobalEnv)) rm(.RNMImportTestEnv, envir = .GlobalEnv)
 	return(OUT)
 }
 

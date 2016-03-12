@@ -259,7 +259,7 @@ nmVersion <- function(lstContents)
 #' @title partitionLstSubproblems
 #' @return list
 #' @author Mango Solutions
-#'
+#' @noRd
 
 partitionLstSubproblems <- function(contents)
 {

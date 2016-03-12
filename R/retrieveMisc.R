@@ -205,6 +205,8 @@ getControlStatements.NMRun <- function(obj, problemNum = 1)
 	getControlStatements(getProblem(obj, problemNum))
 }
 
+#' @rdname getControlStatements
+
 setMethod("getControlStatements", signature(obj = "NMRun"), getControlStatements.NMRun)
 
 getControlStatements.NMProblem <- function(obj, ...) 
@@ -212,6 +214,7 @@ getControlStatements.NMProblem <- function(obj, ...)
 	obj@controlStatements
 }
 
+#' @rdname getControlStatements
 
 setMethod("getControlStatements", signature(obj = "NMProblem"), getControlStatements.NMProblem)
 
@@ -237,7 +240,12 @@ getNmVersion.NMRunProb <- function(obj)
 	versionInfo
 }
 
+#' @rdname getNmVersion
+
 setMethod("getNmVersion", signature(obj = "NMRun"), getNmVersion.NMRunProb)
+
+#' @rdname getNmVersion
+
 setMethod("getNmVersion", signature(obj = "NMProblem"), getNmVersion.NMRunProb)
 
 #' Extract information simulation information from a simulation problem
@@ -265,6 +273,8 @@ getSimInfo.NMRun <- function(obj, problemNum = 1, addRawInfo = TRUE)
 	getSimInfo(getProblem(obj, problemNumber = problemNum), addRawInfo = addRawInfo)
 }
 
+#' @rdname getSimInfo
+
 setMethod("getSimInfo", signature(obj = "NMRun"), getSimInfo.NMRun)
 
 getSimInfo.NMSim <- function(obj, problemNum = 1, addRawInfo = TRUE)
@@ -282,6 +292,14 @@ getSimInfo.NMSim <- function(obj, problemNum = 1, addRawInfo = TRUE)
 	simInfo
 }
 
+#' @rdname getSimInfo
+
 setMethod("getSimInfo", signature(obj = "NMSimModelNM7"), getSimInfo.NMSim)
+
+#' @rdname getSimInfo
+
 setMethod("getSimInfo", signature(obj = "NMSimDataGen"), getSimInfo.NMSim)
+
+#' @rdname getSimInfo
+
 setMethod("getSimInfo", signature(obj = "NMSimModel"), getSimInfo.NMSim)
