@@ -65,6 +65,8 @@ setGeneric("nmData")
 		subset
 }
 
+if (getRversion() >= "2.15.1") utils::globalVariables("NSIM")
+
 nmData.NMBasicModel <- function(obj, dataTypes = c("input", "output") , returnMode = c("singleDF", "DFList"),
 		subset = NULL, ...)
 {

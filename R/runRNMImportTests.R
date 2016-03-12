@@ -31,22 +31,21 @@ runRNMImportTests <- function(TestPath = system.file(package="RNMImport", "unitt
 		TestSuite <- list()
 		for (i in seq_along(TestFolders)) {
 			TestSuiteName <- paste0("RNMImport Tests - ", basename(TestFolders)[i])
-			TestSuite[[i]] <- defineTestSuite(TestSuiteName, dirs = TestFolders[i], testFileRegexp = "^runit\\..+\\.[rR]$") 
+			TestSuite[[i]] <- RUnit::defineTestSuite(TestSuiteName, dirs = TestFolders[i], testFileRegexp = "^runit\\..+\\.[rR]$") 
 		}
 	} else {
-		TestSuite <- defineTestSuite("RNMImport Tests", dirs = TestPath, testFileRegexp = "^runit\\..+\\.[rR]$")
+		TestSuite <- RUnit::defineTestSuite("RNMImport Tests", dirs = TestPath, testFileRegexp = "^runit\\..+\\.[rR]$")
 	}
 	
 	OUT <- RUnit::runTestSuite(TestSuite)
 	if(!is.null(TestResult)) {
 		TestResult <- paste(gsub(paste("\\.", ResultsType, sep = ""), "", 
 						TestResult, ignore.case = TRUE), ResultsType, sep = ".")
-		if (ResultsType == "html") printHTMLProtocol(OUT, fileName = TestResult)
-		if (ResultsType == "text") printTextProtocol(OUT, fileName = TestResult)
+		if (ResultsType == "html") RUnit::printHTMLProtocol(OUT, fileName = TestResult)
+		if (ResultsType == "text") RUnit::printTextProtocol(OUT, fileName = TestResult)
 	} 
 	if (exists(".RNMImportTestEnv", envir = .GlobalEnv)) rm(.RNMImportTestEnv, envir = .GlobalEnv)
 	return(OUT)
 }
-
 
 
