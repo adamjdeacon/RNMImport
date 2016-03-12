@@ -19,7 +19,7 @@
 runRNMImportTests <- function(TestPath = system.file(package="RNMImport", "unittests"), 
 		ExcludeFolders = NULL, TestResult = NULL, ResultsType = c("html", "text"))
 {
-	if(!require("RUnit", quietly = TRUE)) stop("There is no 'RUnit' package!")
+	if(!requireNamespace("RUnit", quietly = TRUE)) stop("There is no 'RUnit' package!")
 	TestPath <- normalizePath(TestPath, winslash = "/", mustWork = TRUE)
 	ResultsType <- match.arg(ResultsType)
 	if (!exists(".RNMImportTestEnv", envir = .GlobalEnv)) assign(".RNMImportTestEnv", new.env(), envir = .GlobalEnv)
@@ -37,7 +37,7 @@ runRNMImportTests <- function(TestPath = system.file(package="RNMImport", "unitt
 		TestSuite <- defineTestSuite("RNMImport Tests", dirs = TestPath, testFileRegexp = "^runit\\..+\\.[rR]$")
 	}
 	
-	OUT <- runTestSuite(TestSuite)
+	OUT <- RUnit::runTestSuite(TestSuite)
 	if(!is.null(TestResult)) {
 		TestResult <- paste(gsub(paste("\\.", ResultsType, sep = ""), "", 
 						TestResult, ignore.case = TRUE), ResultsType, sep = ".")
