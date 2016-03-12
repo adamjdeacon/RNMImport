@@ -3,8 +3,10 @@ Title: Tools for importing and manipulating NONMEM data
 Version: 0.3.6
 Author: Mango Solutions <support@mango-solutions.com>
 Maintainer: Gabor Csardi <gcsardi@mango-solutions.com>
-Suggests: RUnit (>= 0.4.22)
-Depends: R (>= 2.8.0)
+Suggests:
+    RUnit (>= 0.4.22)
+Depends:
+    R (>= 2.8.0)
 Imports:
     utils,
     stats,
@@ -15,3 +17,4 @@ Description: Imports NONMEM data, and provides utilities for manipulation
 License: BSD_3_clause + file LICENSE
 URL: https://github.com/mangothecat/RNMImport
 BugReports: https://github.com/mangothecat/RNMImport/issues
+RoxygenNote: 5.0.1
