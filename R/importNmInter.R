@@ -3,6 +3,7 @@
 #' @param iterSec An element of the list returned by sectionLst  
 #' @return Vector
 #' @author Mango Solutions
+#' @noRd
 
 .readIterSection <- function(x)
 {

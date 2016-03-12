@@ -8,6 +8,7 @@
 #' @note Based on code by R. Francois
 #' @author Mango Solutions
 #' @export
+
 .importNmLstMatrix <- function( 
 		txt,                  #@ [C+] text in which to read the matrices
 		condensed = NULL,          #@ [L,1] using the condensed notation

@@ -28,6 +28,7 @@ sectionStart <- function(
 #' @title section
 #' @return A list of character vectors, where each element of the list is a section of the control file
 #' @author Mango Solutions
+#' @noRd
 
 # Originally by R. Francois
 

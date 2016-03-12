@@ -141,6 +141,7 @@ augmentDefaultDataSubset <- function(sub)
 #' @param applyOnLoad If supplied, used to toggle the setting
 #' @return Setting if argument is not supplied
 #' @author Mango Solutions
+#' @noRd
 
 applySubsetOnLoad <- function(applyOnLoad)
 {

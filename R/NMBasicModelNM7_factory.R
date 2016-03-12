@@ -9,6 +9,7 @@
 #' @param versionInfo [C, +] numeric vector that holds
 #' @return An NMBasicModel object holding the problem information
 #' @author Mango Solutions
+#' @@noRd
 
 NMBasicModelNM7 <- function(controlStatements, path, reportContents, dropInputColumns = FALSE, 
 		versionInfo = c("major" = "VII", "minor" = 1), conFile=NULL)

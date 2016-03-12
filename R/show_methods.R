@@ -5,6 +5,7 @@
 #' @title Show output table info
 #' @return none
 #' @author Mango Solutions
+#' @noRd
 
 showOutput <- function(object)
 {

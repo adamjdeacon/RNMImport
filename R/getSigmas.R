@@ -17,6 +17,7 @@
 #'      x <- importNm("theoph.con", path = "examples/theoph")
 #'      getSigmas(x, what = c("initial", "final")) 
 #' }
+#' @noRd
 
 getSigmas <- function(obj, what = "final",  subProblemNum = 1, method = 1, problemNum = 1)
 {

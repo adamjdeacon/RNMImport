@@ -8,7 +8,7 @@
 #' @return A data.frame of descriptor information about each line in the $TABLE statement, including
 #' which columns are to be written, whether there is a header or not, etc.
 #' @author Mango Solutions
-#' 
+#' @noRd
 
 .importNmModTables <- function
 (

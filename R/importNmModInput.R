@@ -10,7 +10,7 @@
 #' statement with the variables used by NONMEM, which can be different by setting
 #' aliases, e.g. ID=SUBJ in the $INPUT statement.  Also some may be dropped
 #' @author Mango Solutions
-#' 
+#' @noRd
 
 
 .importNmModInput <- function(txt, .extract = length(grep("\\$INPUT", toupper(txt))) > 0)

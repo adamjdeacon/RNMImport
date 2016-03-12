@@ -87,7 +87,7 @@
 #' @param previousProblem 
 #' @return vector
 #' @author Mango Solutions
-#' 
+#' @noRd
 
 .mergeMissing <- function(currentProblem, previousProblem)
 {

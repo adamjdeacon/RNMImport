@@ -9,7 +9,7 @@
 #' @return A matrix with one row for each "theta" and 3 columns : 1 for the lower value bounds.
 #' one for the initial estimate, and one for the upper bound
 #' @author Mango Solutions
-#' 
+#' @noRd
 
 # note: Based on code by R Francois, J James and R Pugh
 

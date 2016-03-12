@@ -21,6 +21,7 @@
 #'      x.covariates <- nmDatabyVarType(x, varTypes = "Covariate")
 #'      print(head(x.covariates))
 #' }
+#' @noRd
 
 nmDatabyVarType <- function(obj, varTypes, returnMode = c("singleDF", "DFList"), ... )
 {

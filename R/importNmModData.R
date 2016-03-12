@@ -7,7 +7,7 @@
 #' @param .extract Logical flag.  If TRUE, assumes
 #' @return A matrix of descriptor information
 #' @author Mango Solutions
-#' 
+#' @noRd
 
 .importNmModData <- function(txt, modFile, 
         .extract = length(grep("^\\$DAT", toupper(txt))) > 0 ){

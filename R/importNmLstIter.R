@@ -5,6 +5,8 @@
 #' @return A 3 column data.frame with the iterations for each parameter estimate
 #' @note Based on code by R. Francois, R. Pugh and J. James
 #' @author Mango Solutions
+#' @noRd
+
 .importNmLstIter <- function(iterList)
 {
 	

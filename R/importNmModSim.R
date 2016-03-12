@@ -7,6 +7,7 @@
 #' @return A character vector holding the number of simulation subproblems, the 2 seed values, and
 #'  whether or not SIMONLY is TRUE or FALSE
 #' @author Mango Solutions
+#' @noRd
 
 
 .importNmModSim <- function(

@@ -33,7 +33,7 @@
 #'  print(summary(y.outputData))
 #' }
 #' @keywords utilities datagen
-#' 
+#' @noRd
  
 
 # TODO: add option to extract from derived data
@@ -52,6 +52,7 @@ setGeneric("nmData")
 #' @param subset The subset parameter passed to nmData - a logical, NULL, or a character vector
 #' @return NULL or a character vector
 #' @author Mango Solutions
+#' @noRd
 
 .getSubset <- function(obj, subset)
 {

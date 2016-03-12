@@ -5,6 +5,7 @@
 #' @param reportContents Parsed contents of the report file
 #' @return Newly constructed object 
 #' @author Mango Solutions
+#' @noRd
 
 NMSimModel <- function(controlStatements, path, reportContents, versionInfo = c("major" = "VI", "minor" = 0))
 {

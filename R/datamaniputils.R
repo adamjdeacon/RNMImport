@@ -6,6 +6,7 @@
 #' @title Convert list of matrices to 3d array
 #' @return An 3d array whose submatrices come from "matrixList"
 #' @author Mango Solutions
+#' @noRd
 
 arrayFromMatrixList <- function(matrixList, matrixNames = names(matrixList))
 {

@@ -14,6 +14,7 @@
 #' case a list of 2 components is returned. 
 #' @author Mango Solutions
 #' @importFrom methods is
+#' @noRd
 
 importModelOutputTables <- function( tableStatement, allowFirstOnly = TRUE, 
         dvLog = FALSE, trim = FALSE, returnFormat = c("singleDF", "DFlist"),

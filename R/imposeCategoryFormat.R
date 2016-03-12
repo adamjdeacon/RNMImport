@@ -11,6 +11,7 @@
 #' x <- data.frame(SMOK = sample(0:1, 10, replace = TRUE), SEX = sample(1:2, 10, replace = TRUE))
 #' print(imposeCategoryFormat(x)) 
 #' @author Mango Solutions
+#' @noRd
 
 imposeCategoryFormat <- function(obj, varSubset, ...)
 {

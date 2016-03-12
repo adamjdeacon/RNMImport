@@ -19,6 +19,7 @@ PARAMITEMS <- c("final", "initial", "stderrors")
 #'      x <- importNm("theoph.con", path = "examples/theoph")
 #'      getThetas(x, what = c("initial", "final")) 
 #' }
+#' @noRd
 
 getThetas <- function(obj, what = "final", subProblemNum = 1, method = 1, problemNum = 1 )
 {

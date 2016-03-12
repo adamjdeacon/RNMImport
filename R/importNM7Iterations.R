@@ -14,7 +14,7 @@
 #' @return A list of data.frames of iteration information.  Each data.frame
 #' will have been loaded via \code{importNmTable}
 #' @author Mango Solutions
-#' 
+#' @noRd
 
 importNm7Iterations <- function( files = NULL, noTitles = NULL, noLabels = NULL, methods = NULL, path = "." )
 {

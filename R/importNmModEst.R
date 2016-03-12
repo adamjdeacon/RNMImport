@@ -5,6 +5,7 @@
 #' @return A matrix of parsed statements.  Each row of the matrix will correspond to one parsed $EST statement.
 #' These will have 4 columns
 #' @author Mango Solutions
+#' @noRd
 
 
 .importNmModEst <- function(txt )

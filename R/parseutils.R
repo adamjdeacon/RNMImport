@@ -18,7 +18,7 @@ negGrep <- function( pattern ,text, value = FALSE, ...)
 #' @title "grep -o"
 #' @return A vector of segments of texts that match "pattern" 
 #' @author Mango Solutions
-#' 
+#' @noRd
 
 # Original code by R Francois
 
@@ -386,6 +386,7 @@ killRegex <- function(txt, rx, ignore.case = TRUE, rmBlanks = FALSE, ...)
 #' @param ... additional parameters passed to "scan"
 #' @return vector
 #' @author Mango Solutions
+#' @noRd
 
 .readValues <- function( txt, quiet = TRUE, what = "character",  ... )
 {
@@ -433,6 +434,7 @@ nullIfBlank <- function(x)
 #' @param txt 
 #' @return List of sequences, as described above
 #' @author Mango Solutions
+#' @noRd
 
 lseq <- function( x, txt = NULL ){
 	out <- mapply( seq, length.out = diff(x), from = head(x, -1) )
@@ -451,6 +453,7 @@ lseq <- function( x, txt = NULL ){
 #' @param includeEnd should the last element of the vector be included automatically?
 #' @return A list of split elements of x.  These will be of the form x[index_n:(index_n - 1)] for each index
 #' @author Mango Solutions
+#' @noRd
 
 splitVector <- function(x, indices, includeStart = FALSE, includeEnd = FALSE)
 {

@@ -5,6 +5,8 @@
 #' @param tableStatement a tableStatement in the control stream, typically returned by importNmMod
 #' @param force.change return the normalized tableStatement even the original file is not splited successfully
 #' @return the normalized tableStatement which each table resides in its own file
+#' @noRd
+
 normalize.table.statements = function(tableStatement, force.change=FALSE) {
     files = as.character(tableStatement[,'File'])
     N = NROW(tableStatement)
@@ -45,6 +47,8 @@ normalize.table.statements = function(tableStatement, force.change=FALSE) {
 #' @param num how many tables need to be splitted into
 #' @return logical value indicating if splitting is successfully
 #' @importFrom methods is
+#' @noRd
+
 split.file.into = function(fn, num) {
     lines = try(readLines(fn), silent=TRUE)
     if (is(lines,'try-error')) return(FALSE)

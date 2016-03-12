@@ -10,7 +10,7 @@
 #' @param ... 
 #' @return A matrix if just the covariance matrix is required, a list of matrices otherwise
 #' @author Mango Solutions
-#'
+#' @noRd
 
 getEstimateCov <- function(obj, corMatrix = FALSE, invCorMatrix = FALSE, pdMatrix = FALSE, ...)
 {
@@ -85,6 +85,7 @@ setMethod("getEstimateCov", signature(obj = "NMBasicModelNM7"), getEstimateCov.N
 #'      x <- importNm("theoph.con", path  = "examples/theoph")
 #'      getObjective(x)
 #' }
+#' @noRd
 
 getObjective <- function(obj, addMinInfo = TRUE, ...)
 {
@@ -172,7 +173,7 @@ setMethod("getObjective", signature(obj="NMSimModelNM7"), getObjective.NMSimMode
 #' @return A data.frame with 2 rows, 1 describing the report file and the other the control file
 #' @author Mango Solutions
 #' @keywords utility
-#'
+#' @noRd
 
 getFileinfo <- function(run)
 {
