@@ -123,5 +123,6 @@
 		alright <- which( regexpr("[\\(\\)]", trythat) == -1 )
 		rownames(out)[rx.out!=-1][alright] <- trythat[alright]
 	}
-	out 	
+	out <- data.frame(out) 	
+	out$FIX <- sapply(thetaLines,function(x)logicalPop( x, "FIX", inPlace = TRUE)) 	
 }
