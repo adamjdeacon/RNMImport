@@ -21,6 +21,7 @@
 #' an exception will also be generated. 
 #' @keywords IO
 #' @noRd
+#' @export
 
 importNmMod <- function(
 		fileName = NULL, path = NULL, version = "VI", textReport = FALSE )
