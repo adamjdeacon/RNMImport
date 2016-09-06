@@ -125,4 +125,7 @@
 	}
 	out <- data.frame(out) 	
 	out$FIX <- sapply(thetaLines,function(x)logicalPop( x, "FIX", inPlace = TRUE)) 	
+	out$comments <- rep(NA, nrow(out))
+    if(length(comments)>0) { out$comments <- comments }
+    out
 }
