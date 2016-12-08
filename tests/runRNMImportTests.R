@@ -1,4 +1,6 @@
 
+stopifnot(require(RNMImport, quietly = TRUE))
+
 .RNMImportTestEnv <- new.env()
 
 #' Run unit tests.
@@ -13,20 +15,20 @@
 #' @author Mango Solutions
 #' @keywords debugging
 #' @examples \dontrun{
-#' x <- runRNMImportTests(TestResult = "runRNMImportTests_tests")
-#' summary(x)
+#' ## Run this from the /tests folder
+#' source("runRNMImportTests_tests")
 #' }
 #' @noRd
 
-runRNMImportTests <- function(TestPath = system.file(package="RNMImport", "unittests"), 
+runRNMImportTests <- function(TestPath = "./unittests",
 		ExcludeFolders = NULL, TestResult = NULL, ResultsType = c("html", "text"))
 {
-	if(!requireNamespace("RUnit", quietly = TRUE)) stop("There is no 'RUnit' package!")
+	if(!require("RUnit", quietly = TRUE)) stop("There is no 'RUnit' package!")
 	TestPath <- normalizePath(TestPath, winslash = "/", mustWork = TRUE)
 	ResultsType <- match.arg(ResultsType)
-	assign("InternalDataPath", TestPath, envir = .RNMImportTestEnv)
+	assign("TestPath", TestPath, envir = .RNMImportTestEnv)
 	
-	TestFolders <- list.dirs(TestPath, full.names = TRUE, recursive = FALSE)
+	TestFolders <- TestPath
 	TestFolders <- TestFolders[!basename(TestFolders) %in% ExcludeFolders]
 	if (length(TestFolders) > 0) {
 		TestSuite <- list()
@@ -38,7 +40,7 @@ runRNMImportTests <- function(TestPath = system.file(package="RNMImport", "unitt
 		TestSuite <- RUnit::defineTestSuite("RNMImport Tests", dirs = TestPath, testFileRegexp = "^runit\\..+\\.[rR]$")
 	}
 	
-	OUT <- RUnit::runTestSuite(TestSuite)
+	OUT <- RUnit::runTestSuite(TestSuite[[1]])
 	if(!is.null(TestResult)) {
 		TestResult <- paste(gsub(paste("\\.", ResultsType, sep = ""), "", 
 						TestResult, ignore.case = TRUE), ResultsType, sep = ".")
@@ -49,3 +51,5 @@ runRNMImportTests <- function(TestPath = system.file(package="RNMImport", "unitt
 }
 
 
+OUT <- runRNMImportTests()
+summary(OUT)

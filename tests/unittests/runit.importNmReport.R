@@ -6,7 +6,7 @@
 test.importNmReport.Basic <- function()
 {
 	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
-	report1 <- importNmReport("TestData1notab.lst", path = file.path(unitTestPath, "testdata/TestRunNoTab"))
+	report1 <- RNMImport:::importNmReport("TestData1notab.lst", path = file.path(unitTestPath, "testdata/TestRunNoTab"))
 	
 	report1Class <- class(report1)
 	attributes(report1Class) <- NULL
@@ -14,8 +14,8 @@ test.importNmReport.Basic <- function()
 	
 	checkEquals(report1$VersionInfo, structure(c("VI", "2.0"), .Names = c("Version", "Level")), msg = " | correct version info")
 	
-	 #conStatements <- importNmMod("TestData1.ctl", path = file.path(unitTestPath, "testdata/TestRun"))
-	# report1.withCtl <- importNmReport("TestData1.lst", controlStatements = conStatements, path = file.path(unitTestPath, "testdata/TestRun"))
+	 #conStatements <- RNMImport:::importNmMod("TestData1.ctl", path = file.path(unitTestPath, "testdata/TestRun"))
+	# report1.withCtl <- RNMImport:::importNmReport("TestData1.lst", controlStatements = conStatements, path = file.path(unitTestPath, "testdata/TestRun"))
 	# checkEquals(report1, report1.withCtl, "report loaded with control statements and without are identical (1)")
 	
 	checkEquals(length(report1$Raw), 231, msg = "Raw contents correct length")
@@ -48,8 +48,8 @@ test.importNmReport.Basic <- function()
 	# 11:17 AM
 	#################
 	
-	report2 <- importNmReport("test.lst", path = file.path(unitTestPath, "testdata") )
-	report3 <- importNmReport("test_stoptimefooter.lst", path = file.path(unitTestPath, "testdata") )
+	report2 <- RNMImport:::importNmReport("test.lst", path = file.path(unitTestPath, "testdata") )
+	report3 <- RNMImport:::importNmReport("test_stoptimefooter.lst", path = file.path(unitTestPath, "testdata") )
 	
 	# compare the reports without the raw contents.  They should be equal
 	
@@ -62,9 +62,9 @@ test.importNmReport.Basic <- function()
 test.importNmReport.SimModel <- function()
 {
 	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
-	report2 <- importNmReport("TestData1SIM.lst", path = file.path(unitTestPath, "testdata/TestSimRun"))
-	conStatements <- importNmMod("TestData1SIM.con", path = file.path(unitTestPath, "testdata/TestSimRun"))
-	report2.withCtl <- importNmReport("TestData1SIM.lst", controlStatements = conStatements, path = file.path(unitTestPath, "testdata/TestSimRun"))
+	report2 <- RNMImport:::importNmReport("TestData1SIM.lst", path = file.path(unitTestPath, "testdata/TestSimRun"))
+	conStatements <- RNMImport:::importNmMod("TestData1SIM.con", path = file.path(unitTestPath, "testdata/TestSimRun"))
+	report2.withCtl <- RNMImport:::importNmReport("TestData1SIM.lst", controlStatements = conStatements, path = file.path(unitTestPath, "testdata/TestSimRun"))
 	
 	checkEquals(report2$VersionInfo , c("VI", "1.0"), check.attributes = FALSE , msg = " | correct version info")
 	
@@ -94,7 +94,7 @@ test.importNmReport.SimModel <- function()
 test.importNmReport.BasicNM7 <- function()
 {
 	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
-	report3 <- importNmReport("TestData1.lst", path = file.path(unitTestPath, "testdata/TestDataNM7"))
+	report3 <- RNMImport:::importNmReport("TestData1.lst", path = file.path(unitTestPath, "testdata/TestDataNM7"))
 	
 	probResults <- report3$problemResults[[1]]
 	
@@ -162,7 +162,7 @@ test.importNmReport.BasicNM7 <- function()
 	# 11:17 AM
 	#################
 	
-	report4 <- importNmReport("TestData1_stoptimefooter.lst", path = file.path(unitTestPath, "testdata"))
+	report4 <- RNMImport:::importNmReport("TestData1_stoptimefooter.lst", path = file.path(unitTestPath, "testdata"))
 	
 	checkEquals( tail( report3, - 1), tail(report4, -1  ) )
 }

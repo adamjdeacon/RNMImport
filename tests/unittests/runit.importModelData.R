@@ -15,7 +15,7 @@ test.importModelData <- function()
     # first test: checks that multiple IGNORE= are handled correctly
 	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
     testDir <- file.path(unitTestPath, "testdata")
-    # x <- readNmData(file.path(testDir, "data3"))
+    # x <- RNMImport:::readNmData(file.path(testDir, "data3"))
     
     dataStatement <- RNMImport:::.importNmModData("$DATA data3.dat IGNORE=I IGNORE=(TIME.EQ.1)")
     
@@ -106,7 +106,7 @@ test.importModelDataAliasDrop <- function()
     # first test: checks that multiple IGNORE= are handled correctly
 	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
     testDir <- file.path(unitTestPath, "testdata")
-    # x <- readNmData(file.path(testDir, "data3"))
+    # x <- RNMImport:::readNmData(file.path(testDir, "data3"))
     
     dataStatement1 <- .importNmModData("$DATA data4.dat IGNORE=#")
     inputStatement <- .importNmModInput("$INPUT AMT TIME=TIM DV=FOO")

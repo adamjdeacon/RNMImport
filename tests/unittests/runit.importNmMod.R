@@ -13,7 +13,7 @@ test.importNmMod <- function()
 {
 	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
 	testDir <- file.path(unitTestPath, "testdata")
-	dat1 <- importNmMod(file.path(testDir, "control3.con"))
+	dat1 <- RNMImport:::importNmMod(file.path(testDir, "control3.con"))
 	
 	dat1Class <- class(dat1)
 	attributes(dat1Class) <- NULL
@@ -26,17 +26,17 @@ test.importNmMod <- function()
 	checkEquals(names(x), c("Theta", "Problem", "Tables", "Subroutine", "Input", "Data",
 							"PK", "Error", "Estimates", "Cov") )
 	checkEquals(x$Data[1,"REWIND"], c(REWIND = "FALSE"), msg = "Checking ")
-	dat2 <- importNmMod(file.path(testDir, "control4.con"))
+	dat2 <- RNMImport:::importNmMod(file.path(testDir, "control4.con"))
 	checkEquals(rownames(dat2$problemContents[[1]]$Theta), c("A", "B", "C"), msg = "Parameter labels read correctly")
 
-	dat3 <- importNmMod(file.path(testDir, "multiprob1.mod"))
+	dat3 <- RNMImport:::importNmMod(file.path(testDir, "multiprob1.mod"))
 	
 	checkEquals(length(dat3$problemContents), 2)
 	x <- dat3$problemContents
 	checkEquals(names(x[[1]]), c("Problem","Subroutine", "Input", "Data", "PRED"   ))
 	checkEquals(names(x[[2]]), c("Theta",  "Omega", "Sigma", "Problem", "Input","Data","Sim")) 
 	# now try an example with simulation statements
-	dat4 <- importNmMod(file.path(testDir, "subprob1.mod"))
+	dat4 <- RNMImport:::importNmMod(file.path(testDir, "subprob1.mod"))
 	
 	
 	checkEquals(sum(dat4$Comments == ""), 59)
