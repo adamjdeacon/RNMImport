@@ -23,10 +23,10 @@ initializeLogs <- function()
 }
 
 
-initializeVariables <- function(libName = file.path(system.file(), "../"))
+initializeVariables <- function()
 {
-	
-	fileName <- file.path(libName, "RNMImport", "configdata/NONMEM2_Variables.csv" )
+
+	fileName <- system.file(package = .packageName, "configdata", "NONMEM2_Variables.csv")
 	packageStartupMessage("Full path to configuration file: \n", fileName, "\n")
 	defaultConfig <- try(read.table(file = fileName, header = TRUE, sep = ",", stringsAsFactors = FALSE), silent = TRUE)
 	if(inherits(defaultConfig, "try-error"))
@@ -57,7 +57,7 @@ initializeSubsets <- function()
 .onLoad <- function(libname, pkgname)
 {
 	initializeLogs()
-	initializeVariables(libname)
+	initializeVariables()
 	initializeFileNameExtensions()
 	initializeDataPath()
 	initializeSubsets()
