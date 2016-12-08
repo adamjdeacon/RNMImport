@@ -54,11 +54,6 @@ initializeSubsets <- function()
 	.RNMImportEnv$subsets <- list("default" = c("MDV != 1", "EVID == 0", "AMT <= 0"), applyOnLoad = TRUE)
 }
 
-initializeMiscOptions <- function(libName = file.path(system.file(), "../"))
-{
-	.RNMImportEnv$unitTestPath <- file.path(libName, "RNMImport/unittests") 
-}
-
 .onLoad <- function(libname, pkgname)
 {
 	initializeLogs()
@@ -66,7 +61,6 @@ initializeMiscOptions <- function(libName = file.path(system.file(), "../"))
 	initializeFileNameExtensions()
 	initializeDataPath()
 	initializeSubsets()
-	initializeMiscOptions()
 
 }
 
