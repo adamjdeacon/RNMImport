@@ -33,7 +33,7 @@ test.nmTitle <- function()
 		" EPS1",                                                                                                                    
 		"+        1.97E-02"  )
 
-	testSection1Split <- RNMImport:::nmTitle(testSection1)
+	testSection1Split <- nmTitle(testSection1)
 	checkEquals( testSection1Split$text, testSection1[-(1:5)], msg =  " |text field should be the original text minus the header" )
 	checkEquals( testSection1Split$title, "FINAL PARAMETER ESTIMATE", msg = " |title field is the text in the middle of a soup of stars")
 
@@ -48,9 +48,9 @@ test.nmVersion <- function()
 				   "PROBLEM NO.:         1")
 	
 		  
-	versionInfo <- RNMImport:::nmVersion(testText1)
+	versionInfo <- nmVersion(testText1)
 	checkEquals(versionInfo, c("Version" = "VI", "Level" = "1.0"), msg = " |Version info extracted correctly")
-	errorCheck <- try(RNMImport:::nmVersion(testText1[-1]), silent = TRUE)
+	errorCheck <- try(nmVersion(testText1[-1]), silent = TRUE)
 	checkTrue(length(grep(errorCheck, pattern = "Error : Could not find any version information in the contents of the report file")) > 0,
 			msg = " |appropriate error text appears in the error message")
 	

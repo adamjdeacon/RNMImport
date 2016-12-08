@@ -10,9 +10,9 @@ test.getObjective <- function()
 	run1 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestRun" ))
 	# NMBasicModel
 
-	checkEquals(RNMImport:::getObjective(getProblem(run1), addMinInfo = FALSE), 3228.988 ) 
+	checkEquals(getObjective(getProblem(run1), addMinInfo = FALSE), 3228.988 ) 
 	
-	obj <- RNMImport:::getObjective(run1, addMinInfo = TRUE)
+	obj <- getObjective(run1, addMinInfo = TRUE)
 	target <- 3228.988
 	attr(target, "minInfo") <- c("minResult" = "SUCCESSFUL", "numEval" = "143", 
 			"numSigDigits" = "3.5")
@@ -22,8 +22,8 @@ test.getObjective <- function()
 	
 	run2 <- importNm( "TestData1SIM.con", path = file.path(unitTestPath, "testdata/TestSimRun" ))
 	prob2 <- getProblem(run2)
-	checkEquals(RNMImport:::getObjective(run2, subProblems = 1:5), RNMImport:::getObjective(prob2, subProblems = 1:5))
-	checkEquals(RNMImport:::getObjective(prob2, subProblems = c(2, 4)), 
+	checkEquals(getObjective(run2, subProblems = 1:5), getObjective(prob2, subProblems = 1:5))
+	checkEquals(getObjective(prob2, subProblems = c(2, 4)), 
 			structure(c(3575.252, 3606.526), .Names = c("sim2","sim4")),
 			msg = " |objective functions for simulation problem are correct")
 	
@@ -32,13 +32,13 @@ test.getObjective <- function()
 	run3 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestDataNM7" ))
 	prob3 <- getProblem(run3)
 	
-	checkEquals(RNMImport:::getObjective(run3, method = 1:2), RNMImport:::getObjective(prob3, method = 1:2), msg = " |getobjective the same on run and NMBasicModelNM7" )
+	checkEquals(getObjective(run3, method = 1:2), getObjective(prob3, method = 1:2), msg = " |getobjective the same on run and NMBasicModelNM7" )
 	
 	objTarget <- c(3335.250, 2339.093)
 	attr(objTarget, "minInfo") <- c("OPTIMIZATION COMPLETED", "STOCHASTIC PORTION COMPLETED")
-	checkEquals(RNMImport:::getObjective(run3, method = 1:2), objTarget)
-	checkEquals(RNMImport:::getObjective(prob3, method = 1, addMinInfo = FALSE), 3335.250 )
-	checkEquals(RNMImport:::getObjective(prob3, method = 2, addMinInfo = FALSE), 2339.093 )
+	checkEquals(getObjective(run3, method = 1:2), objTarget)
+	checkEquals(getObjective(prob3, method = 1, addMinInfo = FALSE), 3335.250 )
+	checkEquals(getObjective(prob3, method = 2, addMinInfo = FALSE), 2339.093 )
 	
 	removeNmPath("internalunit")
 	
@@ -54,7 +54,7 @@ test.getEstimateCov <- function()
 	run1 <- importNm( "TestData1notab.ctl", path = file.path(unitTestPath, "testdata/TestRunNoTab" ))
 	prob1 <- getProblem(run1)
 	
-	checkEquals(RNMImport:::getEstimateCov(run1, corMatrix = TRUE) ,RNMImport:::getEstimateCov(run1, corMatrix = TRUE))
+	checkEquals(getEstimateCov(run1, corMatrix = TRUE) ,getEstimateCov(run1, corMatrix = TRUE))
 	# expected covariance matrices
 	expCovMat <- structure(c(0.927, 2.16, 0.0347, 0.00617, 0, 0, 0.00252, 0, 0.0471, 
 					0.00176, 2.16, 12.7, 0.18, 0.00892, 0, 0, 0.00903, 0, 0.39, 0.000474, 
@@ -82,8 +82,8 @@ test.getEstimateCov <- function()
 							"OM13", "OM22", "OM23", "OM33", "SG11"), c("TH1", "TH2", "TH3", 
 							"OM11", "OM12", "OM13", "OM22", "OM23", "OM33", "SG11")))
 	
-	checkEquals(RNMImport:::getEstimateCov(prob1), expCovMat, msg = " |covariance matrix as expected")
-	test1 <- RNMImport:::getEstimateCov(run1, corMatrix = TRUE)
+	checkEquals(getEstimateCov(prob1), expCovMat, msg = " |covariance matrix as expected")
+	test1 <- getEstimateCov(run1, corMatrix = TRUE)
 	
 	checkEquals(test1, list("covariance" = expCovMat, "correlation" = expCorMat),
 			msg = " | extracting with both")
@@ -92,14 +92,14 @@ test.getEstimateCov <- function()
 	
 	run2 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestRun" ))
 	
-	checkTrue(is.null(RNMImport:::getEstimateCov(run2)), msg = " |NULL returned when no parameter covariance matrix found" )
+	checkTrue(is.null(getEstimateCov(run2)), msg = " |NULL returned when no parameter covariance matrix found" )
 	
 	############## # now NONMEM 7 run
 	run3 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestDataNM7" ))
 	prob3 <- getProblem(run3)
 	
 	# for method 2, should be NULL
-	checkTrue( is.null(RNMImport:::getEstimateCov(run3, method = 2) ), msg = " |NULL returned when no parameter covariance matrix found")
+	checkTrue( is.null(getEstimateCov(run3, method = 2) ), msg = " |NULL returned when no parameter covariance matrix found")
 	
 	expCov2 <- structure(c(1.53, -6.69, 0.00102, 0.00653, 0, 0, -0.00655, 0, 
 					-0.0794, -0.00023, -6.69, 59.4, -0.0543, 0.0591, 0, 0, -0.14, 
@@ -128,11 +128,11 @@ test.getEstimateCov <- function()
 							"TH2", "TH3", "OM11", "OM12", "OM13", "OM22", "OM23", "OM33", 
 							"SG11"))) 
 	
-	cov2Test <- RNMImport:::getEstimateCov( prob3, method = 1 )
+	cov2Test <- getEstimateCov( prob3, method = 1 )
 	
 	checkEquals(cov2Test, expCov2, msg = " | covariance matrix OK")
 	
-	checkEquals(RNMImport:::getEstimateCov(prob3, corMatrix = TRUE), 
+	checkEquals(getEstimateCov(prob3, corMatrix = TRUE), 
 			list("covariance" = expCov2, "correlation" = expCor2),
 			msg = " |retrieving both at the same time works")
 }
@@ -185,7 +185,7 @@ test.getFileinfo <- function()
 	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
 	run1 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestRun" ))
 	
-	fInfoTest <- RNMImport:::getFileinfo(run1) 
+	fInfoTest <- getFileinfo(run1) 
 	if (.Platform$OS.type == "windows") {
 		colnametest <- c("size", "mode", "mtime", "ctime", "atime", "exe", "fileName")
 	} else {

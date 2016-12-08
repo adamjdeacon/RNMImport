@@ -10,12 +10,14 @@
 #' @param ... 
 #' @return A matrix if just the covariance matrix is required, a list of matrices otherwise
 #' @author Mango Solutions
-#' @noRd
+#' @export
 
 getEstimateCov <- function(obj, corMatrix = FALSE, invCorMatrix = FALSE, pdMatrix = FALSE, ...)
 {
 	RNMImportStop("getEstimateCov not implemented for this class yet\n", match.call())
 }
+
+#' @exportMEthod getEstimateCov
 
 setGeneric("getEstimateCov")
 
@@ -91,6 +93,8 @@ getObjective <- function(obj, addMinInfo = TRUE, ...)
 {
 	RNMImportStop("getObjective not implemented for this class type")
 }
+
+#' @exportMethod getObjective
 
 setGeneric("getObjective")
 
@@ -173,7 +177,7 @@ setMethod("getObjective", signature(obj="NMSimModelNM7"), getObjective.NMSimMode
 #' @return A data.frame with 2 rows, 1 describing the report file and the other the control file
 #' @author Mango Solutions
 #' @keywords utility
-#' @noRd
+#' @export
 
 getFileinfo <- function(run)
 {
@@ -181,7 +185,14 @@ getFileinfo <- function(run)
 	rbind("controlFile" = run@controlFileInfo, "reportFile" = run@reportFileInfo)
 }
 
+#' @rdname getFileinfo
+#' @export
+
 getReporttext <- function(run) 	run@reportText
+
+#' @rdname getFileinfo
+#' @export
+
 getControltext <- function(run) run@controlText
 
 
@@ -198,6 +209,8 @@ getControlStatements <- function(obj, ...)
 {
 	RNMImportStop("This function is not implemented for objects of this class")
 }
+
+#' @exportMethod getControlStatements
 
 setGeneric("getControlStatements")
 
@@ -231,6 +244,8 @@ getNmVersion <- function(obj)
 {
 	RNMImportStop("This function is not implemented for objects of this class")
 }
+
+#' @exportMethod getNmVersion
 
 setGeneric("getNmVersion")
 
@@ -266,6 +281,8 @@ getSimInfo <- function(obj, problemNum = 1, addRawInfo = TRUE)
 {
 	RNMImportStop("This function is not implemented for objects of this class")
 }
+
+#' @exportMethod getSimInfo
 
 setGeneric("getSimInfo")
 

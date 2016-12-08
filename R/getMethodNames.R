@@ -24,6 +24,8 @@ getMethodNames <- function(obj, what = c("report", "control" ), problemNum = 1)
     RNMImportStop("This function is not implemented for objects of this class")
 }
 
+#' @exportMethod getMethodNames
+
 setGeneric("getMethodNames")
 
 getMethodNames.NMRun <- function(obj, what = c("report", "control" ), problemNum = 1)

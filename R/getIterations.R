@@ -19,6 +19,8 @@ getIterations <- function(obj, problemNum = 1)
 	RNMImportStop("Not defined for objects of this class")
 }
 
+#' @exportMethod getIterations
+
 setGeneric("getIterations")
 
 getIterations.NMRun <- function(obj, problemNum = 1)

@@ -20,7 +20,7 @@ test.importNmModEst <- function()
 	"$EST METHOD=COND INTERACTION MAXEVAL=9999 NSIG=3 SIGL=10 PRINT=5 NOABORT NOPRIOR=1",
 	"FILE=test7.EXT NOLABEL=1" )
 
-	estResult1 <- RNMImport:::.importNmModEst(estText)
+	estResult1 <- .importNmModEst(estText)
 	
 	estMatrix1 <- cbind("method" = c("ITS", "SAEM", "IMP", "BAYES", "COND"), "file" = c("test7.EXT","","","test7.txt", "test7.EXT"),
 			"noTitle" = c("1", "1", "1","0","0"), "noLabel" = c("0", "0", "0", "1", "1"),

@@ -6,6 +6,7 @@
 #' @return none
 #' @author Mango Solutions
 #' @noRd
+#' @exportMethod show
 
 showOutput <- function(object)
 {

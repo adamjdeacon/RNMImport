@@ -141,7 +141,7 @@ test.importMethodBlock <- function()
 	# this attribute should be turned into the "method" field of the output list
 	
 	attr(testBlock, "method.name") <-  "Iterative Two Stage"
-	processedBlock <- RNMImport:::.importMethodBlock(testBlock)
+	processedBlock <- .importMethodBlock(testBlock)
 	
 	# extract just final estimates
 

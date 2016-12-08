@@ -28,19 +28,19 @@ test.getThetas <- function()
 	expThetaInitial <- matrix(c(-Inf, 18.7, Inf, -Inf, 87.3, Inf, -Inf, 2.13, Inf), 3,
 						dimnames = list(c("lowerBound", "initial", "upperBound"), c("THETA1", "THETA2", "THETA3")))
 	expThetaStderrs <-  c("THETA1" = 0.963, "THETA2" = 3.56, "THETA3" = 0.218)
-	checkEquals(RNMImport:::getThetas(prob1), expThetas)
-	checkEquals(RNMImport:::getThetas(run1), expThetas)
+	checkEquals(getThetas(prob1), expThetas)
+	checkEquals(getThetas(run1), expThetas)
 	
 	# final and initial together
 	
-	checkEquals(RNMImport:::getThetas(prob1, what = c("final", "initial")), rbind( expThetaInitial, "estimates" = expThetas),
+	checkEquals(getThetas(prob1, what = c("final", "initial")), rbind( expThetaInitial, "estimates" = expThetas),
 				msg = " |what = final and initial works correctly")
 	
-	tryStderrs <- try(RNMImport:::getThetas(run1, what = "stderrors"), silent = TRUE)
+	tryStderrs <- try(getThetas(run1, what = "stderrors"), silent = TRUE)
 	checkTrue(length(grep(tryStderrs, pattern = "Standard errors not available")) > 0, 
 			msg = " | correct error message when no standard errors available")
 	# stderrors and final
-	checkEquals(RNMImport:::getThetas(run3, what = c("final", "stderrors")), 
+	checkEquals(getThetas(run3, what = c("final", "stderrors")), 
 			rbind("estimates" = expThetas, "standardErrors" = expThetaStderrs), 
 			msg = " | final and stderrs together is correct" )
 	
@@ -59,54 +59,54 @@ test.getThetas <- function()
 	
 	names(simInitial) <- c("THETA1", "THETA2", "THETA3")
 	
-	checkEquals(RNMImport:::getThetas(prob2, subProblemNum = 1:5),  simThetas, msg = " |for sim model, final as expected")
+	checkEquals(getThetas(prob2, subProblemNum = 1:5),  simThetas, msg = " |for sim model, final as expected")
 	
-	checkEquals(RNMImport:::getThetas(prob2, subProblemNum = 3:4, what = c("final", "initial")),  
+	checkEquals(getThetas(prob2, subProblemNum = 3:4, what = c("final", "initial")),  
 			list("initial.estimates" = simInitial, "final.estimates" = simThetas[3:4,] ), 
 			msg = " |for sim model, final + initial as expected")
 	
-	checkEquals(RNMImport:::getThetas(prob2, what = "initial"), simInitial, msg = " |initial alone as expected")
+	checkEquals(getThetas(prob2, what = "initial"), simInitial, msg = " |initial alone as expected")
 	
 	## check that parameters are passed through correctly from run to simModel
 	# see also issue 1969
 	
-	checkEquals(RNMImport:::getThetas(run2, subProblemNum = 1:3, what = c("initial", "final")), 
-			RNMImport:::getThetas(prob2, subProblemNum = 1:3,  what = c("initial", "final") ))
+	checkEquals(getThetas(run2, subProblemNum = 1:3, what = c("initial", "final")), 
+			getThetas(prob2, subProblemNum = 1:3,  what = c("initial", "final") ))
 	
 	######## NONMEM 7 run
 	
 	run3 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestDataNM7" ))
 	prob3 <- getProblem(run3)
 	
-	checkEquals( RNMImport:::getThetas(prob3, what = c("initial", "final"), method = 2), 
+	checkEquals( getThetas(prob3, what = c("initial", "final"), method = 2), 
 			structure(c(-Inf, 20, Inf, 19.1, -Inf, 77.3, Inf, 76.7, -Inf, 
 							1.27, Inf, 1.68), .Dim = c(4L, 3L), .Dimnames = list(c("lowerBound", 
 									"initial", "upperBound", "estimates"), c("THETA1", "THETA2", 
 									"THETA3")), methodName = "Stochastic Approximation Expectation-Maximization"))
 	
-	checkEquals(RNMImport:::getThetas(prob3, what = "initial", method = 1), structure(c(-Inf, 18.7, Inf, -Inf, 87.3, Inf, -Inf, 2.13, Inf
+	checkEquals(getThetas(prob3, what = "initial", method = 1), structure(c(-Inf, 18.7, Inf, -Inf, 87.3, Inf, -Inf, 2.13, Inf
 					), .Dim = c(3L, 3L), .Dimnames = list(c("lowerBound", "initial", 
 									"upperBound"), c("THETA1", "THETA2", "THETA3")), 
 					methodName = "Iterative Two Stage"))
 	
-	checkEquals(RNMImport:::getThetas(prob3, what = c("stderrors", "final")), 
+	checkEquals(getThetas(prob3, what = c("stderrors", "final")), 
 			structure(c(20, 1.24, 77.3, 7.71, 1.27, 0.127), .Dim = 2:3, .Dimnames = list(
 							c("estimates", "standardErrors"), c("THETA1", "THETA2", "THETA3"
 							)), methodName = "Iterative Two Stage" ))
 
-	thetaTest4 <- RNMImport:::getThetas(prob3, what = "final", method = 1:2)
-	thetaTest5 <- RNMImport:::getThetas(prob3, what = c("initial", "final", "stderrors"), method = 1:2 )
+	thetaTest4 <- getThetas(prob3, what = "final", method = 1:2)
+	thetaTest5 <- getThetas(prob3, what = c("initial", "final", "stderrors"), method = 1:2 )
 	
-	checkEquals(thetaTest4, list(RNMImport:::getThetas(prob3, what = "final", method = 1), 
-					RNMImport:::getThetas(prob3, what = "final", method = 2)), msg = " |multiple methods correct (1) " )
+	checkEquals(thetaTest4, list(getThetas(prob3, what = "final", method = 1), 
+					getThetas(prob3, what = "final", method = 2)), msg = " |multiple methods correct (1) " )
 	
-	checkEquals(thetaTest5, list(RNMImport:::getThetas(prob3, what = c("initial", "stderrors", "final"), method = 1), 
-					RNMImport:::getThetas(prob3, what = c("initial", "stderrors", "final"), method = 2)), 
+	checkEquals(thetaTest5, list(getThetas(prob3, what = c("initial", "stderrors", "final"), method = 1), 
+					getThetas(prob3, what = c("initial", "stderrors", "final"), method = 2)), 
 			msg = " |multiple methods correct (2)")
 	
 	testDir <- file.path(unitTestPath, "testdata/TestRun")	
-	mod1 <- RNMImport:::importNmMod("TestData1.ctl",  path = testDir)
-	checkEquals(RNMImport:::getThetas(mod1), t(mod1$problemContents[[1]]$Theta))
+	mod1 <- importNmMod("TestData1.ctl",  path = testDir)
+	checkEquals(getThetas(mod1), t(mod1$problemContents[[1]]$Theta))
 }
 
 test.getOmegas <- function()
@@ -126,17 +126,17 @@ test.getOmegas <- function()
 	expOmegaInit <- diag(c(0.128, 0.142, 1.82))
 	dimnames(expOmegaInit) = list(c("OMEGA1", "OMEGA2", "OMEGA3"), c("OMEGA1", "OMEGA2", "OMEGA3"))
 	
-	checkEquals(RNMImport:::getOmegas(prob1),  expOmegas, msg = " |default parameters : extract final values")
-	checkEquals(RNMImport:::getOmegas(run1),  expOmegas)
+	checkEquals(getOmegas(prob1),  expOmegas, msg = " |default parameters : extract final values")
+	checkEquals(getOmegas(run1),  expOmegas)
 	
-	omegaTest1 <- RNMImport:::getOmegas(prob1, what = "initial")
-	omegaTest2 <- RNMImport:::getOmegas(run1, what = "initial")
+	omegaTest1 <- getOmegas(prob1, what = "initial")
+	omegaTest2 <- getOmegas(run1, what = "initial")
 	
 	checkEquals(omegaTest1,  expOmegaInit)
 	checkEquals(omegaTest2,  expOmegaInit)	
 	
 	run3 <- importNm( "TestData1notab.ctl", path = file.path(unitTestPath, "testdata/TestRunNoTab" ))
-	omegaTest3 <- RNMImport:::getOmegas(run3, what = c("final", "stderrors"))
+	omegaTest3 <- getOmegas(run3, what = c("final", "stderrors"))
 	omegaStderrs <- structure(c(0.0239, 0, 0, 0, 0.022, 0, 0, 0, 0.345), .Dim = c(3L, 
 					3L), .Dimnames = list(c("OMEGA1", "OMEGA2", "OMEGA3"), c("OMEGA1", 
 							"OMEGA2", "OMEGA3")))
@@ -145,13 +145,13 @@ test.getOmegas <- function()
 	
 	# check exception handling
 
-	tryOmega <- try(RNMImport:::getOmegas(run3, what = "foo"))
+	tryOmega <- try(getOmegas(run3, what = "foo"))
 	checkTrue( inherits(tryOmega, "try-error") )
 	checkTrue(length(grep( tryOmega, pattern = "No valid items selected for retrieval!" )) > 0)
 	
 	# try to get standard errors that aren't there, check for correct error message
 	
-	tryOmega2 <- try(RNMImport:::getOmegas(run1, what = "stderrors"))
+	tryOmega2 <- try(getOmegas(run1, what = "stderrors"))
 	checkTrue( inherits(tryOmega2, "try-error") )
 	checkTrue(length(grep( tryOmega2, pattern = "Standard errors not available" )) > 0)
 	
@@ -174,17 +174,17 @@ test.getOmegas <- function()
 	
 	dimnames(initialSimOmegas) <- list(c("OMEGA1", "OMEGA2", "OMEGA3"), c("OMEGA1", "OMEGA2", "OMEGA3"))
 	
-	checkEquals(RNMImport:::getOmegas(prob2, subProblemNum = 1:5),  simOmegas)
-	checkEquals(RNMImport:::getOmegas(prob2, what = "initial", subProblemNum = 1:5),  initialSimOmegas)
+	checkEquals(getOmegas(prob2, subProblemNum = 1:5),  simOmegas)
+	checkEquals(getOmegas(prob2, what = "initial", subProblemNum = 1:5),  initialSimOmegas)
 	
-	checkEquals(RNMImport:::getOmegas(prob2, what = c("final", "initial"), subProblemNum = 1:5), 
+	checkEquals(getOmegas(prob2, what = c("final", "initial"), subProblemNum = 1:5), 
 			list("initial.estimates" = initialSimOmegas , "final.estimates" = simOmegas))
 	
-	checkEquals(RNMImport:::getOmegas(prob2, what = c("final", "initial"), subProblemNum = 4), 
+	checkEquals(getOmegas(prob2, what = c("final", "initial"), subProblemNum = 4), 
 			list("initial.estimates" = initialSimOmegas , "final.estimates" = simOmegas[,,4, drop = FALSE]))
 	# check that parameters passed down correctly (see also issue 1969)
-	checkEquals(RNMImport:::getOmegas(run2, subProblemNum = 1:3, what = c("initial", "final")), 
-			RNMImport:::getOmegas(prob2, subProblemNum = 1:3,  what = c("initial", "final") ))
+	checkEquals(getOmegas(run2, subProblemNum = 1:3, what = c("initial", "final")), 
+			getOmegas(prob2, subProblemNum = 1:3,  what = c("initial", "final") ))
 	
 	
 	###################################
@@ -195,16 +195,16 @@ test.getOmegas <- function()
 	run3 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestDataNM7" ))
 	prob3 <- getProblem(run3)
 	
-	omegaTest1 <- RNMImport:::getOmegas(prob3, what = c("initial", "final"), method = 2)
+	omegaTest1 <- getOmegas(prob3, what = c("initial", "final"), method = 2)
 	
-	expOmega1 <- list(initial.estimates = .removeMethName( RNMImport:::getOmegas(prob3, what = "final", method = 1) ),	
-			final.estimates = .removeMethName(RNMImport:::getOmegas(prob3, method = 2)))
+	expOmega1 <- list(initial.estimates = .removeMethName( getOmegas(prob3, what = "final", method = 1) ),	
+			final.estimates = .removeMethName(getOmegas(prob3, method = 2)))
 	
 	attr(expOmega1, "methodName") <- "Stochastic Approximation Expectation-Maximization"
 	
 	checkEquals(omegaTest1, expOmega1,	msg = " | getOmegas correct (1)")
 	
-	omegaTest2 <- RNMImport:::getOmegas(prob3, what = c("stderrors", "initial"), method = 1)
+	omegaTest2 <- getOmegas(prob3, what = c("stderrors", "initial"), method = 1)
 	
 	checkEquals(omegaTest2, 
 			structure(list(initial.estimates = structure(c(0.128, 0, 0, 0, 
@@ -216,10 +216,10 @@ test.getOmegas <- function()
 							"standard.errors"), methodName = "Iterative Two Stage"), 
 			msg = " | getOmegas correct (2)")
 	
-	omegaTest3 <- RNMImport:::getOmegas( prob3, what = c("stderrors", "final"))
+	omegaTest3 <- getOmegas( prob3, what = c("stderrors", "final"))
 	
-	expOmega3 <- list(final.estimates =  .removeMethName(RNMImport:::getOmegas(prob3, what = "final")), 
-			standard.errors = .removeMethName(RNMImport:::getOmegas(prob3, what = "stderrors")))
+	expOmega3 <- list(final.estimates =  .removeMethName(getOmegas(prob3, what = "final")), 
+			standard.errors = .removeMethName(getOmegas(prob3, what = "stderrors")))
 	
 	attr(expOmega3, "methodName" ) <- "Iterative Two Stage"
 	
@@ -228,19 +228,19 @@ test.getOmegas <- function()
 		
 	## add additional tests for extracting multple methods at once
 	
-	omegaTest4 <- RNMImport:::getOmegas(prob3, what = "final", method = 1:2)
-	omegaTest5 <- RNMImport:::getOmegas(prob3, what = c("final", "stderrors"), method = 1:2 )
+	omegaTest4 <- getOmegas(prob3, what = "final", method = 1:2)
+	omegaTest5 <- getOmegas(prob3, what = c("final", "stderrors"), method = 1:2 )
 	
-	checkEquals(omegaTest4, list(RNMImport:::getOmegas(prob3, what = "final", method = 1), 
-					RNMImport:::getOmegas(prob3, what = "final", method = 2)), msg = " |multiple methods correct (1) " )
+	checkEquals(omegaTest4, list(getOmegas(prob3, what = "final", method = 1), 
+					getOmegas(prob3, what = "final", method = 2)), msg = " |multiple methods correct (1) " )
 	
-	checkEquals(omegaTest5, list(RNMImport:::getOmegas(prob3, what = c("stderrors", "final"), method = 1), 
-					RNMImport:::getOmegas(prob3, what = c("stderrors", "final"), method = 2)), 
+	checkEquals(omegaTest5, list(getOmegas(prob3, what = c("stderrors", "final"), method = 1), 
+					getOmegas(prob3, what = c("stderrors", "final"), method = 2)), 
 			msg = " |multiple methods correct (2)")
 	
 	testDir <- file.path(unitTestPath, "testdata/TestRun")	
-	mod1 <- RNMImport:::importNmMod("TestData1.ctl",  path = testDir)
-	checkEquals(RNMImport:::getOmegas(mod1), mod1$problemContents[[1]]$Omega)
+	mod1 <- importNmMod("TestData1.ctl",  path = testDir)
+	checkEquals(getOmegas(mod1), mod1$problemContents[[1]]$Omega)
 }
 
 test.getSigmas <- function()
@@ -254,19 +254,19 @@ test.getSigmas <- function()
 	expSigmaInit <- matrix(0.0231, 1,dimnames = list("SIGMA1", "SIGMA1")) 
 	
 	
-	checkEquals(RNMImport:::getSigmas(prob1),  expSigmas)
-	checkEquals(RNMImport:::getSigmas(run1),  expSigmas)
-	checkEquals(RNMImport:::getSigmas(prob1, what = "initial"),  expSigmaInit)
-	checkEquals(RNMImport:::getSigmas(run1, what = "initial"),  expSigmaInit)
+	checkEquals(getSigmas(prob1),  expSigmas)
+	checkEquals(getSigmas(run1),  expSigmas)
+	checkEquals(getSigmas(prob1, what = "initial"),  expSigmaInit)
+	checkEquals(getSigmas(run1, what = "initial"),  expSigmaInit)
 	
-	checkEquals(RNMImport:::getSigmas(prob1, what = c("initial", "stderrors")), list("initial.estimates" = expSigmaInit, 
+	checkEquals(getSigmas(prob1, what = c("initial", "stderrors")), list("initial.estimates" = expSigmaInit, 
 					"standard.errors" = expSigmaStderrs) )
 	
 	run3 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestRun" ))
 	
 	# try to get standard errors that aren't there, check for correct error message
 	
-	trySigmas2 <- try(RNMImport:::getSigmas(run3, what = "stderrors"))
+	trySigmas2 <- try(getSigmas(run3, what = "stderrors"))
 	checkTrue( inherits(trySigmas2, "try-error") )
 	checkTrue(length(grep( trySigmas2, pattern = "Standard errors not available" )) > 0)
 	
@@ -279,15 +279,15 @@ test.getSigmas <- function()
 			dimnames = list("SIGMA1", "SIGMA1", c("sim1", "sim2", "sim3", "sim4", "sim5")))
 	sigmaInitial <- matrix(0.0202, 1, dimnames = list("SIGMA1", "SIGMA1"))
 	
-	checkEquals(RNMImport:::getSigmas(prob2, subProblemNum = 2:4),  simSigmas[,, 2:4, drop = FALSE ])
-	checkEquals(RNMImport:::getSigmas(prob2, what = "initial", subProblemNum = 1:5), sigmaInitial)
-	checkEquals(RNMImport:::getSigmas(prob2, what = c("final", "initial"), subProblemNum = 3), 
+	checkEquals(getSigmas(prob2, subProblemNum = 2:4),  simSigmas[,, 2:4, drop = FALSE ])
+	checkEquals(getSigmas(prob2, what = "initial", subProblemNum = 1:5), sigmaInitial)
+	checkEquals(getSigmas(prob2, what = c("final", "initial"), subProblemNum = 3), 
 			list("initial.estimates" = sigmaInitial, "final.estimates" = simSigmas[,,3, drop = FALSE] ) )
 	
 	# check that parameters passed down correctly (see also issue 1969)
 	
-	checkEquals(RNMImport:::getSigmas(run2, subProblemNum = 1:3, what = c("initial", "final")), 
-			RNMImport:::getSigmas(prob2, subProblemNum = 1:3,  what = c("initial", "final") ))
+	checkEquals(getSigmas(run2, subProblemNum = 1:3, what = c("initial", "final")), 
+			getSigmas(prob2, subProblemNum = 1:3,  what = c("initial", "final") ))
 	
 	
 	###############################
@@ -299,18 +299,18 @@ test.getSigmas <- function()
 	run3 <- importNm( "TestData1.ctl", path = file.path(unitTestPath, "testdata/TestDataNM7" ))
 	prob3 <- getProblem(run3)
 	
-	sigmaTest1 <- RNMImport:::getSigmas(prob3, what = c("initial", "final"), method = 2)
+	sigmaTest1 <- getSigmas(prob3, what = c("initial", "final"), method = 2)
 	
 	
-	expSigma1 <- list(initial.estimates = .removeMethName( RNMImport:::getSigmas(prob3, what = "final", method = 1) ),	
-			final.estimates = .removeMethName(RNMImport:::getSigmas(prob3, method = 2)))
+	expSigma1 <- list(initial.estimates = .removeMethName( getSigmas(prob3, what = "final", method = 1) ),	
+			final.estimates = .removeMethName(getSigmas(prob3, method = 2)))
 	
 	attr(expSigma1, "methodName") <- "Stochastic Approximation Expectation-Maximization"
 	
 	checkEquals(sigmaTest1, expSigma1,
 			msg = " | getSigmas correct (1)")
 	
-	sigmaTest2 <- RNMImport:::getSigmas(prob3, what = c("stderrors", "initial"), method = 1)
+	sigmaTest2 <- getSigmas(prob3, what = c("stderrors", "initial"), method = 1)
 	
 	checkEquals(sigmaTest2, 
 			structure(list(initial.estimates = structure(0.0231, .Dim = c(1L, 
@@ -319,29 +319,29 @@ test.getSigmas <- function()
 							"standard.errors"), methodName = "Iterative Two Stage"), 
 			msg = " | getSigmas correct (2)")
 	
-	sigmaTest3 <- RNMImport:::getSigmas( prob3, what = c("stderrors", "final") )
-	expSigma3 <- list(final.estimates = .removeMethName(RNMImport:::getSigmas(prob3, what = "final")), 
-			standard.errors = .removeMethName(RNMImport:::getSigmas(prob3, what = "stderrors")))
+	sigmaTest3 <- getSigmas( prob3, what = c("stderrors", "final") )
+	expSigma3 <- list(final.estimates = .removeMethName(getSigmas(prob3, what = "final")), 
+			standard.errors = .removeMethName(getSigmas(prob3, what = "stderrors")))
 	attr(expSigma3, "methodName") <- "Iterative Two Stage"
 	checkEquals(sigmaTest3,	expSigma3,	msg = " | getSigmas correct (3)")
 	
 	# check multiple methods at once
 	
-	sigmaTest4 <- RNMImport:::getSigmas(prob3, what = "final", method = 1:2)
-	sigmaTest5 <- RNMImport:::getSigmas(prob3, what = c("initial", "final", "stderrors"), method = 1:2 )
+	sigmaTest4 <- getSigmas(prob3, what = "final", method = 1:2)
+	sigmaTest5 <- getSigmas(prob3, what = c("initial", "final", "stderrors"), method = 1:2 )
 	
-	checkEquals(sigmaTest4, list(RNMImport:::getSigmas(prob3, what = "final", method = 1), 
-					RNMImport:::getSigmas(prob3, what = "final", method = 2)), msg = " |multiple methods correct (1) " )
+	checkEquals(sigmaTest4, list(getSigmas(prob3, what = "final", method = 1), 
+					getSigmas(prob3, what = "final", method = 2)), msg = " |multiple methods correct (1) " )
 	
-	checkEquals(sigmaTest5, list(RNMImport:::getSigmas(prob3, what = c("initial", "stderrors", "final"), method = 1), 
-					RNMImport:::getSigmas(prob3, what = c("initial", "stderrors", "final"), method = 2)), 
+	checkEquals(sigmaTest5, list(getSigmas(prob3, what = c("initial", "stderrors", "final"), method = 1), 
+					getSigmas(prob3, what = c("initial", "stderrors", "final"), method = 2)), 
 			msg = " |multiple methods correct (2)")
 	
 	# check nmModel
 	
 	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
 	testDir <- file.path(unitTestPath, "testdata/TestRun")	
-	mod1 <- RNMImport:::importNmMod("TestData1.ctl",  path = testDir)
-	checkEquals(RNMImport:::getSigmas(mod1), mod1$problemContents[[1]]$Sigma)
+	mod1 <- importNmMod("TestData1.ctl",  path = testDir)
+	checkEquals(getSigmas(mod1), mod1$problemContents[[1]]$Sigma)
 	
 }

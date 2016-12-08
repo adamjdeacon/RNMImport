@@ -39,6 +39,8 @@
 
 # TODO: take this out of RNMGraphics later
 
+#' @export
+
 "graphSubset<-" <- function(x, value)
 {
 	attr(x, "graphSubset") <- value

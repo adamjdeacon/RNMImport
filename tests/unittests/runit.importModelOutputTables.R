@@ -14,8 +14,8 @@ test.importModelOutputTables <- function()
   	ETA(1) ETA(2) MDV WRES IWRES IPRED NOPRINT FILE=testtab.tab"
   	
 	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
-  	tableInfo <- RNMImport:::.importNmModTables(tableStatement)
-  	tableTest <- RNMImport:::importModelOutputTables(tableInfo, path = file.path(unitTestPath, "testdata"))
+  	tableInfo <- .importNmModTables(tableStatement)
+  	tableTest <- importModelOutputTables(tableInfo, path = file.path(unitTestPath, "testdata"))
   	
   	checkEquals(as.matrix(tableTest), structure(c(11001, 11001, 11001, 11001, 11001, 3, 3, 3, 3, 3, 
 		1, 1, 2, 2, 3, 1, 2, 1, 2, 1, 0, 0, 1, 1, 0, 0, 0, 10, 10, 25, 
@@ -36,8 +36,8 @@ test.importModelOutputTables <- function()
 	tableStatement2 <- c("$TABLE ID TIME DV PRED RES WRES CPRED CWRES EPRED ERES EWRES NOAPPEND ONEHEADER FILE=tabletest2_1.TAB NOPRINT",   
 	"$TABLE ID A B C D FIRSTONLY NOAPPEND NOPRINT FILE=tabletest2_2.tab")
 	
-	tableInfo2 <- RNMImport:::.importNmModTables(tableStatement2)
-	tableTest2 <- RNMImport:::importModelOutputTables(tableInfo2, path = file.path(unitTestPath, "testdata"))
+	tableInfo2 <- .importNmModTables(tableStatement2)
+	tableTest2 <- importModelOutputTables(tableInfo2, path = file.path(unitTestPath, "testdata"))
 	
 	checkEquals(names(tableTest2), c("normal.tables", "firstonly.tables"), msg = " |mix of table types found")
 	

@@ -27,12 +27,15 @@
 #' x <- addDerivedCategorical(mtcars, "mpg", breaks = 6, binType = "counts" )
 #' show(x$mpg.CUT)
 #' @author Mango Solutions
-
+#' @export
 
 addDerivedCategorical <- function(obj, varName, newVar = paste(varName, ".CUT", sep = ""), breaks = 5, binType = "range", labels = NULL, ...)
 {
 	NULL
 }
+
+#' @exportMethod addDerivedCategorical
+
 setGeneric("addDerivedCategorical")
 
 

@@ -21,6 +21,8 @@ addedData <- function(obj, ...)
 	RNMImportStop("Not implemented for this class yet!\n")
 }
 
+#' @exportMethod addedData
+
 setGeneric("addedData")
 
 addedData.NMRun <-function(obj, problemNum = 1)

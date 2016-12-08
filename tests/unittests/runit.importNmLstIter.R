@@ -37,7 +37,7 @@ test.importNmLstIter <- function() {
 					"GRADIENT:  -0.6126E+01 -0.5194E-01 -0.3713E+01 -0.6258E+01 -0.4065E-01 -0.2538E+01  0.5147E+00 -0.2131E+00 -0.1142E+00"),
 					c("END PADDING 1", "END PADDING 2") )
 
-	myDf <- RNMImport:::.importNmLstIter(myInput)	
+	myDf <- .importNmLstIter(myInput)	
 	checkTrue( length(myDf$paramNum) == length(ColiNum) && all(myDf$paramNum == ColiNum)  )
 	checkTrue( length(myDf$iterationNum) == length(ColIter) && all(myDf$iterationNum== ColIter)   )
 	checkTrue( length(myDf$objective) == length(ColObjective) && all(myDf$objective== ColObjective)  )

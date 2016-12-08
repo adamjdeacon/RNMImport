@@ -2,9 +2,9 @@
 % Please edit documentation in R/getIterations.R
 \name{getIterations}
 \alias{getIterations}
+\alias{getIterations,NMRun-method}
 \alias{getIterations,NMBasicModel-method}
 \alias{getIterations,NMBasicModelNM7-method}
-\alias{getIterations,NMRun-method}
 \title{Extract parameter estimate iteration information from a given NONMEM problem}
 \usage{
 getIterations(obj, problemNum = 1)

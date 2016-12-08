@@ -26,6 +26,9 @@ getOmegas <- function(obj, what = "final", subProblemNum = 1, method = 1, proble
 {
 	RNMImportStop(msg = "This method is not implemented for this class!")
 }
+
+#' @exportMethod getOmegas
+
 setGeneric("getOmegas")
 
 getOmegas.NMBasicModel <- function(obj, what = "final", subProblemNum = 1, method = 1, problemNum = 1)

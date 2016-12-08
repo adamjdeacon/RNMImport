@@ -4,9 +4,9 @@
 \name{getSimInfo}
 \alias{getSimInfo}
 \alias{getSimInfo,NMRun-method}
+\alias{getSimInfo,NMSimModelNM7-method}
 \alias{getSimInfo,NMSimDataGen-method}
 \alias{getSimInfo,NMSimModel-method}
-\alias{getSimInfo,NMSimModelNM7-method}
 \title{Get Simulation Information}
 \usage{
 getSimInfo(obj, problemNum = 1, addRawInfo = TRUE)

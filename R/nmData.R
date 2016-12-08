@@ -45,6 +45,8 @@ nmData <- function(obj, dataTypes = c("input", "output") , returnMode = c("singl
 	RNMImportStop("This method is not implemented for this class\n")
 }
 
+#' @exportMethod nmData
+
 setGeneric("nmData")
 
 #' utility function for determining what subset should be applied to a dataset. 

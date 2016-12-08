@@ -3,8 +3,8 @@
 \docType{methods}
 \name{addedData}
 \alias{addedData}
-\alias{addedData,NMProblem-method}
 \alias{addedData,NMRun-method}
+\alias{addedData,NMProblem-method}
 \title{Get added data}
 \usage{
 addedData(obj, ...)

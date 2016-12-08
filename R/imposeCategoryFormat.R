@@ -17,6 +17,9 @@ imposeCategoryFormat <- function(obj, varSubset, ...)
 {
 	NULL
 }
+
+#' @exportMethod imposeCategoryFormat
+
 setGeneric("imposeCategoryFormat")
 
 imposeCategoryFormat.NMBasicModel <- function(obj, varSubset)

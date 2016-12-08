@@ -28,6 +28,8 @@ nmDatabyVarType <- function(obj, varTypes, returnMode = c("singleDF", "DFList"),
 	RNMImportStop("nmDatabyVarType not implemented for this class. \n", match.call())
 }
 
+#' @exportMethod nmDatabyVarType
+
 setGeneric("nmDatabyVarType")
 
 nmDatabyVarType.NMRun <- function(obj, varTypes, returnMode = c("singleDF", "DFList"),

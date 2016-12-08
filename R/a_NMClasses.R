@@ -13,7 +13,8 @@ validity.NMProblem <- function(object)
 #' @slot inputData A data.frame of the input data, if available (otherwise an empty data.frame) 
 #' @slot outputData Aggregation of the output data
 #' @slot additionalVars A data.frame of additional variables created by the user
-#'  
+#'
+#' @export
 
 setClass("NMProblem", representation("VIRTUAL", 
 				problemStatement = "character",
@@ -127,7 +128,8 @@ validity.NMSimDataGen <- function(object)
 #' @slot thetaInitial Fixed/initial theta values used to generate data
 #' @slot omegaInitial Fixed/initial omega values used to generate data
 #' @slot sigmaInitial Fixed/initial sigma values used to generate data
-#' 
+#'
+#' @exportClass NMSimDataGen
 
 setClass(
 		"NMSimDataGen", 
@@ -159,7 +161,8 @@ validity.NMSimModel <- function(object)
 #' @slot omegaInitial Initial values of omegas
 #' @slot sigmaInitial Initial values of sigmas
 #' @slot seeds Values of seeds used for random-number generation
-#' 
+#'
+#' @exportClass NMSimModel
 
 setClass("NMSimModel", representation("NMProblem", numSimulations = "numeric" ,
 				thetaFinal = "matrix", objectiveFinal = "numeric",
@@ -250,7 +253,8 @@ validity.NMSimModelNM7 <- function(object)
 #' @slot omegaInitial Initial values of omegas
 #' @slot sigmaInitial Initial values of sigmas
 #' @slot seeds Values of seeds used for random-number generation
-#' 
+#'
+#' @exportClass NMSimModelNM7
 
 setClass("NMSimModelNM7", representation("NMProblem", numSimulations = "numeric" ,
 				thetaFinal = "array", objectiveFinal = "matrix",
@@ -263,6 +267,10 @@ setClass("NMSimModelNM7", representation("NMProblem", numSimulations = "numeric"
 
 # auxiliary classes for representing report file statements and control file statements
 
+#' @exportClass nmRunReport
+
 setClass("nmRunReport", representation("list"))
+
+#' @exportClass nmModel
 
 setClass("nmModel", representation("list"))

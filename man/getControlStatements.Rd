@@ -3,8 +3,8 @@
 \docType{methods}
 \name{getControlStatements}
 \alias{getControlStatements}
-\alias{getControlStatements,NMProblem-method}
 \alias{getControlStatements,NMRun-method}
+\alias{getControlStatements,NMProblem-method}
 \title{Extract list of parsed control statement}
 \usage{
 getControlStatements(obj, ...)

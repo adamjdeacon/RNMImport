@@ -3,27 +3,27 @@
 
 test.importNmLstMatrix <- function() {
 
-	vec1 <- RNMImport:::.importNmLstMatrix(c("           EPS1","EPS1","        4.67E-02"))
+	vec1 <- .importNmLstMatrix(c("           EPS1","EPS1","        4.67E-02"))
 	mat1 <- cbind(.0467)
 	checkTrue( all(vec1 == mat1) & all(dim(vec1) == dim(mat1)) , msg = "dim1")
 
-	vec2 <- RNMImport:::.importNmLstMatrix(c("           ETA1      ETA2","ETA1","        2.89E-01","ETA2","        1.18E-01  6.78E-02"))
+	vec2 <- .importNmLstMatrix(c("           ETA1      ETA2","ETA1","        2.89E-01","ETA2","        1.18E-01  6.78E-02"))
 	mat2 <- cbind(c( 0.289,0.118 ), c( 0.118,0.0678 ))
 	checkTrue( all(vec2 == mat2) & all(dim(vec2) == dim(mat2)) , msg = "dim2")
 	
-	vec3 <- RNMImport:::.importNmLstMatrix(c("           EPS1","EPS1","        1.00E+00"))
+	vec3 <- .importNmLstMatrix(c("           EPS1","EPS1","        1.00E+00"))
 	mat3 <- cbind(1)
 	checkTrue( all(vec3 == mat3) & all(dim(vec3) == dim(mat3)), msg = "dim1 (2)" )
 	
-	vec4 <- RNMImport:::.importNmLstMatrix(c("           ETA1      ETA2","ETA1","        7.48E-02","ETA2","        3.54E-02  1.96E-02"))
+	vec4 <- .importNmLstMatrix(c("           ETA1      ETA2","ETA1","        7.48E-02","ETA2","        3.54E-02  1.96E-02"))
 	mat4 <- cbind(c( 0.0748,0.0354 ), c( 0.0354,0.0196 ))
 	test4 <- all(vec4 == mat4) & all(dim(vec4) == dim(mat4))
 
-	vec5 <- RNMImport:::.importNmLstMatrix( c("           EPS1","EPS1","       ........."))
+	vec5 <- .importNmLstMatrix( c("           EPS1","EPS1","       ........."))
 	mat5 <- cbind(0)
 	checkTrue(  all(vec5 == mat5) & all(dim(vec5) == dim(mat5)), msg = "s/dots/0/" )
 
-	vec6 <- RNMImport:::.importNmLstMatrix(
+	vec6 <- .importNmLstMatrix(
 	        c("           TH 1      TH 2      TH 3      TH 4      TH 5      TH 6      TH 7      TH 8      TH 9      TH10      OM11      OM12", "            OM22      SG11",
      "TH 1","        5.79E-03",
      "TH 2","       -1.22E-03  2.77E-03",
@@ -55,7 +55,7 @@ test.importNmLstMatrix <- function() {
                   0)
 	checkTrue( all(vec6 == mat6) & all(dim(vec6) == dim(mat6)) , msg = "dots, big matrix")
 	
-	vec7 <- RNMImport:::.importNmLstMatrix(c("           ETA1      ETA2      ETA3      ETA4      ETA5      ETA6      ETA7      ETA8      ETA9      ET10      ET11      ET12","            ET13      ET14      ET15      ET16      ET17",
+	vec7 <- .importNmLstMatrix(c("           ETA1      ETA2      ETA3      ETA4      ETA5      ETA6      ETA7      ETA8      ETA9      ET10      ET11      ET12","            ET13      ET14      ET15      ET16      ET17",
                        "ETA1","        5.94E-01",
                        "ETA2","        0.00E+00  2.91E-01",
                        "ETA3","        0.00E+00  0.00E+00  3.69E+00",
@@ -79,7 +79,7 @@ test.importNmLstMatrix <- function() {
     msg = "check 7") 
 
 	# TESTING COMPRESSED FORMAT !!!
-	vec8 <-  RNMImport:::.importNmLstMatrix(
+	vec8 <-  .importNmLstMatrix(
 	c( 	"    TH 1 | TH 1      TH 2 | TH 1      TH 2 | TH 2      TH 3 | TH 1      TH 3 | TH 2      TH 3 | TH 3      TH 4 | TH 1  ",
 	            	"      4.85E-02         9.91E-02         1.90E+00         2.78E-03        -9.81E-05         3.82E-04         4.37E-04",
 	            	"    TH 4 | TH 2      TH 4 | TH 3      TH 4 | TH 4      TH 5 | TH 1      TH 5 | TH 2      TH 5 | TH 3      TH 5 | TH 4  ",
@@ -165,7 +165,7 @@ test.importNmLstMatrix <- function() {
 
 
 	# Added test matrix based on NMart findings
-	vec9 <- try(RNMImport:::.importNmLstMatrix(c(
+	vec9 <- try(.importNmLstMatrix(c(
 	"            TH 1      TH 2      TH 3      TH 4      TH 5      TH 6      TH 7      TH 8      TH 9     OM0101    OM0102    OM0103", 
 	"            OM0104    OM0105    OM0106    OM0107    OM0108    OM0109    OM0110    OM0202    OM0203    OM0204    OM0205    OM0206", 
 	"           OM0207    OM0208    OM0209    OM0210    OM0303    OM0304    OM0305    OM0306    OM0307    OM0308    OM0309    OM0310", 

@@ -17,4 +17,4 @@ Description: Imports NONMEM data, and provides utilities for manipulation
 License: BSD_3_clause + file LICENSE
 URL: https://github.com/mangothecat/RNMImport
 BugReports: https://github.com/mangothecat/RNMImport/issues
-RoxygenNote: 5.0.1
+RoxygenNote: 5.0.1.9000

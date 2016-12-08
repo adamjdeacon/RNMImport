@@ -3,7 +3,7 @@
 
 test.importNmModTables <- function() {
 	# .importNmModTables <- RNMImport:::.importNmModTables
-  vec1 <- RNMImport:::.importNmModTables(
+  vec1 <- .importNmModTables(
       c("$TABLE ID TIME DV CMT EVID AMT RATE CL V1 K K12 K21",
         "SCRT AGE SEX BW CLCR IPRED PRED WRES IRES IWRES",
         "ONEHEADER NOPRINT FILE=CBNCCV03.fit "))
@@ -12,7 +12,7 @@ test.importNmModTables <- function() {
   checkEquals(vec1[["NoHeader"]], FALSE, msg = "check 1 (noheader)")
 	checkTrue(vec1[["append"]], msg = "check 1 (append)")
 
-	vec2 <- RNMImport:::.importNmModTables(
+	vec2 <- .importNmModTables(
     c("$TABLE ID TIME CL Q V1 V2 VSS MDV CYCL WT CMT IPRE IRES IWRS",
       "ONEHEADER NOPRINT",
       "FILE=TES8BA03.fit "))
@@ -26,7 +26,7 @@ test.importNmModTables <- function() {
 	checkTrue(vec2[["append"]], msg = "check 2 (append)")
   
   
-	vec3 <- RNMImport:::.importNmModTables(
+	vec3 <- .importNmModTables(
     c("$TABLE ID TIME AMT IPRE DOSE FAST VMAX",
       "NOPRINT ONEHEADER FILE=TES11ST1.fit ",
       "$TABLE ID AMT VM1 VM2 KDKA CL V2 ALAG1 KD BMAX KDIS F1 TC DOSE FAST",
@@ -39,7 +39,7 @@ test.importNmModTables <- function() {
   checkEquals( vec3$firstOnly, c(FALSE, TRUE), msg = "check3 (first only")
 	checkEquals(vec3[["append"]], c(TRUE, FALSE) , " check 3 (append)")
   
-	vec4 <- RNMImport:::.importNmModTables(
+	vec4 <- .importNmModTables(
     c("$TABLE ID TIME DV IPRED PRED WRES IWRES IRES MDV ATIM OCC GRP ONEHEADER NOPRINT",
       "FILE=TES3ST03a.fit ",
 	    "$TABLE ID CL K30 V3 K34 K43  K12 K23 OCC GRP F1 ALAG1 ONEHEADER",

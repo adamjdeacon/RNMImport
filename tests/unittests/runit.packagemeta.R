@@ -32,7 +32,7 @@ test.setVarDescription <- function()
 	setVar(varName = "SEX", varLabel = "M/F", varFormat = "0=male,1=female", varType = "Unknown")
 	checkEquals(getVar("SEX"), testFrame, check.attributes = FALSE)
 	checkEquals(names(getVar("SEX")), names(testFrame))
-	assign("variables", df, envir = RNMImport:::.RNMImportEnv)
+	assign("variables", df, envir = .RNMImportEnv)
 }
 
 test.addVarDescription <- function()
@@ -45,7 +45,7 @@ test.addVarDescription <- function()
 	addVar(varName = "XXX", varLabel = "RUNIT Test", varType = "Undefined")
 	checkEquals(getVar("XXX"), testFrame, check.attributes = FALSE)
 	checkEquals(names(getVar("SEX")), names(testFrame))
-	assign("variables", df, envir = RNMImport:::.RNMImportEnv)
+	assign("variables", df, envir = .RNMImportEnv)
 }
 
 test.getNmFileExtensions <- function()
@@ -72,7 +72,7 @@ test.setNmFileExtensions <- function()
 	checkEquals(getFileExts("report"), c("testl1", "testl2"))
 	checkEquals(getFileExts("table"), c("testt1", "testt2", "testt3"))
 	checkEquals(getFileExts("input"), c("testi1", "testi2", "testi3", "testi4"))
-	assign("fileExtensions", original, envir = RNMImport:::.RNMImportEnv)
+	assign("fileExtensions", original, envir = .RNMImportEnv)
 }
 
 test.getNmPath <- function()
@@ -80,9 +80,9 @@ test.getNmPath <- function()
 	tmp <- original <-RNMImport:::.RNMImportEnv$dataPath
 	getPath <- RNMImport:::getNmPath
 	tmp[["Dummy"]] <- "X:\\Program Files\\Dummy Data"	
-	assign("dataPath", tmp, envir = RNMImport:::.RNMImportEnv)	
+	assign("dataPath", tmp, envir = .RNMImportEnv)	
 	checkEquals(getPath("Dummy"), "X:\\Program Files\\Dummy Data") 
-	assign("dataPath", original, envir = RNMImport:::.RNMImportEnv)
+	assign("dataPath", original, envir = .RNMImportEnv)
 }
 
 test.setNmPath <- function()
@@ -92,7 +92,7 @@ test.setNmPath <- function()
 	setPath <- RNMImport:::setNmPath
 	setPath("Dummy", "X:\\Program Files\\Dummy Data")	
 	checkEquals(getPath("Dummy"), "X:\\Program Files\\Dummy Data") 
-	assign("dataPath", original, envir = RNMImport:::.RNMImportEnv)
+	assign("dataPath", original, envir = .RNMImportEnv)
 }
 
 test.removeNmPath <- function()
@@ -101,7 +101,7 @@ test.removeNmPath <- function()
 	setPath <- RNMImport:::setNmPath
 	getPath <-  RNMImport:::getNmPath
 	removePath <- RNMImport:::removeNmPath
-	assign("dataPath", character(0), envir = RNMImport:::.RNMImportEnv)
+	assign("dataPath", character(0), envir = .RNMImportEnv)
 	testVectorOne <- c("X:\\Program Files\\Dummy Data 1", "X:\\Program Files\\Dummy Data 2")
 	names(testVectorOne) <- c("Dummy1", "Dummy2")
 	testVectorTwo <- "X:\\Program Files\\Dummy Data 1"
@@ -110,12 +110,12 @@ test.removeNmPath <- function()
 	setPath("Dummy2", "X:\\Program Files\\Dummy Data 2")
 	setPath("Dummy3", "X:\\Program Files\\Dummy Data 3")
 	removePath("Dummy3")
-	checkEquals(get("dataPath", envir = RNMImport:::.RNMImportEnv), testVectorOne)
+	checkEquals(get("dataPath", envir = .RNMImportEnv), testVectorOne)
 	removePath("Dummy2")
-	checkEquals(get("dataPath", envir = RNMImport:::.RNMImportEnv), testVectorTwo)
+	checkEquals(get("dataPath", envir = .RNMImportEnv), testVectorTwo)
 	removePath("Dummy1")
-	checkEquals(get("dataPath", envir = RNMImport:::.RNMImportEnv), character(0))
-	assign("dataPath", envir = RNMImport:::.RNMImportEnv, original)
+	checkEquals(get("dataPath", envir = .RNMImportEnv), character(0))
+	assign("dataPath", envir = .RNMImportEnv, original)
 }
 
 # Tests whether or not the subset configuration functions work correctly 
@@ -124,7 +124,7 @@ test.configSubsets <- function()
 {
 	STANDARDSUBSET <- c("MDV != 1", "EVID == 0", "AMT <= 0")
 	# by default, should attach subsets
-	checkTrue( RNMImport:::applySubsetOnLoad(), msg = " |By default, data subset should be applied|" )
+	checkTrue( applySubsetOnLoad(), msg = " |By default, data subset should be applied|" )
 	
 	# check default is loaded correctly.
 	
@@ -167,8 +167,8 @@ test.configSubsets <- function()
 	checkTrue(is.null(dataSubset(testRun)),  " |No default data subset attached|")
 	
 	# reset configuration
-	RNMImport:::applySubsetOnLoad(TRUE)
-	checkTrue(RNMImport:::applySubsetOnLoad())
+	applySubsetOnLoad(TRUE)
+	checkTrue(applySubsetOnLoad())
 }
 
 # Tests whether or not the subset configuration functions handle errors as expected.
