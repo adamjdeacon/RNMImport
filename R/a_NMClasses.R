@@ -10,6 +10,8 @@ validity.NMProblem <- function(object)
 #' @slot problemStatement The contents of the $PROB statement
 #' @slot controlStatements A list of parsed sections of the control file
 #' @slot reportStatements A list of parsed sections of the output report file 
+#' @slot nmVersionMajor [C,1] NONMEM major version number
+#' @slot nmVersionMinor [N,1] NONMEM minor version number
 #' @slot inputData A data.frame of the input data, if available (otherwise an empty data.frame) 
 #' @slot outputData Aggregation of the output data
 #' @slot additionalVars A data.frame of additional variables created by the user
@@ -52,12 +54,15 @@ validity.NMBasicModel <- function(object)
 #' 
 #' @slot parameterIterations A data.frame of the iteration of each parameter estimate, if available
 #' @slot objectiveFinal The numeric value of the objective function minimum
+#' @slot thetaInitial Initial theta values
 #' @slot thetaFinal Final estimates of the "thetas", together with the standard errors, if available (as a matrix with 1 or 2 rows)
+#' @slot sigmaInitial Initial sigma values
 #' @slot sigmaFinal Final estimates of the "sigmas", together with the standard errors, if available (as an array  with 1 or 2 matrices)
-#' @slot omegaFinal Final estimates of the "omegas", together with the standard errors, if available (as an array  with 1 or 2 matrices) 
+#' @slot omegaInitial Initial omega values
+#' @slot omegaFinal Final estimates of the "omegas", together with the standard errors, if available (as an array  with 1 or 2 matrices)
+#' @slot parameterCorMatrix The cross-correlation matrix of the parameter estimators, if available
 #' @slot parameterCovMatrix The variance-covariance of the parameter estimators, if available
 #' @slot minInfo A string describing the status of the objective function-minimization
-#' 
 
 setClass(
 		"NMBasicModel", 
@@ -206,8 +211,10 @@ setOldClass("Date")
 #' 
 #' @slot controlText [C,+] Text of the control file, without comments
 #' @slot controlComments [C,1] Comments of each line of the control file
+#' @slot nmVersionMajor [C,1] NONMEM major version number
+#' @slot nmVersionMinor [N,1] NONMEM minor version number
 #' @slot controlFileInfo [data.frame] Information about the control file 
-#' @slot reportFileInfo Information about the list file
+#' @slot reportFileInfo [data.frame] Information about the list file
 #' @slot numProblems [N,1] - Number of problems in the run
 #' @slot problems [list] - List of the actual problem results 
 #' @slot reportText Text of the lst output file
@@ -254,6 +261,10 @@ validity.NMSimModelNM7 <- function(object)
 #' @slot sigmaInitial Initial values of sigmas
 #' @slot seeds Values of seeds used for random-number generation
 #'
+#' @slot numMethods TODO
+#' @slot methodInfo TODO
+#' @slot methodNames TODO
+#' 
 #' @exportClass NMSimModelNM7
 
 setClass("NMSimModelNM7", representation("NMProblem", numSimulations = "numeric" ,

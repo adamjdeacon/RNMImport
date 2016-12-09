@@ -11,14 +11,11 @@
 #' x <- data.frame(SMOK = sample(0:1, 10, replace = TRUE), SEX = sample(1:2, 10, replace = TRUE))
 #' print(imposeCategoryFormat(x)) 
 #' @author Mango Solutions
-#' @noRd
 
 imposeCategoryFormat <- function(obj, varSubset, ...)
 {
 	NULL
 }
-
-#' @exportMethod imposeCategoryFormat
 
 setGeneric("imposeCategoryFormat")
 
@@ -65,7 +62,14 @@ imposeCategoryFormat.NMBasicModel <- function(obj, varSubset)
 	}			
 	invisible(obj)
 }
+
+#' @rdname imposeCategoryFormat
+#' @export
+
 setMethod("imposeCategoryFormat", signature(obj = "NMBasicModel"), imposeCategoryFormat.NMBasicModel)
+
+#' @export
+
 setMethod("imposeCategoryFormat", signature(obj = "NMBasicModelNM7"), imposeCategoryFormat.NMBasicModel)
 
 imposeCategoryFormat.NMRun <- function(obj, varSubset, problemNum = 1)
@@ -74,6 +78,10 @@ imposeCategoryFormat.NMRun <- function(obj, varSubset, problemNum = 1)
 	newObj <- imposeCategoryFormat(specObj, varSubset)
 	invisible(newObj)	
 }
+
+#' @rdname imposeCategoryFormat
+#' @export
+
 setMethod("imposeCategoryFormat", signature(obj = "NMRun"), imposeCategoryFormat.NMRun)
 
 setOldClass("data.frame")
@@ -117,6 +125,10 @@ imposeCategoryFormat.data.frame <- function(obj, varSubset)
 	}			
 	invisible(obj)
 }
+
+#' @rdname imposeCategoryFormat
+#' @export
+
 setMethod("imposeCategoryFormat", signature(obj = "data.frame"), imposeCategoryFormat.data.frame)
 
 imposeCategoryFormat.NMSimModel <- function(obj, varSubset)
@@ -162,7 +174,15 @@ imposeCategoryFormat.NMSimModel <- function(obj, varSubset)
 	}			
 	invisible(obj)
 }
+
+#' @rdname imposeCategoryFormat
+#' @export
+
 setMethod("imposeCategoryFormat", signature(obj = "NMSimModel"), imposeCategoryFormat.NMSimModel)
+
+#' @rdname imposeCategoryFormat
+#' @export
+
 setMethod("imposeCategoryFormat", signature(obj = "NMSimModelNM7"), imposeCategoryFormat.NMSimModel)
 
 imposeCategoryFormat.NMSimDataGen <- function(obj, varSubset)
@@ -208,4 +228,8 @@ imposeCategoryFormat.NMSimDataGen <- function(obj, varSubset)
 	}			
 	invisible(obj)
 }
+
+#' @rdname imposeCategoryFormat
+#' @export
+
 setMethod("imposeCategoryFormat", signature(obj = "NMSimDataGen"), imposeCategoryFormat.NMSimDataGen)

@@ -24,8 +24,6 @@ getMethodNames <- function(obj, what = c("report", "control" ), problemNum = 1)
     RNMImportStop("This function is not implemented for objects of this class")
 }
 
-#' @exportMethod getMethodNames
-
 setGeneric("getMethodNames")
 
 getMethodNames.NMRun <- function(obj, what = c("report", "control" ), problemNum = 1)
@@ -35,6 +33,7 @@ getMethodNames.NMRun <- function(obj, what = c("report", "control" ), problemNum
 }
 
 #' @rdname getMethodNames
+#' @export
 
 setMethod("getMethodNames", signature(obj = "NMRun"), getMethodNames.NMRun )
 
@@ -48,9 +47,11 @@ getMethodNames.NMProblemNM7 <- function(obj, what = c("report", "control"), prob
 }
 
 #' @rdname getMethodNames
+#' @export
 
 setMethod("getMethodNames", signature(obj = "NMBasicModelNM7"), getMethodNames.NMProblemNM7)
 
 #' @rdname getMethodNames
+#' @export
 
 setMethod("getMethodNames", signature(obj = "NMSimModelNM7"), getMethodNames.NMProblemNM7)

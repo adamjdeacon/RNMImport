@@ -21,8 +21,6 @@ addedData <- function(obj, ...)
 	RNMImportStop("Not implemented for this class yet!\n")
 }
 
-#' @exportMethod addedData
-
 setGeneric("addedData")
 
 addedData.NMRun <-function(obj, problemNum = 1)
@@ -31,6 +29,7 @@ addedData.NMRun <-function(obj, problemNum = 1)
 }
 
 #' @rdname addedData
+#' @export
 
 setMethod("addedData", signature(obj = "NMRun"), addedData.NMRun)
 
@@ -40,5 +39,6 @@ addedData.NMProblem <- function(obj)
 }
 
 #' @rdname addedData
+#' @export
 
 setMethod("addedData", signature(obj = "NMProblem"), addedData.NMProblem)

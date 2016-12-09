@@ -19,14 +19,11 @@ PARAMITEMS <- c("final", "initial", "stderrors")
 #'      x <- importNm("theoph.con", path = "examples/theoph")
 #'      getThetas(x, what = c("initial", "final")) 
 #' }
-#' @noRd
 
 getThetas <- function(obj, what = "final", subProblemNum = 1, method = 1, problemNum = 1 )
 {
 	RNMImportStop(msg = "This method is not implemented for this class!")
 }
-
-#' @exportMethod getThetas
 
 setGeneric("getThetas")
 
@@ -81,6 +78,9 @@ getThetas.NMBasicModel <- function( obj, what = "final", subProblemNum = 1, meth
 	
 }
 
+#' @rdname getThetas
+#' @export
+
 setMethod("getThetas", signature(obj = "NMBasicModel"), getThetas.NMBasicModel)
 
 getThetas.NMRun <- function( obj, what = "final", subProblemNum = 1, method = 1, problemNum = 1 )
@@ -89,6 +89,10 @@ getThetas.NMRun <- function( obj, what = "final", subProblemNum = 1, method = 1,
 	thetas <- getThetas(dat, what = what, method = method, subProblemNum = subProblemNum)
 	thetas	
 }
+
+#' @rdname getThetas
+#' @export
+
 setMethod("getThetas", signature(obj = "NMRun"), getThetas.NMRun)
 
 getThetas.NMBasicModelNM7 <- function( obj, what = "final", subProblemNum = 1, method = 1, problemNum = 1 )
@@ -176,6 +180,8 @@ getThetas.NMBasicModelNM7 <- function( obj, what = "final", subProblemNum = 1, m
 		.getThetasSingleMethod(method)
 }
 
+#' @export
+
 setMethod("getThetas", signature(obj = "NMBasicModelNM7"), getThetas.NMBasicModelNM7)
 
 getThetas.NMSimModel <- function( obj, what = "final", subProblemNum = 1, method = 1, problemNum = 1 )
@@ -208,6 +214,10 @@ getThetas.NMSimModel <- function( obj, what = "final", subProblemNum = 1, method
 	
 	res
 }
+
+#' @rdname getThetas
+#' @export
+
 setMethod("getThetas", signature(obj = "NMSimModel"), getThetas.NMSimModel)
 
 
@@ -255,12 +265,19 @@ getThetas.NMSimModelNM7 <- function(obj, what = "final", subProblemNum = 1, meth
 	else
 		.getThetasSingleMethod(method)
 }
+
+#' @rdname getThetas
+#' @export
+
 setMethod("getThetas", signature(obj = "NMSimModelNM7"), getThetas.NMSimModelNM7)
 
 getThetas.NMSimDataGen <- function(obj, what = "initial", subProblemNum = 1, method = 1, problemNum = 1 )
 {
 	obj@thetaInitial
 }
+
+#' @rdname getThetas
+#' @export
 
 setMethod("getThetas", signature(obj = "NMSimDataGen"), getThetas.NMSimDataGen)
 
@@ -273,5 +290,7 @@ getThetas.nmModel <- function( obj, what = "initial", subProblemNum = 1, method 
 	t(probResults$Theta)
 	
 }
+
+#' @export
 
 setMethod("getThetas", signature(obj = "nmModel"), getThetas.nmModel)

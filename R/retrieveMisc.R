@@ -17,8 +17,6 @@ getEstimateCov <- function(obj, corMatrix = FALSE, invCorMatrix = FALSE, pdMatri
 	RNMImportStop("getEstimateCov not implemented for this class yet\n", match.call())
 }
 
-#' @exportMethod getEstimateCov
-
 setGeneric("getEstimateCov")
 
 getEstimateCov.NMRun <- function(obj, corMatrix = FALSE, invCorMatrix = FALSE, pdMatrix = FALSE,  
@@ -26,6 +24,9 @@ getEstimateCov.NMRun <- function(obj, corMatrix = FALSE, invCorMatrix = FALSE, p
 {
 	getEstimateCov(getProblem(obj, problemNum), corMatrix = corMatrix, method = method)
 }
+
+#' @rdname getEstimateCov
+#' @export
 
 setMethod("getEstimateCov", signature(obj = "NMRun"), getEstimateCov.NMRun)
 
@@ -45,6 +46,9 @@ getEstimateCov.NMBasicModel <- function(obj, corMatrix = FALSE, invCorMatrix = F
 	else list("covariance" = obj@parameterCovMatrix, "correlation" = obj@parameterCorMatrix)
 	
 }
+
+#' @rdname getEstimateCov
+#' @export
 
 setMethod("getEstimateCov", signature(obj = "NMBasicModel"), getEstimateCov.NMBasicModel)
 
@@ -87,14 +91,11 @@ setMethod("getEstimateCov", signature(obj = "NMBasicModelNM7"), getEstimateCov.N
 #'      x <- importNm("theoph.con", path  = "examples/theoph")
 #'      getObjective(x)
 #' }
-#' @noRd
 
 getObjective <- function(obj, addMinInfo = TRUE, ...)
 {
 	RNMImportStop("getObjective not implemented for this class type")
 }
-
-#' @exportMethod getObjective
 
 setGeneric("getObjective")
 
@@ -102,6 +103,9 @@ getObjective.NMRun <- function(obj, addMinInfo=TRUE, subProblems=1, problemNum=1
 {
 	getObjective(getProblem(obj, problemNum), addMinInfo, subProblems, method = method)
 }
+
+#' @rdname getObjective
+#' @export
 
 setMethod("getObjective", signature(obj="NMRun"), getObjective.NMRun)
 
@@ -117,6 +121,9 @@ getObjective.NMBasicModel <- function(obj, addMinInfo=TRUE, ...)
 	}
 	objective
 }
+
+#' @rdname getObjective
+#' @export
 
 setMethod("getObjective", signature(obj="NMBasicModel"), getObjective.NMBasicModel)
 
@@ -153,6 +160,9 @@ getObjective.NMSimModel <- function(obj, addMinInfo = TRUE, subProblems = 1,...)
 	obj@objectiveFinal[subProblems]
 }
 
+#' @rdname getObjective
+#' @export
+
 setMethod("getObjective", signature(obj="NMSimModel"), getObjective.NMSimModel)
 
 
@@ -167,6 +177,9 @@ getObjective.NMSimModelNM7 <- function(obj, addMinInfo = TRUE, subProblems = 1, 
 	objective <- obj@objectiveFinal[subProblems, methodsChosen]
 	objective
 }
+
+#' @rdname getObjective
+#' @export
 
 setMethod("getObjective", signature(obj="NMSimModelNM7"), getObjective.NMSimModelNM7)
 
@@ -210,8 +223,6 @@ getControlStatements <- function(obj, ...)
 	RNMImportStop("This function is not implemented for objects of this class")
 }
 
-#' @exportMethod getControlStatements
-
 setGeneric("getControlStatements")
 
 getControlStatements.NMRun <- function(obj, problemNum = 1)
@@ -220,6 +231,7 @@ getControlStatements.NMRun <- function(obj, problemNum = 1)
 }
 
 #' @rdname getControlStatements
+#' @export
 
 setMethod("getControlStatements", signature(obj = "NMRun"), getControlStatements.NMRun)
 
@@ -229,6 +241,7 @@ getControlStatements.NMProblem <- function(obj, ...)
 }
 
 #' @rdname getControlStatements
+#' @export
 
 setMethod("getControlStatements", signature(obj = "NMProblem"), getControlStatements.NMProblem)
 
@@ -245,8 +258,6 @@ getNmVersion <- function(obj)
 	RNMImportStop("This function is not implemented for objects of this class")
 }
 
-#' @exportMethod getNmVersion
-
 setGeneric("getNmVersion")
 
 getNmVersion.NMRunProb <- function(obj)
@@ -257,10 +268,12 @@ getNmVersion.NMRunProb <- function(obj)
 }
 
 #' @rdname getNmVersion
+#' @export
 
 setMethod("getNmVersion", signature(obj = "NMRun"), getNmVersion.NMRunProb)
 
 #' @rdname getNmVersion
+#' @export
 
 setMethod("getNmVersion", signature(obj = "NMProblem"), getNmVersion.NMRunProb)
 
@@ -282,8 +295,6 @@ getSimInfo <- function(obj, problemNum = 1, addRawInfo = TRUE)
 	RNMImportStop("This function is not implemented for objects of this class")
 }
 
-#' @exportMethod getSimInfo
-
 setGeneric("getSimInfo")
 
 getSimInfo.NMRun <- function(obj, problemNum = 1, addRawInfo = TRUE)
@@ -292,6 +303,7 @@ getSimInfo.NMRun <- function(obj, problemNum = 1, addRawInfo = TRUE)
 }
 
 #' @rdname getSimInfo
+#' @export
 
 setMethod("getSimInfo", signature(obj = "NMRun"), getSimInfo.NMRun)
 
@@ -311,13 +323,16 @@ getSimInfo.NMSim <- function(obj, problemNum = 1, addRawInfo = TRUE)
 }
 
 #' @rdname getSimInfo
+#' @export
 
 setMethod("getSimInfo", signature(obj = "NMSimModelNM7"), getSimInfo.NMSim)
 
 #' @rdname getSimInfo
+#' @export
 
 setMethod("getSimInfo", signature(obj = "NMSimDataGen"), getSimInfo.NMSim)
 
 #' @rdname getSimInfo
+#' @export
 
 setMethod("getSimInfo", signature(obj = "NMSimModel"), getSimInfo.NMSim)

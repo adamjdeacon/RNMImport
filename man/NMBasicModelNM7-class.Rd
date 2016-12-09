@@ -7,7 +7,6 @@
 \alias{getOmegas,NMBasicModelNM7-method}
 \alias{getSigmas,NMBasicModelNM7-method}
 \alias{getThetas,NMBasicModelNM7-method}
-\alias{getMethodNames,NMBasicModelNM7-method}
 \alias{imposeCategoryFormat,NMBasicModelNM7-method}
 \alias{nmData,NMBasicModelNM7-method}
 \alias{show,NMBasicModelNM7-method}
