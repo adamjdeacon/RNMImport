@@ -17,7 +17,7 @@ getEstimateCov <- function(obj, corMatrix = FALSE, invCorMatrix = FALSE, pdMatri
 	RNMImportStop("getEstimateCov not implemented for this class yet\n", match.call())
 }
 
-#' @exportMEthod getEstimateCov
+#' @exportMethod getEstimateCov
 
 setGeneric("getEstimateCov")
 
