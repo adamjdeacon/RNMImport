@@ -29,6 +29,7 @@
   }
   else 
   {  ### Independent OMEGAs                                                              
+
     equalExpressionPop( x, "DIAG", sep = "[[:space:]]*", inPlace = TRUE )                                                
     
     # check for the presence of "FIXED"
@@ -40,8 +41,9 @@
     x <- gsub( "[\\(\\)]", "", x )
     values <- as.numeric( .readValues( x ) )
     out <- data.frame(values=values, FIX = fixed)
-    out$comments <- ifelse(length(comments)>0, comments, NA)
-    
+    if ( length(comments)  > 0) out$comments <- comments
+    if ( length(comments) == 0) out$comments <- rep(NA, nrow(out))
+
     if( length( comments)>0 && guessNames )
     {
       guess <- ogrep( rx, comments, filter = "\\1")
