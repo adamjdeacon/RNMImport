@@ -28,7 +28,7 @@
 	# determine whether this is data generating-only simulation
 	simOnly <- any(regexMatches(txt, rx = "ONLY"))
 	# TODO: correct the regular expression used to indicate simonly statements
-	listToRemove <- c("NEW", "REQUESTFIRST", "REQUESTSECOND", 
+	listToRemove <- c("REQUESTFIRST", "REQUESTSECOND", 
 			"NOPREDICTION", "PREDICTION", "OMITTED", "ONLYSIMULATION")
 	txt <- killRegex( txt, listToRemove )
 	### extract the seeds                                                         
