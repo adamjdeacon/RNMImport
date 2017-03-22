@@ -115,7 +115,7 @@ pop <- function(
 				if(removeBrackets){
 					out <- gsub("[\\(\\)]", "", out)
 				}
-				out
+				trimws(out, which = "both")
 			} 
 			else absent
 	if( numeric) 
