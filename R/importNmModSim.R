@@ -40,7 +40,7 @@
 	# using shorcut because PROB can be one of : 
 	# NSUBPROBS, NSUBPROBLEMS, SUBPROBLEMS, NPROBLEMS, ...
 	# another way is to use "N?S?U?B?PROBL?E?M?S" instead of "PROB"
-	nSub <- equalExpressionPop( txt, "PROB", absent = 1, shortcut = TRUE, sep = "=", inPlace = TRUE )
+	nSub <- equalExpressionPop( txt, "PROB", absent = 1, shortcut = TRUE, inPlace = TRUE )
 	if( nSub == 1) nSub <- equalExpressionPop( txt, "SUB", absent = 1, shortcut = TRUE, inPlace = TRUE )
 	
 	### the TRUE option                                                           
