@@ -111,9 +111,9 @@
 			lower <- as.numeric( sub( "^([^,]*),.*", "\\1"         , th ) )   # before the first comma
 			est   <- as.numeric( sub( "^[^,]*,([^,]*),.*", "\\1"   , th ) )   # between comma 1 and 2
 			upper <- as.numeric( sub( "^[^,]*,[^,]*,([^,]*)", "\\1", th ) )   # after comma 2
-			out[i,1] <- lower
+			out[i,1] <- ifelse(is.na(lower), -Inf, lower)
 			out[i,2] <- est
-			out[i,3] <- upper
+			out[i,3] <- ifelse(is.na(upper), Inf, upper)
 		}
 	}  
 	if( guessNames && length(comments) == nrow(out)  )
