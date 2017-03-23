@@ -63,9 +63,7 @@
 {
   # extract comments	
   comments <- commentPop( x, inPlace = TRUE )  
-  # check for the presence of "FIXED"
-  fixed <- logicalPop( x, "FIXE?D?", inPlace = TRUE) 
-  
+
   ### SAME STYLE                                                              
   
   if(logicalPop( x, "SAME", inPlace = TRUE) )  
@@ -81,6 +79,11 @@
     else 
     {  ### DIAG style                                                              
       equalExpressionPop( x, "DIAG", sep = "[[:space:]]*", inPlace = TRUE )                                                
+      x <- gsub( "[[:space:]]*(FIXE?D?)[[:space:]]*", "FIX", x, ignore.case = TRUE) 
+      x <- regexSplit(x, "\\)?[[:space:]]+\\(?")
+      x <- gsub( "FIX", " FIX ", x ) 
+      fixed <- sapply(x,logicalPop,"FIX", inPlace = TRUE)
+      x <- gsub( "[[:space:]]*(FIXE?D?)[[:space:]]*", "", x, ignore.case = TRUE) 
       x <- gsub( "[\\(\\)]", "", x )
       out <- as.numeric( .readValues( x ) )
       out <- if( length(out)==1) as.matrix(out) else diag(out)
