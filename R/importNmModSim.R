@@ -49,7 +49,6 @@
 	
 	### build the output structure                                                
 	out <- c( "nSub" = nSub, "Seed1" = Seed1, "Seed2" = Seed2, "TRUE" = true, "simOnly" = simOnly )
-	attr(out, "rawStatement") <- simStatement
 	out 
 	
 }
