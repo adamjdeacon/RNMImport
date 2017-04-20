@@ -1,6 +1,6 @@
 Package: RNMImport
 Title: Tools for importing and manipulating NONMEM data
-Version: 0.3.6
+Version: 0.3.7
 Author: Mango Solutions <support@mango-solutions.com>
 Maintainer: Gabor Csardi <gcsardi@mango-solutions.com>
 Suggests:
