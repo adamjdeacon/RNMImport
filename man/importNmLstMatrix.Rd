@@ -27,4 +27,3 @@ Based on code by R. Francois
 \author{
 Mango Solutions
 }
-

@@ -50,4 +50,3 @@ getObjective will access the final value(s) of the objective function. It is a g
 Mango Solutions
 }
 \keyword{methods}
-

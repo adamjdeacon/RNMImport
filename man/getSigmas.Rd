@@ -61,4 +61,3 @@ Invalid \code{what} elements are simply ignored.
 Mango Solutions
 }
 \keyword{methods}
-

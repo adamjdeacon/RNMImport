@@ -24,4 +24,3 @@ Parses the $PRIOR statement of NONMEM 7 control files.  The parsed statement is 
 \author{
 Mango Solutions
 }
-

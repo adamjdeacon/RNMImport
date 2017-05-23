@@ -9,6 +9,7 @@
 #' which columns are to be written, whether there is a header or not, etc.
 #' @author Mango Solutions
 #' @noRd
+#' @export 
 
 .importNmModTables <- function
 (
@@ -35,11 +36,11 @@
 		x <- gsub("\\)", ".", x)
 		
 		# TODO: If FILE is missing, need to handle this gracefully, since this might be allowed
-		fileName <- equalExpressionPop(x, "FILE", inPlace = TRUE,sep="=")
+		fileName <- equalExpressionPop(x, "FILE", inPlace = TRUE)
 		RNMImportStopifnot(!is.null(fileName), match.call())
 
         ### handle the FORMAT=,1PE11.4 like statements
-        format.of.table = equalExpressionPop(x, "FORMAT", inPlace=TRUE, sep = '=' )
+        format.of.table = equalExpressionPop(x, "FORMAT", inPlace=TRUE)
 
 		### handle the HEADER
 		noHeader <- !ynPop( x, "HEADER", yes.prefix = "ONE", default = TRUE , inPlace = TRUE)

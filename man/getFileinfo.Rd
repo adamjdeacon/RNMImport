@@ -25,4 +25,3 @@ Retrieves information about a run's control and report files as a data.frame
 Mango Solutions
 }
 \keyword{utility}
-

@@ -48,10 +48,10 @@ test.pop <- function(){
 	# comments pop
 	x <- c("vt; yehe hyr jut (154) fr3f34 (123) ", "vgt4 gtet4 hy5e5 hr5 h65e5", "gfrew gwer; gewr " )
 	out <- pop( x , mode = "comments", inPlace = TRUE)
-	checkTrue( all(regexpr(x, ";")==-1))
-	checkEquals( out[1], " yehe hyr jut (154) fr3f34 (123) " )
+	checkTrue( all(regexpr(pattern = ";", text = x)==-1))
+	checkEquals( out[1], "yehe hyr jut (154) fr3f34 (123)" )
 	checkEquals( out[2], "" )
-	checkEquals( out[3], " gewr " )
+	checkEquals( out[3], "gewr" )
 	
 	# equal pop
 	x <- "OPT=3"
@@ -71,7 +71,7 @@ test.pop <- function(){
 # tests "equalExppressionPop", code by F. Gochez and R. Francois
 ###############################################################################
 
-test.equalExpressionPop <- function(){
+test.equalExpressionPop <- function() {
 	equalExpressionPop <- RNMImport:::equalExpressionPop
 	x <- "OPT=3"
 	out <- equalExpressionPop(x, "OPT", inPlace = TRUE)
@@ -142,10 +142,11 @@ test.commentPop <- function(){
 	commentPop <- RNMImport:::commentPop
 	x <- c("vt; yehe hyr jut (154) fr3f34 (123) ", "vgt4 gtet4 hy5e5 hr5 h65e5", "gfrew gwer; gewr " )
 	out <- commentPop( x, inPlace = TRUE )
-	checkTrue( all(regexpr(x, ";")==-1))
-	checkEquals( out[1], " yehe hyr jut (154) fr3f34 (123) " )
+    # comments have been removed
+	checkTrue( all(regexpr(pattern = ";", text = x)==-1))
+	checkEquals( out[1], "yehe hyr jut (154) fr3f34 (123)" )
 	checkEquals( out[2], "" )
-	checkEquals( out[3], " gewr " )
+	checkEquals( out[3], "gewr")
 	
 }
 

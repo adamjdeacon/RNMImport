@@ -5,10 +5,14 @@
 \alias{getThetas}
 \alias{getThetas,NMBasicModel-method}
 \alias{getThetas,NMRun-method}
+\alias{getThetas,NMBasicModelNM7-method}
 \alias{getThetas,NMSimModel-method}
 \alias{getThetas,NMSimModelNM7-method}
 \alias{getThetas,NMSimDataGen-method}
-\title{A generic function that extracts theta estimates (and initial estimates and standard errors if specified) from a NONMEM object.}
+\alias{getThetas,nmModel-method}
+\title{Get Theta values
+A generic function that extracts theta estimates (and initial estimates 
+and standard errors if specified) from a NONMEM object.}
 \usage{
 getThetas(obj, what = "final", subProblemNum = 1, method = 1,
   problemNum = 1)
@@ -19,6 +23,9 @@ getThetas(obj, what = "final", subProblemNum = 1, method = 1,
 \S4method{getThetas}{NMRun}(obj, what = "final", subProblemNum = 1,
   method = 1, problemNum = 1)
 
+\S4method{getThetas}{NMBasicModelNM7}(obj, what = "final",
+  subProblemNum = 1, method = 1, problemNum = 1)
+
 \S4method{getThetas}{NMSimModel}(obj, what = "final", subProblemNum = 1,
   method = 1, problemNum = 1)
 
@@ -27,24 +34,29 @@ getThetas(obj, what = "final", subProblemNum = 1, method = 1,
 
 \S4method{getThetas}{NMSimDataGen}(obj, what = "initial", subProblemNum = 1,
   method = 1, problemNum = 1)
+
+\S4method{getThetas}{nmModel}(obj, what = "initial", subProblemNum = 1,
+  method = 1, problemNum = 1)
 }
 \arguments{
-\item{obj}{An object of class NMBasicModel, NMRun, NMSimModel, NMBasicModelNM7, NMSimModelNM7, or  nmModel}
+\item{obj}{An object of class NMBasicModel, NMRun, NMSimModel, 
+NMBasicModelNM7, NMSimModelNM7, or  nmModel}
 
-\item{what}{Character vector of items to extract. One or more of "final", "stderrors" or "initial" (or "shrinkage" for NONMEM 7 basic models)}
+\item{what}{Character vector of items to extract. 
+One or more of "final", "stderrors" or "initial" (or "shrinkage" for 
+NONMEM 7 basic models)}
 
-\item{subProblemNum}{Numeric vector of simulation sub-problems to use.  Only applies to simulation models}
+\item{subProblemNum}{Numeric vector of simulation sub-problems to use.
+Only applies to simulation models}
 
 \item{method}{Vector of methods to extract when dealing with NONMEM 7 problems}
 
 \item{problemNum}{Number of problem to use - applies to NMRun only}
 }
 \value{
-A matrix of named rows for final estimates, initial estimates, standard errors etc. as applicable, or a list
+A matrix of named rows for final estimates, initial estimates, 
+standard errors etc. as applicable, or a list
 of matrices if multiple methods are chosen in NONMEM 7
-}
-\description{
-A generic function that extracts theta estimates (and initial estimates and standard errors if specified) from a NONMEM object.
 }
 \note{
 Invalid \code{what} elements are simply ignored.
@@ -59,4 +71,3 @@ Invalid \code{what} elements are simply ignored.
 Mango Solutions
 }
 \keyword{methods}
-

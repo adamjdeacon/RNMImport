@@ -39,4 +39,3 @@ x <- importNm("theoph.con", path = system.file("examples/theoph", package = "RNM
 Mango Solutions
 }
 \keyword{utils}
-

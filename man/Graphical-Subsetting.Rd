@@ -44,4 +44,3 @@ graphSubset(x)
 Mango Solutions
 }
 \keyword{environment}
-
