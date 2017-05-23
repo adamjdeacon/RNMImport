@@ -34,4 +34,3 @@ Displays information about output data.  Utility function for use with show meth
 \author{
 Mango Solutions
 }
-

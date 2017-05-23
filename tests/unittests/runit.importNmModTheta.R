@@ -134,34 +134,46 @@ test.importNmModTheta <- function(){
 	#THETA2  0.025  0.102   0.4
 	#THETA3 10.000 29.000  80.0
 	output10 <- nonames(.importNmModTheta(input10))
-	expected <- rbind( c(.4,1.7,7), c(.025,.102,.4), c(10,29,80) )
+    # # previously matrix
+	# expected <- rbind( c(.4,1.7,7), c(.025,.102,.4), c(10,29,80) )
+    # list since 0.3.7
+	expected <- list( c(.4, .025, 10), 
+        c(1.7, .102, 29), 
+        c(7, .4, 80), 
+        c(FALSE, FALSE, FALSE), 
+        c(NA, NA, NA))
 	checkEquals(output10, expected, msg = "Theta specified by THTA")
 	
 	input11 <-  c("$THETA (0 90 480)   ;  PCB",  "$THETA (1 FIXED)    ; EMAX", 
 			"$THETA (0 50 500)   ; EC50", "$THETA (0 0.5 1)         ; ZOLPIDEM")
 	output11 <- .importNmModTheta(input11)
 	
-	expected <- cbind("Lower" = c(0,1,0,0), "Est" = c(90,1,50,0.5), "Upper" = c(480, 1, 500, 1))
+	expected <- as.data.frame(cbind("Lower" = c(0,1,0,0), "Est" = c(90,1,50,0.5), "Upper" = c(480, 1, 500, 1)))
+    expected$FIX <- c(FALSE, TRUE, FALSE, FALSE)
 	rownames(expected) <- c("PCB", "EMAX", "EC50", "ZOLPIDEM")
-	
+	expected$comments <- rownames(expected)
+    
 	checkEquals(output11, expected)
 	
 	input12 <- "$THETA 4.3 -2.9 4.3 -0.67 (0.000001 0.667 0.9999)"
 	output12 <-  .importNmModTheta(input12)
-	expected <- cbind( "Lower" = c(-Inf, -Inf, -Inf, -Inf, 1e-06),
+	expected <- as.data.frame(cbind( "Lower" = c(-Inf, -Inf, -Inf, -Inf, 1e-06),
 			"Est" = c(4.3, -2.9, 4.3, -0.670, 0.667), 
-			"Upper" = c(Inf, Inf, Inf, Inf, 0.9999) )
+			"Upper" = c(Inf, Inf, Inf, Inf, 0.9999) ))
+    expected$FIX <- FALSE
 	rownames(expected) <- paste("THETA", 1:5, sep = "")
+    expected$comments <- NA
 	checkEquals(expected, output12)
 	
 	input13 <- c("$THETA",	"(-1000.0  4.3 1000.0)",
 	"(-1000.0 -2.9 1000.0)", "(-1000.0 -0.67 1000.0)", 
 	"(0.0001 0.667 0.9999)")
 	output13 <- .importNmModTheta(input13)
-	expected <- cbind(Lower = c(-1000, -1000, -1000, 0.0001 ), 
-			Est = c(4.3, -2.9, -0.67, 0.667), Upper = c(1000, 1000, 1000, 0.9999))
+	expected <- as.data.frame(cbind(Lower = c(-1000, -1000, -1000, 0.0001 ), 
+			Est = c(4.3, -2.9, -0.67, 0.667), Upper = c(1000, 1000, 1000, 0.9999)))
+    expected$FIX <- FALSE
 	rownames(expected) <- paste("THETA", 1:4, sep = "")
-	
+	expected$comments <- NA
 	checkEquals(output13, expected)
 }
 

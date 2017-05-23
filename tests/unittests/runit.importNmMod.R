@@ -35,19 +35,26 @@ test.importNmMod <- function()
 	x <- dat3$problemContents
 	checkEquals(names(x[[1]]), c("Problem","Subroutine", "Input", "Data", "PRED"   ))
 	checkEquals(names(x[[2]]), c("Theta",  "Omega", "Sigma", "Problem", "Input","Data","Sim")) 
-	# now try an example with simulation statements
+	
+    # now try an example with simulation statements
 	dat4 <- importNmMod(file.path(testDir, "subprob1.mod"))
 	
-	
 	checkEquals(sum(dat4$Comments == ""), 59)
-	checkEquals(dat4$Comments[6], " initialize" )
-	checkEquals(dat4$Comments[43], " $SUPER SCOPE=3 ITERATIONS=10")
+	checkEquals(dat4$Comments[6], "initialize" )
+	checkEquals(dat4$Comments[43], "$SUPER SCOPE=3 ITERATIONS=10")
 	
 	x <- dat4$problemContents
 	checkEquals(length(x), 4)
 	
-	checkEquals(x[[2]]$Theta[2,], c(.025,.102,.4), checkNames = FALSE )
-	checkEquals(diag(x[[2]]$Omega), c(.04, .04, .04), checkNames = FALSE)
+    # change at 0.3.7
+    # data.frame instead of vector
+    # c(.025,.102,.4)
+	dat <- structure(
+        list(Lower = 0.025, Est = 0.102, Upper = 0.4, FIX = FALSE, comments = NA), 
+            .Names = c("Lower", "Est", "Upper", "FIX", "comments"), 
+            row.names = "THETA2", class = "data.frame")
+    checkEquals(x[[2]]$Theta[2,], dat, checkNames = FALSE )
+	checkEquals(diag(x[[2]]$Omega$initialMatrix), c(.04, .04, .04), checkNames = FALSE)
 	# ensure that THETAs appear in the first 3 problems
 	checkTrue(all(sapply(x[-4], function(y) "Theta" %in% names(y)) ))
 	expectedSim <- c("1000", "5566898", "-1", "INITIAL", "TRUE")

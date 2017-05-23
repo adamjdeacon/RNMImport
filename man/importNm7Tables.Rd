@@ -39,4 +39,3 @@ The "cov" type covers .cor, .cov and .coi files.
 Mango Solutions
 }
 \keyword{IO}
-

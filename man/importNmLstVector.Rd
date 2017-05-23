@@ -19,4 +19,3 @@ Reads a "vector" stored in the text of a list file
 \author{
 Mango Solutions
 }
-

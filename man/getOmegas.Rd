@@ -60,4 +60,3 @@ Invalid \code{what} elements are simply ignored.
 \author{
 Mango Solutions
 }
-

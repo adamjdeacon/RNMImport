@@ -19,4 +19,3 @@ This function parses
 \author{
 Mango Solutions
 }
-

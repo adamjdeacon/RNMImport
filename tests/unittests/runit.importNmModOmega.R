@@ -7,22 +7,23 @@ test.importNmModOmega <- function(){
 	nonames.array <- RNMImport:::nonames.array
 	nonames.default <- RNMImport:::nonames.default
 	nonames.matrix <- RNMImport:::nonames.matrix
-	checkEquals( .importNmModOmega( "0.02" ), 
+    # note change to output object at version 0.3.7
+	checkEquals( .importNmModOmega( "0.02" )$initialMatrix, 
     matrix(0.02, dimnames = rep(list("OMEGA1"), 2) ) , msg = "single object")
 	
-  checkEquals( .importNmModOmega( " 0.02 FIXED "),  
+  checkEquals( .importNmModOmega( " 0.02 FIXED ")$initialMatrix,  
     matrix(0.02, dimnames = rep(list("OMEGA1"), 2) ) , msg = "single object, fixed ")
     
-	out3 <- .importNmModOmega( c(" 0.2 0.2 0.15  ") )
+	out3 <- .importNmModOmega(c(" 0.2 0.2 0.15  "))$initialMatrix
   checkEquals( as.vector(rownames(out3)), sprintf("OMEGA%d", 1:3), msg = "dimnames" )
   checkEquals( nonames(out3), diag(  c( 0.2, 0.2, 0.15) ) , msg = "diag")
   
-	out4 <- .importNmModOmega( c("BLOCK (1) 0.0102 ","BLOCK (1)  0.0147 ","BLOCK (1)  0.0212 "))
+	out4 <- .importNmModOmega(c("BLOCK (1) 0.0102 ","BLOCK (1)  0.0147 ","BLOCK (1)  0.0212 "))$initialMatrix
   expec4 <- cbind( c(0.0102,0,0) , c(0,0.0147,0) , c(0,0,0.0212) ) 
 	checkEquals( rownames(out4), sprintf("OMEGA%d", 1:3), msg = "dimnames" )
   checkEquals( nonames(out4), diag(  c( 0.0102, 0.0147, 0.0212)  ) , msg = "diag")
   
-  out5 <- .importNmModOmega( 
+  out5 <- .importNmModOmega(
      c("0.15      ",
        "0.75      ",
        "1  FIXED  ",
@@ -32,7 +33,7 @@ test.importNmModOmega <- function(){
        "BLOCK(1) 0.21    ",
        "BLOCK(1) SAME    ",
        "BLOCK(1) SAME    ",
-       "0.5      "))       
+       "0.5      "))$initialMatrix     
   expec5 <- cbind( c(0.15,0,0,0,0,0,0,0,0,0) , 
                    c(0,0.75,0,0,0,0,0,0,0,0) , 
                    c(0,0,1,0,0,0,0,0,0,0) , 
@@ -47,23 +48,23 @@ test.importNmModOmega <- function(){
   dimnames(out5) <- NULL
   checkEquals( out5, expec5 )
   
-	out6 <- .importNmModOmega( c("BLOCK (1)  0.0102 ","BLOCK (1)  0.0147 ","BLOCK (1)  0.0212 ")) 
+	out6 <- .importNmModOmega( c("BLOCK (1)  0.0102 ","BLOCK (1)  0.0147 ","BLOCK (1)  0.0212 "))$initialMatrix
   exp6 <- cbind( c(0.0102,0,0) , c(0,0.0147,0) , c(0,0,0.0212) ) 
   dimnames(out6) <- NULL
   checkEquals( out6, exp6, msg = "1-size blocks" )
   
-	out7 <- .importNmModOmega( c("BLOCK(2) 0.3 0.05 0.3    ","         0.3         ")) 
+	out7 <- .importNmModOmega( c("BLOCK(2) 0.3 0.05 0.3    ","         0.3         "))$initialMatrix
   exp7 <- cbind( c(0.3,0.05,0) , c(0.05,0.3,0) , c(0,0,0.3) )
   dimnames(out7) <- NULL
   checkEquals( out7, exp7, msg = "2-size block" )
   
-  out8 <- .importNmModOmega( c("BLOCK (1) 0.0102 ","BLOCK (1) 0.0147 ","BLOCK (1) 0.0212 "))
+  out8 <- .importNmModOmega( c("BLOCK (1) 0.0102 ","BLOCK (1) 0.0147 ","BLOCK (1) 0.0212 "))$initialMatrix
   exp8 <- cbind( c(0.0102,0,0) , c(0,0.0147,0) , c(0,0,0.0212) )
   dimnames( out8) <- NULL
   checkEquals( out8, exp8 , msg = "1-size block")
   
 	out9 <- .importNmModOmega( 
-    c("BLOCK(4)  0.2  0.01  0.2  0.001 0.001 0.2    0  0.001 0.01  0.2   ")) 
+    c("BLOCK(4)  0.2  0.01  0.2  0.001 0.001 0.2    0  0.001 0.01  0.2   "))$initialMatrix
   exp9 <- cbind(
     c(0.2,0.01,0.001,0) , 
     c(0.01,0.2,0.001,0.001) , 
@@ -89,7 +90,7 @@ test.importNmModOmega <- function(){
     "BLOCK(1) SAME     ",
     "BLOCK(1) SAME     ",
     "BLOCK(1) SAME     ",
-    "BLOCK(1) SAME     ")) 
+    "BLOCK(1) SAME     "))$initialMatrix
   exp10 <- cbind( 
     c(0.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0) , 
     c(0,0.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0) , 
@@ -111,8 +112,8 @@ test.importNmModOmega <- function(){
   dimnames( out10) <- NULL
   checkEquals( out10, exp10 , msg = "same")
   
-	out11 <- .importNmModOmega( 
-    c(" 0.0158 "," 0.0238"," 0 FIX"," 0 FIX "," 0 FIX"," 0 FIX"," 0.00076 "," 0.00076  "," 0.00076  "))
+	out11 <- .importNmModOmega(
+    c(" 0.0158 "," 0.0238"," 0 FIX"," 0 FIX "," 0 FIX"," 0 FIX"," 0.00076 "," 0.00076  "," 0.00076  "))$initialMatrix
   exp11 <- cbind( c(0.0158,0,0,0,0,0,0,0,0) , 
                   c(0,0.0238,0,0,0,0,0,0,0) , 
                   c(0,0,0,0,0,0,0,0,0) ,
@@ -132,7 +133,7 @@ test.importNmModOmega <- function(){
       "DIAG(2) 0.03 0.1 ",
       "BLOCK(1) 4.6 ",
       "BLOCK(1) SAME ",
-      "BLOCK(1) SAME ")) 
+      "BLOCK(1) SAME "))$initialMatrix
   exp12 <- cbind( 
     c(0.2,0,0,0,0,0,0,0,0,0) , 
     c(0,4,0.02,0,0,0,0,0,0,0) , 
@@ -147,7 +148,6 @@ test.importNmModOmega <- function(){
   dimnames( out12 ) <- NULL
   checkEquals( out12, exp12 , msg = "SAME")
   
-		
 }
 
 

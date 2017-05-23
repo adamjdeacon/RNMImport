@@ -35,4 +35,3 @@ while ignoring some. A structured list object is returned
 Mango Solutions
 }
 \keyword{IO}
-

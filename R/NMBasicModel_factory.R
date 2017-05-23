@@ -57,10 +57,14 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 				covMatrix <- if(!is.null(reportContents$CovarianceMatrix)) CovarianceMatrix else matrix(ncol = 0, nrow = 0)
 				corMatrix <- if(!is.null(reportContents$CorrelationMatrix)) CorrelationMatrix else matrix(ncol = 0, nrow = 0)
 				# grab parameter initial values
-				thetaInitial <- t(controlStatements$Theta)
+				thetaInitial <- t(controlStatements$Theta[,c("Lower","Est","Upper")])
 				# these may be missing in the control statements, so try to extract them from the reportContents
-				omegaInitial <- if(!is.null(controlStatements$Omega)) controlStatements$Omega  else  reportContents$initialEstimates$OMEGA
-				# grab dimensions of omega final estimates
+				omegaInitial <- if(!is.null(controlStatements$Omega)) {
+                    getVariabilityMatrix(control = controlStatements, which = "Omega") 
+                } else { 
+                    reportContents$initialEstimates$OMEGA
+				}
+                # grab dimensions of omega final estimates
 				omegaDim <- dim(FinalEstimates$OMEGA)
 				# if no initial omega, fall back on a default set of names
 				if(is.null(omegaInitial)) {
@@ -70,7 +74,7 @@ NMBasicModel <- function(controlStatements, path, reportContents, dropInputColum
 				
 				else omegaDimNames <- dimnames(omegaInitial)
 				
-				sigmaInitial <- controlStatements$Sigma
+				sigmaInitial <- getVariabilityMatrix(control = controlStatements, which = "Sigma") 
 				if(is.null(sigmaInitial)) sigmaInitial <- matrix()
 				rownames(thetaInitial) <- c("lowerBound", "initial", "upperBound")
 				

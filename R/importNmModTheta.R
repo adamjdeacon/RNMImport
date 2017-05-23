@@ -1,24 +1,22 @@
 
-
-#' Extracts the "theta" declaration information from the text of a control file
+#' @title Parse $THETA statement
+#' @name importNmModTheta
+#' @aliases .importNmModTheta
+#' @description Extracts the "theta" declaration information from the text of a control file
 #' @param txt [C,+] - Vector of strings in which to extract THETAs
 #' @param guessNames [L,1] - Try to deduce the names of the thetas (CL, KV, etc.) 
 #' @param rx Regular expression used for detecting names of thetas
 #' @param fileName 
-#' @title Parse $THETA statement
 #' @return A matrix with one row for each "theta" and 3 columns : 1 for the lower value bounds.
 #' one for the initial estimate, and one for the upper bound
 #' @author Mango Solutions
-#' @noRd
-
 # note: Based on code by R Francois, J James and R Pugh
 
 .importNmModTheta <- function(
 		txt = NULL,       
 		guessNames = TRUE,
 		rx = "([^~[:space:]]+)$",  		 
-		fileName = NULL
-)
+		fileName = NULL)
 {					
 	if(is.null(txt))
 		txt <- scanFile(fileName)
@@ -111,9 +109,9 @@
 			lower <- as.numeric( sub( "^([^,]*),.*", "\\1"         , th ) )   # before the first comma
 			est   <- as.numeric( sub( "^[^,]*,([^,]*),.*", "\\1"   , th ) )   # between comma 1 and 2
 			upper <- as.numeric( sub( "^[^,]*,[^,]*,([^,]*)", "\\1", th ) )   # after comma 2
-			out[i,1] <- lower
+			out[i,1] <- ifelse(is.na(lower), -Inf, lower)
 			out[i,2] <- est
-			out[i,3] <- upper
+			out[i,3] <- ifelse(is.na(upper), Inf, upper)
 		}
 	}  
 	if( guessNames && length(comments) == nrow(out)  )
@@ -123,5 +121,10 @@
 		alright <- which( regexpr("[\\(\\)]", trythat) == -1 )
 		rownames(out)[rx.out!=-1][alright] <- trythat[alright]
 	}
-	out 	
+	out <- data.frame(out, stringsAsFactors = FALSE)
+    # TODO replace with vapply
+	out$FIX <- sapply(thetaLines,function(x)logicalPop( x, "FIX", inPlace = TRUE))
+	out$comments <- rep(NA, nrow(out))
+    if(length(comments)>0) { out$comments <- comments }
+    out
 }

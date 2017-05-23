@@ -50,4 +50,3 @@ print(imposeCategoryFormat(x))
 \author{
 Mango Solutions
 }
-

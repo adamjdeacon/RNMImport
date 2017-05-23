@@ -48,4 +48,3 @@ Mango Solutions
 }
 \keyword{methods}
 \keyword{utilities}
-

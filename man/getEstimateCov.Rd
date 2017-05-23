@@ -38,4 +38,3 @@ Retrieves the variance-covariance matrix of the estimators and optionally
 \author{
 Mango Solutions
 }
-

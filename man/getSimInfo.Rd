@@ -40,4 +40,3 @@ Mango Solutions
 \keyword{classes,}
 \keyword{manip,}
 \keyword{utilities}
-

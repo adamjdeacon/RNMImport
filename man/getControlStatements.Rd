@@ -27,4 +27,3 @@ Extracts the list of "parsed control statements" associated with a problem or ru
 \author{
 Mango Solutions
 }
-

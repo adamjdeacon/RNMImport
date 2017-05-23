@@ -81,4 +81,3 @@ show(x$mpg.CUT)
 Mango Solutions
 }
 \keyword{datagen}
-

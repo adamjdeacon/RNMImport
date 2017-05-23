@@ -26,4 +26,3 @@ Gets the version of NONMEM used to create compile obj
 \author{
 Mango Solutions
 }
-

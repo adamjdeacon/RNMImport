@@ -49,7 +49,7 @@ test.getThetas <- function()
 	unitTestPath <- get("TestPath", envir = .RNMImportTestEnv)
 	testDir2 <- file.path(unitTestPath, "testdata/TestSimRun")
 	
-	run2 <- importNm( "TestData1SIM.con", path = file.path(unitTestPath, "testdata/TestSimRun" ))
+	run2 <- importNm("TestData1SIM.con", path = file.path(unitTestPath, "testdata/TestSimRun"))
 	
 	prob2 <- getProblem(run2)
 	
@@ -229,13 +229,13 @@ test.getOmegas <- function()
 	## add additional tests for extracting multple methods at once
 	
 	omegaTest4 <- getOmegas(prob3, what = "final", method = 1:2)
-	omegaTest5 <- getOmegas(prob3, what = c("final", "stderrors"), method = 1:2 )
+	omegaTest5 <- suppressWarnings(getOmegas(prob3, what = c("final", "stderrors"), method = 1:2 ))
 	
 	checkEquals(omegaTest4, list(getOmegas(prob3, what = "final", method = 1), 
 					getOmegas(prob3, what = "final", method = 2)), msg = " |multiple methods correct (1) " )
 	
 	checkEquals(omegaTest5, list(getOmegas(prob3, what = c("stderrors", "final"), method = 1), 
-					getOmegas(prob3, what = c("stderrors", "final"), method = 2)), 
+					suppressWarnings(getOmegas(prob3, what = c("stderrors", "final"), method = 2))), 
 			msg = " |multiple methods correct (2)")
 	
 	testDir <- file.path(unitTestPath, "testdata/TestRun")	
@@ -328,13 +328,13 @@ test.getSigmas <- function()
 	# check multiple methods at once
 	
 	sigmaTest4 <- getSigmas(prob3, what = "final", method = 1:2)
-	sigmaTest5 <- getSigmas(prob3, what = c("initial", "final", "stderrors"), method = 1:2 )
+	sigmaTest5 <- suppressWarnings(getSigmas(prob3, what = c("initial", "final", "stderrors"), method = 1:2))
 	
 	checkEquals(sigmaTest4, list(getSigmas(prob3, what = "final", method = 1), 
 					getSigmas(prob3, what = "final", method = 2)), msg = " |multiple methods correct (1) " )
 	
 	checkEquals(sigmaTest5, list(getSigmas(prob3, what = c("initial", "stderrors", "final"), method = 1), 
-					getSigmas(prob3, what = c("initial", "stderrors", "final"), method = 2)), 
+					suppressWarnings(getSigmas(prob3, what = c("initial", "stderrors", "final"), method = 2))), 
 			msg = " |multiple methods correct (2)")
 	
 	# check nmModel

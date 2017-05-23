@@ -15,7 +15,7 @@ test.importNM7Iterations <- function()
 	
 	# test case 1
 	
-	iter <- importNm7Iterations(c("TestData1.Ext", ""), noTitles = c("0", "0"), noLabels = c("0", "0"), methods = c("A", "B")
+	iter <- RNMImport:::importNm7Iterations(c("TestData1.Ext", ""), noTitles = c("0", "0"), noLabels = c("0", "0"), methods = c("A", "B")
 	, path = testDataPath)
 	
 	expIter <- importNm7Tables("TestData1.Ext", path = testDataPath, type = "ext" )
@@ -25,7 +25,7 @@ test.importNM7Iterations <- function()
 	
 	# test case 2 : iterations spread across multiple files
 	
-	iter2 <- importNm7Iterations(c("TestData1_2.EXT", "extfile2_2.EXT" ), noTitles = c("1","0"), 
+	iter2 <- RNMImport:::importNm7Iterations(c("TestData1_2.EXT", "extfile2_2.EXT" ), noTitles = c("1","0"), 
 			noLabels = c("0","0"), methods = c("A","B"), path = testDataPath )
 	expIter1 <- importNm7Tables("TestData1_2.EXT", path = testDataPath, type = "ext", tableTitles = FALSE)
 	checkEquals(iter2[[1]], expIter1[[1]], check.attributes = FALSE, msg = " |")
@@ -34,14 +34,14 @@ test.importNM7Iterations <- function()
 	
 	# test case 3 : only one iterations file, for the final estimation method
 	
-	iter3 <- importNm7Iterations(c("", "extfile2_2.EXT" ), noTitles = c("0","1"), 
+	iter3 <- RNMImport:::importNm7Iterations(c("", "extfile2_2.EXT" ), noTitles = c("0","1"), 
 			noLabels = c("0","0"), methods = c("A","B"), path = testDataPath )
 
 	checkEquals(iter3, list( "Stochastic Approximation Expectation-Maximization" =expIter2[[1]] ), check.attributes = FALSE )
 
 	# test case 4 : repeated file names are ignored
 	
-	iter4 <- importNm7Iterations(c("TestData1.EXT", "TestData1.EXT" ), noTitles = c("0","0"), 
+	iter4 <- RNMImport:::importNm7Iterations(c("TestData1.EXT", "TestData1.EXT" ), noTitles = c("0","0"), 
 			noLabels = c("0","0"), methods = c("A","B"), path = testDataPath )
 	checkEquals(iter4$"Iterative Two Stage", expIter[[1]], check.attributes = FALSE, msg = " | correct import on repeated files")
 	checkEquals(iter4$`Stochastic Approximation Expectation-Maximization`, expIter[[2]], check.attributes = FALSE, msg = " |correct import on repeated files")
